@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Class-Path: commons-lang3-3.7.jar classindex-3.4.jar slf4j-api-1.7.25.
+ jar
+Main-Class: com.msemu.login.LoginServer
+

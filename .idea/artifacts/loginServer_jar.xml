@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact name="loginServer:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/loginServer_jar</output-path>
+    <root id="root">
+      <element id="archive" name="loginServer.jar">
+        <element id="module-output" name="loginServer" />
+        <element id="module-output" name="commons" />
+      </element>
+      <element id="library" level="project" name="Maven: org.apache.commons:commons-lang3:3.7" />
+      <element id="library" level="project" name="Maven: org.atteo.classindex:classindex:3.4" />
+      <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.7.25" />
+    </root>
+  </artifact>
+</component>

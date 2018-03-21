@@ -1,0 +1,36 @@
+2018-03-16 20:02:18,479 INFO  com.msemu.commons.utils.ServerInfoUtils   - --------------------------------------------------------------------------------------------------------={ BeforeStart }
+2018-03-16 20:02:18,487 INFO  com.msemu.commons.utils.versioning.Version   - =================================================
+2018-03-16 20:02:18,487 INFO  com.msemu.commons.utils.versioning.Version   - Revision: ................ Dev
+2018-03-16 20:02:18,487 INFO  com.msemu.commons.utils.versioning.Version   - Build date: .............. N/A
+2018-03-16 20:02:18,487 INFO  com.msemu.commons.utils.versioning.Version   - =================================================
+2018-03-16 20:02:18,487 INFO  com.msemu.commons.utils.ServerInfoUtils   - ----------------------------------------------------------------------------------------------------------={ Configure }
+2018-03-16 20:02:18,496 INFO  com.msemu.commons.config.utils.ConfigLoader   - Loading config file: configs/login.properties
+2018-03-16 20:02:18,500 INFO  com.msemu.commons.config.utils.ConfigLoader   - Loading config file: configs/timer.properties
+2018-03-16 20:02:18,501 INFO  com.msemu.commons.config.utils.ConfigLoader   - Loading config file: configs/database.properties
+2018-03-16 20:02:18,504 INFO  com.msemu.commons.config.utils.ConfigLoader   - Updated 'configs/core.properties' config with new field 'core.wz.path'
+2018-03-16 20:02:18,509 INFO  com.msemu.commons.config.utils.ConfigLoader   - Loading config file: configs/core.properties
+2018-03-16 20:02:18,513 INFO  com.msemu.commons.config.utils.ConfigLoader   - Loading config file: configs/network.properties
+2018-03-16 20:02:18,517 INFO  com.msemu.commons.utils.ServerInfoUtils   - --------------------------------------------------------------------------------------------------------------={ Timer }
+2018-03-16 20:02:18,521 INFO  com.msemu.commons.thread.TimerPool   - TimerPool initialized
+2018-03-16 20:02:18,521 INFO  com.msemu.commons.utils.ServerInfoUtils   - -----------------------------------------------------------------------------------------------------------={ Database }
+2018-03-16 20:02:18,781 INFO  com.msemu.commons.database.DatabaseFactory   - DatabaseFactory initialized
+2018-03-16 20:02:18,781 INFO  com.msemu.commons.utils.ServerInfoUtils   - ------------------------------------------------------------------------------------------------------------={ Service }
+2018-03-16 20:02:18,783 INFO  com.msemu.commons.reload.ReloadService   - Loaded 0 reloadable instances.
+2018-03-16 20:02:18,783 INFO  com.msemu.commons.utils.ServerInfoUtils   - ---------------------------------------------------------------------------------------------------------------={ Data }
+2018-03-16 20:02:18,783 INFO  com.msemu.commons.utils.ServerInfoUtils   - --------------------------------------------------------------------------------------------------------------={ World }
+2018-03-16 20:02:18,783 INFO  com.msemu.commons.utils.ServerInfoUtils   - ------------------------------------------------------------------------------------------------------------={ Network }
+2018-03-16 20:02:18,901 INFO  com.msemu.commons.utils.ServerInfoUtils   - ---------------------------------------------------------------------------------------------------------={ AfterStart }
+2018-03-16 20:02:18,932 INFO  com.msemu.core.startup.StartupLevel   - +----
+2018-03-16 20:02:18,932 INFO  com.msemu.core.startup.StartupLevel   - | Global Memory Informations at 20:02:18:
+2018-03-16 20:02:18,932 INFO  com.msemu.core.startup.StartupLevel   - |    |
+2018-03-16 20:02:18,932 INFO  com.msemu.core.startup.StartupLevel   - | Allowed Memory: 3728384 KB
+2018-03-16 20:02:18,932 INFO  com.msemu.core.startup.StartupLevel   - |    |= Allocated Memory: 1005056 KB (26.9569%)
+2018-03-16 20:02:18,932 INFO  com.msemu.core.startup.StartupLevel   - |    |= Non-Allocated Memory: 2723328 KB (73.0431%)
+2018-03-16 20:02:18,932 INFO  com.msemu.core.startup.StartupLevel   - | Allocated Memory: 1005056 KB
+2018-03-16 20:02:18,932 INFO  com.msemu.core.startup.StartupLevel   - |    |= Used Memory: 23073 KB (0.6189%)
+2018-03-16 20:02:18,932 INFO  com.msemu.core.startup.StartupLevel   - |    |= Unused (cached) Memory: 981983 KB (26.3380%)
+2018-03-16 20:02:18,932 INFO  com.msemu.core.startup.StartupLevel   - | Useable Memory: 3705311 KB (99.3811%)
+2018-03-16 20:02:18,932 INFO  com.msemu.core.startup.StartupLevel   - +----
+2018-03-16 20:02:19,088 INFO  com.msemu.commons.network.NetworkThread   - 伺服器 0.0.0.0 : 8484 等待連接
+2018-03-16 20:02:19,089 INFO  com.msemu.core.startup.StartupLevel   - 伺服器於 1,343 毫秒讀取完畢.
+2018-03-16 20:02:19,174 INFO  com.msemu.login.service.LoginServerRMI   - 登陸伺服器等待世界伺服器連接於 PORT 9000

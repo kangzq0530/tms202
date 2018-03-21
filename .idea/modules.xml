@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/MapleStoryServer.iml" filepath="$PROJECT_DIR$/MapleStoryServer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/commons/commons.iml" filepath="$PROJECT_DIR$/commons/commons.iml" />
+      <module fileurl="file://$PROJECT_DIR$/loginServer/loginServer.iml" filepath="$PROJECT_DIR$/loginServer/loginServer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/worldServer/worldServer.iml" filepath="$PROJECT_DIR$/worldServer/worldServer.iml" />
+    </modules>
+  </component>
+</project>

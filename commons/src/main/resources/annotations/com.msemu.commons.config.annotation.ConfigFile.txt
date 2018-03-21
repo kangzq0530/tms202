@@ -1,0 +1,7 @@
+com.msemu.core.network.LoginClientFactory
+com.msemu.core.network.LoginNetworkThread
+com.msemu.core.network.LoginPacketFactory
+com.msemu.login.service.AuthTokenService
+com.msemu.login.service.BanService
+com.msemu.login.service.CookieService
+com.msemu.login.service.FirewallService
