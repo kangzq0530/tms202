@@ -31,7 +31,7 @@ public class LoginServerRMI extends UnicastRemoteObject implements ILoginServerR
         try {
             Registry registry = LocateRegistry.createRegistry(NetworkConfig.RMI_PORT, new SocketFactory(), new SocketFactory());
             registry.bind("msemu_login_server", this);
-            log.info("登陸伺服器等待世界伺服器連接於 PORT {}", NetworkConfig.RMI_PORT);
+            log.info("登入伺服器等待世界伺服器連接於 PORT {}", NetworkConfig.RMI_PORT);
         } catch (Exception ex) {
             log.error("初始化 Java RMI 伺服器錯誤", ex);
         } finally {

@@ -1,8 +1,10 @@
 package com.msemu.core.startup;
 
+import com.msemu.commons.thread.TimerPool;
 import com.msemu.commons.utils.ServerInfoUtils;
 import com.msemu.commons.utils.versioning.Version;
-import com.msemu.core.network.LoginNetworkThread;
+import com.msemu.core.configs.NetworkConfig;
+import com.msemu.login.network.LoginAcceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,11 +35,12 @@ public enum StartupLevel implements IStartupLevel {
                 StartupLevel.log.info(line);
             }
             try {
-                LoginNetworkThread.getInstance().startup();
+                LoginAcceptor.getInstance().startup();
+                log.info("登入伺服器等待連接於 {}:{}", NetworkConfig.HOST, NetworkConfig.PORT);
             } catch (IOException | InterruptedException e) {
                 StartupLevel.log.error("Error while starting network thread", e);
             }
-            StartupLevel.log.info("伺服器於 {} 毫秒讀取完畢.", ServerInfoUtils.formatNumber(ManagementFactory.getRuntimeMXBean().getUptime()));
+            StartupLevel.log.info("登入伺服器於 {} 毫秒讀取完畢.", ServerInfoUtils.formatNumber(ManagementFactory.getRuntimeMXBean().getUptime()));
         }
     };
 

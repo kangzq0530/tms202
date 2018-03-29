@@ -3,7 +3,6 @@ package com.msemu.core.configs;
 import com.msemu.commons.config.annotation.ConfigComments;
 import com.msemu.commons.config.annotation.ConfigFile;
 import com.msemu.commons.config.annotation.ConfigProperty;
-import com.msemu.commons.model.enums.EGameServiceType;
 
 /**
  * Created by Weber on 2018/3/14.

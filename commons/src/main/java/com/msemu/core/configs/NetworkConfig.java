@@ -4,7 +4,7 @@ import com.msemu.commons.config.annotation.ConfigAfterLoad;
 import com.msemu.commons.config.annotation.ConfigComments;
 import com.msemu.commons.config.annotation.ConfigFile;
 import com.msemu.commons.config.annotation.ConfigProperty;
-import com.msemu.commons.model.enums.ENetIOExecMode;
+import com.msemu.commons.enums.NetIOExecMode;
 
 /**
  * Created by Weber on 2018/3/14.
@@ -128,7 +128,7 @@ public class NetworkConfig {
             name = "network.io.execution.mode",
             value = "POOLED"
     )
-    public static ENetIOExecMode IO_EXECUTION_MODE;
+    public static NetIOExecMode IO_EXECUTION_MODE;
     @ConfigComments(
             comment = {"Number of IO Network threads.", "Default: -1 (Processor count)"}
     )

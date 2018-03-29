@@ -2,16 +2,19 @@ package com.msemu.commons.database;
 
 import com.msemu.core.configs.DatabaseConfig;
 import com.msemu.core.startup.StartupComponent;
+import org.atteo.classindex.ClassIndex;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.boot.model.relational.Database;
+import org.hibernate.cfg.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Properties;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 /**
  * Created by Weber on 2018/3/14.
@@ -21,15 +24,12 @@ public class DatabaseFactory {
     private static final Logger log = LoggerFactory.getLogger(DatabaseFactory.class);
 
     private static final AtomicReference<DatabaseFactory> instance = new AtomicReference<>();
-    private final HashMap<Long, ConnectionWrapper> connections = new HashMap<>();
+    private SessionFactory sessionFactory;
+    private List<Session> sessions;
 
     public DatabaseFactory() {
-        try {
-            testConnection();
-            log.info("DatabaseFactory initialized");
-        } catch (SQLException except) {
-            log.error("connection to database fail", except);
-        }
+        initializeDatabase();
+        log.info("DatabaseFactory initialized");
     }
 
     public static DatabaseFactory getInstance() {
@@ -46,73 +46,51 @@ public class DatabaseFactory {
         return value;
     }
 
-    public Connection getConnection() {
-        Long threadId = Thread.currentThread().getId();
-        ConnectionWrapper connectionWrapper = connections.get(threadId);
-        if (connectionWrapper == null) {
-            Connection connection = connectToDatabase();
-            connectionWrapper = new ConnectionWrapper(connection);
-            connections.put(threadId, connectionWrapper);
-        }
-        return connectionWrapper.getConnection();
+    private void initializeDatabase() {
+        Iterable<Class<?>> dbClasses = ClassIndex.getAnnotated(Schema.class);
+        Configuration configuration = new Configuration();
+        dbClasses.forEach(configuration::addAnnotatedClass);
+        configuration.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect")
+                .setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver")
+                .setProperty("hibernate.connection.url", "jdbc:mysql://" + DatabaseConfig.HOST + ":"+ DatabaseConfig.PORT +
+                        "/"+ DatabaseConfig.DATABASE_NAME +"?autoReconnect=true&amp;useSSL=false")
+                .setProperty("hibernate.connection.username", DatabaseConfig.USERNAME)
+                .setProperty("hibernate.connection.password", DatabaseConfig.PASSWORD)
+                .setProperty("hibernate.show_sql", String.valueOf(DatabaseConfig.SHOW_SQL));
+        sessionFactory = configuration.buildSessionFactory();
+        sessions = new ArrayList<>();
     }
 
-    private void testConnection() throws SQLException {
-        Connection testCon = getConnection();
-        PreparedStatement pre = testCon.prepareStatement("SELECT 1");
-        pre.execute();
+    public Session getSession() {
+        Session session = sessionFactory.openSession();
+        sessions.add(session);
+        return session;
     }
 
-    private Connection connectToDatabase() {
-        Connection connection = null;
-        Properties dbProps = new Properties();
-        dbProps.put("user", DatabaseConfig.USER);
-        dbProps.put("password", DatabaseConfig.PASSWORD);
-        dbProps.put("connectTimeout", Long.toString(DatabaseConfig.CONNECT_TIMEOUT));
-        dbProps.put("socketTimeout", Long.toString(DatabaseConfig.SOCKET_TIMEOUT));
-        dbProps.put("tcpNoDelay", Boolean.toString(DatabaseConfig.TCP_NO_DELAY));
-        dbProps.put("autoReconnect", Boolean.toString(DatabaseConfig.AUTO_RECONNECT));
-        dbProps.put("serverTimezone", "Asia/Taipei");
-        dbProps.put("characterEncoding", DatabaseConfig.CHARACTER_ENCODING);
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-            connection = DriverManager.getConnection(
-                    "jdbc:mysql://" + DatabaseConfig.DATABASE_IP + ":" + DatabaseConfig.DATABASE_PORT +
-                            "/" + DatabaseConfig.DATABASE_NAME, dbProps
-            );
-        } catch (SQLException | ClassNotFoundException except) {
-            log.error("connect to database error", except);
-        }
-        return connection;
+    public void cleanUpSessions() {
+        sessions.removeAll(sessions.stream().filter(s -> !s.isOpen()).collect(Collectors.toList()));
     }
 
-    private static class ConnectionWrapper {
-        private long lastAccesstime = 0;
-        private Connection connection;
-
-        public ConnectionWrapper(Connection connection) {
-            this.connection = connection;
-            this.lastAccesstime = System.currentTimeMillis();
-        }
-
-        public Connection getConnection() {
-            if (isExpire()) {
-                try {
-                    this.connection.close();
-                } catch (SQLException ignored) {
-                }
-                this.connection = DatabaseFactory.getInstance().connectToDatabase();
-            }
-            this.lastAccesstime = System.currentTimeMillis();
-            return this.connection;
-        }
-
-        private boolean isExpire() {
-            try {
-                return ((System.currentTimeMillis() - lastAccesstime) > DatabaseConfig.SOCKET_TIMEOUT) || connection.isClosed();
-            } catch (SQLException except) {
-                return true;
+    public void saveToDB(Object obj) {
+        synchronized (obj) {
+            try (Session session = getSession()) {
+                Transaction t = session.beginTransaction();
+                session.saveOrUpdate(obj);
+                t.commit();
             }
         }
+        cleanUpSessions();
     }
+
+    public void deleteFromDB(Object obj) {
+        synchronized (obj) {
+            try (Session session = getSession()) {
+                Transaction t = session.beginTransaction();
+                session.delete(obj);
+                t.commit();
+            }
+        }
+        cleanUpSessions();
+    }
+
 }

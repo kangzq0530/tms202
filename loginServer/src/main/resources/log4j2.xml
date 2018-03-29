@@ -68,7 +68,7 @@
         <logger name="Authentication" level="info" additivity="false">
             <appender-ref ref="Authentication"/>
         </logger>
-        <logger name="Network" level="info" additivity="false">
+        <logger name="Network" level="debug" additivity="false">
             <appender-ref ref="Network"/>
         </logger>
         <logger name="DebugLogger" level="debug" additivity="false">

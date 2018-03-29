@@ -38,6 +38,14 @@ public class HexUtils {
         return out.toString();
     }
 
+    public static String readableByteArray(byte[] arr) {
+        StringBuilder res = new StringBuilder();
+        for(byte b : arr) {
+            res.append(String.format("%02X ",b));
+        }
+        return res.toString();
+    }
+
     public static String toHex(ByteBuffer data, int endPOsition) {
         StringBuilder result = new StringBuilder();
         int counter = 0;
@@ -104,4 +112,9 @@ public class HexUtils {
 
         return bytes;
     }
+
+    public static String toString(final int intValue) {
+        return Integer.toHexString(intValue);
+    }
+
 }

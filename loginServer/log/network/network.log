@@ -1,100 +1,98 @@
-2018-03-15 03:28:40,709 - Client [] connected.
-2018-03-15 03:28:40,709 - Client [] connected.
-2018-03-15 03:28:40,724 - Client [] disconnected.
-2018-03-15 03:28:40,725 - Client [] disconnected.
-2018-03-15 03:28:40,727 - Client [] connected.
-2018-03-15 03:28:40,728 - Client [] disconnected.
-2018-03-15 03:28:40,840 - Client [] connected.
-2018-03-15 03:28:40,841 - Client [] disconnected.
-2018-03-16 13:36:26,121 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 13:36:41,829 - Client [IP: not connected State: DISCONNECTED] disconnected.
-2018-03-16 13:37:38,724 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 13:37:42,411 - Client [IP: not connected State: DISCONNECTED] disconnected.
-2018-03-16 13:37:58,407 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 13:38:01,148 - Client [IP: not connected State: DISCONNECTED] disconnected.
-2018-03-16 13:40:03,605 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 13:40:08,570 - Client [IP: not connected State: DISCONNECTED] disconnected.
-2018-03-16 13:41:30,931 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 13:41:34,217 - Client [IP: not connected State: DISCONNECTED] disconnected.
-2018-03-16 13:43:27,592 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 13:43:31,557 - Client [IP: not connected State: DISCONNECTED] disconnected.
-2018-03-16 13:44:20,348 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 13:44:41,029 - Client [IP: not connected State: DISCONNECTED] disconnected.
-2018-03-16 13:45:00,753 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 13:46:37,653 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 13:46:42,684 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 13:53:19,561 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 13:54:51,604 - Client [IP: not connected State: DISCONNECTED] disconnected.
-2018-03-16 13:56:37,693 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 14:01:59,011 - Client [IP: not connected State: DISCONNECTED] disconnected.
-2018-03-16 14:02:16,352 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 14:28:29,995 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 15:13:30,018 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 15:13:56,725 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 15:14:45,267 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 15:45:06,469 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 15:45:35,426 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 15:45:46,727 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 15:48:46,791 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 15:48:50,774 - Client [IP: not connected State: DISCONNECTED] disconnected.
-2018-03-16 15:50:21,039 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 15:51:07,149 - Client [IP: not connected State: DISCONNECTED] disconnected.
-2018-03-16 15:52:56,824 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 15:53:45,606 - Client [IP: not connected State: DISCONNECTED] disconnected.
-2018-03-16 15:59:28,586 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 15:59:29,068 - Client [IP: not connected State: DISCONNECTED] disconnected.
-2018-03-16 16:00:00,845 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 16:00:01,329 - Client [IP: not connected State: DISCONNECTED] disconnected.
-2018-03-16 16:02:07,512 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 16:25:27,228 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 16:30:23,624 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 16:44:12,301 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 16:44:29,119 - Client [IP: not connected State: DISCONNECTED] disconnected.
-2018-03-16 16:46:38,129 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 16:46:52,502 - Client [IP: not connected State: DISCONNECTED] disconnected.
-2018-03-16 16:48:56,535 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 16:49:22,268 - Client [IP: not connected State: DISCONNECTED] disconnected.
-2018-03-16 16:52:14,367 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 16:52:19,197 - Client [IP: not connected State: DISCONNECTED] disconnected.
-2018-03-16 16:53:06,022 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 16:53:08,513 - Client [IP: not connected State: DISCONNECTED] disconnected.
-2018-03-16 16:53:25,667 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 16:53:27,497 - Client [IP: not connected State: DISCONNECTED] disconnected.
-2018-03-16 16:53:45,325 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 16:54:29,007 - Client [IP: not connected State: DISCONNECTED] disconnected.
-2018-03-16 16:55:08,487 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 16:55:31,710 - Client [IP: not connected State: DISCONNECTED] disconnected.
-2018-03-16 16:55:53,230 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 16:56:08,198 - Client [IP: not connected State: DISCONNECTED] disconnected.
-2018-03-16 16:57:05,549 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 16:57:23,806 - Client [IP: not connected State: DISCONNECTED] disconnected.
-2018-03-16 17:02:09,619 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 17:04:45,911 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 17:05:33,582 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 17:06:47,512 - Client [IP: not connected State: DISCONNECTED] disconnected.
-2018-03-16 17:06:59,976 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 17:07:14,488 - Client [IP: not connected State: DISCONNECTED] disconnected.
-2018-03-16 17:07:21,098 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 17:07:36,154 - Client [IP: not connected State: DISCONNECTED] disconnected.
-2018-03-16 17:09:07,566 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 17:09:27,436 - Client [IP: not connected State: DISCONNECTED] disconnected.
-2018-03-16 17:10:45,076 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 17:10:45,561 - Client [IP: not connected State: DISCONNECTED] disconnected.
-2018-03-16 17:11:13,341 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 17:11:13,843 - Client [IP: not connected State: DISCONNECTED] disconnected.
-2018-03-16 17:11:30,467 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 17:12:09,183 - Client [IP: not connected State: DISCONNECTED] disconnected.
-2018-03-16 17:12:16,431 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 17:15:00,067 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 17:15:15,337 - Client [IP: not connected State: DISCONNECTED] disconnected.
-2018-03-16 17:15:31,582 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 17:17:24,508 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 17:17:44,414 - Client [IP: not connected State: DISCONNECTED] disconnected.
-2018-03-16 17:18:58,880 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 17:21:16,271 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 17:25:46,502 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 18:03:52,782 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 18:04:20,784 - Client [IP: not connected State: DISCONNECTED] disconnected.
-2018-03-16 18:06:44,108 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 18:07:28,839 - Client [IP: 127.0.0.1 State: CONNECTED] connected.
-2018-03-16 18:11:40,605 - Client [IP: not connected State: DISCONNECTED] disconnected.
+2018-03-29 15:06:58,696 - Waiting for connections on 0.0.0.0:8484
+2018-03-29 15:27:20,665 - Waiting for connections on 0.0.0.0:8484
+2018-03-29 15:28:24,172 - Waiting for connections on 0.0.0.0:8484
+2018-03-29 15:28:53,197 - Waiting for connections on 0.0.0.0:8484
+2018-03-29 15:31:59,995 - Waiting for connections on 0.0.0.0:8484
+2018-03-29 15:32:58,888 - Waiting for connections on 0.0.0.0:8484
+2018-03-29 15:33:29,611 - Waiting for connections on 0.0.0.0:8484
+2018-03-29 15:36:18,410 - Waiting for connections on 0.0.0.0:8484
+2018-03-29 15:39:26,627 - Waiting for connections on 0.0.0.0:8484
+2018-03-29 15:40:11,263 - Waiting for connections on 0.0.0.0:8484
+2018-03-29 15:41:38,765 - Waiting for connections on 0.0.0.0:8484
+2018-03-29 15:44:39,060 - Waiting for connections on 0.0.0.0:8484
+2018-03-29 15:45:58,549 - Waiting for connections on 0.0.0.0:8484
+2018-03-29 15:46:39,005 - Waiting for connections on 0.0.0.0:8484
+2018-03-29 15:46:48,774 - Waiting for connections on 0.0.0.0:8484
+2018-03-29 15:56:41,331 - Waiting for connections on 0.0.0.0:8484
+2018-03-29 15:59:13,665 - Waiting for connections on 0.0.0.0:8484
+2018-03-29 15:59:38,705 - Session Opened from %s
+2018-03-29 16:00:03,515 - Session Closed from %s
+2018-03-29 16:03:13,317 - Waiting for connections on 0.0.0.0:8484
+2018-03-29 16:03:22,852 - Session Opened from 127.0.0.1
+2018-03-29 16:04:06,375 - Session Closed from 127.0.0.1
+2018-03-29 16:08:32,411 - Waiting for connections on 0.0.0.0:8484
+2018-03-29 16:08:51,701 - Session Opened from 127.0.0.1
+2018-03-29 16:10:43,089 - Session Closed from 127.0.0.1
+2018-03-29 16:14:16,817 - Waiting for connections on 0.0.0.0:8484
+2018-03-29 16:14:20,449 - Session Opened from 127.0.0.1
+2018-03-29 16:16:20,928 - Waiting for connections on 0.0.0.0:8484
+2018-03-29 16:16:26,269 - Session Opened from 127.0.0.1
+2018-03-29 16:17:04,414 - Waiting for connections on 0.0.0.0:8484
+2018-03-29 16:17:07,645 - Session Opened from 127.0.0.1
+2018-03-29 16:17:07,984 - Session Closed from 127.0.0.1
+2018-03-29 16:20:23,250 - Waiting for connections on 0.0.0.0:8484
+2018-03-29 16:20:27,001 - Session Opened from 127.0.0.1
+2018-03-29 16:20:27,285 - Session Closed from 127.0.0.1
+2018-03-29 16:22:01,579 - Waiting for connections on 0.0.0.0:8484
+2018-03-29 16:22:07,612 - Session Opened from 127.0.0.1
+2018-03-29 16:22:07,951 - Session Closed from 127.0.0.1
+2018-03-29 16:27:31,733 - Waiting for connections on 0.0.0.0:8484
+2018-03-29 16:27:39,052 - Session Opened from 127.0.0.1
+2018-03-29 16:27:39,379 - Session Closed from 127.0.0.1
+2018-03-29 16:29:34,416 - Waiting for connections on 0.0.0.0:8484
+2018-03-29 16:29:48,420 - Session Opened from 127.0.0.1
+2018-03-29 16:29:48,761 - Session Closed from 127.0.0.1
+2018-03-29 16:30:31,834 - Session Opened from 127.0.0.1
+2018-03-29 16:30:31,839 - Session Closed from 127.0.0.1
+2018-03-29 16:31:50,456 - Waiting for connections on 0.0.0.0:8484
+2018-03-29 16:31:53,851 - Session Opened from 127.0.0.1
+2018-03-29 16:31:54,185 - Session Closed from 127.0.0.1
+2018-03-29 16:34:24,494 - Session Opened from 127.0.0.1
+2018-03-29 16:34:24,501 - Session Closed from 127.0.0.1
+2018-03-29 16:35:51,755 - Waiting for connections on 0.0.0.0:8484
+2018-03-29 16:36:01,502 - Session Opened from 127.0.0.1
+2018-03-29 16:36:01,507 - Session Closed from 127.0.0.1
+2018-03-29 16:36:56,182 - Waiting for connections on 0.0.0.0:8484
+2018-03-29 16:36:59,168 - Session Opened from 127.0.0.1
+2018-03-29 16:38:05,591 - Session Closed from 127.0.0.1
+2018-03-29 16:38:09,498 - Waiting for connections on 0.0.0.0:8484
+2018-03-29 16:38:16,573 - Session Opened from 127.0.0.1
+2018-03-29 16:43:57,298 - Session Closed from 127.0.0.1
+2018-03-29 16:43:57,300 - Session Opened from 127.0.0.1
+2018-03-29 16:43:59,918 - Session Closed from 127.0.0.1
+2018-03-29 18:29:38,683 - Session Opened from 127.0.0.1
+2018-03-29 18:39:56,173 - Waiting for connections on 0.0.0.0:8484
+2018-03-29 18:40:02,421 - Session Opened from 127.0.0.1
+2018-03-29 18:40:02,764 - Session Closed from 127.0.0.1
+2018-03-29 18:43:50,569 - Session Opened from 127.0.0.1
+2018-03-29 18:43:50,569 - Client forcibly closed the game.
+2018-03-29 18:43:50,570 - Session Closed from 127.0.0.1
+2018-03-29 18:43:59,030 - Waiting for connections on 0.0.0.0:8484
+2018-03-29 18:44:18,309 - Session Opened from 127.0.0.1
+2018-03-29 18:44:21,198 - Unhandled opcode 20/0x14, packet 06 91 00 01 00 
+2018-03-29 18:44:57,421 - Unhandled opcode 59/0x3b, packet 
+2018-03-29 18:44:57,421 - Unhandled opcode 39/0x27, packet 
+2018-03-29 18:45:08,492 - Session Closed from 127.0.0.1
+2018-03-29 18:45:18,852 - Session Opened from 127.0.0.1
+2018-03-29 18:45:19,350 - Unhandled opcode 20/0x14, packet 06 91 00 01 00 
+2018-03-29 18:45:51,574 - Unhandled opcode 59/0x3b, packet 
+2018-03-29 18:45:53,099 - Unhandled opcode 39/0x27, packet 
+2018-03-29 18:46:12,626 - Unhandled opcode 21/0x15, packet 0A 00 77 65 71 71 77 65 71 77 65 71 07 00 77 65 71 65 71 77 65 20 89 84 1B 5D 5F 38 D9 87 CC 00 00 00 00 42 95 00 00 00 00 02 00 
+2018-03-29 18:46:15,566 - Session Closed from 127.0.0.1
+2018-03-29 18:46:22,062 - Session Opened from 127.0.0.1
+2018-03-29 18:46:22,561 - Unhandled opcode 20/0x14, packet 06 91 00 01 00 
+2018-03-29 18:46:54,663 - Unhandled opcode 59/0x3b, packet 
+2018-03-29 18:46:56,152 - Unhandled opcode 39/0x27, packet 
+2018-03-29 18:47:00,920 - Session Closed from 127.0.0.1
+2018-03-29 18:47:51,107 - Waiting for connections on 0.0.0.0:8484
+2018-03-29 18:47:54,921 - Session Opened from 127.0.0.1
+2018-03-29 18:47:55,245 - Unhandled opcode 20/0x14, packet 06 91 00 01 00 
+2018-03-29 18:48:27,501 - Unhandled opcode 59/0x3b, packet 
+2018-03-29 18:48:29,035 - Unhandled opcode 39/0x27, packet 
+2018-03-29 18:48:37,273 - Session Closed from 127.0.0.1
+2018-03-29 18:49:03,930 - Session Opened from 127.0.0.1
+2018-03-29 18:49:03,930 - Unhandled opcode 20/0x14, packet 06 91 00 01 00 
+2018-03-29 18:49:54,205 - Unhandled opcode 59/0x3b, packet 
+2018-03-29 18:50:10,381 - Unhandled opcode 39/0x27, packet 
+2018-03-29 18:50:10,381 - Session Closed from 127.0.0.1
+2018-03-29 18:50:28,113 - Waiting for connections on 0.0.0.0:8484

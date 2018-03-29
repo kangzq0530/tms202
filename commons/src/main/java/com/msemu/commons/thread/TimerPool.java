@@ -96,19 +96,19 @@ public class TimerPool {
     }
 
     public class Timer {
-        private final ScheduledThreadPoolExecutor scheduledThreadPoolExecutor;
+        private final ScheduledThreadPoolExecutor stpe;
 
         Timer(int corePoolSize,
               ThreadFactory threadFactory) {
-            scheduledThreadPoolExecutor = new ScheduledThreadPoolExecutor(corePoolSize, threadFactory);
-            scheduledThreadPoolExecutor.setKeepAliveTime(10, TimeUnit.MINUTES);
-            scheduledThreadPoolExecutor.allowCoreThreadTimeOut(true);
-            scheduledThreadPoolExecutor.setContinueExistingPeriodicTasksAfterShutdownPolicy(false);
+            stpe = new ScheduledThreadPoolExecutor(corePoolSize, threadFactory);
+            stpe.setKeepAliveTime(10, TimeUnit.MINUTES);
+            stpe.allowCoreThreadTimeOut(true);
+            stpe.setContinueExistingPeriodicTasksAfterShutdownPolicy(false);
         }
 
         public ScheduledFuture<?> register(Runnable r, long repeatTime, long delay) {
             try {
-                return scheduledThreadPoolExecutor.scheduleAtFixedRate(r, delay, repeatTime, TimeUnit.MILLISECONDS);
+                return stpe.scheduleAtFixedRate(r, delay, repeatTime, TimeUnit.MILLISECONDS);
             } catch (RejectedExecutionException except) {
                 log.error("Timer register Error", except);
                 return null;
@@ -117,7 +117,7 @@ public class TimerPool {
 
         public ScheduledFuture<?> register(Runnable r, long repeatTime) {
             try {
-                return scheduledThreadPoolExecutor.scheduleAtFixedRate(r, 0, repeatTime, TimeUnit.MILLISECONDS);
+                return stpe.scheduleAtFixedRate(r, 0, repeatTime, TimeUnit.MILLISECONDS);
             } catch (RejectedExecutionException except) {
                 log.error("Timer register Error", except);
                 return null;
@@ -126,7 +126,7 @@ public class TimerPool {
 
         public ScheduledFuture<?> registerInMinute(Runnable r, long repeatTime, long delay) {
             try {
-                return scheduledThreadPoolExecutor.scheduleAtFixedRate(r, delay, repeatTime, TimeUnit.MINUTES);
+                return stpe.scheduleAtFixedRate(r, delay, repeatTime, TimeUnit.MINUTES);
             } catch (RejectedExecutionException except) {
                 log.error("Timer register Error", except);
                 return null;
@@ -135,7 +135,7 @@ public class TimerPool {
 
         public ScheduledFuture<?> registerInMinute(Runnable r, long repeatTime) {
             try {
-                return scheduledThreadPoolExecutor.scheduleAtFixedRate(r, 0, repeatTime, TimeUnit.MINUTES);
+                return stpe.scheduleAtFixedRate(r, 0, repeatTime, TimeUnit.MINUTES);
             } catch (RejectedExecutionException except) {
                 log.error("Timer register Error", except);
                 return null;
@@ -144,7 +144,7 @@ public class TimerPool {
 
         public ScheduledFuture<?> schedule(Runnable r, long delay) {
             try {
-                return scheduledThreadPoolExecutor.schedule(r, delay, TimeUnit.MILLISECONDS);
+                return stpe.schedule(r, delay, TimeUnit.MILLISECONDS);
             } catch (RejectedExecutionException except) {
                 log.error("Timer schedule Error", except);
                 return null;
@@ -153,19 +153,23 @@ public class TimerPool {
 
         public ScheduledFuture<?> scheduleAtTimestamp(Runnable r, long timestamp) {
             try {
-                return scheduledThreadPoolExecutor.schedule(r, timestamp - System.currentTimeMillis(), TimeUnit.MILLISECONDS);
+                return stpe.schedule(r, timestamp - System.currentTimeMillis(), TimeUnit.MILLISECONDS);
             } catch (RejectedExecutionException except) {
                 log.error("Timer scheduleAtTimestamp Error", except);
                 return null;
             }
         }
 
+        public void execute(Runnable r) {
+            stpe.execute(r);
+        }
+
         public ScheduledThreadPoolExecutor getExecutor() {
-            return this.scheduledThreadPoolExecutor;
+            return this.stpe;
         }
 
         public void purge() {
-            scheduledThreadPoolExecutor.purge();
+            stpe.purge();
         }
     }
 

@@ -1,7 +1,5 @@
 package com.msemu;
 
-import com.msemu.core.startup.StartupManager;
-import com.msemu.world.service.WorldServerRMI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,7 +8,6 @@ import org.slf4j.LoggerFactory;
  */
 public class WorldServer {
     private static final Logger log = LoggerFactory.getLogger(WorldServer.class);
-    private static WorldServerRMI rmi;
 
     public WorldServer() {
 //        StartupManager.getInstance().startup(Sta);
@@ -22,9 +19,5 @@ public class WorldServer {
         } catch (Exception ex) {
             WorldServer.log.error("Error while starting MainServer", ex);
         }
-    }
-
-    public static WorldServerRMI getRmi() {
-        return WorldServer.rmi;
     }
 }

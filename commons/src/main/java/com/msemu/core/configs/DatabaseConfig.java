@@ -3,39 +3,24 @@ package com.msemu.core.configs;
 import com.msemu.commons.config.annotation.ConfigComments;
 import com.msemu.commons.config.annotation.ConfigFile;
 import com.msemu.commons.config.annotation.ConfigProperty;
+import com.msemu.commons.enums.GameServiceType;
 
 /**
- * Created by Weber on 2018/3/14.
+ * Created by Weber on 2018/3/29.
  */
 @ConfigFile(
         name = "configs/database.properties"
 )
 public class DatabaseConfig {
+
     @ConfigComments(
-            comment = {"The database server IP."}
+            comment = {"The database Username."}
     )
     @ConfigProperty(
-            name = "databaseServerIP",
-            value = "localhost"
-    )
-    public static String DATABASE_IP;
-    @ConfigComments(
-            comment = {"The database server port."}
-    )
-    @ConfigProperty(
-            name = "databaseServerPort",
-            value = "3306"
-    )
-    public static String DATABASE_PORT;
-    @ConfigComments(
-            comment = {"The database Account."}
-    )
-    @ConfigProperty(
-            name = "databaseUser",
+            name = "databaseUsername",
             value = "root"
     )
-    public static String USER;
-
+    public static String USERNAME;
     @ConfigComments(
             comment = {"The database Password."}
     )
@@ -44,67 +29,37 @@ public class DatabaseConfig {
             value = ""
     )
     public static String PASSWORD;
-
     @ConfigComments(
-            comment = {"The database Name."}
+            comment = {"The database\'s host address."}
     )
     @ConfigProperty(
-            name = "databaseName",
-            value = "zzms"
+            name = "database.host",
+            value = "localhost"
+    )
+    public static String HOST;
+    @ConfigComments(
+            comment = {"The port on which the database is running."}
+    )
+    @ConfigProperty(
+            name = "database.port",
+            value = "3306"
+    )
+    public static int PORT;
+    @ConfigComments(
+            comment = {"The database name."}
+    )
+    @ConfigProperty(
+            name = "database.name",
+            value = "msemu"
     )
     public static String DATABASE_NAME;
-
     @ConfigComments(
-            comment = {"The database connect server timeout."}
+            comment = {"The database\'s connection url"}
     )
     @ConfigProperty(
-            name = "connectTimeout",
-            value = "3000"
-    )
-    public static long CONNECT_TIMEOUT;
-
-    @ConfigComments(
-            comment = {"The database socket timeout."}
-    )
-    @ConfigProperty(
-            name = "socketTimeout",
-            value = "3600000"
-    )
-    public static long SOCKET_TIMEOUT;
-
-    @ConfigComments(
-            comment = {"If connecting using TCP/IP, should the driver set SO_TCP_NODELAY (disabling the Nagle Algorithm)?"}
-    )
-    @ConfigProperty(
-            name = "tcpNoDelay",
+            name = "database.showSql",
             value = "true"
     )
-    public static boolean TCP_NO_DELAY;
-
-    @ConfigComments(
-            comment = {"Auto reconnect to database."}
-    )
-    @ConfigProperty(
-            name = "autoReconnect",
-            value = "true"
-    )
-    public static boolean AUTO_RECONNECT;
-
-    @ConfigComments(
-            comment = {"Max reconnection times to database."}
-    )
-    @ConfigProperty(
-            name = "maxReconnectTimes",
-            value = "3"
-    )
-    public static String MAX_RECONNECT_TIMES;
-
-    @ConfigComments(
-            comment = {"The character encoding of database connection."}
-    )
-    @ConfigProperty(
-            name = "characterEncoding",
-            value = "UTF8"
-    )
-    public static String CHARACTER_ENCODING;
+    public static boolean SHOW_SQL;
 }
+

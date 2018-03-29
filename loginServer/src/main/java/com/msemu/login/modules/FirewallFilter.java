@@ -1,6 +1,6 @@
 package com.msemu.login.modules;
 
-import com.msemu.commons.network.IAcceptFilter;
+import com.msemu.commons.network.filters.IAcceptFilter;
 
 import java.net.InetSocketAddress;
 
