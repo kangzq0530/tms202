@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
  * Created by Weber on 2018/3/14.
  */
 public class LoginServer {
-    private static final Logger log;
+    private static final Logger log = LoggerFactory.getLogger((Class) LoginServer.class);
     private static LoginServerRMI rmi;
 
     private LoginServer() throws Exception {
@@ -28,9 +28,5 @@ public class LoginServer {
 
     public static LoginServerRMI getRmi() {
         return LoginServer.rmi;
-    }
-
-    static {
-        log = LoggerFactory.getLogger((Class) LoginServer.class);
     }
 }

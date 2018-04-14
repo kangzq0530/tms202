@@ -64,6 +64,10 @@ public class StringUtils {
         return builder.toString();
     }
 
+    public static boolean isNumber(String string) {
+        return string.matches("-?\\d+(\\.\\d+)?");
+    }
+
     public static final String makeEnumHumanReadable(final String enumName) {
         StringBuilder builder = new StringBuilder(enumName.length() + 1);
         for (String word : enumName.split("_")) {

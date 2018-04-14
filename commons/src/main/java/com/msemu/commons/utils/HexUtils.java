@@ -1,6 +1,10 @@
 package com.msemu.commons.utils;
 
+import com.msemu.commons.enums.GameServiceType;
+import com.msemu.core.configs.CoreConfig;
+
 import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 
 /**
  * Created by Weber on 2018/3/14.
@@ -40,8 +44,8 @@ public class HexUtils {
 
     public static String readableByteArray(byte[] arr) {
         StringBuilder res = new StringBuilder();
-        for(byte b : arr) {
-            res.append(String.format("%02X ",b));
+        for (byte b : arr) {
+            res.append(String.format("%02X ", b));
         }
         return res.toString();
     }
@@ -89,6 +93,25 @@ public class HexUtils {
             }
         }
 
+    }
+
+    public static String toAscii(final byte[] bytes) {
+        byte[] ret = new byte[bytes.length];
+        for (int x = 0; x < bytes.length; x++) {
+            if (bytes[x] < 32 && bytes[x] >= 0) {
+                ret[x] = '.';
+            } else {
+                int chr = ((short) bytes[x]) & 0xFF;
+                ret[x] = (byte) chr;
+            }
+        }
+        Charset encode = CoreConfig.GAME_SERVICE_TYPE.getCharset();
+        try {
+            String str = new String(ret, encode);
+            return str;
+        } catch (Exception e) {
+        }
+        return "";
     }
 
     public static String fillHex(int data, int digits) {

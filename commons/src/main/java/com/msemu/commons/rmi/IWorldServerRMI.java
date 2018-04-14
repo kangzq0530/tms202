@@ -10,8 +10,8 @@ public interface IWorldServerRMI extends Remote {
 
     boolean testConnection() throws RemoteException;
 
-    boolean isAccountOnServer(long accountId) throws RemoteException;
+    boolean isAccountOnServer(int accountId) throws RemoteException;
 
-    void kickByAccountId(long var1) throws RemoteException;
+    boolean kickByAccountId(int accountId) throws RemoteException;
 
 }

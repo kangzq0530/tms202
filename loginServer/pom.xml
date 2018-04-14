@@ -40,6 +40,12 @@
             <artifactId>disruptor</artifactId>
             <version>3.3.7</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.mindrot/jbcrypt -->
+        <dependency>
+            <groupId>org.mindrot</groupId>
+            <artifactId>jbcrypt</artifactId>
+            <version>0.3m</version>
+        </dependency>
     </dependencies>
     <build>
         <finalName>loginServer</finalName>

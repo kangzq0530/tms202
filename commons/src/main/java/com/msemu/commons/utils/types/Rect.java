@@ -1,7 +1,5 @@
 package com.msemu.commons.utils.types;
 
-import com.msemu.commons.network.OutPacket;
-
 /**
  * Created by Weber on 2018/3/28.
  */

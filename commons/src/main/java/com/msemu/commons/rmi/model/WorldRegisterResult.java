@@ -9,7 +9,7 @@ public enum WorldRegisterResult implements Serializable {
     SUCCESS,
     DISABLED,
     UNKNOWN,
-    REGISTERED;
+    ALREADY_REGISTERED;
 
     WorldRegisterResult() {
     }

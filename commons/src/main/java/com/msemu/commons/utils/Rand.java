@@ -61,15 +61,15 @@ public class Rand {
     }
 
     public static boolean getChance(int chance) {
-        return chance >= 1 && (chance > 99 || ThreadLocalRandom.current().nextInt(99) + 1 <= chance);
+        return getChance(chance, 100);
     }
 
     public static boolean getChance(double chance) {
-        return ThreadLocalRandom.current().nextDouble() * 100.0D <= chance;
+        return getChance(chance, 100);
     }
 
-    public static boolean getChance(int chance, int divider) {
-        return getChance((double) chance / (double) divider);
+    public static boolean getChance(double chance, double max) {
+        return ThreadLocalRandom.current().nextDouble() * max <= chance;
     }
 
     public static <E> E get(E[] list) {

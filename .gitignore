@@ -48,6 +48,7 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
-
+configs/
 target/
 wz/
+log/

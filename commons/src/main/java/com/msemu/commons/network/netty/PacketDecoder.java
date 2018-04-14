@@ -1,6 +1,6 @@
 package com.msemu.commons.network.netty;
 
-import com.msemu.commons.network.InPacket;
+import com.msemu.commons.network.packets.InPacket;
 import com.msemu.commons.network.crypt.MapleCrypt;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;

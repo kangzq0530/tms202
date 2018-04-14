@@ -1,9 +1,10 @@
 package com.msemu.commons.network.netty.handler;
 
-import com.msemu.commons.network.InHeader;
-import com.msemu.commons.network.InPacket;
 import com.msemu.commons.network.netty.NettyClient;
-import com.msemu.core.configs.NetworkConfig;
+import com.msemu.commons.enums.InHeader;
+import com.msemu.commons.network.packets.InPacket;
+import com.msemu.commons.utils.HexUtils;
+import com.msemu.core.configs.CoreConfig;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
@@ -30,13 +31,13 @@ public abstract class MapleChannelHandler<TClient extends NettyClient<TClient>> 
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         TClient client = (TClient) ctx.channel().attr(NettyClient.CLIENT_KEY).get();
         client.onOpen();
-        log.debug("Session Opened from {}", client.getIP());
+        log.warn("Session Opened from {}", client.getIP());
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         if (cause instanceof IOException) {
-            log.info("Client forcibly closed the game.");
+            log.warn("Client forcibly closed the game.");
         } else {
             cause.printStackTrace();
         }
@@ -69,8 +70,8 @@ public abstract class MapleChannelHandler<TClient extends NettyClient<TClient>> 
     }
 
     public void handlePacket(InHeader opcode, InPacket packet, TClient client) {
-        if (NetworkConfig.DEBUG && !InHeader.isSpamHeader(opcode)) {
-            log.debug(String.format("[In]\t| %s, 0x%s\t| %s", opcode, Integer.toHexString(opcode.getValue()).toUpperCase(), packet));
+        if (CoreConfig.SHOW_PACKET && !InHeader.isSpamHeader(opcode)) {
+            log.warn(String.format("[In]\t| %s, 0x%s\t| %s\n\t%s", opcode, Integer.toHexString(opcode.getValue()).toUpperCase(), packet, HexUtils.toAscii(packet.getData())));
         }
     }
 }

@@ -1,6 +1,6 @@
 package com.msemu.commons.rmi;
 
-import com.msemu.commons.rmi.model.WorldChannelInfo;
+import com.msemu.commons.rmi.model.WorldInfo;
 import com.msemu.commons.rmi.model.WorldRegisterResult;
 
 import java.rmi.Remote;
@@ -12,8 +12,8 @@ import java.rmi.RemoteException;
 public interface ILoginServerRMI extends Remote {
     boolean testConnection() throws RemoteException;
 
-    WorldRegisterResult registerWorld(IWorldServerRMI rmi, WorldChannelInfo worldInfo) throws RemoteException;
+    WorldRegisterResult registerWorld(IWorldServerRMI rmi, WorldInfo worldInfo) throws RemoteException;
 
-    void updateWorld(IWorldServerRMI rmi, WorldChannelInfo  worldInfo) throws RemoteException;
+    void updateWorld(IWorldServerRMI rmi, WorldInfo worldInfo) throws RemoteException;
 
 }

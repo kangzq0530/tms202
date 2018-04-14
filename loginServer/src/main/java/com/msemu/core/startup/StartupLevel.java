@@ -1,10 +1,9 @@
 package com.msemu.core.startup;
 
-import com.msemu.commons.thread.TimerPool;
 import com.msemu.commons.utils.ServerInfoUtils;
 import com.msemu.commons.utils.versioning.Version;
 import com.msemu.core.configs.NetworkConfig;
-import com.msemu.login.network.LoginAcceptor;
+import com.msemu.login.network.netty.LoginAcceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +20,7 @@ public enum StartupLevel implements IStartupLevel {
         }
     },
     Configure,
-    Timer,
+    Event,
     Database,
     Service,
     Data,

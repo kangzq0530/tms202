@@ -1,9 +1,8 @@
 package com.msemu.commons.network.netty;
 
-import com.msemu.commons.network.OutHeader;
-import com.msemu.commons.network.Packet;
+import com.msemu.commons.network.packets.Packet;
 import com.msemu.commons.network.crypt.MapleCrypt;
-import com.msemu.core.configs.NetworkConfig;
+import com.msemu.core.configs.CoreConfig;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
@@ -21,10 +20,11 @@ public class PacketEncoder extends MessageToByteEncoder<Packet> {
         byte[] data = packet.getData();
         NettyClient client = ctx.channel().attr(NettyClient.CLIENT_KEY).get();
         MapleCrypt crypt = ctx.channel().attr(NettyClient.CRYPTO_KEY).get();
-        if (NetworkConfig.DEBUG ) {
-            log.warn("[Out]\t" + packet);
-        }
+
         if (client != null) {
+            if (CoreConfig.SHOW_PACKET ) {
+                log.warn("[Out]\t" + packet);
+            }
             byte[] iv = client.getSendIV();
             byte[] head = crypt.getSendHeader(data.length, iv);
             client.acquireEncoderState();

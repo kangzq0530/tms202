@@ -1,11 +1,12 @@
 package com.msemu.commons.network.netty;
 
-import com.msemu.commons.network.InPacket;
-import com.msemu.commons.network.Packet;
+import com.msemu.commons.network.packets.InPacket;
+import com.msemu.commons.network.packets.Packet;
 import com.msemu.commons.network.crypt.MapleCrypt;
 import io.netty.channel.Channel;
 import io.netty.util.AttributeKey;
 
+import java.net.SocketAddress;
 import java.util.concurrent.locks.ReentrantLock;
 
 public abstract class NettyClient<TClient extends NettyClient<TClient>> {
@@ -35,7 +36,7 @@ public abstract class NettyClient<TClient extends NettyClient<TClient>> {
      */
     private int storedLength = -1;
     /**
-     * Channel object associated with this specific client. Used for all
+     * ChannelInfo object associated with this specific client. Used for all
      * I/O operations regarding a MapleStory game session.
      */
     protected final Channel ch;
@@ -62,7 +63,7 @@ public abstract class NettyClient<TClient extends NettyClient<TClient>> {
     }
 
     /**
-     * Construct a new NettyClient with the corresponding Channel that
+     * Construct a new NettyClient with the corresponding ChannelInfo that
      * will be used to write to as well as the send and recv seeds or IVs.
      * @param c the channel object associated with this client session.
      * @param siv the send seed or IV.
@@ -180,4 +181,8 @@ public abstract class NettyClient<TClient extends NettyClient<TClient>> {
     public abstract void onOpen();
 
     public abstract void onClose();
+
+    public SocketAddress getSocketAddress() {
+        return ch.remoteAddress();
+    }
 }

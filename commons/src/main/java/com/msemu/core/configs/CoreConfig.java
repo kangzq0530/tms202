@@ -17,7 +17,7 @@ public class CoreConfig {
     public static GameServiceType GAME_SERVICE_TYPE;
 
     @ConfigComments(comment = {"Server Version"})
-    @ConfigProperty(name = "core.game.service.version", value = "202")
+    @ConfigProperty(name = "core.game.service.version", value = "145")
     public static int GAME_VERSION;
 
     @ConfigComments(comment = {"Server Patch Version"})
@@ -27,4 +27,13 @@ public class CoreConfig {
     @ConfigComments(comment = {"Server WZ Path"})
     @ConfigProperty(name = "core.wz.path", value = "./wz")
     public static String WZ_PATH;
+
+
+    @ConfigComments(comment = {"Server Dat Path"})
+    @ConfigProperty(name = "core.dat.path", value = "./wz")
+    public static String DAT_PATH;
+
+    @ConfigComments(comment = {"Show Packet"})
+    @ConfigProperty(name = "core.network.showPacket", value = "true")
+    public static boolean SHOW_PACKET;
 }

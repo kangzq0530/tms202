@@ -1,5 +1,9 @@
 package com.msemu;
 
+import com.msemu.commons.rmi.IWorldServerRMI;
+import com.msemu.core.startup.StartupLevel;
+import com.msemu.core.startup.StartupManager;
+import com.msemu.world.service.WorldServerRMI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,9 +12,11 @@ import org.slf4j.LoggerFactory;
  */
 public class WorldServer {
     private static final Logger log = LoggerFactory.getLogger(WorldServer.class);
+    private IWorldServerRMI rmi;
 
-    public WorldServer() {
-//        StartupManager.getInstance().startup(Sta);
+    public WorldServer() throws Exception {
+        this.rmi = new WorldServerRMI();
+        StartupManager.getInstance().startup(StartupLevel.class);
     }
 
     public static void main(final String[] args) {

@@ -1,6 +1,6 @@
 package com.msemu.commons.utils;
 
-import com.msemu.commons.network.IHeader;
+import com.msemu.commons.network.packets.IHeader;
 
 import java.util.*;
 
