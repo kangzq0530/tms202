@@ -6,7 +6,9 @@ import com.msemu.commons.rmi.model.WorldRegisterResult;
 import com.msemu.commons.thread.EventManager;
 import com.msemu.core.configs.NetworkConfig;
 import com.msemu.world.World;
+import com.msemu.world.channel.Channel;
 import com.msemu.world.client.GameClient;
+import com.msemu.world.client.character.Character;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,6 +17,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
@@ -26,14 +29,10 @@ public class WorldServerRMI extends UnicastRemoteObject implements IWorldServerR
 
     private static final Logger log = LoggerFactory.getLogger(WorldServerRMI.class);
 
-    private final Map<Integer, GameClient> accountsInWorld;
     private ILoginServerRMI connection;
     private transient ScheduledFuture<?> reconnectTask;
-    private World world;
 
     public WorldServerRMI() throws RemoteException {
-        this.accountsInWorld = new ConcurrentHashMap<>();
-        this.world = new World();
         EventManager.getInstance().addFixedRateEvent(this::watchLoginServerStatus, 2000, 5000);
     }
 
@@ -41,27 +40,43 @@ public class WorldServerRMI extends UnicastRemoteObject implements IWorldServerR
         try {
             final Registry registry = LocateRegistry.getRegistry(NetworkConfig.RMI_PORT);
             this.connection = (ILoginServerRMI) registry.lookup("msemu_login_server");
-            final WorldRegisterResult registerResult = this.connection.registerWorld(this, this.world.getWorldInfo());
+            final WorldRegisterResult registerResult = this.connection.registerWorld(this, World.getInstance().getWorldInfo());
             switch (registerResult) {
                 case SUCCESS: {
-                    log.info("Connected to login server successfully.");
+                    log.info("Connected to Login server successfully.");
                     break;
                 }
                 default: {
-                    log.warn("Connection to login server failed. Reason: {}", registerResult.toString());
+                    log.warn("Connection to Login server failed. Reason: {}", registerResult.toString());
                     break;
                 }
             }
         } catch (ConnectException e2) {
             log.warn("Login server isn't available. Make sure it's up and running. {}", e2);
         } catch (Exception e) {
-            log.error("Connection to login server failed", e);
+            log.error("Connection to Login server failed", e);
         } finally {
             this.reconnectTask = null;
             if (this.connection == null) {
                 this.onConnectionLost();
             }
         }
+    }
+
+    public void updateWorld() {
+        try {
+            this.connection.updateWorld(this, World.getInstance().getWorldInfo());
+        } catch (RemoteException e) {
+            WorldServerRMI.log.error("Error while updateWorld");
+        }
+    }
+
+    public void addClient(int channel, GameClient client) {
+      // TODO
+    }
+
+    public void removeClient(Integer accID) {
+        // TODO
     }
 
     @Override
@@ -71,16 +86,16 @@ public class WorldServerRMI extends UnicastRemoteObject implements IWorldServerR
 
     @Override
     public boolean isAccountOnServer(int accountId) throws RemoteException {
-        return this.accountsInWorld.containsKey(accountId);
+        return World.getInstance().getChannels().stream().filter(ch-> ch.isAccountOnChannel(accountId)).findFirst().isPresent();
     }
 
     @Override
     public boolean kickByAccountId(int accountId) throws RemoteException {
-        if (this.accountsInWorld.containsKey(accountId)) {
-            final GameClient client = this.accountsInWorld.get(accountId);
-            if (client != null) {
-                client.close();
-            }
+        if (isAccountOnServer(accountId)) {
+            World.getInstance().getChannels()
+                    .stream()
+                    .forEach(ch -> ch.getCharacters().stream()
+                    .forEach(chr -> chr.logout()));
             return true;
         }
         return false;
@@ -90,10 +105,10 @@ public class WorldServerRMI extends UnicastRemoteObject implements IWorldServerR
         if (this.reconnectTask != null) {
             return;
         }
-        log.info("Connection with login server lost.");
+        log.info("Connection with Login server lost.");
         this.connection = null;
-        EventManager.getInstance().addEvent(() -> {
-            log.info("Reconnecting to login server...");
+        reconnectTask = EventManager.getInstance().addEvent(() -> {
+            log.info("Reconnecting to Login server...");
             connectToLoginServer();
         }, 2000);
     }

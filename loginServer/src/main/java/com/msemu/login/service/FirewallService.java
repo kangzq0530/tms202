@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * Created by Weber on 2018/3/15.
  */
-@StartupComponent("Network")
+@StartupComponent("Service")
 public class FirewallService {
     private static final Logger log = LoggerFactory.getLogger((Class) FirewallService.class);
     private static final AtomicReference<FirewallService> instance = new AtomicReference<FirewallService>();

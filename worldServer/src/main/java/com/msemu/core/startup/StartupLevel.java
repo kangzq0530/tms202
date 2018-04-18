@@ -2,6 +2,7 @@ package com.msemu.core.startup;
 
 import com.msemu.commons.utils.ServerInfoUtils;
 import com.msemu.commons.utils.versioning.Version;
+import com.msemu.world.World;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -32,6 +32,10 @@ public class WorldConfig {
     @ConfigProperty(name = "world.state", value = "0")
     public static int STATE = 0;
 
+    @ConfigComments(comment = { "Max Character in one channel" })
+    @ConfigProperty(name = "world.channel.maxLoading", value = "500")
+    public static int CHANNEL_MAX_LOADING = 500;
+
     @ConfigComments(comment = { "The channel amount of the world server", "Default: 5" })
     @ConfigProperty(name = "world.channel.count", value = "5")
     public static int CHANNEL_COUNT = 5;

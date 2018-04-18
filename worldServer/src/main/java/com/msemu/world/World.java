@@ -1,5 +1,7 @@
 package com.msemu.world;
 
+import com.msemu.WorldServer;
+import com.msemu.commons.enums.WorldServerType;
 import com.msemu.commons.reload.IReloadable;
 import com.msemu.commons.rmi.model.WorldInfo;
 import com.msemu.core.configs.WorldConfig;
@@ -9,6 +11,7 @@ import com.msemu.world.client.character.party.Party;
 import com.msemu.world.client.guild.Guild;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
@@ -84,6 +87,7 @@ public class World implements IReloadable {
         WorldInfo worldInfo = new WorldInfo();
         worldInfo.setName(name);
         worldInfo.setChannels(channels.values().stream().map(Channel::getChannelInfo).collect(Collectors.toList()));
+        worldInfo.setServerType(WorldServerType.Normal);
         worldInfo.setWorldEventDesc(worldEventDesc);
         worldInfo.setWorldEventExpWSE(worldEventExpWSE);
         worldInfo.setWorldEventDropWSE(worldEventDropWSE);
@@ -93,6 +97,7 @@ public class World implements IReloadable {
     @Override
     public void reload() {
         this.loadSettings();
+        WorldServer.getRmi().updateWorld();
     }
 
     public void startWorld() {
@@ -158,5 +163,10 @@ public class World implements IReloadable {
 
     public Guild getGuildByID(int id) {
         return getGuilds().get(id);
+    }
+
+
+    public List<Channel> getChannels() {
+        return channels.values().stream().collect(Collectors.toList());
     }
 }

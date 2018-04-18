@@ -6,9 +6,10 @@ package com.msemu.login.client;
 
 import com.msemu.commons.database.DatabaseFactory;
 import com.msemu.commons.database.Schema;
-import com.msemu.commons.utils.types.FileTime;
 import com.msemu.login.client.character.Character;
 import com.msemu.login.enums.PicStatus;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.Session;
 import org.hibernate.annotations.Cascade;
 
@@ -19,47 +20,83 @@ import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @Schema
 @Entity
 @Table(name = "accounts")
 public class Account {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
+    @Getter
+    @Setter
     private int id;
+
+    @Getter
+    @Setter
     @Column(name = "username")
     private String username;
+    @Getter
+    @Setter
     @Column(name = "password")
     private String password;
+    @Getter
+    @Setter
     @Column(name = "accountTypeMask")
     private int accountType;
+    @Getter
+    @Setter
     @Column(name = "age")
     private int age;
+    @Getter
+    @Setter
     @Column(name = "vipGrade")
     private int vipGrade;
+    @Getter
+    @Setter
     @Column(name = "nBlockReason")
     private int nBlockReason;
+    @Getter
+    @Setter
     @Column(name = "gmLevel")
     private int gmLevel;
+    @Getter
+    @Setter
     @Column(name = "gender")
     private byte gender;
+    @Getter
+    @Setter
     @Column(name = "msg2")
     private byte msg2;
+    @Getter
+    @Setter
     @Column(name = "purchaseExp")
     private byte purchaseExp;
     @Column(name = "pBlockReason")
+    @Getter
+    @Setter
     private byte pBlockReason;
     @Column(name = "gradeCode")
+    @Getter
+    @Setter
     private byte gradeCode;
     @Column(name = "chatUnblockDate")
+    @Getter
+    @Setter
     private long chatUnblockDate;
+    @Getter
+    @Setter
     @Column(name = "pic")
     private String pic;
     @Column(name = "characterSlots")
+    @Getter
+    @Setter
     private int characterSlots;
     @Column(name = "creationDate")
+    @Getter
+    @Setter
     private long creationDate;
-
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "accId")
@@ -69,14 +106,6 @@ public class Account {
 
     public Account() {
 
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public final String getSecureUserName() {
@@ -90,134 +119,6 @@ public class Account {
             sb.replace(sb.length() - 1, sb.length(), "*");
         }
         return sb.toString();
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public int getAccountType() {
-        return accountType;
-    }
-
-    public void setAccountType(int accountType) {
-        this.accountType = accountType;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public int getVipGrade() {
-        return vipGrade;
-    }
-
-    public void setVipGrade(int vipGrade) {
-        this.vipGrade = vipGrade;
-    }
-
-    public int getnBlockReason() {
-        return nBlockReason;
-    }
-
-    public void setnBlockReason(int nBlockReason) {
-        this.nBlockReason = nBlockReason;
-    }
-
-    public int getGmLevel() {
-        return gmLevel;
-    }
-
-    public void setGmLevel(int gmLevel) {
-        this.gmLevel = gmLevel;
-    }
-
-    public byte getGender() {
-        return gender;
-    }
-
-    public void setGender(byte gender) {
-        this.gender = gender;
-    }
-
-    public byte getMsg2() {
-        return msg2;
-    }
-
-    public void setMsg2(byte msg2) {
-        this.msg2 = msg2;
-    }
-
-    public byte getPurchaseExp() {
-        return purchaseExp;
-    }
-
-    public void setPurchaseExp(byte purchaseExp) {
-        this.purchaseExp = purchaseExp;
-    }
-
-    public byte getpBlockReason() {
-        return pBlockReason;
-    }
-
-    public void setpBlockReason(byte pBlockReason) {
-        this.pBlockReason = pBlockReason;
-    }
-
-    public byte getGradeCode() {
-        return gradeCode;
-    }
-
-    public void setGradeCode(byte gradeCode) {
-        this.gradeCode = gradeCode;
-    }
-
-    public long getChatUnblockDate() {
-        return chatUnblockDate;
-    }
-
-    public void setChatUnblockDate(long chatUnblockDate) {
-        this.chatUnblockDate = chatUnblockDate;
-    }
-
-    public String getPic() {
-        return pic;
-    }
-
-    public void setPic(String pic) {
-        this.pic = pic;
-    }
-
-    public int getCharacterSlots() {
-        return characterSlots;
-    }
-
-    public void setCharacterSlots(int characterSlots) {
-        this.characterSlots = characterSlots;
-    }
-
-    public long getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(long creationDate) {
-        this.creationDate = creationDate;
     }
 
     public List<Character> getCharacters() {
@@ -255,7 +156,7 @@ public class Account {
     public PicStatus getPicStatus() {
         PicStatus picStatus;
         String pic = getPic();
-        if(pic == null || pic.length() == 0) {
+        if (pic == null || pic.length() == 0) {
             picStatus = PicStatus.CREATE_PIC;
         } else {
             picStatus = PicStatus.ENTER_PIC;

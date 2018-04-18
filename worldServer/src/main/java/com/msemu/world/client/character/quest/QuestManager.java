@@ -9,8 +9,7 @@ import com.msemu.world.client.character.quest.rewards.IQuestReward;
 import com.msemu.world.client.life.Mob;
 import com.msemu.world.data.ItemData;
 import com.msemu.world.data.QuestData;
-import com.msemu.world.enums.QuestStatus;
-import com.msemu.world.network.packets.WvsContext.messages.QuestRecordMessage;
+import com.msemu.core.network.packets.out.WvsContext.messages.QuestRecordMessage;
 
 import javax.persistence.*;
 import java.util.*;

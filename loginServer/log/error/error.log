@@ -1,30 +1,43 @@
-2018-04-14 22:05:05,545 ERROR com.msemu.commons.utils.ClassUtils 27 singletonInstance - Error while calling singleton instance of DatabaseFactory java.lang.reflect.InvocationTargetException: null
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:1.8.0_60]
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:1.8.0_60]
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:1.8.0_60]
-	at java.lang.reflect.Method.invoke(Method.java:497) ~[?:1.8.0_60]
-	at com.msemu.commons.utils.ClassUtils.singletonInstance(ClassUtils.java:25) ~[classes/:?]
-	at com.msemu.core.startup.StartModule.init(StartModule.java:29) ~[classes/:?]
-	at java.util.ArrayList.forEach(ArrayList.java:1249) [?:1.8.0_60]
-	at com.msemu.core.startup.StartupInstance.runLevel(StartupInstance.java:30) [classes/:?]
-	at com.msemu.core.startup.StartupManager.startup(StartupManager.java:78) [classes/:?]
-	at com.msemu.login.LoginServer.<init>(LoginServer.java:17) [classes/:?]
-	at com.msemu.login.LoginServer.main(LoginServer.java:23) [classes/:?]
-Caused by: org.hibernate.AnnotationException: Use of @OneToMany or @ManyToMany targeting an unmapped class: com.msemu.login.client.Account.characters[com.msemu.login.client.character.Character]
-	at org.hibernate.cfg.annotations.CollectionBinder.bindManyToManySecondPass(CollectionBinder.java:1253) ~[hibernate-core-5.2.12.Final.jar:5.2.12.Final]
-	at org.hibernate.cfg.annotations.CollectionBinder.bindStarToManySecondPass(CollectionBinder.java:810) ~[hibernate-core-5.2.12.Final.jar:5.2.12.Final]
-	at org.hibernate.cfg.annotations.CollectionBinder$1.secondPass(CollectionBinder.java:735) ~[hibernate-core-5.2.12.Final.jar:5.2.12.Final]
-	at org.hibernate.cfg.CollectionSecondPass.doSecondPass(CollectionSecondPass.java:54) ~[hibernate-core-5.2.12.Final.jar:5.2.12.Final]
-	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.processSecondPasses(InFlightMetadataCollectorImpl.java:1621) ~[hibernate-core-5.2.12.Final.jar:5.2.12.Final]
-	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.processSecondPasses(InFlightMetadataCollectorImpl.java:1589) ~[hibernate-core-5.2.12.Final.jar:5.2.12.Final]
-	at org.hibernate.boot.model.process.spi.MetadataBuildingProcess.complete(MetadataBuildingProcess.java:278) ~[hibernate-core-5.2.12.Final.jar:5.2.12.Final]
-	at org.hibernate.boot.model.process.spi.MetadataBuildingProcess.build(MetadataBuildingProcess.java:83) ~[hibernate-core-5.2.12.Final.jar:5.2.12.Final]
-	at org.hibernate.boot.internal.MetadataBuilderImpl.build(MetadataBuilderImpl.java:418) ~[hibernate-core-5.2.12.Final.jar:5.2.12.Final]
-	at org.hibernate.boot.internal.MetadataBuilderImpl.build(MetadataBuilderImpl.java:87) ~[hibernate-core-5.2.12.Final.jar:5.2.12.Final]
-	at org.hibernate.cfg.Configuration.buildSessionFactory(Configuration.java:691) ~[hibernate-core-5.2.12.Final.jar:5.2.12.Final]
-	at org.hibernate.cfg.Configuration.buildSessionFactory(Configuration.java:726) ~[hibernate-core-5.2.12.Final.jar:5.2.12.Final]
-	at com.msemu.commons.database.DatabaseFactory.initializeDatabase(DatabaseFactory.java:60) ~[classes/:?]
-	at com.msemu.commons.database.DatabaseFactory.<init>(DatabaseFactory.java:31) ~[classes/:?]
-	at com.msemu.commons.database.DatabaseFactory.getInstance(DatabaseFactory.java:41) ~[classes/:?]
-	... 11 more
-
+2018-04-19 01:13:59,452 ERROR com.msemu.commons.network.handler.ClientPacketHandler 56 unknownPacket - [UNKNOWN PACKET] : received 0x66, state=CONNECTED
+2018-04-19 01:13:59,453 ERROR com.msemu.commons.network.Connection 102 channelRead - [In][Unknown]	| null, 102/0x66	| null
+2018-04-19 01:13:59,453 ERROR com.msemu.commons.network.handler.ClientPacketHandler 56 unknownPacket - [UNKNOWN PACKET] : received 0x67, state=CONNECTED
+2018-04-19 01:13:59,454 ERROR com.msemu.commons.network.Connection 102 channelRead - [In][Unknown]	| null, 103/0x67	| null
+2018-04-19 01:14:07,756 ERROR com.msemu.commons.network.handler.ClientPacketHandler 56 unknownPacket - [UNKNOWN PACKET] : received 0x90, state=CONNECTED
+2018-04-19 01:14:07,756 ERROR com.msemu.commons.network.Connection 102 channelRead - [In][Unknown]	| CheckOTPForWebLaunchingRequest, 144/0x90	| null
+2018-04-19 01:14:08,100 ERROR com.msemu.commons.network.handler.ClientPacketHandler 56 unknownPacket - [UNKNOWN PACKET] : received 0x66, state=CONNECTED
+2018-04-19 01:14:08,101 ERROR com.msemu.commons.network.Connection 102 channelRead - [In][Unknown]	| null, 102/0x66	| null
+2018-04-19 01:14:08,513 ERROR com.msemu.commons.network.handler.ClientPacketHandler 56 unknownPacket - [UNKNOWN PACKET] : received 0x66, state=CONNECTED
+2018-04-19 01:14:08,514 ERROR com.msemu.commons.network.Connection 102 channelRead - [In][Unknown]	| null, 102/0x66	| null
+2018-04-19 01:14:08,679 ERROR com.msemu.commons.network.handler.ClientPacketHandler 56 unknownPacket - [UNKNOWN PACKET] : received 0xa9, state=CONNECTED
+2018-04-19 01:14:08,679 ERROR com.msemu.commons.network.Connection 102 channelRead - [In][Unknown]	| null, 169/0xA9	| null
+2018-04-19 01:15:52,340 ERROR com.msemu.commons.network.handler.ClientPacketHandler 56 unknownPacket - [UNKNOWN PACKET] : received 0x66, state=CONNECTED
+2018-04-19 01:15:52,340 ERROR com.msemu.commons.network.Connection 102 channelRead - [In][Unknown]	| null, 102/0x66	| null
+2018-04-19 01:15:52,340 ERROR com.msemu.commons.network.handler.ClientPacketHandler 56 unknownPacket - [UNKNOWN PACKET] : received 0x67, state=CONNECTED
+2018-04-19 01:15:52,341 ERROR com.msemu.commons.network.Connection 102 channelRead - [In][Unknown]	| null, 103/0x67	| null
+2018-04-19 01:15:52,341 ERROR com.msemu.commons.network.handler.ClientPacketHandler 56 unknownPacket - [UNKNOWN PACKET] : received 0x90, state=CONNECTED
+2018-04-19 01:15:52,341 ERROR com.msemu.commons.network.Connection 102 channelRead - [In][Unknown]	| CheckOTPForWebLaunchingRequest, 144/0x90	| null
+2018-04-19 01:15:52,346 ERROR com.msemu.commons.network.handler.ClientPacketHandler 56 unknownPacket - [UNKNOWN PACKET] : received 0xa2, state=CONNECTED
+2018-04-19 01:15:52,347 ERROR com.msemu.commons.network.Connection 102 channelRead - [In][Unknown]	| BackToLogin, 162/0xA2	| null
+2018-04-19 01:17:46,576 ERROR com.msemu.commons.network.Connection 102 channelRead - [In][Unknown]	| null, 102/0x66	| null
+2018-04-19 01:17:46,576 ERROR com.msemu.commons.network.Connection 102 channelRead - [In][Unknown]	| null, 103/0x67	| null
+2018-04-19 01:17:46,577 ERROR com.msemu.commons.network.Connection 102 channelRead - [In][Unknown]	| CheckOTPForWebLaunchingRequest, 144/0x90	| null
+2018-04-19 01:17:46,581 ERROR com.msemu.commons.network.Connection 102 channelRead - [In][Unknown]	| BackToLogin, 162/0xA2	| null
+2018-04-19 01:18:53,207 ERROR com.msemu.commons.network.Connection 103 channelRead - [In][Unknown]	| null, 102/0x66	| null
+2018-04-19 01:18:53,208 ERROR com.msemu.commons.network.Connection 103 channelRead - [In][Unknown]	| null, 103/0x67	| null
+2018-04-19 01:18:53,208 ERROR com.msemu.commons.network.Connection 103 channelRead - [In][Unknown]	| CheckOTPForWebLaunchingRequest, 144/0x90	| null
+2018-04-19 01:18:53,213 ERROR com.msemu.commons.network.Connection 103 channelRead - [In][Unknown]	| BackToLogin, 162/0xA2	| null
+2018-04-19 01:21:07,553 ERROR com.msemu.commons.network.Connection 102 channelRead - [In][Unknown]	| null, 102/0x66
+	[All]	66 0 2 1 0 0 0 0 0 0 0 1 0 0 0 
+	[ASCII]	f..............
+2018-04-19 01:21:07,554 ERROR com.msemu.commons.network.Connection 102 channelRead - [In][Unknown]	| null, 103/0x67
+	[All]	67 0 6 ca 0 1 0 0 
+	[ASCII]	g..�....
+2018-04-19 01:21:07,554 ERROR com.msemu.commons.network.Connection 102 channelRead - [In][Unknown]	| CheckOTPForWebLaunchingRequest, 144/0x90
+	[All]	90 0 27 0 31 30 35 35 2d 31 35 30 44 2d 44 42 37 34 2d 39 45 38 37 2d 37 35 35 45 2d 41 35 45 32 2d 30 30 33 38 2d 45 34 41 31 
+	[ASCII]	�.'.1055-150D-DB74-9E87-755E-A5E2-0038-E4A1
+2018-04-19 01:21:07,558 ERROR com.msemu.commons.network.Connection 102 channelRead - [In][Unknown]	| BackToLogin, 162/0xA2
+	[All]	a2 0 5 0 61 64 6d 69 6e 
+	[ASCII]	�...admin
+2018-04-19 01:21:36,985 ERROR com.msemu.commons.network.Connection 102 channelRead - [In][Unknown]	| CheckSPWExistRequest, 109/0x6D
+	[All]	6d 0 
+	[ASCII]	m.

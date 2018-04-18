@@ -3,6 +3,8 @@ package com.msemu.login.client.character;
 import com.msemu.commons.database.Schema;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.utils.types.FileTime;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -18,22 +20,40 @@ public class NonCombatStatDayLimit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
+    @Getter
+    @Setter
     private int id;
     @Column(name = "charisma")
+    @Getter
+    @Setter
     private short charisma;
+    @Getter
+    @Setter
     @Column(name = "charm")
     private short charm;
+    @Getter
+    @Setter
     @Column(name = "insight")
     private short insight;
+    @Getter
+    @Setter
     @Column(name = "will")
     private short will;
+    @Getter
+    @Setter
     @Column(name = "craft")
     private short craft;
+    @Getter
+    @Setter
     @Column(name = "sense")
     private short sense;
+    @Getter
+    @Setter
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "ftLastUpdateCharmByCashPR")
     private FileTime ftLastUpdateCharmByCashPR;
+    @Getter
+    @Setter
     @Column(name = "charmByCashPR")
     private byte charmByCashPR;
 
@@ -52,62 +72,6 @@ public class NonCombatStatDayLimit {
         this((short) 0, (short) 0, (byte) 0, (short) 0, (short) 0, (short) 0, (short) 0, FileTime.getFTFromLong(0));
     }
 
-    public short getCharm() {
-        return charm;
-    }
-
-    public void setCharm(short charm) {
-        this.charm = charm;
-    }
-
-    public byte getCharmByCashPR() {
-        return charmByCashPR;
-    }
-
-    public void setCharmByCashPR(byte charmByCashPR) {
-        this.charmByCashPR = charmByCashPR;
-    }
-
-    public short getInsight() {
-        return insight;
-    }
-
-    public void setInsight(short insight) {
-        this.insight = insight;
-    }
-
-    public short getWill() {
-        return will;
-    }
-
-    public void setWill(short will) {
-        this.will = will;
-    }
-
-    public short getCraft() {
-        return craft;
-    }
-
-    public void setCraft(short craft) {
-        this.craft = craft;
-    }
-
-    public short getSense() {
-        return sense;
-    }
-
-    public void setSense(short sense) {
-        this.sense = sense;
-    }
-
-    public FileTime getFtLastUpdateCharmByCashPR() {
-        return ftLastUpdateCharmByCashPR;
-    }
-
-    public void setFtLastUpdateCharmByCashPR(FileTime ftLastUpdateCharmByCashPR) {
-        this.ftLastUpdateCharmByCashPR = ftLastUpdateCharmByCashPR;
-    }
-
     public void encode(OutPacket outPacket) {
         outPacket.encodeShort(getCharisma());
         outPacket.encodeShort(getInsight());
@@ -119,20 +83,4 @@ public class NonCombatStatDayLimit {
         getFtLastUpdateCharmByCashPR().encode(outPacket);
     }
 
-    public short getCharisma() {
-        return charisma;
-    }
-
-    public void setCharisma(short charisma) {
-        this.charisma = charisma;
-    }
-
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 }

@@ -2,7 +2,7 @@ package com.msemu.world.client.character.skills;
 
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.world.client.character.Character;
-import com.msemu.world.network.packets.UserPool.UserLocal.IncLarknessResponse;
+import com.msemu.core.network.packets.out.UserPool.UserLocal.IncLarknessResponse;
 
 /**
  * Created by Weber on 2018/4/11.

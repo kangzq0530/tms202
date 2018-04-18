@@ -8,8 +8,8 @@ import com.msemu.world.client.character.skills.SkillInfo;
 import com.msemu.world.client.life.Mob;
 import com.msemu.world.data.SkillData;
 import com.msemu.world.enums.MobStat;
-import com.msemu.world.network.packets.MobPool.MobStatReset;
-import com.msemu.world.network.packets.MobPool.MobStatSet;
+import com.msemu.core.network.packets.out.MobPool.MobStatReset;
+import com.msemu.core.network.packets.out.MobPool.MobStatSet;
 
 
 import java.util.*;

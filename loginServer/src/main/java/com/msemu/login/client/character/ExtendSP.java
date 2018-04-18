@@ -2,6 +2,8 @@ package com.msemu.login.client.character;
 
 import com.msemu.commons.database.Schema;
 import com.msemu.commons.network.packets.OutPacket;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -17,9 +19,13 @@ public class ExtendSP {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
+    @Getter
+    @Setter
     private int id;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "extendsp_id")
+    @Getter
+    @Setter
     private List<SPSet> spSet;
 
     public ExtendSP() {
@@ -33,17 +39,10 @@ public class ExtendSP {
         }
     }
 
-    public List<SPSet> getSpSet() {
-        return spSet;
-    }
-
     public int getTotalSp() {
         return spSet.stream().mapToInt(SPSet::getSp).sum();
     }
 
-    public void setSpSet(List<SPSet> spSet) {
-        this.spSet = spSet;
-    }
 
     public void encode(OutPacket outPacket) {
         outPacket.encodeByte(getSpSet().size());
@@ -53,13 +52,6 @@ public class ExtendSP {
         }
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public void setSpToJobLevel(int jobLevel, int sp) {
         SPSet spSet = getSpSet().stream().filter(sps -> sps.getJobLevel() == jobLevel).findFirst().orElse(null);

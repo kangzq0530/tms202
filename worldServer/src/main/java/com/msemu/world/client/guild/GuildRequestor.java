@@ -2,6 +2,8 @@ package com.msemu.world.client.guild;
 
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.world.client.character.Character;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -13,27 +15,47 @@ import javax.persistence.*;
 public class GuildRequestor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter
+    @Setter
     private int id;
+
     @Column(name = "charID")
+    @Getter
+    @Setter
     private int charID;
+
     @Column(name = "name")
+    @Getter
+    @Setter
     private String name;
+
     @Column(name = "job")
+    @Getter
+    @Setter
     private int job;
+
     @Column(name = "level")
+    @Getter
+    @Setter
     private int level;
+
     @Column(name = "loggedIn")
+    @Getter
+    @Setter
     private boolean online;
 
+
+    @Getter
+    @Setter
     @Transient
-    private Character chr;
+    private Character character;
 
     public GuildRequestor() {
     }
 
-    public GuildRequestor(Character chr) {
-        this.chr = chr;
-        updateInfoFromChar(chr);
+    public GuildRequestor(Character character) {
+        this.character = character;
+        updateInfoFromChar(character);
     }
 
     public void updateInfoFromChar(Character chr) {
@@ -44,13 +66,6 @@ public class GuildRequestor {
         setOnline(chr.isOnline());
     }
 
-    public Character getCharacter() {
-        return chr;
-    }
-
-    public void setChracter(Character chr) {
-        this.chr = chr;
-    }
 
     public void encode(OutPacket outPacket) {
         outPacket.encodeString(getName(), 13);
@@ -71,51 +86,4 @@ public class GuildRequestor {
         return obj instanceof GuildMember && ((GuildMember) obj).getCharacter().equals(getCharacter());
     }
 
-    public int getCharID() {
-        return charID;
-    }
-
-    public void setCharID(int charID) {
-        this.charID = charID;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getJob() {
-        return job;
-    }
-
-    public void setJob(int job) {
-        this.job = job;
-    }
-
-    public int getLevel() {
-        return level;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
-    }
-
-    public void setOnline(boolean online) {
-        this.online = online;
-    }
-
-    public boolean isOnline() {
-        return online;
-    }
 }

@@ -18,8 +18,8 @@ import com.msemu.world.client.life.skills.MobTemporaryStat;
 import com.msemu.world.data.SkillData;
 import com.msemu.world.enums.ChatMsgColor;
 import com.msemu.world.enums.MobStat;
-import com.msemu.world.network.packets.WvsContext.ModCombo;
-import com.msemu.world.network.packets.WvsContext.TemporaryStatSet;
+import com.msemu.core.network.packets.out.WvsContext.ModCombo;
+import com.msemu.core.network.packets.out.WvsContext.TemporaryStatSet;
 
 import java.util.Arrays;
 

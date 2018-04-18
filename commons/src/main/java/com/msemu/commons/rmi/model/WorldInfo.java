@@ -115,6 +115,7 @@ public class WorldInfo implements Serializable {
         this.worldEventExpWSE = worldInfo.getWorldEventExpWSE();
         this.worldEventDropWSE = worldInfo.getWorldEventDropWSE();
         this.serverType = worldInfo.getServerType();
+        this.setChannels(worldInfo.getChannels());
         this.state = worldInfo.getState();
     }
 }

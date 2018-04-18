@@ -16,7 +16,9 @@ import com.msemu.world.client.character.skills.Skill;
 import com.msemu.world.client.character.skills.TemporaryStatManager;
 import com.msemu.world.client.field.Field;
 import com.msemu.world.client.field.Portal;
+import com.msemu.world.client.guild.GuildMember;
 import com.msemu.world.client.guild.operations.GuildUpdate;
+import com.msemu.world.client.guild.operations.GuildUpdateMemberLogin;
 import com.msemu.world.client.jobs.Job;
 import com.msemu.world.client.life.AffectedArea;
 import com.msemu.world.client.life.Pet;
@@ -27,13 +29,15 @@ import com.msemu.world.constants.SkillConstants;
 import com.msemu.world.data.ItemData;
 import com.msemu.world.data.SkillData;
 import com.msemu.world.enums.*;
-import com.msemu.world.network.packets.Stage.SetField;
-import com.msemu.world.network.packets.UserPool.UserEnterField;
-import com.msemu.world.network.packets.UserPool.UserLocal.ChatMsg;
-import com.msemu.world.network.packets.WvsContext.GuildResult;
-import com.msemu.world.network.packets.WvsContext.InventoryOperation;
-import com.msemu.world.network.packets.WvsContext.StatChanged;
-import com.msemu.world.network.packets.WvsContext.messages.IncExpMessage;
+import com.msemu.core.network.packets.out.Stage.SetField;
+import com.msemu.core.network.packets.out.UserPool.UserEnterField;
+import com.msemu.core.network.packets.out.UserPool.UserLocal.ChatMsg;
+import com.msemu.core.network.packets.out.WvsContext.GuildResult;
+import com.msemu.core.network.packets.out.WvsContext.InventoryOperation;
+import com.msemu.core.network.packets.out.WvsContext.StatChanged;
+import com.msemu.core.network.packets.out.WvsContext.messages.IncExpMessage;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.*;
@@ -53,114 +57,230 @@ public class Character {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
+    @Getter
+    @Setter
     private int id;
 
     @Column(name = "accId")
+    @Getter
+    @Setter
     private int accId;
 
     @JoinColumn(name = "questManager")
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @Getter
+    @Setter
     private QuestManager questManager;
 
     @JoinColumn(name = "equippedInventory")
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @Getter
+    @Setter
     private Inventory equippedInventory = new Inventory(InvType.EQUIPPED, 50);
 
     @JoinColumn(name = "equipInventory")
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @Getter
+    @Setter
     private Inventory equipInventory = new Inventory(InvType.EQUIP, 50);
 
     @JoinColumn(name = "consumeInventory")
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @Getter
+    @Setter
     private Inventory consumeInventory = new Inventory(InvType.CONSUME, 50);
 
     @JoinColumn(name = "etcInventory")
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @Getter
+    @Setter
     private Inventory etcInventory = new Inventory(InvType.ETC, 50);
 
     @JoinColumn(name = "installInventory")
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @Getter
+    @Setter
     private Inventory installInventory = new Inventory(InvType.INSTALL, 50);
 
     @JoinColumn(name = "cashInventory")
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @Getter
+    @Setter
     private Inventory cashInventory = new Inventory(InvType.CASH, 50);
 
     @JoinColumn(name = "avatarData")
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @Getter
+    @Setter
     private AvatarData avatarData;
+
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @Getter
+    @Setter
     private FuncKeyMap funcKeyMap;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "charId")
+    @Getter
+    @Setter
     private List<Skill> skills;
 
     @JoinColumn(name = "guild")
     @OneToOne(cascade = CascadeType.ALL)
+    @Getter
+    @Setter
     private Guild guild;
 
     @Transient
+    @Getter
+    @Setter
     private GameClient client;
 
     @Transient
+    @Getter
+    @Setter
     private Ranking ranking;
+
     @Transient
+    @Getter
+    @Setter
     private int combatOrders;
+
     @Transient
+    @Getter
+    @Setter
     private List<Skill> stolenSkills;
+
     @Transient
+    @Getter
+    @Setter
     private List<Skill> chosenSkills;
+
     @Transient
+    @Getter
+    @Setter
     private List<ItemPot> itemPots;
+
     @Transient
+    @Getter
+    @Setter
     private List<Pet> pets;
+
     @Transient
+    @Getter
+    @Setter
     private List<FriendRecord> friends;
+
     @Transient
+    @Getter
+    @Setter
     private List<ExpConsumeItem> expConsumeItems;
+
     @Transient
+    @Getter
+    @Setter
     private List<MonsterBattleMobInfo> monsterBattleMobInfos;
+
     @Transient
+    @Getter
+    @Setter
     private MonsterBattleLadder monsterBattleLadder;
+
     @Transient
+    @Getter
+    @Setter
     private MonsterBattleRankInfo monsterBattleRankInfo;
+
     @Transient
+    @Getter
+    @Setter
     private Position position;
+
     @Transient
+    @Getter
+    @Setter
     private Position oldPosition;
+
     @Transient
+    @Getter
+    @Setter
     private Field field;
+
     @Transient
+    @Getter
+    @Setter
     private byte moveAction;
+
     @Transient
+    @Getter
+    @Setter
     private TemporaryStatManager temporaryStatManager;
+
     @Transient
+    @Getter
+    @Setter
     private Job jobHandler;
+
     @Transient
+    @Getter
+    @Setter
     private boolean left;
+
     @Transient
+    @Getter
+    @Setter
     private MarriageRecord marriageRecord;
+
     @Transient
+    @Getter
+    @Setter
     private WildHunterInfo wildHunterInfo;
+
     @Transient
+    @Getter
+    @Setter
     private ZeroInfo zeroInfo;
+
     @Transient
+    @Getter
+    @Setter
     private int nickItem;
+
     @Transient
+    @Getter
+    @Setter
     private int damageSkin;
+
     @Transient
+    @Getter
+    @Setter
     private int premiumDamageSkin;
+
     @Transient
+    @Getter
+    @Setter
     private boolean partyInvitable;
+
     @Transient
+    @Getter
+    @Setter
     private ScriptManager scriptManager = new ScriptManager(this);
+
     @Transient
+    @Getter
+    @Setter
     private int driverID;
+
     @Transient
+    @Getter
+    @Setter
     private int passengerID;
+
     @Transient
+    @Getter
+    @Setter
     private int chocoCount;
+
     @Transient
     private int activeEffectItemID;
     @Transient
@@ -237,181 +357,6 @@ public class Character {
         avatarData.setAvatarLook(new AvatarLook());
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getAccId() {
-        return accId;
-    }
-
-    public void setAccId(int accId) {
-        this.accId = accId;
-    }
-
-    public QuestManager getQuestManager() {
-        return questManager;
-    }
-
-    public void setQuestManager(QuestManager questManager) {
-        this.questManager = questManager;
-    }
-
-    public Inventory getEquippedInventory() {
-        return equippedInventory;
-    }
-
-    public void setEquippedInventory(Inventory equippedInventory) {
-        this.equippedInventory = equippedInventory;
-    }
-
-    public Inventory getEquipInventory() {
-        return equipInventory;
-    }
-
-    public void setEquipInventory(Inventory equipInventory) {
-        this.equipInventory = equipInventory;
-    }
-
-    public Inventory getConsumeInventory() {
-        return consumeInventory;
-    }
-
-    public void setConsumeInventory(Inventory consumeInventory) {
-        this.consumeInventory = consumeInventory;
-    }
-
-    public Inventory getEtcInventory() {
-        return etcInventory;
-    }
-
-    public void setEtcInventory(Inventory etcInventory) {
-        this.etcInventory = etcInventory;
-    }
-
-    public Inventory getInstallInventory() {
-        return installInventory;
-    }
-
-    public void setInstallInventory(Inventory installInventory) {
-        this.installInventory = installInventory;
-    }
-
-    public Inventory getCashInventory() {
-        return cashInventory;
-    }
-
-    public void setCashInventory(Inventory cashInventory) {
-        this.cashInventory = cashInventory;
-    }
-
-    public AvatarData getAvatarData() {
-        return avatarData;
-    }
-
-    public void setAvatarData(AvatarData avatarData) {
-        this.avatarData = avatarData;
-    }
-
-    public FuncKeyMap getFuncKeyMap() {
-        return funcKeyMap;
-    }
-
-    public void setFuncKeyMap(FuncKeyMap funcKeyMap) {
-        this.funcKeyMap = funcKeyMap;
-    }
-
-    public void setCombatOrders(int combatOrders) {
-        this.combatOrders = combatOrders;
-    }
-
-    public int getCombatOrders() {
-        return combatOrders;
-    }
-
-    public List<Skill> getStolenSkills() {
-        return stolenSkills;
-    }
-
-    public List<Skill> getChosenSkills() {
-        return chosenSkills;
-    }
-
-    public void setChosenSkills(List<Skill> chosenSkills) {
-        this.chosenSkills = chosenSkills;
-    }
-
-    public void setQuests(QuestManager questManager) {
-        this.questManager = questManager;
-    }
-
-    public List<ItemPot> getItemPots() {
-        return null;
-    }
-
-    public void setItemPots(List<ItemPot> itemPots) {
-        this.itemPots = itemPots;
-    }
-
-    public List<Pet> getPets() {
-        return pets;
-    }
-
-    public void setPets(List<Pet> pets) {
-        this.pets = pets;
-    }
-
-    public List<FriendRecord> getFriends() {
-        return friends;
-    }
-
-    public void setFriends(List<FriendRecord> friends) {
-        this.friends = friends;
-    }
-
-    public List<ExpConsumeItem> getExpConsumeItems() {
-        return expConsumeItems;
-    }
-
-    public void setExpConsumeItems(List<ExpConsumeItem> expConsumeItems) {
-        this.expConsumeItems = expConsumeItems;
-    }
-
-    public List<MonsterBattleMobInfo> getMonsterBattleMobInfos() {
-        return monsterBattleMobInfos;
-    }
-
-    public void setMonsterBattleMobInfos(List<MonsterBattleMobInfo> monsterBattleMobInfos) {
-        this.monsterBattleMobInfos = monsterBattleMobInfos;
-    }
-
-    public MonsterBattleLadder getMonsterBattleLadder() {
-        return monsterBattleLadder;
-    }
-
-    public void setMonsterBattleLadder(MonsterBattleLadder monsterBattleLadder) {
-        this.monsterBattleLadder = monsterBattleLadder;
-    }
-
-    public MonsterBattleRankInfo getMonsterBattleRankInfo() {
-        return monsterBattleRankInfo;
-    }
-
-    public void setMonsterBattleRankInfo(MonsterBattleRankInfo monsterBattleRankInfo) {
-        this.monsterBattleRankInfo = monsterBattleRankInfo;
-    }
-
-    public Guild getGuild() {
-        return guild;
-    }
-
-    public void setGuild(Guild guild) {
-        this.guild = guild;
-    }
 
     public String getName() {
         return getAvatarData().getCharacterStat().getName();
@@ -437,23 +382,10 @@ public class Character {
         return getQuestManager().hasQuestInProgress(questReq);
     }
 
-
-    public GameClient getClient() {
-        return client;
-    }
-
-    public void setClient(GameClient client) {
-        this.client = client;
-    }
-
     public void write(OutPacket outPacket) {
         if (getClient() != null) {
             getClient().write(outPacket);
         }
-    }
-
-    public boolean isOnline() {
-        return online;
     }
 
     public ExpIncreaseInfo getExpIncreaseInfo() {
@@ -1773,6 +1705,22 @@ public class Character {
 
     }
 
+    public boolean isOnline() {
+        return online;
+    }
+
+    public void setOnline(boolean online) {
+        if(getGuild() != null) {
+            Guild g = getGuild();
+            GuildMember gm = g.getMemberByID(getId());
+            gm.setOnline(online);
+            gm.setCharacter(online ? this : null);
+            getGuild().broadcast(new GuildResult(
+                    new GuildUpdateMemberLogin(g.getId(), getId(), online, !this.online && online)), this);
+        }
+        this.online = online;
+    }
+
     private String getBlessingOfFairy() {
         //TODO
         return null;
@@ -1781,6 +1729,13 @@ public class Character {
     private String getBlessingOfEmpress() {
         // TODO
         return null;
+    }
+
+    public void logout() {
+        setOnline(false);
+        getField().removeCharacter(this);
+        DatabaseFactory.getInstance().saveToDB(this);
+        getClient().getChannelInstance().removeCharacter(this);
     }
 }
 

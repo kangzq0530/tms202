@@ -5,6 +5,8 @@ import com.msemu.commons.database.Schema;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.login.constants.ItemConstants;
 import com.msemu.login.constants.MapleJob;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;
@@ -19,267 +21,117 @@ public class AvatarLook {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter
+    @Setter
     @Column(name = "id")
     private int id;
+    @Getter
+    @Setter
     @Column(name = "gender")
     private int gender;
+    @Getter
+    @Setter
     @Column(name = "skin")
     private int skin;
+    @Getter
+    @Setter
     @Column(name = "face")
     private int face;
+    @Getter
+    @Setter
     @Column(name = "hair")
     private int hair;
+    @Getter
+    @Setter
     @Column(name = "weaponStickerId")
     private int weaponStickerId;
+    @Getter
+    @Setter
     @Column(name = "weaponId")
     private int weaponId;
+    @Getter
+    @Setter
     @Column(name = "subWeaponId")
     private int subWeaponId;
+    @Getter
+    @Setter
     @ElementCollection
     @CollectionTable(name = "hairEquips", joinColumns = @JoinColumn(name = "alId"))
     @Column(name = "equipId")
     private List<Integer> hairEquips;
+    @Getter
+    @Setter
     @ElementCollection
     @CollectionTable(name = "unseenEquips", joinColumns = @JoinColumn(name = "alId"))
     @Column(name = "equipId")
     private List<Integer> unseenEquips;
+    @Getter
+    @Setter
     @ElementCollection
     @CollectionTable(name = "petIDs", joinColumns = @JoinColumn(name = "alId"))
     @Column(name = "petId")
     private List<Integer> petIDs;
+    @Getter
+    @Setter
     @Column(name = "job")
     private int job;
+    @Getter
+    @Setter
     @Column(name = "drawElfEar")
     private boolean drawElfEar;
+    @Getter
+    @Setter
     @Column(name = "demonSlayerDefFaceAcc")
     private int demonSlayerDefFaceAcc;
+    @Getter
+    @Setter
     @Column(name = "xenonDefFaceAcc")
     private int xenonDefFaceAcc;
+    @Getter
+    @Setter
     @Column(name = "beastTamerDefFaceAcc")
     private int beastTamerDefFaceAcc;
+    @Getter
+    @Setter
     @Column(name = "isZeroBetaLook")
     private boolean isZeroBetaLook;
+    @Getter
+    @Setter
     @Column(name = "mixedHairColor")
     private int mixedHairColor;
+    @Getter
+    @Setter
     @Column(name = "mixHairPercent")
     private int mixHairPercent;
+    @Getter
+    @Setter
     @ElementCollection
     @CollectionTable(name = "totems", joinColumns = @JoinColumn(name = "alId"))
     @Column(name = "totemId")
     private List<Integer> totems;
+    @Getter
+    @Setter
     @Column(name = "ears")
     private int ears;
+    @Getter
+    @Setter
     @Column(name = "tail")
     private int tail;
 
-
+    @Getter
+    @Setter
     @Transient
     private int demonWingID;
+    @Getter
+    @Setter
     @Transient
     private int kaiserWingID;
+    @Getter
+    @Setter
     @Transient
     private int kaiserTailID;
 
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getGender() {
-        return gender;
-    }
-
-    public void setGender(int gender) {
-        this.gender = gender;
-    }
-
-    public int getSkin() {
-        return skin;
-    }
-
-    public void setSkin(int skin) {
-        this.skin = skin;
-    }
-
-    public int getFace() {
-        return face;
-    }
-
-    public void setFace(int face) {
-        this.face = face;
-    }
-
-    public int getHair() {
-        return hair;
-    }
-
-    public void setHair(int hair) {
-        this.hair = hair;
-    }
-
-    public int getWeaponStickerId() {
-        return weaponStickerId;
-    }
-
-    public void setWeaponStickerId(int weaponStickerId) {
-        this.weaponStickerId = weaponStickerId;
-    }
-
-    public int getWeaponId() {
-        return weaponId;
-    }
-
-    public void setWeaponId(int weaponId) {
-        this.weaponId = weaponId;
-    }
-
-    public int getSubWeaponId() {
-        return subWeaponId;
-    }
-
-    public void setSubWeaponId(int subWeaponId) {
-        this.subWeaponId = subWeaponId;
-    }
-
-    public List<Integer> getHairEquips() {
-        return hairEquips;
-    }
-
-    public void setHairEquips(List<Integer> hairEquips) {
-        this.hairEquips = hairEquips;
-    }
-
-    public List<Integer> getUnseenEquips() {
-        return unseenEquips;
-    }
-
-    public void setUnseenEquips(List<Integer> unseenEquips) {
-        this.unseenEquips = unseenEquips;
-    }
-
-    public List<Integer> getPetIDs() {
-        return petIDs;
-    }
-
-    public void setPetIDs(List<Integer> petIDs) {
-        this.petIDs = petIDs;
-    }
-
-    public int getJob() {
-        return job;
-    }
-
-    public void setJob(int job) {
-        this.job = job;
-    }
-
-    public boolean isDrawElfEar() {
-        return drawElfEar;
-    }
-
-    public void setDrawElfEar(boolean drawElfEar) {
-        this.drawElfEar = drawElfEar;
-    }
-
-    public int getDemonSlayerDefFaceAcc() {
-        return demonSlayerDefFaceAcc;
-    }
-
-    public void setDemonSlayerDefFaceAcc(int demonSlayerDefFaceAcc) {
-        this.demonSlayerDefFaceAcc = demonSlayerDefFaceAcc;
-    }
-
-    public int getXenonDefFaceAcc() {
-        return xenonDefFaceAcc;
-    }
-
-    public void setXenonDefFaceAcc(int xenonDefFaceAcc) {
-        this.xenonDefFaceAcc = xenonDefFaceAcc;
-    }
-
-    public int getBeastTamerDefFaceAcc() {
-        return beastTamerDefFaceAcc;
-    }
-
-    public void setBeastTamerDefFaceAcc(int beastTamerDefFaceAcc) {
-        this.beastTamerDefFaceAcc = beastTamerDefFaceAcc;
-    }
-
-    public boolean isZeroBetaLook() {
-        return isZeroBetaLook;
-    }
-
-    public void setZeroBetaLook(boolean zeroBetaLook) {
-        isZeroBetaLook = zeroBetaLook;
-    }
-
-    public int getMixedHairColor() {
-        return mixedHairColor;
-    }
-
-    public void setMixedHairColor(int mixedHairColor) {
-        this.mixedHairColor = mixedHairColor;
-    }
-
-    public int getMixHairPercent() {
-        return mixHairPercent;
-    }
-
-    public void setMixHairPercent(int mixHairPercent) {
-        this.mixHairPercent = mixHairPercent;
-    }
-
-    public List<Integer> getTotems() {
-        return totems;
-    }
-
-    public void setTotems(List<Integer> totems) {
-        this.totems = totems;
-    }
-
-    public int getEars() {
-        return ears;
-    }
-
-    public void setEars(int ears) {
-        this.ears = ears;
-    }
-
-    public int getTail() {
-        return tail;
-    }
-
-    public void setTail(int tail) {
-        this.tail = tail;
-    }
-
-    public int getDemonWingID() {
-        return demonWingID;
-    }
-
-    public void setDemonWingID(int demonWingID) {
-        this.demonWingID = demonWingID;
-    }
-
-    public int getKaiserWingID() {
-        return kaiserWingID;
-    }
-
-    public void setKaiserWingID(int kaiserWingID) {
-        this.kaiserWingID = kaiserWingID;
-    }
-
-    public int getKaiserTailID() {
-        return kaiserTailID;
-    }
-
-    public void setKaiserTailID(int kaiserTailID) {
-        this.kaiserTailID = kaiserTailID;
-    }
 
     public void encode(OutPacket outPacket) {
         outPacket.encodeByte(getGender());

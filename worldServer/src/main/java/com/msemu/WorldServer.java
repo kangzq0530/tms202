@@ -12,10 +12,10 @@ import org.slf4j.LoggerFactory;
  */
 public class WorldServer {
     private static final Logger log = LoggerFactory.getLogger(WorldServer.class);
-    private IWorldServerRMI rmi;
+    private static WorldServerRMI rmi;
 
     public WorldServer() throws Exception {
-        this.rmi = new WorldServerRMI();
+        rmi = new WorldServerRMI();
         StartupManager.getInstance().startup(StartupLevel.class);
     }
 
@@ -25,5 +25,9 @@ public class WorldServer {
         } catch (Exception ex) {
             WorldServer.log.error("Error while starting MainServer", ex);
         }
+    }
+
+    public static WorldServerRMI getRmi() {
+        return rmi;
     }
 }

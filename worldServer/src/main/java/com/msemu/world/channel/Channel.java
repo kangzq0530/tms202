@@ -1,17 +1,18 @@
 package com.msemu.world.channel;
 
-import com.msemu.commons.network.netty.NettyClient;
 import com.msemu.commons.rmi.model.ChannelInfo;
-import com.msemu.commons.utils.types.Tuple;
 import com.msemu.core.configs.WorldConfig;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.field.Field;
 import com.msemu.world.data.FieldData;
+import lombok.Synchronized;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Created by Weber on 2018/3/18.
@@ -24,8 +25,8 @@ public class Channel {
     private int gaugePx, worldId, channelId;
     private boolean adultChannel;
     private List<Field> fields;
-    private Map<Integer, Tuple<Byte, NettyClient>> transfers;
-    private Map<Integer, Character> characters = new HashMap<>();
+    private Map<Integer, Character> transfers = new ConcurrentHashMap<>();
+    private Map<Integer, Character> characters = new ConcurrentHashMap<>();
 
     public Channel(String worldName, int worldId, int channelId) {
         this.name = worldName + "-" + channelId;
@@ -88,7 +89,48 @@ public class Channel {
         return name;
     }
 
+    public boolean isAccountOnPending(int accountId) {
+        return getPendingByAccId(accountId) != null;
+    }
+
+    @Synchronized
+    public List<Character> getPendings() {
+        return transfers.values().stream()
+                .collect(Collectors.toList());
+    }
+
+    public Character getPendingByAccId(int accountId) {
+        return getPendings().stream()
+                .filter(chr -> chr.getAccId() == accountId)
+                .findFirst()
+                .orElse(null);
+    }
+
+    public List<Character> getCharacters() {
+        return characters.values().stream().collect(Collectors.toList());
+    }
+
+    public Character getCharacterByAccId(int accountId) {
+        return getCharacters().stream()
+                .filter(chr -> chr.getAccId() == accountId)
+                .findFirst().orElse(null);
+    }
+
     public ChannelInfo getChannelInfo() {
-        return new ChannelInfo();
+        ChannelInfo channelInfo = new ChannelInfo();
+        channelInfo.setName(getName());
+        channelInfo.setChannel(getChannelId());
+        channelInfo.setConnectedClients(getCharacters().size());
+        channelInfo.setMaxConnectedClients(WorldConfig.CHANNEL_MAX_LOADING);
+        channelInfo.setWorldId(getWorldId());
+        return channelInfo;
+    }
+
+    public boolean isAccountOnChannel(int accountId) {
+        return getCharacterByAccId(accountId) != null;
+    }
+
+    public void removeCharacter(Character character) {
+        this.characters.remove(character.getAccId());
     }
 }

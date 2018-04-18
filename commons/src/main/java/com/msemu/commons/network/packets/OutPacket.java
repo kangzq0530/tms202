@@ -1,10 +1,13 @@
 package com.msemu.commons.network.packets;
 
 import com.msemu.commons.enums.OutHeader;
+import com.msemu.commons.network.Client;
 import com.msemu.commons.utils.HexUtils;
 import com.msemu.commons.utils.types.FileTime;
 import com.msemu.commons.utils.types.Position;
 import com.msemu.commons.utils.types.Rect;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -14,15 +17,18 @@ import java.util.Arrays;
 /**
  * Created by Weber on 2018/3/29.
  */
-public class OutPacket extends Packet {
+public class OutPacket<TClient extends Client<TClient>> extends Packet<TClient> {
+    @Getter
+    @Setter
+    private TClient client;
     private ByteArrayOutputStream baos;
     private boolean loopback = false;
     private boolean encryptedByShanda = false;
-    private short op;
+    private short opcode;
     private static final Logger log = LogManager.getRootLogger();
 
     /**
-     * Creates a new OutPacket with a given op. Immediately encodes the op.
+     * Creates a new OutPacket with a given opcode. Immediately encodes the opcode.
      *
      * @param op The opcode of this OutPacket.
      */
@@ -30,11 +36,11 @@ public class OutPacket extends Packet {
         super(new byte[]{});
         baos = new ByteArrayOutputStream();
         encodeShort(op);
-        this.op = op;
+        this.opcode = op;
     }
 
     /**
-     * Creates a new OutPacket with a given op. Immediately encodes the op.
+     * Creates a new OutPacket with a given opcode. Immediately encodes the opcode.
      *
      * @param op The opcode of this OutPacket.
      */
@@ -77,7 +83,7 @@ public class OutPacket extends Packet {
      */
     @Override
     public int getHeader() {
-        return op;
+        return opcode;
     }
 
     /**
@@ -237,11 +243,6 @@ public class OutPacket extends Packet {
         return baos.toByteArray();
     }
 
-    @Override
-    public Packet clone() {
-        return new OutPacket(getData());
-    }
-
     /**
      * Returns the length of the ByteArrayOutputStream.
      *
@@ -262,7 +263,7 @@ public class OutPacket extends Packet {
 
     @Override
     public String toString() {
-        return String.format("%s, 0x%s\t| %s\n\t%s", OutHeader.getOutHeaderByOp(op), Integer.toHexString(op).toUpperCase()
+        return String.format("%s, 0x%s\t\n\t[ALL]\t%s\n\t[ASCII]\t%s", OutHeader.getOutHeaderByOp(opcode), Integer.toHexString(opcode).toUpperCase()
                 , HexUtils.readableByteArray(Arrays.copyOfRange(getData(), 2, getData().length)), HexUtils.toAscii(getData()));
     }
 
@@ -328,7 +329,7 @@ public class OutPacket extends Packet {
     }
 
     public void encodeZeroBytes(int count) {
-        for(int i = 0 ; i < count; i++)
+        for (int i = 0; i < count; i++)
             encodeByte(0);
     }
 }

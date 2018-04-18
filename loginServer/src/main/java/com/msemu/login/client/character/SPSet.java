@@ -1,6 +1,8 @@
 package com.msemu.login.client.character;
 
 import com.msemu.commons.database.Schema;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -14,10 +16,16 @@ public class SPSet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
+    @Getter
+    @Setter
     private int id;
     @Column(name = "jobLevel")
+    @Getter
+    @Setter
     private byte jobLevel;
     @Column(name = "sp")
+    @Getter
+    @Setter
     private int sp;
 
     public SPSet() {
@@ -28,28 +36,5 @@ public class SPSet {
         this.sp = sp;
     }
 
-    public void setJobLevel(byte jobLevel) {
-        this.jobLevel = jobLevel;
-    }
-
-    public void setSp(int sp) {
-        this.sp = sp;
-    }
-
-    public byte getJobLevel() {
-        return jobLevel;
-    }
-
-    public int getSp() {
-        return sp;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 }
 

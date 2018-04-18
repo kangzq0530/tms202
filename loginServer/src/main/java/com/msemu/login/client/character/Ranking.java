@@ -1,14 +1,25 @@
 package com.msemu.login.client.character;
 
 import com.msemu.commons.network.packets.OutPacket;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Created by Weber on 2018/4/13.
  */
 public class Ranking {
+
+    @Getter
+    @Setter
     private int totRank;
+    @Getter
+    @Setter
     private int totRankGap;
+    @Getter
+    @Setter
     private int worldRank;
+    @Getter
+    @Setter
     private int worldRankGap;
 
     public Ranking(int totRank, int totRankGap, int worldRank, int worldRankGap) {
@@ -20,38 +31,6 @@ public class Ranking {
 
     public Ranking() {
         this(1,3,3,7);
-    }
-
-    public int getTotRank() {
-        return totRank;
-    }
-
-    public void setTotRank(int totRank) {
-        this.totRank = totRank;
-    }
-
-    public int getTotRankGap() {
-        return totRankGap;
-    }
-
-    public void setTotRankGap(int totRankGap) {
-        this.totRankGap = totRankGap;
-    }
-
-    public int getWorldRank() {
-        return worldRank;
-    }
-
-    public void setWorldRank(int worldRank) {
-        this.worldRank = worldRank;
-    }
-
-    public int getWorldRankGap() {
-        return worldRankGap;
-    }
-
-    public void setWorldRankGap(int worldRankGap) {
-        this.worldRankGap = worldRankGap;
     }
 
     public void encode(OutPacket outPacket) {

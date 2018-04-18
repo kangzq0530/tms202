@@ -1,12 +1,17 @@
 package com.msemu.commons.network.packets;
 
+import com.msemu.commons.network.Client;
 import com.msemu.commons.utils.HexUtils;
 
 /**
  * Created by Weber on 2018/3/23.
  */
-public class Packet implements Cloneable {
+public class Packet<TClient extends Client<TClient>> {
     private byte[] data;
+
+    public Packet() {
+        data = new byte[0];
+    }
 
     public Packet(byte[] data) {
         this.data = new byte[data.length];
@@ -41,8 +46,4 @@ public class Packet implements Cloneable {
         return "[Packet] | " + HexUtils.readableByteArray(data);
     }
 
-    @Override
-    public Packet clone() {
-        return new Packet(data);
-    }
 }

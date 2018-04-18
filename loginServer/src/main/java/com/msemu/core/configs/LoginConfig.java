@@ -7,7 +7,7 @@ import com.msemu.commons.config.annotation.ConfigProperty;
 /**
  * Created by Weber on 2018/3/14.
  */
-@ConfigFile(name = "configs/login.properties")
+@ConfigFile(name = "configs/Login.properties")
 public class LoginConfig {
 
 

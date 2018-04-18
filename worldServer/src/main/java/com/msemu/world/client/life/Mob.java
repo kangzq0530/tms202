@@ -13,9 +13,9 @@ import com.msemu.world.client.life.skills.ForcedMobStat;
 import com.msemu.world.client.life.skills.MobSkill;
 import com.msemu.world.client.life.skills.MobTemporaryStat;
 import com.msemu.world.enums.DeathType;
-import com.msemu.world.network.packets.CField.FieldEffect;
-import com.msemu.world.network.packets.MobPool.MobHpIndicator;
-import com.msemu.world.network.packets.MobPool.MobLeaveField;
+import com.msemu.core.network.packets.out.Field.FieldEffect;
+import com.msemu.core.network.packets.out.MobPool.MobHpIndicator;
+import com.msemu.core.network.packets.out.MobPool.MobLeaveField;
 
 import java.util.*;
 

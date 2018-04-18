@@ -2,12 +2,11 @@ package com.msemu.world.client.guild;
 
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.world.client.character.Character;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -18,53 +17,97 @@ import java.util.stream.Collectors;
 public class Guild {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter
+    @Setter
     private int id;
     @Column(name = "name")
+    @Getter
+    @Setter
     private String name;
     @JoinColumn(name = "leaderID")
+    @Getter
+    @Setter
     private int leaderID;
     @Column(name = "worldID")
+    @Getter
+    @Setter
     private int worldID;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @CollectionTable(name = "guildrequestors", joinColumns = @JoinColumn(name = "guildID"))
+    @Getter
+    @Setter
     private List<GuildRequestor> requestors = new ArrayList<>();
     @ElementCollection
     @CollectionTable(name = "gradeNames", joinColumns = @JoinColumn(name = "guildID"))
     @Column(name = "gradeName")
+    @Getter
+    @Setter
     private List<String> gradeNames = new ArrayList<>();
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "guildID")
+    @Getter
+    @Setter
     private List<GuildMember> members = new ArrayList<>();
     @Column(name = "markBg")
+    @Getter
+    @Setter
     private int markBg;
     @Column(name = "markBgColor")
+    @Getter
+    @Setter
     private int markBgColor;
     @Column(name = "mark")
+    @Getter
+    @Setter
     private int mark;
     @Column(name = "markColor")
+    @Getter
+    @Setter
     private int markColor;
     @Column(name = "maxMembers")
+    @Getter
+    @Setter
     private int maxMembers;
     @Column(name = "notice")
+    @Getter
+    @Setter
     private String notice;
     @Column(name = "points")
+    @Getter
+    @Setter
     private int points;
     @Column(name = "seasonPoints")
+    @Getter
+    @Setter
     private int seasonPoints;
     @Column(name = "allianceID")
+    @Getter
+    @Setter
     private int allianceID;
     @Column(name = "level")
+    @Getter
+    @Setter
     private int level;
     @Column(name = "rank")
+    @Getter
+    @Setter
     private int rank;
     @Column(name = "ggp")
+    @Getter
+    @Setter
     private int ggp;
     // Start GUILDSETTING struct
     @Column(name = "appliable")
+    @Getter
+    @Setter
     private boolean appliable;
     @Column(name = "joinSetting")
+    @Getter
+    @Setter
     private int joinSetting;
     @Column(name = "reqLevel")
+    @Getter
+    @Setter
     private int reqLevel;
     // End GUILDSETTING struct
 
@@ -72,21 +115,15 @@ public class Guild {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @CollectionTable(name = "guildskills")
     @MapKeyColumn(name = "skillID")
+    @Getter
+    @Setter
     private Map<Integer, GuildSkill> skills = new HashMap<>();
 
     public Guild() {
-        setGradeNames(new String[]{"Guild Master", "Junior", "Veteran", "Member", "Newbie"});
+        setGradeNames(Arrays.asList("Guild Master", "Junior", "Veteran", "Member", "Newbie"));
         setAppliable(true);
         setMaxMembers(10);
         setName("Default guild");
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public void encodeForRemote(OutPacket outPacket) {
@@ -132,10 +169,6 @@ public class Guild {
         }
     }
 
-    public List<GuildMember> getMembers() {
-        return members;
-    }
-
     public void addMember(GuildMember guildMember) {
         getMembers().add(guildMember);
         if(guildMember.getCharacter() != null && guildMember.getCharacter().getGuild() == null) {
@@ -175,14 +208,6 @@ public class Guild {
         return getMembers().stream().filter(gm -> gm.getCharacter().equals(chr)).findAny().orElse(null);
     }
 
-    public int getLeaderID() {
-        return leaderID;
-    }
-
-    public void setLeaderID(int leaderID) {
-        this.leaderID = leaderID;
-    }
-
     public void setLeader(GuildMember leader) {
         int oldGrade = leader.getGrade();
         if(getLeaderID() != 0) {
@@ -200,46 +225,6 @@ public class Guild {
         return getMembers().stream().filter(gm -> gm.getCharID() == id).findAny().orElse(null);
     }
 
-    public int getMarkBg() {
-        return markBg;
-    }
-
-    public void setMarkBg(int markBg) {
-        this.markBg = markBg;
-    }
-
-    public int getMarkBgColor() {
-        return markBgColor;
-    }
-
-    public void setMarkBgColor(int markBgColor) {
-        this.markBgColor = markBgColor;
-    }
-
-    public int getMark() {
-        return mark;
-    }
-
-    public void setMark(int mark) {
-        this.mark = mark;
-    }
-
-    public int getMarkColor() {
-        return markColor;
-    }
-
-    public void setMarkColor(int markColor) {
-        this.markColor = markColor;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public List<GuildMember> getOnlineMembers() {
         return getMembers().stream().filter(GuildMember::isOnline).collect(Collectors.toList());
     }
@@ -255,139 +240,10 @@ public class Guild {
         getOnlineMembers().stream().filter(gm -> !gm.getCharacter().equals(exceptChr)).forEach(gm -> gm.getCharacter().write(outPacket));
     }
 
-    public List<GuildRequestor> getRequestors() {
-        return requestors;
-    }
-
-    public void setRequestors(List<GuildRequestor> requestors) {
-        this.requestors = requestors;
-    }
-
-    public List<String> getGradeNames() {
-        return gradeNames;
-    }
-
-    public void setGradeNames(List<String> gradeNames) {
-        this.gradeNames = gradeNames;
-    }
-
-    public void setGradeNames(String[] gradeNames) {
-        for (String gradeName : gradeNames) {
-            getGradeNames().add(gradeName);
-        }
-    }
-
-    public void setMembers(List<GuildMember> members) {
-        this.members = members;
-    }
-
-    public int getMaxMembers() {
-        return maxMembers;
-    }
-
-    public void setMaxMembers(int maxMembers) {
-        this.maxMembers = maxMembers;
-    }
-
-    public String getNotice() {
-        return notice;
-    }
-
-    public void setNotice(String notice) {
-        this.notice = notice;
-    }
-
-    public int getPoints() {
-        return points;
-    }
-
-    public void setPoints(int points) {
-        this.points = points;
-    }
-
-    public int getSeasonPoints() {
-        return seasonPoints;
-    }
-
-    public void setSeasonPoints(int seasonPoints) {
-        this.seasonPoints = seasonPoints;
-    }
-
-    public int getAllianceID() {
-        return allianceID;
-    }
-
-    public void setAllianceID(int allianceID) {
-        this.allianceID = allianceID;
-    }
-
-    public int getLevel() {
-        return level;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
-    }
-
-    public int getRank() {
-        return rank;
-    }
-
-    public void setRank(int rank) {
-        this.rank = rank;
-    }
-
-    public int getGgp() {
-        return ggp;
-    }
-
-    public void setGgp(int ggp) {
-        this.ggp = ggp;
-    }
-
-    public boolean isAppliable() {
-        return appliable;
-    }
-
-    public void setAppliable(boolean setState) {
-        this.appliable = setState;
-    }
-
-    public int getJoinSetting() {
-        return joinSetting;
-    }
-
-    public void setJoinSetting(int joinSetting) {
-        this.joinSetting = joinSetting;
-    }
-
-    public int getReqLevel() {
-        return reqLevel;
-    }
-
-    public void setReqLevel(int reqLevel) {
-        this.reqLevel = reqLevel;
-    }
-
-    public Map<Integer, GuildSkill> getSkills() {
-        return skills;
-    }
-
-    public void setSkills(Map<Integer, GuildSkill> skills) {
-        this.skills = skills;
-    }
-
     public void addGuildSkill(GuildSkill gs) {
         getSkills().put(gs.getSkillID(), gs);
     }
 
-    public int getWorldID() {
-        return worldID;
-    }
-
-    public void setWorldID(int worldID) {
-        this.worldID = worldID;
-    }
 
     public static void defaultEncodeForRemote(OutPacket outPacket) {
         outPacket.encodeString("");

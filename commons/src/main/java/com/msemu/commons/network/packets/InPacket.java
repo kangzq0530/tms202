@@ -1,42 +1,37 @@
 package com.msemu.commons.network.packets;
 
 
+import com.msemu.commons.network.Client;
 import com.msemu.commons.utils.HexUtils;
 import com.msemu.commons.utils.types.Position;
 import com.msemu.commons.utils.types.Rect;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
+import lombok.Getter;
+import lombok.Setter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 
 /**
  * Created on 2/18/2017.
  */
-public class InPacket extends Packet {
+public abstract class InPacket<TClient extends Client<TClient>> extends Packet<TClient> implements Runnable, Cloneable{
+    private static final Logger log = LoggerFactory.getLogger(InPacket.class);
     private ByteBuf byteBuf;
+    @Getter
+    @Setter
+    protected TClient client;
+    @Getter
+    private short opcode;
 
-    /**
-     * Creates a new InPacket with a given buffer.
-     * @param byteBuf The buffer this InPacket has to be initialized with.
-     */
-    public InPacket(ByteBuf byteBuf) {
-        super(byteBuf.array());
-        this.byteBuf = byteBuf.copy();
+    public InPacket(short opcode) {
+        this.opcode = opcode;
     }
 
-    /**
-     * Creates a new InPacket with no data.
-     */
-    public InPacket(){
-        this(Unpooled.buffer());
-    }
-
-    /**
-     * Creates a new InPacket with given data.
-     * @param data The data this InPacket has to be initialized with.
-     */
-    public InPacket(byte[] data) {
-        this(Unpooled.copiedBuffer(data));
+    public void setByteBuf(ByteBuf byteBuf) {
+        setData(byteBuf.array());
+        this.byteBuf = byteBuf;
     }
 
     @Override
@@ -49,13 +44,20 @@ public class InPacket extends Packet {
         return byteBuf.array();
     }
 
-    @Override
-    public InPacket clone() {
-        return new InPacket(byteBuf);
+
+    public InPacket<TClient> clonePacket() {
+        try {
+            return (InPacket<TClient>) super.clone();
+        } catch (Exception var2) {
+            log.error("Error while cloning ReceivablePacket: {}", this.getClass().getSimpleName(), var2);
+            return null;
+        }
     }
+
 
     /**
      * Reads a single byte of the ByteBuf.
+     *
      * @return The byte that has been read.
      */
     public byte decodeByte() {
@@ -64,12 +66,13 @@ public class InPacket extends Packet {
 
     /**
      * Reads an <code>amount</code> of bytes from the ByteBuf.
+     *
      * @param amount The amount of bytes to read.
      * @return The bytes that have been read.
      */
     public byte[] decodeBytes(int amount) {
         byte[] arr = new byte[amount];
-        for(int i = 0; i < amount; i++) {
+        for (int i = 0; i < amount; i++) {
             arr[i] = byteBuf.readByte();
         }
         return arr;
@@ -77,6 +80,7 @@ public class InPacket extends Packet {
 
     /**
      * Reads an integer from the ByteBuf.
+     *
      * @return The integer that has been read.
      */
     public int decodeInt() {
@@ -85,6 +89,7 @@ public class InPacket extends Packet {
 
     /**
      * Reads a short from the ByteBuf.
+     *
      * @return The short that has been read.
      */
     public short decodeShort() {
@@ -93,13 +98,14 @@ public class InPacket extends Packet {
 
     /**
      * Reads a char array of a given length of this ByteBuf.
+     *
      * @param amount The length of the char array
      * @return The char array as a String
      */
     public String decodeString(int amount) {
         byte[] bytes = decodeBytes(amount);
         char[] chars = new char[amount];
-        for(int i = 0; i < amount; i++) {
+        for (int i = 0; i < amount; i++) {
             chars[i] = (char) bytes[i];
         }
         return String.valueOf(chars);
@@ -107,6 +113,7 @@ public class InPacket extends Packet {
 
     /**
      * Reads a String, by first reading a short, then reading a char array of that length.
+     *
      * @return The char array as a String
      */
     public String decodeString() {
@@ -116,12 +123,19 @@ public class InPacket extends Packet {
 
     @Override
     public String toString() {
-        return HexUtils.readableByteArray(Arrays.copyOfRange(getData(), 2, getData().length)); // Substring after copy of range xd
+        return toString(false);
+    }
+
+    public String toString(boolean showNow) {
+        int start = showNow ? byteBuf.arrayOffset() : 0;
+        int size = showNow ? byteBuf.readableBytes() : getData().length;
+        return HexUtils.readableByteArray(Arrays.copyOfRange(getData(), start, size)); // Substring after copy of range xd
     }
 
 
     /**
      * Reads and returns a long from this packet.
+     *
      * @return The long that has been read.
      */
     public long decodeLong() {
@@ -130,6 +144,7 @@ public class InPacket extends Packet {
 
     /**
      * Reads a position (short x, short y) and returns this.
+     *
      * @return The position that has been read.
      */
     public Position decodePosition() {
@@ -138,6 +153,7 @@ public class InPacket extends Packet {
 
     /**
      * Reads a rectangle (short l, short t, short r, short b) and returns this.
+     *
      * @return The rectangle that has been read.
      */
     public Rect decodeShortRect() {
@@ -146,6 +162,7 @@ public class InPacket extends Packet {
 
     /**
      * Reads a rectangle (int l, int t, int r, int b) and returns this.
+     *
      * @return The rectangle that has been read.
      */
     public Position decodePositionInt() {
@@ -154,6 +171,7 @@ public class InPacket extends Packet {
 
     /**
      * Returns the amount of bytes that are unread.
+     *
      * @return The amount of bytes that are unread.
      */
     public int getUnreadAmount() {
@@ -164,5 +182,19 @@ public class InPacket extends Packet {
     public void skip(int offset) {
         byteBuf.skipBytes(offset);
     }
+
+    public abstract void read();
+
+    public abstract void runImpl();
+
+    public void run() {
+        try {
+            this.runImpl();
+        } catch (Exception var2) {
+            log.error("Error while running {} packet", this.getClass().getSimpleName(), var2);
+        }
+
+    }
+
 }
 

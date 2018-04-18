@@ -2,6 +2,8 @@ package com.msemu.world.client.guild;
 
 import com.msemu.commons.utils.types.FileTime;
 import com.msemu.commons.network.packets.OutPacket;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -12,54 +14,33 @@ import javax.persistence.*;
 public class GuildSkill {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    @Getter
+    @Setter
     private int id;
+    @Column(name = "skillID")
+    @Getter
+    @Setter
     private int skillID;
+    @Column(name = "level")
+    @Getter
+    @Setter
     private short level;
+    @Getter
+    @Setter
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "expireDate")
     private FileTime expireDate;
+
+    @Column(name = "buyCharacterName")
+    @Getter
+    @Setter
     private String buyCharacterName;
+
+    @Column(name = "extendCharacterName")
+    @Getter
+    @Setter
     private String extendCharacterName;
-
-    public int getSkillID() {
-        return skillID;
-    }
-
-    public void setSkillID(int skillID) {
-        this.skillID = skillID;
-    }
-
-    public short getLevel() {
-        return level;
-    }
-
-    public void setLevel(short level) {
-        this.level = level;
-    }
-
-    public FileTime getExpireDate() {
-        return expireDate;
-    }
-
-    public void setExpireDate(FileTime expireDate) {
-        this.expireDate = expireDate;
-    }
-
-    public String getBuyCharacterName() {
-        return buyCharacterName;
-    }
-
-    public void setBuyCharacterName(String buyCharacterName) {
-        this.buyCharacterName = buyCharacterName;
-    }
-
-    public String getExtendCharacterName() {
-        return extendCharacterName;
-    }
-
-    public void setExtendCharacterName(String extendCharacterName) {
-        this.extendCharacterName = extendCharacterName;
-    }
 
     public void encode(OutPacket outPacket) {
         // GUILDDATA::SKILLENTRY::Decode

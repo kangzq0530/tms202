@@ -144,3 +144,34 @@
 2018-04-14 21:06:58,307 - Waiting for connections on 0.0.0.0:8484
 2018-04-14 22:00:45,133 - Waiting for connections on 0.0.0.0:8484
 2018-04-14 22:05:05,893 - Waiting for connections on 0.0.0.0:8484
+2018-04-14 22:08:29,176 - Waiting for connections on 0.0.0.0:8484
+2018-04-14 22:39:34,960 - Waiting for connections on 0.0.0.0:8484
+2018-04-14 22:48:56,329 - Waiting for connections on 0.0.0.0:8484
+2018-04-14 22:52:10,859 - Waiting for connections on 0.0.0.0:8484
+2018-04-14 22:53:58,696 - Waiting for connections on 0.0.0.0:8484
+2018-04-14 22:56:51,226 - Waiting for connections on 0.0.0.0:8484
+2018-04-17 16:32:07,698 - Waiting for connections on 0.0.0.0:8484
+2018-04-17 16:45:50,044 - Waiting for connections on 0.0.0.0:8484
+2018-04-17 19:15:07,945 - Waiting for connections on 0.0.0.0:8484
+2018-04-17 19:30:46,674 - Waiting for connections on 0.0.0.0:8484
+2018-04-17 19:40:25,735 - Waiting for connections on 0.0.0.0:8484
+2018-04-17 20:03:30,514 - Waiting for connections on 0.0.0.0:8484
+2018-04-17 20:07:36,688 - Waiting for connections on 0.0.0.0:8484
+2018-04-19 00:44:43,506 - Client [com.msemu.core.network.LoginClient@288ddb5d] connected.
+2018-04-19 00:47:35,190 - Client [com.msemu.core.network.LoginClient@41e1ad29] connected.
+2018-04-19 00:48:26,678 - Client [com.msemu.core.network.LoginClient@4cc646ee] connected.
+2018-04-19 00:48:51,570 - Client [com.msemu.core.network.LoginClient@18b22c9b] connected.
+2018-04-19 00:49:45,609 - Client [com.msemu.core.network.LoginClient@36110bf1] connected.
+2018-04-19 00:51:12,350 - Client [com.msemu.core.network.LoginClient@36110bf1] connected.
+2018-04-19 00:54:32,837 - Client [com.msemu.core.network.LoginClient@3e05ab9] connected.
+2018-04-19 01:00:41,819 - Client [com.msemu.core.network.LoginClient@38610a7a] connected.
+2018-04-19 01:03:01,196 - Client [com.msemu.core.network.LoginClient@78ca2078] connected.
+2018-04-19 01:04:01,294 - Client [com.msemu.core.network.LoginClient@78ccaa8d] connected.
+2018-04-19 01:05:07,876 - Client [com.msemu.core.network.LoginClient@3864682f] connected.
+2018-04-19 01:07:45,126 - Client [com.msemu.core.network.LoginClient@1b1e852] connected.
+2018-04-19 01:13:07,645 - Client [com.msemu.core.network.LoginClient@19d74fb7] connected.
+2018-04-19 01:13:58,969 - Client [com.msemu.core.network.LoginClient@16b6f5ba] connected.
+2018-04-19 01:15:51,839 - Client [com.msemu.core.network.LoginClient@1346294a] connected.
+2018-04-19 01:17:46,076 - Client [com.msemu.core.network.LoginClient@378a8ca6] connected.
+2018-04-19 01:18:52,707 - Client [com.msemu.core.network.LoginClient@1a307b95] connected.
+2018-04-19 01:21:07,053 - Client [com.msemu.core.network.LoginClient@55fe561f] connected.

@@ -5,6 +5,8 @@ import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.utils.types.FileTime;
 import com.msemu.login.constants.JobConstants;
 import com.msemu.login.constants.MapleJob;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -19,123 +21,237 @@ public class CharacterStat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
+    @Getter
+    @Setter
     private int id;
+    @Getter
+    @Setter
     @Column(name = "characterId")
     private int characterId;
+    @Getter
+    @Setter
     @Column(name = "characterIdForLog")
     private int characterIdForLog;
+    @Getter
+    @Setter
     @Column(name = "worldIdForLog")
     private int worldIdForLog;
+    @Getter
+    @Setter
     @Column(name = "name")
     private String name;
+    @Getter
+    @Setter
     @Column(name = "gender")
     private int gender;
+    @Getter
+    @Setter
     @Column(name = "skin")
     private int skin;
+    @Getter
+    @Setter
     @Column(name = "face")
     private int face;
+    @Getter
+    @Setter
     @Column(name = "hair")
     private int hair;
+    @Getter
+    @Setter
     @Column(name = "mixBaseHairColor")
     private int mixBaseHairColor;
+    @Getter
+    @Setter
     @Column(name = "mixAddHairColor")
     private int mixAddHairColor;
+    @Getter
+    @Setter
     @Column(name = "mixHairBaseProb")
     private int mixHairBaseProb;
+    @Getter
+    @Setter
     @Column(name = "level")
     private int level;
+    @Getter
+    @Setter
     @Column(name = "job")
     private int job;
+    @Getter
+    @Setter
     @Column(name = "str")
     private int str;
+    @Getter
+    @Setter
     @Column(name = "dex")
     private int dex;
+    @Getter
+    @Setter
     @Column(name = "inte")
     private int inte;
+    @Getter
+    @Setter
     @Column(name = "luk")
     private int luk;
+    @Getter
+    @Setter
     @Column(name = "hp")
     private int hp;
+    @Getter
+    @Setter
     @Column(name = "maxHp")
     private int maxHp;
+    @Getter
+    @Setter
     @Column(name = "mp")
     private int mp;
+    @Getter
+    @Setter
     @Column(name = "maxMp")
     private int maxMp;
+    @Getter
+    @Setter
     @Column(name = "ap")
     private int ap;
+    @Getter
+    @Setter
     @Column(name = "sp")
     private int sp;
+    @Getter
+    @Setter
     @Column(name = "exp")
     private long exp;
+    @Getter
+    @Setter
     @Column(name = "pop")
     private int pop; // fame
+    @Getter
+    @Setter
     @Column(name = "money")
     private long money;
+    @Getter
+    @Setter
     @Column(name = "wp")
     private int wp;
+    @Getter
+    @Setter
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "extendSP")
     private ExtendSP extendSP;
+    @Getter
+    @Setter
     @Column(name = "posMap")
     private long posMap;
+    @Getter
+    @Setter
     @Column(name = "portal")
     private int portal;
+    @Getter
+    @Setter
     @Column(name = "subJob")
     private int subJob;
+    @Getter
+    @Setter
     @Column(name = "defFaceAcc")
     private int defFaceAcc;
+    @Getter
+    @Setter
     @Column(name = "fatigue")
     private int fatigue;
+    @Getter
+    @Setter
     @Column(name = "lastFatigueUpdateTime")
     private int lastFatigueUpdateTime;
+    @Getter
+    @Setter
     @Column(name = "charismaExp")
     private int charismaExp;
+    @Getter
+    @Setter
     @Column(name = "insightExp")
     private int insightExp;
+    @Getter
+    @Setter
     @Column(name = "willExp")
     private int willExp;
+    @Getter
+    @Setter
     @Column(name = "craftExp")
     private int craftExp;
+    @Getter
+    @Setter
     @Column(name = "senseExp")
     private int senseExp;
+    @Getter
+    @Setter
     @Column(name = "charmExp")
     private int charmExp;
+    @Getter
+    @Setter
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "nonCombatStatDayLimit")
     private NonCombatStatDayLimit nonCombatStatDayLimit;
+    @Getter
+    @Setter
     @Column(name = "pvpExp")
     private int pvpExp;
+    @Getter
+    @Setter
     @Column(name = "pvpGrade")
     private int pvpGrade;
+    @Getter
+    @Setter
     @Column(name = "pvpPoint")
     private int pvpPoint;
+    @Getter
+    @Setter
     @Column(name = "pvpModeLevel")
     private int pvpModeLevel;
+    @Getter
+    @Setter
     @Column(name = "pvpModeType")
     private int pvpModeType;
+    @Getter
+    @Setter
     @Column(name = "eventPoint")
     private int eventPoint;
+    @Getter
+    @Setter
     @Column(name = "albaActivityID")
     private int albaActivityID;
+    @Getter
+    @Setter
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "albaStartTime")
     private FileTime albaStartTime;
+    @Getter
+    @Setter
     @Column(name = "albaDuration")
     private int albaDuration;
+    @Getter
+    @Setter
     @Column(name = "albaSpecialReward")
     private int albaSpecialReward;
+    @Getter
+    @Setter
     @Column(name = "burning")
     private boolean burning;
+    @Getter
+    @Setter
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "characterCard")
     private CharacterCard characterCard;
+    @Getter
+    @Setter
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "accountLastLogout")
     private SystemTime accountLastLogout;
+    @Getter
+    @Setter
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "lastLogout")
     private FileTime lastLogout;
+    @Getter
+    @Setter
     @Column(name = "gachExp")
     private int gachExp;
 
@@ -146,462 +262,6 @@ public class CharacterStat {
         lastLogout = new FileTime(0);
         characterCard = new CharacterCard(0, 0, (byte) 0);
         accountLastLogout = new SystemTime(1970, 1);
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getCharacterId() {
-        return characterId;
-    }
-
-    public void setCharacterId(int characterId) {
-        this.characterId = characterId;
-    }
-
-    public int getCharacterIdForLog() {
-        return characterIdForLog;
-    }
-
-    public void setCharacterIdForLog(int characterIdForLog) {
-        this.characterIdForLog = characterIdForLog;
-    }
-
-    public int getWorldIdForLog() {
-        return worldIdForLog;
-    }
-
-    public void setWorldIdForLog(int worldIdForLog) {
-        this.worldIdForLog = worldIdForLog;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getGender() {
-        return gender;
-    }
-
-    public void setGender(int gender) {
-        this.gender = gender;
-    }
-
-    public int getSkin() {
-        return skin;
-    }
-
-    public void setSkin(int skin) {
-        this.skin = skin;
-    }
-
-    public int getFace() {
-        return face;
-    }
-
-    public void setFace(int face) {
-        this.face = face;
-    }
-
-    public int getHair() {
-        return hair;
-    }
-
-    public void setHair(int hair) {
-        this.hair = hair;
-    }
-
-    public int getMixBaseHairColor() {
-        return mixBaseHairColor;
-    }
-
-    public void setMixBaseHairColor(int mixBaseHairColor) {
-        this.mixBaseHairColor = mixBaseHairColor;
-    }
-
-    public int getMixAddHairColor() {
-        return mixAddHairColor;
-    }
-
-    public void setMixAddHairColor(int mixAddHairColor) {
-        this.mixAddHairColor = mixAddHairColor;
-    }
-
-    public int getMixHairBaseProb() {
-        return mixHairBaseProb;
-    }
-
-    public void setMixHairBaseProb(int mixHairBaseProb) {
-        this.mixHairBaseProb = mixHairBaseProb;
-    }
-
-    public int getLevel() {
-        return level;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
-    }
-
-    public int getJob() {
-        return job;
-    }
-
-    public void setJob(int job) {
-        this.job = job;
-    }
-
-    public int getStr() {
-        return str;
-    }
-
-    public void setStr(int str) {
-        this.str = str;
-    }
-
-    public int getDex() {
-        return dex;
-    }
-
-    public void setDex(int dex) {
-        this.dex = dex;
-    }
-
-    public int getInte() {
-        return inte;
-    }
-
-    public void setInte(int inte) {
-        this.inte = inte;
-    }
-
-    public int getLuk() {
-        return luk;
-    }
-
-    public void setLuk(int luk) {
-        this.luk = luk;
-    }
-
-    public int getHp() {
-        return hp;
-    }
-
-    public void setHp(int hp) {
-        this.hp = hp;
-    }
-
-    public int getMaxHp() {
-        return maxHp;
-    }
-
-    public void setMaxHp(int maxHp) {
-        this.maxHp = maxHp;
-    }
-
-    public int getMp() {
-        return mp;
-    }
-
-    public void setMp(int mp) {
-        this.mp = mp;
-    }
-
-    public int getMaxMp() {
-        return maxMp;
-    }
-
-    public void setMaxMp(int maxMp) {
-        this.maxMp = maxMp;
-    }
-
-    public int getAp() {
-        return ap;
-    }
-
-    public void setAp(int ap) {
-        this.ap = ap;
-    }
-
-    public int getSp() {
-        return sp;
-    }
-
-    public void setSp(int sp) {
-        this.sp = sp;
-    }
-
-    public long getExp() {
-        return exp;
-    }
-
-    public void setExp(long exp) {
-        this.exp = exp;
-    }
-
-    public int getPop() {
-        return pop;
-    }
-
-    public void setPop(int pop) {
-        this.pop = pop;
-    }
-
-    public long getMoney() {
-        return money;
-    }
-
-    public void setMoney(long money) {
-        this.money = money;
-    }
-
-    public int getWp() {
-        return wp;
-    }
-
-    public void setWp(int wp) {
-        this.wp = wp;
-    }
-
-    public ExtendSP getExtendSP() {
-        return extendSP;
-    }
-
-    public void setExtendSP(ExtendSP extendSP) {
-        this.extendSP = extendSP;
-    }
-
-    public long getPosMap() {
-        return posMap;
-    }
-
-    public void setPosMap(long posMap) {
-        this.posMap = posMap;
-    }
-
-    public int getPortal() {
-        return portal;
-    }
-
-    public void setPortal(int portal) {
-        this.portal = portal;
-    }
-
-    public int getSubJob() {
-        return subJob;
-    }
-
-    public void setSubJob(int subJob) {
-        this.subJob = subJob;
-    }
-
-    public int getDefFaceAcc() {
-        return defFaceAcc;
-    }
-
-    public void setDefFaceAcc(int defFaceAcc) {
-        this.defFaceAcc = defFaceAcc;
-    }
-
-    public int getFatigue() {
-        return fatigue;
-    }
-
-    public void setFatigue(int fatigue) {
-        this.fatigue = fatigue;
-    }
-
-    public int getLastFatigueUpdateTime() {
-        return lastFatigueUpdateTime;
-    }
-
-    public void setLastFatigueUpdateTime(int lastFatigueUpdateTime) {
-        this.lastFatigueUpdateTime = lastFatigueUpdateTime;
-    }
-
-    public int getCharismaExp() {
-        return charismaExp;
-    }
-
-    public void setCharismaExp(int charismaExp) {
-        this.charismaExp = charismaExp;
-    }
-
-    public int getInsightExp() {
-        return insightExp;
-    }
-
-    public void setInsightExp(int insightExp) {
-        this.insightExp = insightExp;
-    }
-
-    public int getWillExp() {
-        return willExp;
-    }
-
-    public void setWillExp(int willExp) {
-        this.willExp = willExp;
-    }
-
-    public int getCraftExp() {
-        return craftExp;
-    }
-
-    public void setCraftExp(int craftExp) {
-        this.craftExp = craftExp;
-    }
-
-    public int getSenseExp() {
-        return senseExp;
-    }
-
-    public void setSenseExp(int senseExp) {
-        this.senseExp = senseExp;
-    }
-
-    public int getCharmExp() {
-        return charmExp;
-    }
-
-    public void setCharmExp(int charmExp) {
-        this.charmExp = charmExp;
-    }
-
-    public NonCombatStatDayLimit getNonCombatStatDayLimit() {
-        return nonCombatStatDayLimit;
-    }
-
-    public void setNonCombatStatDayLimit(NonCombatStatDayLimit nonCombatStatDayLimit) {
-        this.nonCombatStatDayLimit = nonCombatStatDayLimit;
-    }
-
-    public int getPvpExp() {
-        return pvpExp;
-    }
-
-    public void setPvpExp(int pvpExp) {
-        this.pvpExp = pvpExp;
-    }
-
-    public int getPvpGrade() {
-        return pvpGrade;
-    }
-
-    public void setPvpGrade(int pvpGrade) {
-        this.pvpGrade = pvpGrade;
-    }
-
-    public int getPvpPoint() {
-        return pvpPoint;
-    }
-
-    public void setPvpPoint(int pvpPoint) {
-        this.pvpPoint = pvpPoint;
-    }
-
-    public int getPvpModeLevel() {
-        return pvpModeLevel;
-    }
-
-    public void setPvpModeLevel(int pvpModeLevel) {
-        this.pvpModeLevel = pvpModeLevel;
-    }
-
-    public int getPvpModeType() {
-        return pvpModeType;
-    }
-
-    public void setPvpModeType(int pvpModeType) {
-        this.pvpModeType = pvpModeType;
-    }
-
-    public int getEventPoint() {
-        return eventPoint;
-    }
-
-    public void setEventPoint(int eventPoint) {
-        this.eventPoint = eventPoint;
-    }
-
-    public int getAlbaActivityID() {
-        return albaActivityID;
-    }
-
-    public void setAlbaActivityID(int albaActivityID) {
-        this.albaActivityID = albaActivityID;
-    }
-
-    public FileTime getAlbaStartTime() {
-        return albaStartTime;
-    }
-
-    public void setAlbaStartTime(FileTime albaStartTime) {
-        this.albaStartTime = albaStartTime;
-    }
-
-    public int getAlbaDuration() {
-        return albaDuration;
-    }
-
-    public void setAlbaDuration(int albaDuration) {
-        this.albaDuration = albaDuration;
-    }
-
-    public int getAlbaSpecialReward() {
-        return albaSpecialReward;
-    }
-
-    public void setAlbaSpecialReward(int albaSpecialReward) {
-        this.albaSpecialReward = albaSpecialReward;
-    }
-
-    public boolean isBurning() {
-        return burning;
-    }
-
-    public void setBurning(boolean burning) {
-        this.burning = burning;
-    }
-
-    public CharacterCard getCharacterCard() {
-        return characterCard;
-    }
-
-    public void setCharacterCard(CharacterCard characterCard) {
-        this.characterCard = characterCard;
-    }
-
-    public SystemTime getAccountLastLogout() {
-        return accountLastLogout;
-    }
-
-    public void setAccountLastLogout(SystemTime accountLastLogout) {
-        this.accountLastLogout = accountLastLogout;
-    }
-
-    public FileTime getLastLogout() {
-        return lastLogout;
-    }
-
-    public void setLastLogout(FileTime lastLogout) {
-        this.lastLogout = lastLogout;
-    }
-
-    public int getGachExp() {
-        return gachExp;
-    }
-
-    public void setGachExp(int gachExp) {
-        this.gachExp = gachExp;
     }
 
     public void encode(OutPacket outPacket) {

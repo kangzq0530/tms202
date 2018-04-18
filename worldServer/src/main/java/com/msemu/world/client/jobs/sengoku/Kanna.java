@@ -20,8 +20,8 @@ import com.msemu.world.data.SkillData;
 import com.msemu.world.enums.ChatMsgColor;
 import com.msemu.world.enums.MobStat;
 import com.msemu.world.enums.MoveAbility;
-import com.msemu.world.network.packets.UserPool.FoxManEnterField;
-import com.msemu.world.network.packets.WvsContext.TemporaryStatSet;
+import com.msemu.core.network.packets.out.UserPool.FoxManEnterField;
+import com.msemu.core.network.packets.out.WvsContext.TemporaryStatSet;
 
 import static com.msemu.world.client.character.skills.CharacterTemporaryStat.*;
 import static com.msemu.world.enums.SkillStat.*;

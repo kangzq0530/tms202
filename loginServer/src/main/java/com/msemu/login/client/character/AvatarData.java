@@ -3,6 +3,8 @@ package com.msemu.login.client.character;
 import com.msemu.commons.database.Schema;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.login.constants.MapleJob;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -13,36 +15,28 @@ import javax.persistence.*;
 @Entity
 @Table(name = "avatarData")
 public class AvatarData {
-
+    @Getter
+    @Setter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
+    @Getter
+    @Setter
     @JoinColumn(name = "characterStat")
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private CharacterStat characterStat;
+    @Getter
+    @Setter
     @JoinColumn(name = "avatarLook")
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private AvatarLook avatarLook;
+    @Getter
+    @Setter
     @JoinColumn(name = "zeroAvatarLook")
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private AvatarLook zeroAvatarLook;
 
-    public AvatarLook getAvatarLook() {
-        return avatarLook;
-    }
-
-    public CharacterStat getCharacterStat() {
-        return characterStat;
-    }
-
-    public AvatarLook getZeroAvatarLook() {
-        return zeroAvatarLook;
-    }
-
-    public void setZeroAvatarLook(AvatarLook zeroAvatarLook) {
-        this.zeroAvatarLook = zeroAvatarLook;
-    }
 
     public void encode(OutPacket outPacket) {
         characterStat.encode(outPacket);
@@ -50,22 +44,6 @@ public class AvatarData {
         if(MapleJob.is神之子(getCharacterStat().getJob())) {
             zeroAvatarLook.encode(outPacket);
         }
-    }
-
-    public void setCharacterStat(CharacterStat characterStat) {
-        this.characterStat = characterStat;
-    }
-
-    public void setAvatarLook(AvatarLook avatarLook) {
-        this.avatarLook = avatarLook;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public AvatarLook getAvatarLook(boolean zeroBetaState) {

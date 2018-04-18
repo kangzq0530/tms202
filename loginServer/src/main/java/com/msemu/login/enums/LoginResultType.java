@@ -20,12 +20,12 @@ public enum LoginResultType {
      * 0xF Gash 帳號不存在
      * 0x11 認證資料不符合，請關閉開啟中的楓之谷官方網頁
      * 0x13 現在透過臨時被封鎖的IP連接 (會自動關閉遊戲)
-     * 0x27 use playsafe card to login
+     * 0x27 use playsafe card to Login
      * 0x29 account is not qualified for testing server
      * 0x2A use otp
      * 0x22 server high loading
      * 0x2B ip not in service range
-     * 0x2C use beanfun to login
+     * 0x2C use beanfun to Login
      * 0x2D plz upgrade account level
      */
     LoginSuccess(0),

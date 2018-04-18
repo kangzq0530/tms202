@@ -1,6 +1,7 @@
 package com.msemu.commons.enums;
 
 import com.msemu.commons.network.packets.IHeader;
+import lombok.Getter;
 
 import java.util.Arrays;
 import java.util.List;
@@ -9,23 +10,22 @@ import java.util.List;
  * Created by Weber on 2018/3/29.
  */
 public enum InHeader implements IHeader {
-    DummyMode(false),
-
+    DummyMode(ClientState.values()),
     _____SocketBegin____,
-    ClientStart(false),
-    CheckOTPForWebLaunchingRequest(false),
-    LoginBasicInfo(false),
-    CheckLoginAuthInfo(false),
-    SelectWorld,
-    CheckSPWRequest,
+    ClientStart(ClientState.CONNECTED),
+    CheckOTPForWebLaunchingRequest(ClientState.CONNECTED),
+    LoginBasicInfo(ClientState.CONNECTED),
+    CheckLoginAuthInfo(ClientState.CONNECTED),
+    SelectWorld(ClientState.AUTHED),
+    CheckSPWRequest(ClientState.AUTHED),
+    LogoutWorld(ClientState.CONNECTED),
     ClientLoadingTimeLog,
     CheckSPWExistRequest,
-    MigrateIn(false),
+    MigrateIn(ClientState.CONNECTED),
     SelectCharacter,
     SelectGoToStarPlanet,
     SelectAccount,
     WorldInfoRequest,
-    LogoutWorld(false),
     CheckDuplicatedID,
     CreateNewCharacter,
     CreateNewCharacterInCS,
@@ -34,7 +34,7 @@ public enum InHeader implements IHeader {
     ReservedDeleteCharacterConfirm,
     ReservedDeleteCharacterCancel,
     RenameCharacter,
-    ExceptionLog(false),
+    ExceptionLog(ClientState.CONNECTED),
     PrivateServerPacket,
     ResetLoginStateOnCheckOTP,
     CreateSecurityHandle,
@@ -43,13 +43,13 @@ public enum InHeader implements IHeader {
     UpdateCharacterCard,
     CheckCenterAndGameAreConnected,
     CreateMapleAccount,
-    BackToLogin,
-    AliveAck(false),
+    BackToLogin(ClientState.CONNECTED),
+    AliveAck(ClientState.CONNECTED),
     ResponseToCheckAliveAck,
     ClientDumpLog,
-    SetGender(false),
+    SetGender(ClientState.CONNECTED),
     ServerStatusRequest,
-    LoginBackground(false),
+    LoginBackground(ClientState.CONNECTED),
     ApplyChangeName,
     _____EndSocket_____,
 
@@ -432,20 +432,25 @@ public enum InHeader implements IHeader {
 
 
     private short value;
-    private boolean needCheck;
+
+    @Getter
+    private ClientState[] states;
+
+    InHeader(short value, ClientState ... clientStates) {
+        this.states = clientStates;
+        this.value = value;
+    }
 
     InHeader() {
-        this.needCheck = true;
-        this.value = (short)0xFFFF;
+        this((short)0xFFFF);
     }
 
-    InHeader(short value, boolean needCheck) {
-        this.value = value;
-        this.needCheck = needCheck;
+    InHeader(short value) {
+        this(value, ClientState.ENTERED, ClientState.CONNECTED);
     }
 
-    InHeader(boolean needCheck) {
-        this.needCheck = needCheck;
+    InHeader(ClientState ... clientStates) {
+        this((short)0xFFFF, clientStates);
     }
 
     @Override
@@ -456,10 +461,6 @@ public enum InHeader implements IHeader {
     @Override
     public void setValue(short value) {
         this.value = value;
-    }
-
-    public boolean isNeedCheck() {
-        return needCheck;
     }
 
     public static InHeader getInHeaderByOp(int op) {

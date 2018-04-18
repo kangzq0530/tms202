@@ -56,7 +56,9 @@ public class DatabaseFactory {
                         "/"+ DatabaseConfig.DATABASE_NAME +"?autoReconnect=true&amp;useSSL=false")
                 .setProperty("hibernate.connection.username", DatabaseConfig.USERNAME)
                 .setProperty("hibernate.connection.password", DatabaseConfig.PASSWORD)
+                .setProperty("hibernate.enable_lazy_load_no_trans", "true")
                 .setProperty("hibernate.show_sql", String.valueOf(DatabaseConfig.SHOW_SQL));
+
         sessionFactory = configuration.buildSessionFactory();
         sessions = new ArrayList<>();
     }
