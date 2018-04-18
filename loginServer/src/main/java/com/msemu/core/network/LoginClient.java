@@ -14,8 +14,9 @@ import lombok.Setter;
  */
 public class LoginClient extends Client<LoginClient> {
 
-
-    private Account accountSchema;
+    @Getter
+    @Setter
+    private Account account;
 
     @Getter
     @Setter
@@ -36,14 +37,6 @@ public class LoginClient extends Client<LoginClient> {
         write(new ConnectToClient(this));
         MapleCrypt crypt = new MapleCrypt(CoreConfig.GAME_SERVICE_TYPE, (short) CoreConfig.GAME_VERSION);
         getConnection().setCipher(crypt);
-    }
-
-    public Account getAccount() {
-        return accountSchema;
-    }
-
-    public void setAccount(Account accountSchema) {
-        this.accountSchema = accountSchema;
     }
 
 }

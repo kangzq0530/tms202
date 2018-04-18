@@ -2,6 +2,7 @@ package com.msemu.commons.database;
 
 import com.msemu.core.configs.DatabaseConfig;
 import com.msemu.core.startup.StartupComponent;
+import com.mysql.fabric.xmlrpc.base.Data;
 import org.atteo.classindex.ClassIndex;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -12,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
@@ -84,6 +86,10 @@ public class DatabaseFactory {
         cleanUpSessions();
     }
 
+    public void saveToDB(Collection<?> list) {
+        list.forEach(this::saveToDB);
+    }
+
     public void deleteFromDB(Object obj) {
         synchronized (obj) {
             try (Session session = getSession()) {
@@ -95,4 +101,6 @@ public class DatabaseFactory {
         cleanUpSessions();
     }
 
+    public void closeSession(Session session) {
+    }
 }

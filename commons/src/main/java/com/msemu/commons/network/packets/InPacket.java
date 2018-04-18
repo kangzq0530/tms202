@@ -183,6 +183,10 @@ public abstract class InPacket<TClient extends Client<TClient>> extends Packet<T
         byteBuf.skipBytes(offset);
     }
 
+    public final int available() {
+        return byteBuf.readableBytes();
+    }
+
     public abstract void read();
 
     public abstract void runImpl();

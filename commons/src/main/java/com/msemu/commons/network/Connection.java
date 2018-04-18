@@ -99,7 +99,7 @@ public class Connection<TClient extends Client<TClient>> extends ChannelInboundH
                         this.close();
                     }
                 } else {
-                    log.error(String.format("[In][Unknown]\t| %s, %d/0x%s\n\t[All]\t%s\n\t[ASCII]\t%s", InHeader.getInHeaderByOp(opcode), opcode, Integer.toHexString(opcode).toUpperCase(), HexUtils.byteArraytoHex(buff.array()), HexUtils.toAscii(buff.array())));
+                    log.error(String.format("[In][Unknown][state=%s]\t| %s, %d/0x%s\n\t[All]\t%s\n\t[ASCII]\t%s", client.getState() ,InHeader.getInHeaderByOp(opcode), opcode, Integer.toHexString(opcode).toUpperCase(), HexUtils.byteArraytoHex(buff.array()), HexUtils.toAscii(buff.array())));
                 }
 
             } catch (Exception e) {

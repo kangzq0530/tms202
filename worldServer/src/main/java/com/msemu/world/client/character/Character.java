@@ -202,8 +202,6 @@ public class Character {
     private Position oldPosition;
 
     @Transient
-    @Getter
-    @Setter
     private Field field;
 
     @Transient
@@ -344,12 +342,18 @@ public class Character {
     @Transient
     private boolean online;
     @Transient
+    @Getter
+    @Setter
     private Party party;
     @Transient
+    @Getter
+    @Setter
     private FieldInstanceType fieldInstanceType;
     @Transient
     private Map<Integer, Field> fields = new HashMap<>();
     @Transient
+    @Getter
+    @Setter
     private int bulletIDForAttack;
 
     public Character() {
@@ -392,51 +396,6 @@ public class Character {
         return new ExpIncreaseInfo();
     }
 
-    public WildHunterInfo getWildHunterInfo() {
-        return wildHunterInfo;
-    }
-
-
-    public void setWildHunterInfo(WildHunterInfo wildHunterInfo) {
-        this.wildHunterInfo = wildHunterInfo;
-    }
-
-    public ZeroInfo getZeroInfo() {
-        return zeroInfo;
-    }
-
-    public void setZeroInfo(ZeroInfo zeroInfo) {
-        this.zeroInfo = zeroInfo;
-    }
-
-    public int getNickItem() {
-        return nickItem;
-    }
-
-    public void setNickItem(int nickItem) {
-        this.nickItem = nickItem;
-    }
-
-    public void setDamageSkin(int damageSkin) {
-        this.damageSkin = damageSkin;
-    }
-
-    public int getDamageSkin() {
-        return damageSkin;
-    }
-
-    public int getPremiumDamageSkin() {
-        return premiumDamageSkin;
-    }
-
-    public void setPremiumDamageSkin(int premiumDamageSkin) {
-        this.premiumDamageSkin = premiumDamageSkin;
-    }
-
-    public void setPartyInvitable(boolean partyInvitable) {
-        this.partyInvitable = partyInvitable;
-    }
-
     public Field getField() {
         return field;
     }
@@ -458,49 +417,6 @@ public class Character {
         getAvatarData().getCharacterStat().setPosMap(fieldID);
     }
 
-    public Job getJobHandler() {
-        return jobHandler;
-    }
-
-    public int getBulletIDForAttack() {
-        return bulletIDForAttack;
-    }
-
-    public void setBulletIDForAttack(int bulletIDForAttack) {
-        this.bulletIDForAttack = bulletIDForAttack;
-    }
-
-    public void setJobHandler(Job jobHandler) {
-        this.jobHandler = jobHandler;
-    }
-
-    public TemporaryStatManager getTemporaryStatManager() {
-        return temporaryStatManager;
-    }
-
-    public void setTemporaryStatManager(TemporaryStatManager temporaryStatManager) {
-        this.temporaryStatManager = temporaryStatManager;
-    }
-
-    public ScriptManager getScriptManager() {
-        return scriptManager;
-    }
-
-    public void setParty(Party party) {
-        this.party = party;
-    }
-
-    public Party getParty() {
-        return party;
-    }
-
-    public Position getPosition() {
-        return position;
-    }
-
-    public void setPosition(Position position) {
-        this.position = position;
-    }
 
     public void addExp(long amount) {
         ExpIncreaseInfo eii = new ExpIncreaseInfo();
@@ -774,15 +690,6 @@ public class Character {
      */
     public void chatMessage(ChatMsgColor clr, String msg) {
         getClient().write(new ChatMsg(clr, msg));
-    }
-
-
-    public List<Skill> getSkills() {
-        return skills;
-    }
-
-    public void setSkills(List<Skill> skills) {
-        this.skills = skills;
     }
 
     /**

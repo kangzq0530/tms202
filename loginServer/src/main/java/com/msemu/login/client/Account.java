@@ -24,7 +24,7 @@ import java.util.List;
 @Schema
 @Entity
 @Table(name = "accounts")
-public class Account {
+public class  Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

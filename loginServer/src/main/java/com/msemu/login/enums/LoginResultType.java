@@ -45,13 +45,16 @@ public enum LoginResultType {
     GashAccountNotExists(0xF),
     AuthenticationDataNotMatch(0x11),
     TempBanIPConnect(0x13),
+    InvalidSecondPassword(0x14),
     ServerHighLoading(0x22),
     PleaseLoginFromPlaySafe(0x27),
     AccountNotQualifiedForTesting(0x29),
     PleaseLoginFromOTP(0x2A),
     IPNotInRange(0x2B),
     PleaseLoginFromBeanfun(0x2C),
-    PleaseUpgradeAccount(0x2D);
+    PleaseUpgradeAccount(0x2D),
+    VerifyWithCaptcha(0x45),
+            ;
 
     private byte value;
 

@@ -33,6 +33,11 @@ public class Character {
     @Setter
     private AvatarData avatarData;
 
+    @Getter
+    @Setter
+    @Column(name = "characterPos")
+    private int characterPos;
+
 
     // TODO:
     @Transient

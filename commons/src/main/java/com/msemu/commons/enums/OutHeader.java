@@ -24,7 +24,7 @@ public enum OutHeader implements IHeader {
     CheckSPWExistResult,
     AlbaRequestResult,
     RequestSetGender,
-    GENDER_SET,
+    SetGenderResult,
     HACKSHIELD_REQUEST,
     FORCED_CHANGE_CHAR_NAME,
     FORCED_CHANGE_CHAR_NAME_NOTICE,
