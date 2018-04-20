@@ -45,4 +45,18 @@ public class Character {
     @Setter
     private Ranking ranking = null;
 
+    public Character(int accId, String name, int keySettingType, int eventNewCharSaleJob, int job, short curSelectedSubJob,
+                byte gender, byte skin, int[] items) {
+
+        this.accId = accId;
+        avatarData = new AvatarData();
+        avatarData.setAvatarLook(new AvatarLook());
+        AvatarLook avatarLook = avatarData.getAvatarLook();
+        avatarLook.setGender(gender);
+        avatarLook.setSkin(skin);
+        avatarLook.setFace(items.length > 0 ? items[0] : 0);
+        avatarLook.setHair(items.length > 1 ? items[1] : 0);
+
+    }
+
 }

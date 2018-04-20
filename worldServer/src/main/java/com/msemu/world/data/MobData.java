@@ -438,7 +438,7 @@ public class MobData {
                     case "mobType":
                         mob.setMobType(value);
                         break;
-                    case "link":
+                    case "value":
                         mob.setLink(Integer.parseInt(value));
                         break;
                     case "speed":

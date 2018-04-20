@@ -3,19 +3,19 @@ package com.msemu.world.data;
 import com.msemu.commons.utils.DirUtils;
 import com.msemu.commons.utils.StringUtils;
 import com.msemu.commons.utils.XMLApi;
-import com.msemu.core.configs.CoreConfig;
 import com.msemu.commons.utils.types.FileTime;
+import com.msemu.core.configs.CoreConfig;
 import com.msemu.world.client.character.items.Equip;
 import com.msemu.world.client.character.items.Item;
-import com.msemu.world.client.character.items.ItemInfo;
 import com.msemu.world.client.character.items.ItemOption;
 import com.msemu.world.data.annotations.DataLoader;
 import com.msemu.world.data.annotations.DataSaver;
+import com.msemu.world.data.templates.EquipTemplate;
+import com.msemu.world.data.templates.ItemTemplate;
 import com.msemu.world.enums.InvType;
 import com.msemu.world.enums.ItemState;
 import com.msemu.world.enums.ScrollStat;
 import com.msemu.world.enums.SpecStat;
-import io.netty.util.internal.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -36,8 +36,8 @@ import static com.msemu.world.enums.ScrollStat.*;
 public class ItemData {
     private static final Logger log = LoggerFactory.getLogger(ItemData.class);
 
-    public static Map<Integer, Equip> equips = new HashMap<>();
-    public static Map<Integer, ItemInfo> items = new HashMap<>();
+    public static Map<Integer, EquipTemplate> equipTemplates = new HashMap<>();
+    public static Map<Integer, ItemTemplate> items = new HashMap<>();
     public static List<ItemOption> itemOptions = new ArrayList<>();
 
     /**
@@ -48,32 +48,33 @@ public class ItemData {
      * <code>itemId</code>.
      */
     public static Equip getEquipDeepCopyFromId(int itemId) {
-        Equip e = getEquipById(itemId);
-        Equip ret = e == null ? null : e.deepCopy();
+        EquipTemplate t = getEquipTemplateById(itemId);
+        Equip ret = t == null ? null : t.toEquip();
         if (ret != null) {
             ret.setQuantity(1);
             ret.setCuttable((short) -1);
             ret.setItemState((short) ItemState.ENHANCABLE.getValue());
+            ret.setDateExpire(new FileTime(-1));
         }
         return ret;
     }
 
-    private static Equip getEquipById(int itemId) {
-        return getEquips().getOrDefault(itemId, getEquipFromFile(itemId));
+    private static EquipTemplate getEquipTemplateById(int itemId) {
+        return getEquipTemplates().getOrDefault(itemId, getEquipTemplateFromFile(itemId));
     }
 
-    private static Equip getEquipFromFile(int itemId) {
-        String fieldDir = String.format("%s/equips/%d.dat", CoreConfig.DAT_PATH, itemId);
+    private static EquipTemplate getEquipTemplateFromFile(int itemId) {
+        String fieldDir = String.format("%s/equipTemplates/%d.dat", CoreConfig.DAT_PATH, itemId);
         File file = new File(fieldDir);
         if (!file.exists()) {
             return null;
         } else {
-            return readEquipFromFile(file);
+            return readEquipTemplateFromFile(file);
         }
     }
 
-    private static Equip readEquipFromFile(File file) {
-        Equip equip = null;
+    private static EquipTemplate readEquipTemplateFromFile(File file) {
+        EquipTemplate t = null;
         try {
             DataInputStream dataInputStream = new DataInputStream(new FileInputStream(file));
             int itemId = dataInputStream.readInt();
@@ -126,54 +127,93 @@ public class ItemData {
             }
             int fixedGrade = dataInputStream.readInt();
             int specialGrade = dataInputStream.readInt();
-            equip = new Equip(itemId, -1, -1, new FileTime(-1), -1,
-                    null, new FileTime(-1), 0, ruc, (short) 0, iStr, iDex, iInt,
-                    iLuk, iMaxHp, iMaxMp, iPad, iMad, iPDD, iMDD, iAcc, iEva, iCraft,
-                    iSpeed, iJump, (short) 0, (short) 0, (short) 0, (short) 0, (short) 0, (short) 0, (short) 0, (short) 0,
-                    (short) 0, (short) 0, (short) 0, (short) 0, (short) 0, (short) 0, (short) 0, damR, statR, (short) 0, (short) 0,
-                    (short) 0, (short) 0, (short) 0, (short) 0, (short) 0, rStr, rDex, rInt,
-                    rLuk, rLevel, rJob, rPop, cash,
-                    islot, vslot, fixedGrade, options, specialGrade, fixedPotential, tradeBlock, only,
-                    notSale, attackSpeed, price, charmEXP, expireOnLogout, setItemID, exItem, equipTradeBlock, "");
-            equips.put(equip.getItemId(), equip);
+
+            t = new EquipTemplate();
+            t.setItemId(itemId);
+            t.setRuc(ruc);
+            t.setIStr(iStr);
+            t.setIDex(iDex);
+            t.setIInt(iInt);
+            t.setILuk(iLuk);
+            t.setIMaxHp(iMaxHp);
+            t.setIMaxMp(iMaxMp);
+            t.setIPad(iPad);
+            t.setIMad(iMad);
+            t.setIPDD(iPad);
+            t.setIMDD(iMDD);
+            t.setIAcc(iAcc);
+            t.setIEva(iEva);
+            t.setIPad(iPad);
+            t.setIPad(iPad);
+            t.setICraft(iCraft);
+            t.setISpeed(iSpeed);
+            t.setIJump(iJump);
+            t.setRStr(rStr);
+            t.setRInt(rInt);
+            t.setRDex(rDex);
+            t.setRLuk(rLuk);
+            t.setRLevel(rLevel);
+            t.setRJob(rJob);
+            t.setDamR(damR);
+            t.setRPop(rPop);
+            t.setCash(cash);
+            t.setISlot(islot);
+            t.setVSlot(vslot);
+            t.setFixedGrade(fixedGrade);
+            t.setSpecialGrade(specialGrade);
+            t.setFixedPotential(fixedPotential);
+            t.setTradeBlock(tradeBlock);
+            t.setOnly(only);
+            t.setNotSale(notSale);
+            t.setAttackSpeed(attackSpeed);
+            t.setPrice(price);
+            t.setCharmEXP(charmEXP);
+            t.setExpireOnLogout(expireOnLogout);
+            t.setItemId(itemId);
+            t.setExItem(exItem);
+            t.setFixedGrade(fixedGrade);
+            t.setEquipTradeBlock(equipTradeBlock);
+            t.setOptions(options);
+            t.setSpecialGrade(specialGrade);
+            equipTemplates.put(t.getItemId(), t);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return equip;
+        return t;
     }
 
-    @DataSaver(varName = "equips")
+    @DataSaver(varName = "equipTemplates")
     public static void saveEquips(String dir) {
         DirUtils.makeDirIfAbsent(dir);
         DataOutputStream dataOutputStream;
         try {
-            for (Equip equip : getEquips().values()) {
+            for (EquipTemplate equip : getEquipTemplates().values()) {
                 dataOutputStream = new DataOutputStream(new FileOutputStream(dir + "/" + equip.getItemId() + ".dat"));
                 dataOutputStream.writeInt(equip.getItemId());
-                dataOutputStream.writeUTF(equip.getiSlot());
-                dataOutputStream.writeUTF(equip.getvSlot());
-                dataOutputStream.writeShort(equip.getrJob());
-                dataOutputStream.writeShort(equip.getrLevel());
-                dataOutputStream.writeShort(equip.getrStr());
-                dataOutputStream.writeShort(equip.getrDex());
-                dataOutputStream.writeShort(equip.getrInt());
-                dataOutputStream.writeShort(equip.getrLuk());
-                dataOutputStream.writeShort(equip.getrPop());
-                dataOutputStream.writeShort(equip.getiStr());
-                dataOutputStream.writeShort(equip.getiDex());
-                dataOutputStream.writeShort(equip.getiInt());
-                dataOutputStream.writeShort(equip.getiLuk());
-                dataOutputStream.writeShort(equip.getiPDD());
-                dataOutputStream.writeShort(equip.getiMDD());
-                dataOutputStream.writeShort(equip.getiMaxHp());
-                dataOutputStream.writeShort(equip.getiMaxMp());
-                dataOutputStream.writeShort(equip.getiPad());
-                dataOutputStream.writeShort(equip.getiMad());
-                dataOutputStream.writeShort(equip.getiEva());
-                dataOutputStream.writeShort(equip.getiAcc());
-                dataOutputStream.writeShort(equip.getiCraft());
-                dataOutputStream.writeShort(equip.getiSpeed());
-                dataOutputStream.writeShort(equip.getiJump());
+                dataOutputStream.writeUTF(equip.getISlot());
+                dataOutputStream.writeUTF(equip.getVSlot());
+                dataOutputStream.writeShort(equip.getRJob());
+                dataOutputStream.writeShort(equip.getRLevel());
+                dataOutputStream.writeShort(equip.getRStr());
+                dataOutputStream.writeShort(equip.getRDex());
+                dataOutputStream.writeShort(equip.getRInt());
+                dataOutputStream.writeShort(equip.getRLuk());
+                dataOutputStream.writeShort(equip.getRPop());
+                dataOutputStream.writeShort(equip.getIStr());
+                dataOutputStream.writeShort(equip.getIDex());
+                dataOutputStream.writeShort(equip.getIInt());
+                dataOutputStream.writeShort(equip.getILuk());
+                dataOutputStream.writeShort(equip.getIPDD());
+                dataOutputStream.writeShort(equip.getIMDD());
+                dataOutputStream.writeShort(equip.getIMaxHp());
+                dataOutputStream.writeShort(equip.getIMaxMp());
+                dataOutputStream.writeShort(equip.getIPad());
+                dataOutputStream.writeShort(equip.getIMad());
+                dataOutputStream.writeShort(equip.getIEva());
+                dataOutputStream.writeShort(equip.getIAcc());
+                dataOutputStream.writeShort(equip.getICraft());
+                dataOutputStream.writeShort(equip.getISpeed());
+                dataOutputStream.writeShort(equip.getIJump());
                 dataOutputStream.writeShort(equip.getDamR());
                 dataOutputStream.writeShort(equip.getStatR());
                 dataOutputStream.writeShort(equip.getRuc());
@@ -434,26 +474,67 @@ public class ItemData {
                                 specialGrade = Integer.parseInt(attributes.get("value"));
                             }
                         }
-                        Equip equip = new Equip(itemId, -1, -1, new FileTime(-1), -1,
-                                null, new FileTime(-1), 0, (short) ruc, (short) 0, (short) incStr, (short) incDex, (short) incInt,
-                                (short) incLuk, (short) incMHP, (short) incMMP, (short) incPAD, (short) incMAD, (short) incPDD, (short) incMDD, (short) incACC, (short) incEVA, (short) incCraft,
-                                (short) incSpeed, (short) incJump, (short) 0, (short) 0, (short) 0, (short) 0, (short) 0, (short) 0, (short) 0, (short) 0,
-                                (short) 0, (short) 0, (short) 0, (short) 0, (short) 0, (short) 0, (short) 0, (short) damR, (short) statR, (short) 0, (short) 0,
-                                (short) 0, (short) 0, (short) 0, (short) 0, (short) 0, (short) reqStr, (short) reqDex, (short) reqInt,
-                                (short) reqLuk, (short) reqLevel, (short) reqJob, (short) reqPop, cash,
-                                islot, vslot, fixedGrade, options, specialGrade, fixedPotential, tradeBlock, only,
-                                notSale, attackSpeed, price, charmEXP, expireOnLogout, setItemID, exItem, equipTradeBlock, "");
-                        equips.put(equip.getItemId(), equip);
+
+                        EquipTemplate t = new EquipTemplate();
+
+
+                        t.setItemId(itemId);
+                        t.setRuc((short) ruc);
+                        t.setIStr((short) incStr);
+                        t.setIDex((short) incDex);
+                        t.setIInt((short) incInt);
+                        t.setILuk((short) incLuk);
+                        t.setIMaxHp((short) incMHP);
+                        t.setIMaxMp((short) incMMP);
+                        t.setIPad((short) incPAD);
+                        t.setIMad((short) incMAD);
+                        t.setIPDD((short) incPDD);
+                        t.setIMDD((short) incMDD);
+                        t.setIAcc((short) incACC);
+                        t.setIEva((short) incEVA);
+                        t.setIPad((short) incPAD);
+                        t.setIPad((short) incPAD);
+                        t.setICraft((short) incCraft);
+                        t.setISpeed((short) incSpeed);
+                        t.setIJump((short) incJump);
+                        t.setRStr((short) reqStr);
+                        t.setRInt((short) reqInt);
+                        t.setRDex((short) reqDex);
+                        t.setRLuk((short) reqLuk);
+                        t.setRLevel((short) reqLevel);
+                        t.setRJob((short) reqJob);
+                        t.setDamR((short) damR);
+                        t.setRPop((short) reqPop);
+                        t.setCash(cash);
+                        t.setISlot(islot);
+                        t.setVSlot(vslot);
+                        t.setFixedGrade(fixedGrade);
+                        t.setSpecialGrade(specialGrade);
+                        t.setFixedPotential(fixedPotential);
+                        t.setTradeBlock(tradeBlock);
+                        t.setOnly(only);
+                        t.setNotSale(notSale);
+                        t.setAttackSpeed(attackSpeed);
+                        t.setPrice(price);
+                        t.setCharmEXP(charmEXP);
+                        t.setExpireOnLogout(expireOnLogout);
+                        t.setItemId(itemId);
+                        t.setExItem(exItem);
+                        t.setFixedGrade(fixedGrade);
+                        t.setEquipTradeBlock(equipTradeBlock);
+                        t.setOptions(options);
+                        t.setSpecialGrade(specialGrade);
+                        getEquipTemplates().put(t.getItemId(), t);
                     }
                 }
             }
         }
     }
 
-    public static ItemInfo loadItemByFile(File file) {
-        ItemInfo itemInfo = null;
+    public static ItemTemplate loadItemByFile(File file) {
+        ItemTemplate itemInfo = null;
         try {
-            itemInfo = new ItemInfo();
+            itemInfo = new ItemTemplate();
             DataInputStream dataInputStream = new DataInputStream(new FileInputStream(file));
             itemInfo.setItemId(dataInputStream.readInt());
             itemInfo.setInvType(InvType.getInvTypeByString(dataInputStream.readUTF()));
@@ -503,7 +584,7 @@ public class ItemData {
         DirUtils.makeDirIfAbsent(dir);
         DataOutputStream dataOutputStream;
         try {
-            for (ItemInfo ii : getItems().values()) {
+            for (ItemTemplate ii : getItems().values()) {
                 dataOutputStream = new DataOutputStream(new FileOutputStream(new File(dir + "/" + ii.getItemId() + ".dat")));
                 dataOutputStream.writeInt(ii.getItemId());
                 dataOutputStream.writeUTF(ii.getInvType().toString());
@@ -561,7 +642,7 @@ public class ItemData {
                         continue;
                     }
                     int id = Integer.parseInt(nodeName);
-                    ItemInfo item = new ItemInfo();
+                    ItemTemplate item = new ItemTemplate();
                     item.setItemId(id);
                     item.setInvType(InvType.getInvTypeByString(subMap));
                     Node infoNode = XMLApi.getFirstChildByNameBF(mainNode, "info");
@@ -989,7 +1070,7 @@ public class ItemData {
         }
     }
 
-    public static Item getDeepCopyByItemInfo(ItemInfo itemInfo) {
+    public static Item getDeepCopyByItemInfo(ItemTemplate itemInfo) {
         if (itemInfo == null) {
             return null;
         }
@@ -1005,8 +1086,8 @@ public class ItemData {
         return getDeepCopyByItemInfo(getItemInfoByID(id));
     }
 
-    public static ItemInfo getItemInfoByID(int itemID) {
-        ItemInfo ii = getItems().getOrDefault(itemID, null);
+    public static ItemTemplate getItemInfoByID(int itemID) {
+        ItemTemplate ii = getItems().getOrDefault(itemID, null);
         if (ii == null) {
             File file = new File(String.format("%s/items/%d.dat", CoreConfig.DAT_PATH, itemID));
             if (!file.exists()) {
@@ -1018,8 +1099,8 @@ public class ItemData {
         return ii;
     }
 
-    public static Map<Integer, Equip> getEquips() {
-        return equips;
+    public static Map<Integer, EquipTemplate> getEquipTemplates() {
+        return equipTemplates;
     }
 
     public static void loadItemOptionsFromWZ() {
@@ -1106,7 +1187,7 @@ public class ItemData {
         loadEquipsFromWz();
         loadItemsFromWZ();
         QuestData.linkItemData();
-        saveEquips(CoreConfig.DAT_PATH + "/equips");
+        saveEquips(CoreConfig.DAT_PATH + "/equipTemplates");
         saveItems(CoreConfig.DAT_PATH + "/items");
         loadItemOptionsFromWZ();
         saveItemOptions(CoreConfig.DAT_PATH);
@@ -1116,11 +1197,11 @@ public class ItemData {
         generateDatFiles();
     }
 
-    public static Map<Integer, ItemInfo> getItems() {
+    public static Map<Integer, ItemTemplate> getItems() {
         return items;
     }
 
-    public static void addItemInfo(ItemInfo ii) {
+    public static void addItemInfo(ItemTemplate ii) {
         getItems().put(ii.getItemId(), ii);
     }
 }

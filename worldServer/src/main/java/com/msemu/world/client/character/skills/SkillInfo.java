@@ -3,6 +3,8 @@ package com.msemu.world.client.character.skills;
 import com.msemu.commons.utils.StringUtils;
 import com.msemu.commons.utils.types.Rect;
 import com.msemu.world.enums.SkillStat;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -16,56 +18,35 @@ import java.util.Map;
  * Created by Weber on 2018/4/11.
  */
 public class SkillInfo {
+    @Getter
+    @Setter
     private int skillId;
+    @Getter
+    @Setter
     private int rootId;
+    @Getter
+    @Setter
     private int maxLevel;
+    @Getter
+    @Setter
     private int currentLevel;
-    private Map<SkillStat, String> skillStatInfo = new HashMap<>();
+    @Getter
+    @Setter
     private boolean invisible;
+    @Getter
+    @Setter
     private int masterLevel;
+    @Getter
+    @Setter
     private int fixLevel;
-    private List<Rect> rects = new ArrayList<>();
+    @Getter
+    @Setter
     private boolean massSpell;
 
-    public int getSkillId() {
-        return skillId;
-    }
-
-    public void setSkillId(int skillId) {
-        this.skillId = skillId;
-    }
-
-    public int getRootId() {
-        return rootId;
-    }
-
-    public void setRootId(int rootId) {
-        this.rootId = rootId;
-    }
-
-    public int getMaxLevel() {
-        return maxLevel;
-    }
-
-    public void setMaxLevel(int maxLevel) {
-        this.maxLevel = maxLevel;
-    }
-
-    public int getCurrentLevel() {
-        return currentLevel;
-    }
-
-    public void setCurrentLevel(int currentLevel) {
-        this.currentLevel = currentLevel;
-    }
-
-    public Map<SkillStat, String> getSkillStatInfo() {
-        return skillStatInfo;
-    }
-
-    public void setSkillStatInfo(Map<SkillStat, String> skillStatInfo) {
-        this.skillStatInfo = skillStatInfo;
-    }
+    @Getter
+    private List<Rect> rects = new ArrayList<>();
+    @Getter
+    private Map<SkillStat, String> skillStatInfo = new HashMap<>();
 
     public void addSkillStatInfo(SkillStat sc, String value) {
         getSkillStatInfo().put(sc, value);
@@ -103,36 +84,8 @@ public class SkillInfo {
         return result;
     }
 
-    public void setInvisible(boolean invisible) {
-        this.invisible = invisible;
-    }
-
-    public boolean isInvisible() {
-        return invisible;
-    }
-
-    public int getMasterLevel() {
-        return masterLevel;
-    }
-
-    public void setMasterLevel(int masterLevel) {
-        this.masterLevel = masterLevel;
-    }
-
-    public int getFixLevel() {
-        return fixLevel;
-    }
-
-    public void setFixLevel(int fixLevel) {
-        this.fixLevel = fixLevel;
-    }
-
     public void addRect(Rect rect) {
         getRects().add(rect);
-    }
-
-    public List<Rect> getRects() {
-        return rects;
     }
 
     public Rect getLastRect() {
@@ -143,11 +96,4 @@ public class SkillInfo {
         return rects != null && rects.size() > 0 ? rects.get(0) : null;
     }
 
-    public boolean isMassSpell() {
-        return massSpell;
-    }
-
-    public void setMassSpell(boolean massSpell) {
-        this.massSpell = massSpell;
-    }
 }

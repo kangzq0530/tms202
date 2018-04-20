@@ -72,8 +72,6 @@ public abstract class Client<TClient extends Client<TClient>> {
      * will be used to write to as well as the send and recv seeds or IVs.
      *
      * @param connection   the channel object associated with this client session.
-     * @param siv the send seed or IV.
-     * @param riv the recv seed or IV.
      */
     public Client(Connection<TClient> connection) {
         this.connection = connection;
@@ -138,10 +136,17 @@ public abstract class Client<TClient extends Client<TClient>> {
     }
 
     protected void onClose() {
-        if(this.state.compareAndSet(ClientState.CONNECTED, ClientState.DISCONNECTED) || this.state.compareAndSet(ClientState.ENTERED, ClientState.DISCONNECTED)) {
+        if(this.state.compareAndSet(ClientState.CONNECTED, ClientState.DISCONNECTED)
+                || this.state.compareAndSet(ClientState.AUTHED_GG, ClientState.DISCONNECTED)
+                || this.state.compareAndSet(ClientState.AUTHED, ClientState.DISCONNECTED)
+                || this.state.compareAndSet(ClientState.ENTERED, ClientState.DISCONNECTED)) {
             log.info("Client [{}] disconnected.", this);
         }
 
+    }
+
+    protected void onIdle() {
+        log.info("Client [{}] Idle.", this);
     }
 
     public void closeForce() {

@@ -17,7 +17,7 @@ import java.util.TreeMap;
  * Created on 11/23/2017.
  */
 @Entity
-@Table(name = "equips")
+@Table(name = "equipTemplates")
 @PrimaryKeyJoinColumn(name = "itemId")
 public class Equip extends Item {
     @Column(name = "serialNumber")
@@ -244,7 +244,7 @@ public class Equip extends Item {
         this.expireOnLogout = expireOnLogout;
         this.setItemID = setItemID;
         this.exItem = exItem;
-        equipTradeBlock = hasEquipTradeBlock;
+        this.equipTradeBlock = hasEquipTradeBlock;
         this.setOwner(owner);
     }
 

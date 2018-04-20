@@ -61,6 +61,7 @@ public class Connection<TClient extends Client<TClient>> extends ChannelInboundH
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         this.channel.attr(Client.CLIENT_KEY).set(null);
+        this.client.onClose();
     }
 
     @Override
@@ -115,12 +116,14 @@ public class Connection<TClient extends Client<TClient>> extends ChannelInboundH
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable except) {
         if (!(except instanceof ReadTimeoutException) && !(except instanceof IOException)) {
             log.error("An exception occured when reading a packet.", new Exception(except));
+            this.close();
         } else {
             if (except instanceof ReadTimeoutException) {
                 log.error("User has been disconnected due ReadTimeoutException.");
+                client.onIdle();
             }
         }
-        this.close();
+
     }
 
     public void write(OutPacket<TClient> packet) {

@@ -198,7 +198,7 @@ public class FieldData {
                     if(name.equalsIgnoreCase("consumeItemCoolTime")) {
                         field.setConsumeItemCoolTime(Integer.parseInt(value));
                     }
-                    if(name.equalsIgnoreCase("link")) {
+                    if(name.equalsIgnoreCase("value")) {
                         field.setLink(Integer.parseInt(value));
                     }
                 }

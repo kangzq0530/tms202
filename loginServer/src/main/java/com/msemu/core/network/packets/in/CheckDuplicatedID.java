@@ -23,7 +23,7 @@ public class CheckDuplicatedID extends InPacket<LoginClient> {
     @Override
     public void runImpl() {
         //TODO 判斷ID能不能用
-        boolean result = true;
-        client.write(new CheckDuplicatedIDResult(charName, result));
+        boolean used = false;
+        client.write(new CheckDuplicatedIDResult(charName, used));
     }
 }

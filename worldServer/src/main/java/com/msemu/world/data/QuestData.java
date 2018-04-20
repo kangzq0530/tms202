@@ -3,7 +3,7 @@ package com.msemu.world.data;
 import com.msemu.commons.utils.DirUtils;
 import com.msemu.commons.utils.XMLApi;
 import com.msemu.core.configs.CoreConfig;
-import com.msemu.world.client.character.items.ItemInfo;
+import com.msemu.world.data.templates.ItemTemplate;
 import com.msemu.world.client.character.quest.Quest;
 import com.msemu.world.client.character.quest.QuestInfo;
 import com.msemu.world.client.character.quest.requirements.*;
@@ -469,15 +469,15 @@ public class QuestData {
                             .collect(Collectors.toSet())) { // readability is overrated
                 int itemID = qpmr.getItemID();
                 if (ItemConstants.isEquip(itemID)) {
-                    // create new ItemInfos just for equips that are required for quests
-                    // normally ItemInfo is just for non-equips.
-                    ItemInfo ii = new ItemInfo();
+                    // create new ItemInfos just for equipTemplates that are required for quests
+                    // normally ItemTemplate is just for non-equipTemplates.
+                    ItemTemplate ii = new ItemTemplate();
                     ii.setItemId(itemID);
                     ii.setInvType(InvType.EQUIP);
                     ii.addQuest(qi.getQuestID());
                     ItemData.addItemInfo(ii);
                 } else {
-                    ItemInfo item = ItemData.getItemInfoByID(qpmr.getItemID());
+                    ItemTemplate item = ItemData.getItemInfoByID(qpmr.getItemID());
                     if (item != null) {
                         item.addQuest(qi.getQuestID());
                     }
