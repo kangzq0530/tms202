@@ -1,5 +1,6 @@
 package com.msemu.login.client.character.items;
 
+import com.msemu.commons.database.Schema;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.utils.types.FileTime;
 import com.msemu.commons.enums.InvType;
@@ -14,6 +15,7 @@ import java.util.Arrays;
 /**
  * Created by Weber on 2018/4/11.
  */
+@Schema
 @Entity
 @Table(name = "items")
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -180,5 +182,6 @@ public class Item implements Serializable {
             return Arrays.stream(Type.values()).filter(type -> type.getValue() == id).findFirst().orElse(null);
         }
     }
+
 }
 

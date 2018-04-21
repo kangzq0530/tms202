@@ -110,6 +110,11 @@ public class FileTime implements Serializable {
         return new FileTime((int) value, (int) (value >> 32));
     }
 
+    public void encodeR(OutPacket outPacket) {
+        outPacket.encodeInt(getLowDateTime());
+        outPacket.encodeInt(getHighDateTime());
+    }
+
     public void encode(OutPacket outPacket) {
         outPacket.encodeInt(getHighDateTime());
         outPacket.encodeInt(getLowDateTime());

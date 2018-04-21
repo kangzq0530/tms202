@@ -1,5 +1,6 @@
 package com.msemu.world.client.character.quest;
 
+import com.msemu.commons.database.Schema;
 import com.msemu.commons.utils.types.FileTime;
 import com.msemu.commons.utils.StringUtils;
 import com.msemu.world.client.character.items.Item;
@@ -16,7 +17,7 @@ import java.util.stream.Collectors;
 /**
  * Created by Weber on 2018/4/13.
  */
-
+@Schema
 @Entity
 @Table(name = "quests")
 public class Quest {

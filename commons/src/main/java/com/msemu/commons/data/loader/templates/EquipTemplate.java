@@ -93,12 +93,6 @@ public class EquipTemplate extends ItemTemplate {
     private short iIncReq;
     @Getter
     @Setter
-    private short growthEnchant;
-    @Getter
-    @Setter
-    private short psEnchant;
-    @Getter
-    @Setter
     private short bdr;
     @Getter
     @Setter
@@ -153,7 +147,7 @@ public class EquipTemplate extends ItemTemplate {
     private short rPop;
     @Getter
     @Setter
-    private Map<Integer, EquipOption> options = new HashMap<>(); // base + add pot
+    private Map<Integer, EquipOption> options = new HashMap<>(7); // base + add pot
     @Getter
     @Setter
     private int specialGrade;

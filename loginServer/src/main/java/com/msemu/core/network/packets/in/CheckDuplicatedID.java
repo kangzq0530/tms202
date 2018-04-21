@@ -3,6 +3,8 @@ package com.msemu.core.network.packets.in;
 import com.msemu.commons.network.packets.InPacket;
 import com.msemu.core.network.LoginClient;
 import com.msemu.core.network.packets.out.Login.CheckDuplicatedIDResult;
+import com.msemu.login.client.character.Character;
+import com.msemu.login.data.StringData;
 
 /**
  * Created by Weber on 2018/4/19.
@@ -22,8 +24,9 @@ public class CheckDuplicatedID extends InPacket<LoginClient> {
 
     @Override
     public void runImpl() {
-        //TODO 判斷ID能不能用
-        boolean used = false;
+
+        boolean used = Character.isNameExists(charName) ||
+                StringData.getInstance().getForbiddenNames().contains(charName);
         client.write(new CheckDuplicatedIDResult(charName, used));
     }
 }

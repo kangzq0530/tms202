@@ -1,4 +1,5 @@
 package com.msemu.world.client.character.quest;
+import com.msemu.commons.database.Schema;
 import com.msemu.commons.utils.types.FileTime;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.items.Item;
@@ -23,6 +24,7 @@ import static com.msemu.world.enums.QuestStatus.STARTED;
 /**
  * Created by Weber on 2018/4/13.
  */
+@Schema
 @Entity
 @Table(name = "questManagers")
 public class QuestManager {

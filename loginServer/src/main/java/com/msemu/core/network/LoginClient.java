@@ -6,6 +6,7 @@ import com.msemu.commons.network.crypt.MapleCrypt;
 import com.msemu.core.configs.CoreConfig;
 import com.msemu.core.network.packets.out.Login.ConnectToClient;
 import com.msemu.login.client.Account;
+import com.msemu.login.client.character.Character;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -38,5 +39,6 @@ public class LoginClient extends Client<LoginClient> {
         MapleCrypt crypt = new MapleCrypt(CoreConfig.GAME_SERVICE_TYPE, (short) CoreConfig.GAME_VERSION);
         getConnection().setCipher(crypt);
     }
+
 
 }

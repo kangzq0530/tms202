@@ -1,6 +1,8 @@
 package com.msemu.login.client.character.items;
 
 
+import com.msemu.commons.data.loader.templates.EquipTemplate;
+import com.msemu.commons.database.Schema;
 import com.msemu.commons.enums.*;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.utils.Rand;
@@ -17,8 +19,9 @@ import java.util.TreeMap;
 /**
  * Created on 11/23/2017.
  */
+@Schema
 @Entity
-@Table(name = "equipTemplates")
+@Table(name = "Equips")
 @PrimaryKeyJoinColumn(name = "itemId")
 public class Equip extends Item {
     @Column(name = "serialNumber")
@@ -309,88 +312,90 @@ public class Equip extends Item {
         super();
     }
 
-    public Equip(int itemId, int bagIndex, long cashItemSerialNumber, FileTime dateExpire, long serialNumber,
-                 String title, FileTime equippedDate, int prevBonusExpRate, short ruc, short cuc, short iStr,
-                 short iDex, short iInt, short iLuk, short iMaxHp, short iMaxMp, short iPad, short iMad, short iPDD,
-                 short iMDD, short iAcc, short iEva, short iCraft, short iSpeed, short iJump, short attribute,
-                 short levelUpType, short level, short exp, short durability, short iuc, short iPvpDamage,
-                 short iReduceReq, short specialAttribute, short durabilityMax, short iIncReq, short growthEnchant,
-                 short psEnchant, short bdr, short imdr, short damR, short statR, short cuttable, short exGradeOption,
-                 short itemState, short chuc, short soulOptionId, short soulSocketId, short soulOption,
-                 short rStr, short rDex, short rInt, short rLuk, short rLevel, short rJob, short rPop, boolean isCash,
-                 String iSlot, String vSlot, int fixedGrade, List<Integer> options, int specialGrade, boolean fixedPotential,
-                 boolean tradeBlock, boolean only, boolean notSale, int attackSpeed, int price, int charmEXP,
-                 boolean expireOnLogout, int setItemID, boolean exItem, boolean hasEquipTradeBlock, String owner) {
-        super(itemId, bagIndex, cashItemSerialNumber, dateExpire, InvType.EQUIP, isCash, Type.EQUIP);
-        this.serialNumber = serialNumber;
-        this.title = title;
-        this.equippedDate = equippedDate;
-        this.prevBonusExpRate = prevBonusExpRate;
-        this.ruc = ruc;
-        this.cuc = cuc;
-        this.iStr = iStr;
-        this.iDex = iDex;
-        this.iInt = iInt;
-        this.iLuk = iLuk;
-        this.iMaxHp = iMaxHp;
-        this.iMaxMp = iMaxMp;
-        this.iPad = iPad;
-        this.iMad = iMad;
-        this.iPDD = iPDD;
-        this.iMDD = iMDD;
-        this.iAcc = iAcc;
-        this.iEva = iEva;
-        this.iCraft = iCraft;
-        this.iSpeed = iSpeed;
-        this.iJump = iJump;
-        this.attribute = attribute;
-        this.levelUpType = levelUpType;
-        this.level = level;
-        this.exp = exp;
-        this.durability = durability;
-        this.iuc = iuc;
-        this.iPvpDamage = iPvpDamage;
-        this.iReduceReq = iReduceReq;
-        this.specialAttribute = specialAttribute;
-        this.durabilityMax = durabilityMax;
-        this.iIncReq = iIncReq;
-        this.growthEnchant = growthEnchant;
-        this.psEnchant = psEnchant;
-        this.bdr = bdr;
-        this.imdr = imdr;
-        this.damR = damR;
-        this.statR = statR;
-        this.cuttable = cuttable;
-        this.exGradeOption = exGradeOption;
-        this.itemState = itemState;
-        this.chuc = chuc;
-        this.soulOptionId = soulOptionId;
-        this.soulSocketId = soulSocketId;
-        this.soulOption = soulOption;
-        this.rStr = rStr;
-        this.rDex = rDex;
-        this.rInt = rInt;
-        this.rLuk = rLuk;
-        this.rLevel = rLevel;
-        this.rJob = rJob;
-        this.rPop = rPop;
-        this.iSlot = iSlot;
-        this.vSlot = vSlot;
-        this.fixedGrade = fixedGrade;
-        this.options = options;
-        this.specialGrade = specialGrade;
-        this.fixedPotential = fixedPotential;
-        this.tradeBlock = tradeBlock;
-        this.only = only;
-        this.notSale = notSale;
-        this.attackSpeed = attackSpeed;
-        this.price = price;
-        this.charmEXP = charmEXP;
-        this.expireOnLogout = expireOnLogout;
-        this.setItemID = setItemID;
-        this.exItem = exItem;
-        this.equipTradeBlock = hasEquipTradeBlock;
-        this.setOwner(owner);
+    public Equip(EquipTemplate t) {
+        this.itemId = t.getItemId();
+        this.title = t.getTitle();
+        // TODO 時間暫時永久
+        this.equippedDate = FileTime.getFileTimeFromType(FileTime.Type.ZERO_TIME);
+        this.prevBonusExpRate = t.getPrevBonusExpRate();
+        this.ruc = t.getTuc();
+        this.cuc = t.getCuc();
+        this.iStr = t.getIStr();
+        this.iDex = t.getIDex();
+        this.iInt = t.getIInt();
+        this.iLuk = t.getILuk();
+        this.iMaxHp = t.getIMaxHp();
+        this.iMaxMp = t.getIMaxMp();
+        this.iPad = t.getIPad();
+        this.iMad = t.getIMad();
+        this.iAcc = t.getIAcc();
+        this.iPDD = t.getIPDD();
+        this.iMDD = t.getIMDD();
+        this.iEva = t.getIEva();
+        this.iCraft = t.getICraft();
+        this.iSpeed = t.getISpeed();
+        this.iJump = t.getIJump();
+        this.iPvpDamage = t.getIPvpDamage();
+        this.iReduceReq = t.getIReduceReq();
+        this.durabilityMax = t.getDurabilityMax();
+        this.iIncReq = t.getIIncReq();
+        this.bdr = t.getBdr();
+        this.imdr = t.getImdr();
+        this.damR = t.getDamR();
+        this.statR = t.getStatR();
+
+        this.attribute = 0;
+        this.levelUpType = 0;
+        this.level = 0;
+        this.exp = 0;
+        this.durability = 0;
+        this.iuc = 0;
+        this.specialAttribute = 0;
+        this.growthEnchant = 0;
+        this.psEnchant = 0;
+
+        this.cuttable = t.getCuttable();
+        this.exGradeOption = t.getExGradeOption();
+        this.itemState = t.getItemState();
+        this.chuc = t.getChuc();
+        this.soulOptionId = t.getSoulOptionId();
+        this.soulSocketId = t.getSoulSocketId();
+        this.soulOption = t.getSoulOption();
+        this.rStr = t.getRStr();
+        this.rDex = t.getRDex();
+        this.rInt = t.getRInt();
+        this.rLuk = t.getRLuk();
+        this.rLevel = t.getRLevel();
+        this.rJob = t.getRJob();
+        this.rPop = t.getRPop();
+        this.iSlot = t.getISlot();
+        this.vSlot = t.getVSlot();
+        this.fixedGrade = t.getFixedGrade();
+        this.options = new ArrayList<>();
+        t.getOptions().values().forEach(option -> {
+            this.options.add(option.getOption());
+        });
+        this.specialGrade = t.getSpecialGrade();
+        this.fixedPotential = t.isFixedPotential();
+        this.tradeBlock = t.isTradeBlock();
+
+        this.only = t.isOnly();
+        this.notSale = t.isNotSale();
+        this.attackSpeed = t.getAttackSpeed();
+        this.price = t.getPrice();
+        this.charmEXP = t.getCharmEXP();
+        this.expireOnLogout = t.isExpireOnLogout();
+        this.setItemID = t.getSetItemID();
+        this.exItem = t.isExItem();
+        this.equipTradeBlock = t.isEquipTradeBlock();
+        this.setOwner(getOwner());
+        this.itemId = t.getItemId();
+        this.cashItemSerialNumber = t.getSerialNumber();
+        this.dateExpire = FileTime.getFileTimeFromType(FileTime.Type.ZERO_TIME);
+        this.invType = t.getInvType();
+        this.type = Type.EQUIP;
+        this.isCash = t.isCash();
+
     }
 
     public Equip deepCopy() {

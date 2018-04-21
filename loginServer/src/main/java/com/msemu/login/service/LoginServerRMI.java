@@ -50,7 +50,7 @@ public class LoginServerRMI extends UnicastRemoteObject implements ILoginServerR
                 worldInfo.getConnection().testConnection();
             } catch (RemoteException except) {
                 worlds.remove(worldInfo.getWorldId());
-                log.info("World ID={} is disconnected.", entry.getKey());
+                log.info("世界伺服器 - {}({})  is disconnected.", worldInfo.getName(), worldInfo.getWorldId());
                 continue;
             }
             break;
@@ -65,13 +65,13 @@ public class LoginServerRMI extends UnicastRemoteObject implements ILoginServerR
     @Override
     public WorldRegisterResult registerWorld(IWorldServerRMI rmi, WorldInfo worldInfo) throws RemoteException {
         if (worlds.containsKey(worldInfo.getWorldId())) {
-            log.warn("World ID={} is already registered", worldInfo.getWorldId());
+            log.warn("世界伺服器 - {}({}) 已在線上", worldInfo.getName(), worldInfo.getWorldId());
             return WorldRegisterResult.ALREADY_REGISTERED;
         }
         WorldInfo info = new WorldInfo();
         info.update(rmi, worldInfo);
         worlds.put(info.getWorldId(), info);
-        log.info("World ID={} is registered", worldInfo.getWorldId());
+        log.info("世界伺服器 - {}({}) 連線成功", worldInfo.getName(), worldInfo.getWorldId());
         return WorldRegisterResult.SUCCESS;
     }
 

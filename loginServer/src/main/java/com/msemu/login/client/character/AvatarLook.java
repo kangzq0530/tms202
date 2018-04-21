@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -131,7 +133,42 @@ public class AvatarLook {
     @Transient
     private int kaiserTailID;
 
+    public AvatarLook() {
+        hairEquips = new ArrayList<>();
+        unseenEquips = new ArrayList<>();
+        petIDs = Arrays.asList(0, 0, 0);
+        totems = new ArrayList<>();
+    }
 
+    public AvatarLook deepCopy() {
+        AvatarLook res = new AvatarLook();
+        res.setGender(getGender());
+        res.setSkin(getSkin());
+        res.setFace(getFace());
+        res.setHair(getHair());
+        res.setWeaponStickerId(getWeaponStickerId());
+        res.setWeaponId(getWeaponId());
+        res.setSubWeaponId(getSubWeaponId());
+        List<Integer> resHairEquips = new ArrayList<>(getHairEquips());
+        res.setHairEquips(resHairEquips);
+        List<Integer> resUnseenEquips = new ArrayList<>(getUnseenEquips());
+        res.setUnseenEquips(resUnseenEquips);
+        List<Integer> resPetIDs = new ArrayList<>(getPetIDs());
+        res.setUnseenEquips(resPetIDs);
+        res.setJob(getJob());
+        res.setDrawElfEar(isDrawElfEar());
+        res.setDemonSlayerDefFaceAcc(getDemonSlayerDefFaceAcc());
+        res.setXenonDefFaceAcc(getXenonDefFaceAcc());
+        res.setBeastTamerDefFaceAcc(getBeastTamerDefFaceAcc());
+        res.setZeroBetaLook(isZeroBetaLook());
+        res.setMixedHairColor(getMixedHairColor());
+        res.setMixHairPercent(getMixHairPercent());
+        List<Integer> resTotems = new ArrayList<>(getTotems());
+        res.setTotems(resTotems);
+        res.setEars(getEars());
+        res.setTail(getTail());
+        return res;
+    }
 
     public void encode(OutPacket outPacket) {
         outPacket.encodeByte(getGender());

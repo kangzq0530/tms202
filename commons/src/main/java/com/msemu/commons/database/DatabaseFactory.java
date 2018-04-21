@@ -59,6 +59,7 @@ public class DatabaseFactory {
                 .setProperty("hibernate.connection.username", DatabaseConfig.USERNAME)
                 .setProperty("hibernate.connection.password", DatabaseConfig.PASSWORD)
                 .setProperty("hibernate.enable_lazy_load_no_trans", "true")
+                .setProperty("hibernate.connection.characterEncoding", "utf8")
                 .setProperty("hibernate.show_sql", String.valueOf(DatabaseConfig.SHOW_SQL));
 
         sessionFactory = configuration.buildSessionFactory();
