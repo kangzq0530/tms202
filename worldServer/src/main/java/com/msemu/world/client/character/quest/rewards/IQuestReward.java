@@ -1,6 +1,6 @@
 package com.msemu.world.client.character.quest.rewards;
 
-import com.msemu.commons.data.DatSerializable;
+import com.msemu.commons.data.dat.DatSerializable;
 import com.msemu.world.client.character.Character;
 
 /**

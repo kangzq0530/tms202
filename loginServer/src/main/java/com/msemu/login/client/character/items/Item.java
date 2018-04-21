@@ -1,9 +1,11 @@
-package com.msemu.world.client.character.items;
+package com.msemu.login.client.character.items;
 
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.utils.types.FileTime;
+import com.msemu.commons.enums.InvType;
 import com.msemu.world.constants.ItemConstants;
-import com.msemu.world.enums.InvType;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -13,60 +15,79 @@ import java.util.Arrays;
  * Created by Weber on 2018/4/11.
  */
 @Entity
-@Table(name = "itemTemplates")
+@Table(name = "items")
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Item implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
+    @Getter
+    @Setter
     private long id;
     @Column(name = "inventoryId")
+    @Getter
+    @Setter
     protected int inventoryId;
     @Column(name = "itemId")
+    @Getter
+    @Setter
     protected int itemId;
     @Column(name = "bagIndex")
+    @Getter
+    @Setter
     protected int bagIndex;
     @Column(name = "cashItemSerialNumber")
+    @Getter
+    @Setter
     protected long cashItemSerialNumber;
     @JoinColumn(name = "dateExpire")
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @Getter
+    @Setter
     protected FileTime dateExpire = FileTime.getFileTimeFromType(FileTime.Type.PERMANENT);
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "invType")
+    @Getter
+    @Setter
     protected InvType invType;
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "type")
+    @Getter
+    @Setter
     protected Type type;
     @Column(name = "isCash")
+    @Getter
+    @Setter
     protected boolean isCash;
     @Column(name = "quantity")
+    @Getter
+    @Setter
     protected int quantity;
     @Column(name = "owner")
+    @Getter
+    @Setter
     private String owner = "";
 
-    public long getId() {
-        return id;
+
+    public Item() {
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public Item(int itemId, int bagIndex, long cashItemSerialNumber, FileTime dateExpire, InvType invType,
+                boolean isCash, Type type) {
+        this.itemId = itemId;
+        this.bagIndex = bagIndex;
+        this.cashItemSerialNumber = cashItemSerialNumber;
+        this.dateExpire = dateExpire;
+        this.invType = invType;
+        this.isCash = isCash;
+        this.type = type;
     }
 
-    public int getInventoryId() {
-        return inventoryId;
-    }
-
-    public void setInventoryId(int inventoryId) {
-        this.inventoryId = inventoryId;
-    }
-
-    public String getOwner() {
-        return owner;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
+    @Override
+    public String toString() {
+        return "資料庫編號: " + getId() + ", 道具ID: " + getItemId() + ", 數量: " + getQuantity() + ", 種類: " + getInvType()
+                + ", 背包位置: " + getBagIndex();
     }
 
     public void drop() {
@@ -85,114 +106,6 @@ public class Item implements Serializable {
         }
     }
 
-    public enum Type {
-        EQUIP(1),
-        ITEM(2),
-        PET(3);
-
-        private byte val;
-
-        Type(byte val) {
-            this.val = val;
-        }
-
-        Type(int val) {
-            this((byte) val);
-        }
-
-        public byte getValue() {
-            return val;
-        }
-
-        public static Type getTypeById(int id) {
-            return Arrays.stream(Type.values()).filter(type -> type.getValue() == id).findFirst().orElse(null);
-        }
-    }
-
-    public Item() {
-    }
-
-    public Item(int itemId, int bagIndex, long cashItemSerialNumber, FileTime dateExpire, InvType invType,
-                boolean isCash, Type type) {
-        this.itemId = itemId;
-        this.bagIndex = bagIndex;
-        this.cashItemSerialNumber = cashItemSerialNumber;
-        this.dateExpire = dateExpire;
-        this.invType = invType;
-        this.isCash = isCash;
-        this.type = type;
-    }
-
-    public int getItemId() {
-        return itemId;
-    }
-
-    public int getBagIndex() {
-        return bagIndex;
-    }
-
-    public void setBagIndex(int bagIndex) {
-        this.bagIndex = Math.abs(bagIndex);
-    }
-
-    public long getCashItemSerialNumber() {
-        return cashItemSerialNumber;
-    }
-
-    public FileTime getDateExpire() {
-        return dateExpire;
-    }
-
-    public InvType getInvType() {
-        return invType;
-    }
-
-    public Type getType() {
-        return type;
-    }
-
-    public boolean isCash() {
-        return isCash;
-    }
-
-
-    public void setItemId(int itemId) {
-        this.itemId = itemId;
-    }
-
-    public void setCashItemSerialNumber(long cashItemSerialNumber) {
-        this.cashItemSerialNumber = cashItemSerialNumber;
-    }
-
-    public void setDateExpire(FileTime dateExpire) {
-        this.dateExpire = dateExpire;
-    }
-
-    public void setInvType(InvType invType) {
-        this.invType = invType;
-    }
-
-    public void setType(Type type) {
-        this.type = type;
-    }
-
-    public void setCash(boolean cash) {
-        isCash = cash;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    @Override
-    public String toString() {
-        return "Id: " + getId() + ", ItemId: " + getItemId() + ", Qty: " + getQuantity() + ", InvType: " + getInvType()
-                + ", BagIndex: " + getBagIndex();
-    }
 
     public void encode(OutPacket outPacket) {
         outPacket.encodeByte(getType().getValue());
@@ -244,5 +157,28 @@ public class Item implements Serializable {
         }
     }
 
+
+    public enum Type {
+        EQUIP(1),
+        ITEM(2),
+        PET(3);
+        private byte value;
+
+        Type(byte val) {
+            this.value = val;
+        }
+
+        Type(int val) {
+            this((byte) val);
+        }
+
+        public byte getValue() {
+            return value;
+        }
+
+        public static Type getTypeById(int id) {
+            return Arrays.stream(Type.values()).filter(type -> type.getValue() == id).findFirst().orElse(null);
+        }
+    }
 }
 

@@ -38,7 +38,7 @@ public class Option {
     }
 
     public Option(int itemID, long duration) {
-        // hack to have a constructorfor items
+        // hack to have a constructorfor itemTemplates
         this.tTerm = (int) duration;
         this.nReason = itemID;
         this.rOption = itemID;

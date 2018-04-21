@@ -1,4 +1,4 @@
-package com.msemu.commons.data;
+package com.msemu.commons.data.dat;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

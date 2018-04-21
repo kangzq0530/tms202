@@ -23,6 +23,7 @@ public enum StartupLevel implements IStartupLevel {
     Event,
     Database,
     Service,
+    Wz,
     Data,
     World,
     Network,

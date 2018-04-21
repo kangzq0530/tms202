@@ -1,15 +1,12 @@
-package com.msemu.world.data.templates;
+package com.msemu.commons.data.loader.templates;
 
-import com.msemu.world.enums.InvType;
+import com.msemu.commons.enums.InvType;
 import com.msemu.commons.enums.ScrollStat;
 import com.msemu.commons.enums.SpecStat;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by Weber on 2018/4/13.
@@ -21,6 +18,12 @@ public class ItemTemplate {
     @Getter
     @Setter
     private InvType invType;
+    @Getter
+    @Setter
+    private int time;
+    @Getter
+    @Setter
+    private int stateChangeItem;
     @Getter
     @Setter
     private boolean cash;
@@ -39,6 +42,18 @@ public class ItemTemplate {
     @Getter
     @Setter
     private String path = "";
+    @Getter
+    @Setter
+    private int rate;
+    @Getter
+    @Setter
+    private int reqSkillLevel;
+    @Getter
+    @Setter
+    private int masterLevel;
+    @Getter
+    @Setter
+    private int success;
     @Getter
     @Setter
     private boolean noCursed;
@@ -84,6 +99,37 @@ public class ItemTemplate {
     @Getter
     @Setter
     private String script = "";
+    @Getter
+    private List<Integer> skills = new ArrayList<>();
+    @Getter
+    @Setter
+    private String noFlip = "";
+    @Getter
+    @Setter
+    private int reqLevel;
+    @Getter
+    @Setter
+    private int karma;
+    @Getter
+    @Setter
+    private int flatRate, limitMin, limitLess, sharedStatCostGrade, levelVariation, maxDays
+            , addTime, maxLevel, pvpChannelLimited, minLevel
+            , recoveryRate, recoveryHP, recoveryMP, tamingMob, dama, sitEmotion, meso
+            , mesomin, mesomax, mesostdev, floatType, type, direction, npc
+            , minusLevel, skillEffectID, dressUpgrade, recover;
+
+    @Setter
+    @Getter
+    private boolean accountSharable, expireOnLogout , timeLimited, soldInform, purchaseShop
+            , removeBody, randstat, blackUpgrade;
+    @Getter
+    @Setter
+    private int map;
+    @Getter
+    @Setter
+    private String path4Top;
+
+
 
     public void putScrollStat(ScrollStat scrollStat, int val) {
         getScrollStats().put(scrollStat, val);

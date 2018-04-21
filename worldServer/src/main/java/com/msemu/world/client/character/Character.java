@@ -583,7 +583,7 @@ public class Character {
 
     /**
      * Consumes an item of this Char with the given id. Will do nothing if the Char doesn't have the Item.
-     * Only works for non-Equip (i.e., type is not EQUIPPED or EQUIP, CASH is fine) items.
+     * Only works for non-Equip (i.e., type is not EQUIPPED or EQUIP, CASH is fine) itemTemplates.
      * Calls {@link #consumeItem(Item)} if an Item is found.
      *
      * @param id       The Item's id.

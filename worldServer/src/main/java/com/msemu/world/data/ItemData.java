@@ -14,8 +14,8 @@ import com.msemu.world.data.templates.EquipTemplate;
 import com.msemu.world.data.templates.ItemTemplate;
 import com.msemu.world.enums.InvType;
 import com.msemu.world.enums.ItemState;
-import com.msemu.world.enums.ScrollStat;
-import com.msemu.world.enums.SpecStat;
+import com.msemu.commons.enums.ScrollStat;
+import com.msemu.commons.enums.SpecStat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.msemu.world.client.character.items.Item.Type.ITEM;
-import static com.msemu.world.enums.ScrollStat.*;
+import static com.msemu.commons.enums.ScrollStat.*;
 
 /**
  * Created by Weber on 2018/4/12.
@@ -37,7 +37,7 @@ public class ItemData {
     private static final Logger log = LoggerFactory.getLogger(ItemData.class);
 
     public static Map<Integer, EquipTemplate> equipTemplates = new HashMap<>();
-    public static Map<Integer, ItemTemplate> items = new HashMap<>();
+    public static Map<Integer, ItemTemplate> itemTemplates = new HashMap<>();
     public static List<ItemOption> itemOptions = new ArrayList<>();
 
     /**
@@ -571,7 +571,7 @@ public class ItemData {
             for (int i = 0; i < size; i++) {
                 itemInfo.addQuest(dataInputStream.readInt());
             }
-            getItems().put(itemInfo.getItemId(), itemInfo);
+            getItemTemplates().put(itemInfo.getItemId(), itemInfo);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -584,7 +584,7 @@ public class ItemData {
         DirUtils.makeDirIfAbsent(dir);
         DataOutputStream dataOutputStream;
         try {
-            for (ItemTemplate ii : getItems().values()) {
+            for (ItemTemplate ii : getItemTemplates().values()) {
                 dataOutputStream = new DataOutputStream(new FileOutputStream(new File(dir + "/" + ii.getItemId() + ".dat")));
                 dataOutputStream.writeInt(ii.getItemId());
                 dataOutputStream.writeUTF(ii.getInvType().toString());
@@ -1064,7 +1064,7 @@ public class ItemData {
                             }
                         }
                     }
-                    getItems().put(item.getItemId(), item);
+                    getItemTemplates().put(item.getItemId(), item);
                 }
             }
         }
@@ -1087,9 +1087,9 @@ public class ItemData {
     }
 
     public static ItemTemplate getItemInfoByID(int itemID) {
-        ItemTemplate ii = getItems().getOrDefault(itemID, null);
+        ItemTemplate ii = getItemTemplates().getOrDefault(itemID, null);
         if (ii == null) {
-            File file = new File(String.format("%s/items/%d.dat", CoreConfig.DAT_PATH, itemID));
+            File file = new File(String.format("%s/itemTemplates/%d.dat", CoreConfig.DAT_PATH, itemID));
             if (!file.exists()) {
                 return null;
             } else {
@@ -1188,7 +1188,7 @@ public class ItemData {
         loadItemsFromWZ();
         QuestData.linkItemData();
         saveEquips(CoreConfig.DAT_PATH + "/equipTemplates");
-        saveItems(CoreConfig.DAT_PATH + "/items");
+        saveItems(CoreConfig.DAT_PATH + "/itemTemplates");
         loadItemOptionsFromWZ();
         saveItemOptions(CoreConfig.DAT_PATH);
     }
@@ -1197,11 +1197,11 @@ public class ItemData {
         generateDatFiles();
     }
 
-    public static Map<Integer, ItemTemplate> getItems() {
-        return items;
+    public static Map<Integer, ItemTemplate> getItemTemplates() {
+        return itemTemplates;
     }
 
     public static void addItemInfo(ItemTemplate ii) {
-        getItems().put(ii.getItemId(), ii);
+        getItemTemplates().put(ii.getItemId(), ii);
     }
 }

@@ -1,8 +1,7 @@
-package com.msemu.world.enums;
+package com.msemu.commons.enums;
 
 import java.util.Arrays;
 
-import static com.msemu.world.enums.EquipBaseStat.*;
 
 /**
  * Created by Weber on 2018/4/13.
@@ -43,42 +42,42 @@ public enum ScrollStat {
     }
 
     public static EquipBaseStat[] getRandStats() {
-        return new EquipBaseStat[]{iStr, iDex, iInt, iLuk, iACC, iEVA, iPAD, iMAD, iPDD, iMDD};
+        return new EquipBaseStat[]{EquipBaseStat.iStr, EquipBaseStat.iDex, EquipBaseStat.iInt, EquipBaseStat.iLuk, EquipBaseStat.iACC, EquipBaseStat.iEVA, EquipBaseStat.iPAD, EquipBaseStat.iMAD, EquipBaseStat.iPDD, EquipBaseStat.iMDD};
     }
 
     public EquipBaseStat getEquipStat() {
-        switch(this) {
+        switch (this) {
             case incSTR:
-                return iStr;
+                return EquipBaseStat.iStr;
             case incDEX:
-                return iDex;
+                return EquipBaseStat.iDex;
             case incINT:
-                return iInt;
+                return EquipBaseStat.iInt;
             case incLUK:
-                return iLuk;
+                return EquipBaseStat.iLuk;
             case incPAD:
-                return iPAD;
+                return EquipBaseStat.iPAD;
             case incMAD:
-                return iMAD;
+                return EquipBaseStat.iMAD;
             case incPDD:
-                return iPDD;
+                return EquipBaseStat.iPDD;
             case incMDD:
-                return iMDD;
+                return EquipBaseStat.iMDD;
             case incACC:
-                return iACC;
+                return EquipBaseStat.iACC;
             case incEVA:
-                return iEVA;
+                return EquipBaseStat.iEVA;
             case incMHP:
-                return iMaxHP;
+                return EquipBaseStat.iMaxHP;
             case incMMP:
-                return iMaxMP;
+                return EquipBaseStat.iMaxMP;
             case incSpeed:
             case speed:
-                return iSpeed;
+                return EquipBaseStat.iSpeed;
             case incJump:
-                return iJump;
+                return EquipBaseStat.iJump;
             case incReqLevel:
-                return iReduceReq;
+                return EquipBaseStat.iReduceReq;
             default:
                 return null;
         }
