@@ -31,7 +31,7 @@ public class Equip extends Item {
     private FileTime equippedDate = new FileTime();
     @Column(name = "prevBonusExpRate")
     private int prevBonusExpRate;
-    @Column(name = "ruc")
+    @Column(name = "tuc")
     private short ruc;
     @Column(name = "cuc")
     private short cuc;

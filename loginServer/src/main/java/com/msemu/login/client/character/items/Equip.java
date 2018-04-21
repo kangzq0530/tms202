@@ -36,7 +36,7 @@ public class Equip extends Item {
     @Getter
     @Setter
     private int prevBonusExpRate;
-    @Column(name = "ruc")
+    @Column(name = "tuc")
     @Getter
     @Setter
     private short ruc;

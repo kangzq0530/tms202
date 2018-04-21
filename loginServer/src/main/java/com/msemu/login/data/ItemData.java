@@ -9,6 +9,8 @@ import com.msemu.commons.data.loader.wz.ItemTemplateLoader;
 import com.msemu.commons.reload.IReloadable;
 import com.msemu.commons.reload.Reloadable;
 import com.msemu.core.startup.StartupComponent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +23,7 @@ import java.util.concurrent.atomic.AtomicReference;
 @Reloadable(name = "item", group = "all")
 @StartupComponent("Data")
 public class ItemData implements IReloadable {
+    private static final Logger log = LoggerFactory.getLogger(ItemData.class);
 
     private final Map<Integer, List<ItemOption>> itemOptions = new HashMap<>();
 
@@ -52,8 +55,11 @@ public class ItemData implements IReloadable {
     public void load() {
         LoginWzManager wzManager = LoginWzManager.getInstance();
         itemOptions.putAll(new ItemOptionLoader().load(wzManager));
+        log.info("{} ItemOptions loaded.", itemOptions.size());
         itemTemplates.putAll(new ItemTemplateLoader().load(wzManager));
+        log.info("{} ItemTemplate loaded.", itemTemplates.size());
         equipTemplates.putAll(new EquipTemplateLoader().load(wzManager));
+        log.info("{} EquipTemplate loaded.", equipTemplates.size());
         System.gc();
     }
 

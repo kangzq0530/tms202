@@ -4,7 +4,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Weber on 2018/4/20.
@@ -22,7 +24,7 @@ public class EquipTemplate extends ItemTemplate {
     private int prevBonusExpRate;
     @Getter
     @Setter
-    private short ruc;
+    private short tuc;
     @Getter
     @Setter
     private short cuc;
@@ -151,7 +153,7 @@ public class EquipTemplate extends ItemTemplate {
     private short rPop;
     @Getter
     @Setter
-    private List<Integer> options = new ArrayList<>(); // base + add pot
+    private Map<Integer, EquipOption> options = new HashMap<>(); // base + add pot
     @Getter
     @Setter
     private int specialGrade;
@@ -160,13 +162,7 @@ public class EquipTemplate extends ItemTemplate {
     private boolean fixedPotential;
     @Getter
     @Setter
-    private boolean tradeBlock;
-    @Getter
-    @Setter
     private boolean only;
-    @Getter
-    @Setter
-    private boolean notSale;
     @Getter
     @Setter
     private int attackSpeed;
@@ -176,9 +172,6 @@ public class EquipTemplate extends ItemTemplate {
     @Getter
     @Setter
     private int charmEXP;
-    @Getter
-    @Setter
-    private boolean expireOnLogout;
     @Getter
     @Setter
     private int setItemID;
@@ -198,90 +191,7 @@ public class EquipTemplate extends ItemTemplate {
     @Setter
     private int fixedGrade;
 
-//
-//    public Equip toEquip() {
-//
-//        Equip ret = new Equip();
-//        ret.setSerialNumber(getSerialNumber());
-//        ret.setTitle(getTitle());
-//        ret.setEquippedDate(new FileTime(-1));
-//        ret.setPrevBonusExpRate(getPrevBonusExpRate());
-//        ret.setRuc(getRuc());
-//        ret.setCuc(getCuc());
-//        ret.setiStr(getIStr());
-//        ret.setiDex(getIDex());
-//        ret.setiLuk(getILuk());
-//        ret.setiInt(getIInt());
-//        ret.setiMaxHp(getIMaxHp());
-//        ret.setiMaxMp(getIMaxMp());
-//        ret.setiPad(getIPad());
-//        ret.setiMad(getIMad());
-//        ret.setiPDD(getIPDD());
-//        ret.setiMDD(getIMDD());
-//        ret.setiAcc(getIAcc());
-//        ret.setiEva(getIEva());
-//        ret.setiCraft(getICraft());
-//        ret.setiSpeed(getISpeed());
-////        ret.setiJump(getIJump());
-////ret.setAttribute(getAttribute());
-////ret.setLevelUpType(getLevelUpType());
-////        ret.setExp(getExp());
-////        ret.levelUpType = levelUpType;
-////        ret.level = level;
-////        ret.exp = exp;
-////        ret.durability = durability;
-////        ret.iuc = iuc;
-////        ret.iPvpDamage = iPvpDamage;
-////        ret.iReduceReq = iReduceReq;
-////        ret.specialAttribute = specialAttribute;
-////        ret.durabilityMax = durabilityMax;
-////        ret.iIncReq = iIncReq;
-////        ret.growthEnchant = growthEnchant;
-////        ret.psEnchant = psEnchant;
-////        ret.bdr = bdr;
-////        ret.imdr = imdr;
-////        ret.damR = damR;
-////        ret.statR = statR;
-////        ret.cuttable = cuttable;
-////        ret.exGradeOption = exGradeOption;
-////        ret.itemState = itemState;
-////        ret.chuc = chuc;
-////        ret.soulOptionId = soulOptionId;
-////        ret.soulSocketId = soulSocketId;
-////        ret.soulOption = soulOption;
-////        ret.rStr = rStr;
-////        ret.rDex = rDex;
-////        ret.rInt = rInt;
-////        ret.rLuk = rLuk;
-////        ret.rLevel = rLevel;
-////        ret.rJob = rJob;
-////        ret.rPop = rPop;
-////        ret.iSlot = iSlot;
-////        ret.vSlot = vSlot;
-////        ret.fixedGrade = fixedGrade;
-////        ret.options = new ArrayList<>();
-////        ret.options.addAll(options);
-////        ret.specialGrade = specialGrade;
-////        ret.fixedPotential = fixedPotential;
-////        ret.tradeBlock = tradeBlock;
-////        ret.only = only;
-////        ret.notSale = notSale;
-////        ret.attackSpeed = attackSpeed;
-////        ret.price = price;
-////        ret.charmEXP = charmEXP;
-////        ret.expireOnLogout = expireOnLogout;
-////        ret.setItemID = setItemID;
-////        ret.exItem = exItem;
-////        ret.equipTradeBlock = equipTradeBlock;
-////        ret.setOwner("");
-////        ret.setItemId(getItemId());
-////        ret.setCashItemSerialNumber(-1);
-////        ret.setEquippedDate();
-////        ret.dateExpire = dateExpire.deepCopy();
-////        ret.invType = invType;
-////        ret.type = type;
-////        ret.isCash = isCash;
-//        return ret;
-//
-//    }
+    public EquipTemplate() {
+
+    }
 }

@@ -64,6 +64,7 @@
     </Appenders>
     <loggers>
         <logger name="org.eclipse.jetty" level="warn"/>
+        <logger name="org.hibernate" level="off"/>
         <logger name="spark" level="info"/>
         <logger name="Authentication" level="info" additivity="false">
             <appender-ref ref="Authentication"/>
