@@ -115,7 +115,7 @@ public class Equip extends Item {
     @Getter
     @Setter
     private short levelUpType;
-    @Column(name = "maxLevel")
+    @Column(name = "level")
     @Getter
     @Setter
     private short level;
