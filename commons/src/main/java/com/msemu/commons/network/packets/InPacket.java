@@ -5,6 +5,7 @@ import com.msemu.commons.network.Client;
 import com.msemu.commons.utils.HexUtils;
 import com.msemu.commons.utils.types.Position;
 import com.msemu.commons.utils.types.Rect;
+import com.msemu.core.configs.CoreConfig;
 import io.netty.buffer.ByteBuf;
 import lombok.Getter;
 import lombok.Setter;
@@ -104,11 +105,7 @@ public abstract class InPacket<TClient extends Client<TClient>> extends Packet<T
      */
     public String decodeString(int amount) {
         byte[] bytes = decodeBytes(amount);
-        char[] chars = new char[amount];
-        for (int i = 0; i < amount; i++) {
-            chars[i] = (char) bytes[i];
-        }
-        return String.valueOf(chars);
+        return new String(bytes, CoreConfig.GAME_SERVICE_TYPE.getCharset());
     }
 
     /**

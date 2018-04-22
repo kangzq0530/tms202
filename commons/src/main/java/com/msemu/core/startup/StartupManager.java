@@ -64,7 +64,7 @@ public class StartupManager {
                         module.addDependency(dependencyModule.get());
                     } else {
                         notfoundModules.add(module);
-                        log.warn("Not found dependency ({}) for {} on {} start level.", dep.getCanonicalName(), clazz.getCanonicalName(), module.getStartLevel().name());
+                        log.warn("Not found dependency ({}) for {} on {} start maxLevel.", dep.getCanonicalName(), clazz.getCanonicalName(), module.getStartLevel().name());
                     }
                 }
             }

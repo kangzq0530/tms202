@@ -51,6 +51,7 @@ public enum InHeader implements IHeader {
     SetGender(ClientState.CONNECTED),
     ServerStatusRequest,
     LoginBackground(ClientState.CONNECTED),
+    DirectGoToField(ClientState.AUTHED),
     ApplyChangeName,
     _____EndSocket_____,
 
@@ -251,7 +252,7 @@ public enum InHeader implements IHeader {
     BINGO,
     CharacterBurning,
 
-    DirectGoToField,
+
     UserUpdateMatrix,
     PetMove,
     PetAction,

@@ -1,17 +1,20 @@
 package com.msemu.commons.network.packets;
 
+import com.msemu.commons.enums.GameServiceType;
 import com.msemu.commons.enums.OutHeader;
 import com.msemu.commons.network.Client;
 import com.msemu.commons.utils.HexUtils;
 import com.msemu.commons.utils.types.FileTime;
 import com.msemu.commons.utils.types.Position;
 import com.msemu.commons.utils.types.Rect;
+import com.msemu.core.configs.CoreConfig;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.ByteArrayOutputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
 /**
@@ -202,11 +205,12 @@ public class OutPacket<TClient extends Client<TClient>> extends Packet<TClient> 
         if (s == null) {
             s = "";
         }
-        if (s.length() > Short.MAX_VALUE) {
+        byte[] data = s.getBytes(CoreConfig.GAME_SERVICE_TYPE.getCharset());
+        if (data.length > Short.MAX_VALUE) {
             log.error("Tried to encode a string that is too big.");
             return;
         }
-        encodeShort((short) s.length());
+        encodeShort((short) data.length);
         encodeString(s, (short) s.length());
     }
 
@@ -221,12 +225,13 @@ public class OutPacket<TClient extends Client<TClient>> extends Packet<TClient> 
         if (s == null) {
             s = "";
         }
-        if (s.length() > 0) {
-            for (char c : s.toCharArray()) {
-                encodeChar(c);
+        byte[] data = s.getBytes(CoreConfig.GAME_SERVICE_TYPE.getCharset());
+        if (data.length > 0) {
+            for (byte b : data) {
+                encodeByte(b);
             }
         }
-        for (int i = s.length(); i < length; i++) {
+        for (int i = data.length; i < length; i++) {
             encodeByte((byte) 0);
         }
     }

@@ -87,6 +87,11 @@ public class DatabaseFactory {
         cleanUpSessions();
     }
 
+
+    public void deleteFromDB(Collection<?> list) {
+        list.forEach(this::deleteFromDB);
+    }
+
     public void saveToDB(Collection<?> list) {
         list.forEach(this::saveToDB);
     }
