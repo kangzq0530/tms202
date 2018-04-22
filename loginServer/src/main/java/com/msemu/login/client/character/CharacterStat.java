@@ -70,7 +70,7 @@ public class CharacterStat {
     private int mixHairBaseProb;
     @Getter
     @Setter
-    @Column(name = "level")
+    @Column(name = "maxLevel")
     private int level;
     @Getter
     @Setter
@@ -329,7 +329,7 @@ public class CharacterStat {
         outPacket.encodeByte(6);
         outPacket.encodeByte(7);
         /* Fuck that, setting the above byte lower than 2 will make all 3rd and 4th job that have the property
-         ((skillID % 10000) / 10000 == 0) be bugged (you see the level, but can't actually use it). ?????????????*/
+         ((skillID % 10000) / 10000 == 0) be bugged (you see the maxLevel, but can't actually use it). ?????????????*/
         //outPacket.encodeByte(getPvpModeType());
         outPacket.encodeInt(getEventPoint());
 //        outPacket.encodeByte(getAlbaActivityID()); // part time job

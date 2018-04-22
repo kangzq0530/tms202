@@ -3,7 +3,7 @@ package com.msemu.login.client.character.items;
 import com.msemu.commons.database.Schema;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.utils.types.FileTime;
-import com.msemu.commons.enums.InvType;
+import com.msemu.commons.data.enums.InvType;
 import com.msemu.world.constants.ItemConstants;
 import lombok.Getter;
 import lombok.Setter;
@@ -130,9 +130,9 @@ public class Item implements Serializable {
             }
             // TODO 萌寵
             outPacket.encodeInt(0); // familiarId
-            outPacket.encodeShort(0); // level
-            outPacket.encodeShort(0); // level
-            outPacket.encodeShort(0); // level
+            outPacket.encodeShort(0); // maxLevel
+            outPacket.encodeShort(0); // maxLevel
+            outPacket.encodeShort(0); // maxLevel
             outPacket.encodeShort(0); // option 1
             outPacket.encodeShort(0); // option 2
             outPacket.encodeShort(0); // option 3
@@ -140,7 +140,7 @@ public class Item implements Serializable {
         } else if (getType() == Type.PET) {
             // TODO 寵物
             outPacket.encodeString("", 13); // name
-            outPacket.encodeByte(0); // level
+            outPacket.encodeByte(0); // maxLevel
             outPacket.encodeShort(0); // 親密度
             outPacket.encodeByte(0); // 飢餓
             outPacket.encodeFT(new FileTime(-1)); // 期限

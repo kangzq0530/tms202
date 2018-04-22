@@ -30,12 +30,11 @@ public class CheckSPWOnCreateNewCharacter extends InPacket<LoginClient> {
 
         boolean checkSPW = BCryptUtils.checkPassword(secondPassword, account.getPic());
 
-        // TODO 這邊應該要有個FLAG確認已經正確輸入第二組密碼，才能創角色/刪角色
-
         if (checkSPW||true) {
-            client.write(new CheckSPWOnCreateNewCharacterResult(LoginResultType.LoginSuccess));
+            client.write(new CheckSPWOnCreateNewCharacterResult(getClient().getLoginResult()));
         } else {
-            client.write(new CheckSPWOnCreateNewCharacterResult(LoginResultType.InvalidSecondPassword));
+            getClient().setLoginResult(LoginResultType.InvalidSecondPassword);
+            client.write(new CheckSPWOnCreateNewCharacterResult(getClient().getLoginResult()));
         }
 
     }

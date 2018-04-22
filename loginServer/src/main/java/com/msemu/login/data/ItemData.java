@@ -1,10 +1,10 @@
 package com.msemu.login.data;
 
-import com.msemu.commons.data.loader.templates.EquipTemplate;
+import com.msemu.commons.data.templates.EquipTemplate;
 import com.msemu.commons.data.loader.wz.EquipTemplateLoader;
 import com.msemu.commons.data.loader.wz.ItemOptionLoader;
-import com.msemu.commons.data.loader.templates.ItemOption;
-import com.msemu.commons.data.loader.templates.ItemTemplate;
+import com.msemu.commons.data.templates.ItemOption;
+import com.msemu.commons.data.templates.ItemTemplate;
 import com.msemu.commons.data.loader.wz.ItemTemplateLoader;
 import com.msemu.commons.reload.IReloadable;
 import com.msemu.commons.reload.Reloadable;

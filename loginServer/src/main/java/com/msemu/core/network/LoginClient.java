@@ -7,6 +7,7 @@ import com.msemu.core.configs.CoreConfig;
 import com.msemu.core.network.packets.out.Login.ConnectToClient;
 import com.msemu.login.client.Account;
 import com.msemu.login.client.character.Character;
+import com.msemu.login.enums.LoginResultType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,6 +28,10 @@ public class LoginClient extends Client<LoginClient> {
     @Setter
     private int channel;
 
+    @Getter
+    @Setter
+    private LoginResultType loginResult = LoginResultType.Nop;
+
     public LoginClient(Connection<LoginClient> connection) {
         super(connection);
     }
@@ -39,6 +44,9 @@ public class LoginClient extends Client<LoginClient> {
         MapleCrypt crypt = new MapleCrypt(CoreConfig.GAME_SERVICE_TYPE, (short) CoreConfig.GAME_VERSION);
         getConnection().setCipher(crypt);
     }
+
+
+
 
 
 }

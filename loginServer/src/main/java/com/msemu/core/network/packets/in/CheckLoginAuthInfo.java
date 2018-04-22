@@ -46,18 +46,17 @@ public class CheckLoginAuthInfo extends InPacket<LoginClient> {
 
     @Override
     public void runImpl() {
-        LoginResultType status = LoginResultType.Nop;
+        LoginResultType status;
         Account account = null;
         try {
-
             account = Account.findByUserName(username);
-                if (account == null) {
-                    status = LoginResultType.AccountNotExists;
-                    log.warn("LoginStatus: [AccountNotExists] IP: {}, username: {}", getClient().getIP(), username);
-                } else if (!BCryptUtils.checkPassword(password, account.getPassword())) {
-                    status = LoginResultType.InvalidPassword;
-                    log.warn("LoginStatus: [LoginSuccess] IP: {}, accountID: {}, username: {} can't kick out from WorldServer", getClient().getIP(), account.getId(), account.getUsername());
-                } else {
+            if (account == null) {
+                status = LoginResultType.AccountNotExists;
+                log.warn("LoginStatus: [AccountNotExists] IP: {}, username: {}", getClient().getIP(), username);
+            } else if (!BCryptUtils.checkPassword(password, account.getPassword())) {
+                status = LoginResultType.InvalidPassword;
+                log.warn("LoginStatus: [LoginSuccess] IP: {}, accountID: {}, username: {} can't kick out from WorldServer", getClient().getIP(), account.getId(), account.getUsername());
+            } else {
                 //TODO : Check Password, IP
                 if (account.getPic().equals("")) {
                     getClient().write(new SetAccountGender(getClient()));

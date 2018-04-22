@@ -79,7 +79,7 @@
                 </configuration>
             </plugin>
 
-            <!-- Set a JDK compiler level -->
+            <!-- Set a JDK compiler maxLevel -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

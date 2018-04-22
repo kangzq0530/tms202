@@ -2,8 +2,10 @@ package com.msemu.core.startup;
 
 import com.msemu.commons.utils.ServerInfoUtils;
 import com.msemu.commons.utils.versioning.Version;
+import com.msemu.commons.wz.WzManager;
 import com.msemu.core.configs.NetworkConfig;
 import com.msemu.core.network.LoginNetworkThread;
+import com.msemu.login.data.LoginWzManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,6 +31,7 @@ public enum StartupLevel implements IStartupLevel {
     Network,
     AfterStart {
         public void invokeDepends() {
+            LoginWzManager.getInstance().clearData();
             System.gc();
             System.runFinalization();
             for (final String line : ServerInfoUtils.getMemUsage()) {

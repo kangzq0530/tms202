@@ -2,7 +2,7 @@ package com.msemu.login.client.character;
 
 import com.msemu.commons.database.DatabaseFactory;
 import com.msemu.commons.database.Schema;
-import com.msemu.commons.enums.InvType;
+import com.msemu.commons.data.enums.InvType;
 import com.msemu.login.client.character.items.Equip;
 import com.msemu.login.client.character.items.Item;
 import com.msemu.login.client.character.quest.QuestManager;

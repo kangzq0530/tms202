@@ -23,7 +23,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.msemu.commons.enums.InvType.EQUIPPED;
+import static com.msemu.commons.data.enums.InvType.EQUIPPED;
 
 /**
  * Created by Weber on 2018/4/19.
@@ -68,11 +68,15 @@ public class CreateNewCharacter extends InPacket<LoginClient> {
     @Override
     public void runImpl() {
 
+        boolean checkLogin = getClient().getLoginResult() == LoginResultType.LoginSuccess;
+
         boolean used = Character.isNameExists(charName) ||
                 StringData.getInstance().getForbiddenNames().contains(charName);
 
-        if (used)
+        if (used && checkLogin) {
+            getClient().write(new CreateNewCharacterResult(LoginResultType.Nop, null));
             return;
+        }
 
         CharCreateInfo info = CharCreateInfo.getByJobType(jobType);
 
@@ -157,9 +161,9 @@ public class CreateNewCharacter extends InPacket<LoginClient> {
 
         DatabaseFactory.getInstance().saveToDB(chr);
 
-        for(int itemID : chr.getAvatarData().getAvatarLook().getHairEquips()) {
+        for (int itemID : chr.getAvatarData().getAvatarLook().getHairEquips()) {
             Equip equip = ItemData.getInstance().getEquipFromTemplate(itemID);
-            if(equip != null && equip.getItemId() >= 1000000) {
+            if (equip != null && equip.getItemId() >= 1000000) {
                 equip.setBagIndex(ItemConstants.getBodyPartFromItem(
                         equip.getItemId(), chr.getAvatarData().getAvatarLook().getGender()));
                 chr.addItemToInventory(EQUIPPED, equip, true);

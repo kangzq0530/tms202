@@ -1,9 +1,9 @@
 package com.msemu.login.client.character.items;
 
 
-import com.msemu.commons.data.loader.templates.EquipTemplate;
+import com.msemu.commons.data.enums.*;
+import com.msemu.commons.data.templates.EquipTemplate;
 import com.msemu.commons.database.Schema;
-import com.msemu.commons.enums.*;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.utils.Rand;
 import com.msemu.commons.utils.types.FileTime;
@@ -115,7 +115,7 @@ public class Equip extends Item {
     @Getter
     @Setter
     private short levelUpType;
-    @Column(name = "level")
+    @Column(name = "maxLevel")
     @Getter
     @Setter
     private short level;
