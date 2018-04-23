@@ -44,8 +44,6 @@ public class DeleteCharacter extends InPacket<LoginClient> {
             Character dbChar = Character.getById(chr.getId());
             DatabaseFactory.getInstance().deleteFromDB(dbChar);
             account.getCharacters().remove(chr);
-            DatabaseFactory.getInstance().saveToDB(account);
-
             getClient().write(new DeleteCharacterResult(chr.getId(), LoginResultType.LoginSuccess));
         } else {
             getClient().write(new DeleteCharacterResult(0, LoginResultType.ServerError));

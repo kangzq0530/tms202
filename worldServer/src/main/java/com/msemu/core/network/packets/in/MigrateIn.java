@@ -37,5 +37,6 @@ public class MigrateIn extends InPacket<GameClient> {
 
 
 
+
     }
 }

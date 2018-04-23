@@ -1,5 +1,8 @@
 package com.msemu.commons.rmi.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.Serializable;
 
 /**
@@ -7,55 +10,33 @@ import java.io.Serializable;
  */
 public class ChannelInfo implements Serializable {
 
+    @Getter
+    @Setter
     private int worldId;
 
+    @Getter
+    @Setter
     private int channel;
 
+    @Getter
+    @Setter
     private String name;
 
+    @Getter
+    @Setter
     private int connectedClients;
 
+    @Getter
+    @Setter
     private int maxConnectedClients;
 
-    public int getWorldId() {
-        return worldId;
-    }
+    @Getter
+    @Setter
+    private String host;
 
-    public void setWorldId(int worldId) {
-        this.worldId = worldId;
-    }
-
-    public int getChannel() {
-        return channel;
-    }
-
-    public void setChannel(int channel) {
-        this.channel = channel;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getConnectedClients() {
-        return connectedClients;
-    }
-
-    public void setConnectedClients(int connectedClients) {
-        this.connectedClients = connectedClients;
-    }
-
-    public int getMaxConnectedClients() {
-        return maxConnectedClients;
-    }
-
-    public void setMaxConnectedClients(int maxConnectedClients) {
-        this.maxConnectedClients = maxConnectedClients;
-    }
+    @Getter
+    @Setter
+    private short port;
 
     public int getChannelLoading() {
         if (getMaxConnectedClients() > 0)

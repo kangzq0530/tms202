@@ -15,7 +15,7 @@ public enum LoginResultType {
      * 0x9
      * 0xA 伺服器忙碌中
      * 0xB age 20 limit
-     * 0xD ip not in master ??
+     * 0xD host not in master ??
      * 0xE 臨時加入帳號無法遊戲，未滿14歲請法定代理同意後即可進行遊戲
      * 0xF Gash 帳號不存在
      * 0x11 認證資料不符合，請關閉開啟中的楓之谷官方網頁
@@ -24,7 +24,7 @@ public enum LoginResultType {
      * 0x29 account is not qualified for testing server
      * 0x2A use otp
      * 0x22 server high loading
-     * 0x2B ip not in service range
+     * 0x2B host not in service range
      * 0x2C use beanfun to Login
      * 0x2D plz upgrade account level
      */

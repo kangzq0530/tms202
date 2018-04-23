@@ -42,7 +42,8 @@ public class LoginClient extends Client<LoginClient> {
         super.onOpen();
         write(new ConnectToClient(this));
         MapleCrypt crypt = new MapleCrypt(CoreConfig.GAME_SERVICE_TYPE, (short) CoreConfig.GAME_VERSION);
-        getConnection().setCipher(crypt);
+        getConnection().setSendCipher(crypt);
+        getConnection().setRecvCipher(crypt);
     }
 
 

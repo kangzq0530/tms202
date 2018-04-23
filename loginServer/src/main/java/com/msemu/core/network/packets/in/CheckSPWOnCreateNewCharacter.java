@@ -30,6 +30,7 @@ public class CheckSPWOnCreateNewCharacter extends InPacket<LoginClient> {
 
         boolean checkSPW = BCryptUtils.checkPassword(secondPassword, account.getPic());
 
+        client.setLoginResult(LoginResultType.LoginSuccess);
         if (checkSPW||true) {
             client.write(new CheckSPWOnCreateNewCharacterResult(getClient().getLoginResult()));
         } else {

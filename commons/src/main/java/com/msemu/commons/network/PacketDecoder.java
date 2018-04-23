@@ -19,7 +19,7 @@ public class PacketDecoder<TClient extends Client<TClient>> extends ByteToMessag
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> list) throws Exception {
         Client client = ctx.channel().attr(Client.CLIENT_KEY).get();
-        ICipher crypt = client.getConnection().getCipher();
+        ICipher crypt = client.getConnection().getRecvCipher();
         if (crypt == null)
             return;
         byte[] iv = client.getRiv();

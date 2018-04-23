@@ -1,6 +1,7 @@
 package com.msemu.core.network;
 
 import com.msemu.core.startup.StartupComponent;
+import com.msemu.world.World;
 
 import java.io.IOException;
 import java.util.Map;
@@ -38,6 +39,7 @@ public class WorldNetworkThread {
 
 
     public void startup() throws IOException, InterruptedException {
+        World.getInstance().getChannels().forEach(ch-> addChannelThread(ch.getChannelId(), ch.getHost(), ch.getPort()));
         for (ChannelNetworkThread thread : channelNetworkThreads.values()) {
             thread.startup();
         }

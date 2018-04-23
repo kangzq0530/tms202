@@ -20,7 +20,7 @@ public class PacketEncoder<TClient extends Client<TClient>> extends MessageToByt
     protected void encode(ChannelHandlerContext ctx, Packet packet, ByteBuf byteBuf) throws Exception {
         byte[] data = packet.getData();
         Client client = ctx.channel().attr(Client.CLIENT_KEY).get();
-        ICipher cipher = client.getConnection().getCipher();
+        ICipher cipher = client.getConnection().getSendCipher();
         if (cipher != null) {
             if (CoreConfig.SHOW_PACKET ) {
                 log.warn("[Out]\t|" + packet);

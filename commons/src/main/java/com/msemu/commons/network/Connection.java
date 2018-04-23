@@ -30,7 +30,11 @@ public class Connection<TClient extends Client<TClient>> extends ChannelInboundH
 
     @Getter
     @Setter
-    private ICipher cipher;
+    private ICipher sendCipher;
+
+    @Getter
+    @Setter
+    private ICipher recvCipher;
 
     @Getter
     private TClient client;

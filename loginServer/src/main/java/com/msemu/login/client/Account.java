@@ -11,6 +11,7 @@ import com.msemu.login.enums.PicStatus;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
@@ -142,13 +143,15 @@ public class  Account {
 
     public static Account findByUserName(String username) {
         Session session = DatabaseFactory.getInstance().getSession();
+        Transaction transaction = session.beginTransaction();
         CriteriaBuilder builder = session.getCriteriaBuilder();
         CriteriaQuery<Account> query = builder.createQuery(Account.class);
         Root<Account> root = query.from(Account.class);
         query.select(root);
         query.where(builder.equal(root.get("username"), username));
         List<Account> result = session.createQuery(query).getResultList();
-        session.clear();
+        transaction.commit();
+        session.close();
         return result.size() > 0 ? result.get(0) : null;
     }
 

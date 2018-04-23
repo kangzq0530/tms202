@@ -63,6 +63,7 @@
         </RollingFile>
     </Appenders>
     <loggers>
+        <logger name="org.hibernate" level="off"/>
         <logger name="org.eclipse.jetty" level="warn"/>
         <logger name="spark" level="info"/>
         <logger name="Authentication" level="info" additivity="false">

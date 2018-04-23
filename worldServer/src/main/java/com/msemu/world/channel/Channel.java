@@ -1,17 +1,19 @@
 package com.msemu.world.channel;
 
 import com.msemu.commons.rmi.model.ChannelInfo;
+import com.msemu.core.configs.NetworkConfig;
 import com.msemu.core.configs.WorldConfig;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.field.Field;
 import com.msemu.world.data.FieldData;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.Synchronized;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
@@ -20,13 +22,25 @@ import java.util.stream.Collectors;
 
 public class Channel {
 
-    private int port;
+    @Getter
+    @Setter
+    private short port;
+    @Getter
+    @Setter
+    private String host;
+    @Getter
+    @Setter
     private String name;
+    @Getter
+    @Setter
     private int gaugePx, worldId, channelId;
+    @Getter
+    @Setter
     private boolean adultChannel;
+    @Getter
     private List<Field> fields;
-    private Map<Integer, Character> transfers = new ConcurrentHashMap<>();
-    private Map<Integer, Character> characters = new ConcurrentHashMap<>();
+    private Map<Integer, Character> transfers;
+    private Map<Integer, Character> characters;
 
     public Channel(String worldName, int worldId, int channelId) {
         this.name = worldName + "-" + channelId;
@@ -34,17 +48,11 @@ public class Channel {
         this.worldId = worldId;
         this.channelId = channelId;
         this.adultChannel = false;
-        this.port = WorldConfig.PORT_START + 100 + channelId;
+        this.port = (short) (NetworkConfig.PORT + 100 + channelId);
+        this.host = NetworkConfig.HOST;
         this.fields = new ArrayList<>();
+        this.characters = new HashMap<>();
         this.transfers = new HashMap<>();
-    }
-
-    public List<Field> getFields() {
-        return fields;
-    }
-
-    public void setFields(List<Field> fields) {
-        this.fields = fields;
     }
 
     public Field getField(int id) {
@@ -55,38 +63,6 @@ public class Channel {
         Field newField = FieldData.getInstance().getFieldFromTemplate(id);
         getFields().add(newField);
         return newField;
-    }
-
-    public boolean isAdultChannel() {
-        return adultChannel;
-    }
-
-    public void setAdultChannel(boolean adultChannel) {
-        this.adultChannel = adultChannel;
-    }
-
-    public int getGaugePx() {
-        return gaugePx;
-    }
-
-    public void setGaugePx(int gaugePx) {
-        this.gaugePx = gaugePx;
-    }
-
-    public int getWorldId() {
-        return worldId;
-    }
-
-    public int getChannelId() {
-        return channelId;
-    }
-
-    public int getPort() {
-        return port;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public boolean isAccountTransfered(int accountId) {
@@ -102,6 +78,13 @@ public class Channel {
     public Character getTransferByAccountId(int accountId) {
         return getTransferCharacters().stream()
                 .filter(chr -> chr.getAccId() == accountId)
+                .findFirst()
+                .orElse(null);
+    }
+
+    public Character getTransferByCharacterId(int characterId) {
+        return getTransferCharacters().stream()
+                .filter(chr -> chr.getId() == characterId)
                 .findFirst()
                 .orElse(null);
     }
@@ -123,6 +106,8 @@ public class Channel {
         channelInfo.setConnectedClients(getCharacters().size());
         channelInfo.setMaxConnectedClients(WorldConfig.CHANNEL_MAX_LOADING);
         channelInfo.setWorldId(getWorldId());
+        channelInfo.setHost(getHost());
+        channelInfo.setPort(getPort());
         return channelInfo;
     }
 
