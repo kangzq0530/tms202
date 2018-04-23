@@ -1,10 +1,10 @@
-package com.msemu.world.client.jobs.adventurer;
+package com.msemu.world.client.character.jobs.adventurer;
 
 import com.msemu.commons.network.packets.InPacket;
 import com.msemu.world.client.character.AttackInfo;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.HitInfo;
-import com.msemu.world.client.jobs.JobHandler;
+import com.msemu.world.client.character.jobs.JobHandler;
 import com.msemu.world.constants.MapleJob;
 
 /**

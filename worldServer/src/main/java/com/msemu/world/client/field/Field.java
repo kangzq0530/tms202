@@ -1,25 +1,18 @@
 package com.msemu.world.client.field;
 
+import com.msemu.commons.data.FieldTemplate;
+import com.msemu.commons.data.templates.Foothold;
+import com.msemu.commons.data.templates.field.Portal;
+import com.msemu.commons.data.templates.skill.SkillInfo;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.thread.EventManager;
 import com.msemu.commons.utils.types.Position;
 import com.msemu.commons.utils.types.Rect;
 import com.msemu.core.network.GameClient;
-import com.msemu.world.client.character.Character;
-import com.msemu.world.client.character.items.Item;
-import com.msemu.world.client.character.skills.SkillInfo;
-import com.msemu.world.client.character.skills.TemporaryStatManager;
-import com.msemu.world.client.life.*;
-import com.msemu.world.client.life.skills.MobTemporaryStat;
-import com.msemu.world.constants.GameConstants;
-import com.msemu.world.data.ItemData;
-import com.msemu.world.data.SkillData;
-import com.msemu.world.enums.LeaveType;
-import com.msemu.world.enums.ScriptType;
-import com.msemu.core.network.packets.out.Field.AffectedAreaCreated;
-import com.msemu.core.network.packets.out.Field.AffectedAreaRemoved;
 import com.msemu.core.network.packets.out.DropPool.DropEnterField;
 import com.msemu.core.network.packets.out.DropPool.DropLeaveField;
+import com.msemu.core.network.packets.out.Field.AffectedAreaCreated;
+import com.msemu.core.network.packets.out.Field.AffectedAreaRemoved;
 import com.msemu.core.network.packets.out.MobPool.MobChangeController;
 import com.msemu.core.network.packets.out.MobPool.MobEnterField;
 import com.msemu.core.network.packets.out.NpcPool.NpcChangeController;
@@ -28,6 +21,16 @@ import com.msemu.core.network.packets.out.SummonPool.SummonEnterField;
 import com.msemu.core.network.packets.out.SummonPool.SummonLeaveField;
 import com.msemu.core.network.packets.out.UserPool.UserEnterField;
 import com.msemu.core.network.packets.out.UserPool.UserLeaveField;
+import com.msemu.world.client.character.Character;
+import com.msemu.world.client.character.items.Item;
+import com.msemu.world.client.character.skills.TemporaryStatManager;
+import com.msemu.world.client.life.*;
+import com.msemu.world.client.life.skills.MobTemporaryStat;
+import com.msemu.world.constants.GameConstants;
+import com.msemu.world.data.ItemData;
+import com.msemu.world.data.SkillData;
+import com.msemu.world.enums.LeaveType;
+import com.msemu.world.enums.ScriptType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -39,39 +42,23 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import static com.msemu.world.enums.SkillStat.time;
+import static com.msemu.commons.data.enums.SkillStat.time;
 
 /**
  * Created by Weber on 2018/4/11.
  */
-public class Field {
+public class Field extends FieldTemplate{
     @Getter
     @Setter
     private Rectangle rect;
     @Getter
     @Setter
-    private double mobRate;
-    @Getter
-    @Setter
-    private int id;
-    @Getter
-    @Setter
-    private int returnMap, forcedReturn, createMobInterval, timeOut, timeLimit, lvLimit, lvForceMove;
-    @Getter
-    @Setter
-    private int consumeItemCoolTime, link;
-    @Getter
-    @Setter
     private long uniqueId;
-    @Getter
-    @Setter
-    private boolean town, swim, fly, reactorShuffle, expeditionOnly, partyOnly, needSkillForFly;
+
     @Getter
     @Setter
     private Set<Portal> portals;
-    @Getter
-    @Setter
-    private Set<Foothold> footholds;
+
     @Getter
     @Setter
     private List<Life> lifes;
@@ -122,6 +109,7 @@ public class Field {
 
     /**
      * Returns a Portal object in this field. The name argument is a specifier that is related to portal name
+     *
      * @param name the portal name
      * @return the portal with the specified name
      * @see Portal
@@ -132,6 +120,7 @@ public class Field {
 
     /**
      * Returns a Portal object in this field. The id argument is a specifier that is related to portal id
+     *
      * @param id
      * @return the portal with the specified id
      * @see Portal
@@ -142,9 +131,10 @@ public class Field {
 
     /**
      * Returns a Foothold object that is below a specified position
+     *
      * @param pos position to find below foothold
-     * @see Position
      * @return the foothold object
+     * @see Position
      * @see Foothold
      */
     public Foothold findFootHoldBelow(Position pos) {
@@ -168,6 +158,7 @@ public class Field {
 
     /**
      * Add a Foothold object to this field
+     *
      * @param foothold a Foothold object that will be added.
      * @see Foothold
      */
@@ -177,6 +168,7 @@ public class Field {
 
     /**
      * Add a Life object to this map
+     *
      * @param life the life object
      * @see Npc
      * @see Mob

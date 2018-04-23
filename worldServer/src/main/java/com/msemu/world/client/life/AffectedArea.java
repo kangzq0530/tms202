@@ -1,21 +1,14 @@
 package com.msemu.world.client.life;
 
+import com.msemu.commons.data.templates.skill.SkillInfo;
 import com.msemu.commons.utils.types.Rect;
 import com.msemu.world.client.character.AttackInfo;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.skills.Option;
 import com.msemu.world.client.character.skills.Skill;
-import com.msemu.world.client.character.skills.SkillInfo;
 import com.msemu.world.client.character.skills.TemporaryStatManager;
-import com.msemu.world.client.jobs.adventurer.Archer;
-import com.msemu.world.client.jobs.sengoku.Kanna;
 import com.msemu.world.client.life.skills.MobTemporaryStat;
 import com.msemu.world.data.SkillData;
-import com.msemu.world.enums.MobStat;
-import com.msemu.world.enums.SkillStat;
-
-import static com.msemu.world.client.character.skills.CharacterTemporaryStat.*;
-import static com.msemu.world.enums.SkillStat.*;
 
 /**
  * Created by Weber on 2018/4/11.

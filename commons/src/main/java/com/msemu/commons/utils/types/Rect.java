@@ -1,5 +1,7 @@
 package com.msemu.commons.utils.types;
 
+import java.awt.*;
+
 /**
  * Created by Weber on 2018/3/28.
  */
@@ -22,6 +24,13 @@ public class Rect {
         this.top = lt.getY();
         this.right = rb.getX();
         this.bottom = rb.getY();
+    }
+
+    public Rect(Point lt, Point rb) {
+        this.left = (int) lt.getX();
+        this.top = (int) lt.getY();
+        this.right = (int) rb.getX();
+        this.bottom = (int) rb.getY();
     }
 
     /**

@@ -1,12 +1,12 @@
 package com.msemu.world.client.life;
 
+import com.msemu.commons.data.enums.SkillStat;
+import com.msemu.commons.data.templates.skill.SkillInfo;
 import com.msemu.commons.utils.types.Position;
 import com.msemu.world.client.character.AvatarLook;
 import com.msemu.world.client.character.Character;
-import com.msemu.world.client.character.skills.SkillInfo;
 import com.msemu.world.data.SkillData;
 import com.msemu.world.enums.Stat;
-import com.msemu.world.enums.SkillStat;
 
 import java.util.ArrayList;
 import java.util.List;

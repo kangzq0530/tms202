@@ -1,10 +1,10 @@
 package com.msemu.world.client.life.skills;
 
+import com.msemu.commons.data.templates.skill.SkillInfo;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.thread.EventManager;
 import com.msemu.world.client.character.skills.Option;
 import com.msemu.world.client.character.skills.Skill;
-import com.msemu.world.client.character.skills.SkillInfo;
 import com.msemu.world.client.life.Mob;
 import com.msemu.world.data.SkillData;
 import com.msemu.world.enums.MobStat;
@@ -16,8 +16,8 @@ import java.util.*;
 import java.util.concurrent.ScheduledFuture;
 import java.util.stream.Collectors;
 
+import static com.msemu.commons.data.enums.SkillStat.*;
 import static com.msemu.world.enums.MobStat.*;
-import static com.msemu.world.enums.SkillStat.*;
 
 /**
  * Created by Weber on 2018/4/12.

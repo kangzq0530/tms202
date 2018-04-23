@@ -1,8 +1,8 @@
-package com.msemu.world.client.jobs;
+package com.msemu.world.client.character.jobs;
 
 import com.msemu.world.client.character.Character;
-import com.msemu.world.client.jobs.adventurer.Archer;
-import com.msemu.world.client.jobs.adventurer.Beginner;
+import com.msemu.world.client.character.jobs.adventurer.Archer;
+import com.msemu.world.client.character.jobs.adventurer.Beginner;
 
 import java.lang.reflect.InvocationTargetException;
 

@@ -1,11 +1,11 @@
-package com.msemu.world.client.jobs.legend;
+package com.msemu.world.client.character.jobs.legend;
 
 import com.msemu.commons.network.packets.InPacket;
 import com.msemu.world.client.character.AttackInfo;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.HitInfo;
 import com.msemu.world.client.character.skills.TemporaryStatManager;
-import com.msemu.world.client.jobs.JobHandler;
+import com.msemu.world.client.character.jobs.JobHandler;
 
 import java.util.Arrays;
 

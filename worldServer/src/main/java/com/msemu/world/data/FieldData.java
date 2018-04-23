@@ -1,5 +1,6 @@
 package com.msemu.world.data;
 
+import com.msemu.commons.data.FieldTemplate;
 import com.msemu.commons.reload.IReloadable;
 import com.msemu.commons.reload.Reloadable;
 import com.msemu.core.startup.StartupComponent;
@@ -10,7 +11,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -21,6 +24,8 @@ import java.util.concurrent.atomic.AtomicReference;
 @StartupComponent("Data")
 public class FieldData implements IReloadable {
     private static final Logger log = LoggerFactory.getLogger(QuestData.class);
+
+    private static List<FieldTemplate> fields = new ArrayList<>();
 
     @Getter
     private final Map<Integer, DropInfo> fieldTemplates = new HashMap<>();

@@ -1,4 +1,4 @@
-package com.msemu.world.enums;
+package com.msemu.commons.data.enums;
 
 import java.util.Arrays;
 

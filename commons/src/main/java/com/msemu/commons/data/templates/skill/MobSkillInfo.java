@@ -1,7 +1,9 @@
-package com.msemu.world.client.life.skills;
+package com.msemu.commons.data.templates.skill;
 
+import com.msemu.commons.data.enums.MobSkillStat;
 import com.msemu.commons.utils.types.Position;
-import com.msemu.world.enums.MobSkillStat;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -9,8 +11,10 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Created by Weber on 2018/4/12.
+ * Created by Weber on 2018/4/23.
  */
+@Getter
+@Setter
 public class MobSkillInfo {
 
     private short id;
@@ -119,4 +123,3 @@ public class MobSkillInfo {
         return rb3;
     }
 }
-

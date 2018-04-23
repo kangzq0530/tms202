@@ -1,7 +1,8 @@
 package com.msemu.world.client.character.skills;
 
+import com.msemu.commons.data.enums.SkillStat;
+import com.msemu.commons.data.templates.skill.SkillInfo;
 import com.msemu.world.data.SkillData;
-import com.msemu.world.enums.SkillStat;
 
 import java.util.ArrayList;
 import java.util.List;

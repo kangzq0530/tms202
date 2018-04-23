@@ -1,11 +1,11 @@
-package com.msemu.world.client.jobs;
+package com.msemu.world.client.character.jobs;
 
+import com.msemu.commons.data.templates.skill.SkillInfo;
 import com.msemu.commons.network.packets.InPacket;
 import com.msemu.core.network.GameClient;
 import com.msemu.world.client.character.AttackInfo;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.HitInfo;
-import com.msemu.world.client.character.skills.SkillInfo;
 import com.msemu.world.data.SkillData;
 import com.msemu.world.enums.Stat;
 

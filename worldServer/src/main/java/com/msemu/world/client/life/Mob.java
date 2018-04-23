@@ -1,13 +1,13 @@
 package com.msemu.world.client.life;
 
 
+import com.msemu.commons.data.templates.Foothold;
 import com.msemu.commons.thread.EventManager;
 import com.msemu.commons.utils.types.Position;
 import com.msemu.commons.utils.types.Tuple;
 import com.msemu.world.client.character.ExpIncreaseInfo;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.field.Field;
-import com.msemu.world.client.field.Foothold;
 import com.msemu.world.client.field.effect.MobHPTagFieldEffect;
 import com.msemu.world.client.life.skills.ForcedMobStat;
 import com.msemu.world.client.life.skills.MobSkill;

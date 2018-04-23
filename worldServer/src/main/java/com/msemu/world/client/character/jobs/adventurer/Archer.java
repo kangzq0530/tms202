@@ -1,5 +1,7 @@
-package com.msemu.world.client.jobs.adventurer;
+package com.msemu.world.client.character.jobs.adventurer;
 
+import com.msemu.commons.data.templates.Foothold;
+import com.msemu.commons.data.templates.skill.SkillInfo;
 import com.msemu.commons.network.packets.InPacket;
 import com.msemu.commons.utils.Rand;
 import com.msemu.commons.utils.types.Position;
@@ -10,11 +12,9 @@ import com.msemu.world.client.character.HitInfo;
 import com.msemu.world.client.character.MobAttackInfo;
 import com.msemu.world.client.character.skills.Option;
 import com.msemu.world.client.character.skills.Skill;
-import com.msemu.world.client.character.skills.SkillInfo;
 import com.msemu.world.client.character.skills.TemporaryStatManager;
 import com.msemu.world.client.field.Field;
-import com.msemu.world.client.field.Foothold;
-import com.msemu.world.client.jobs.JobHandler;
+import com.msemu.world.client.character.jobs.JobHandler;
 import com.msemu.world.client.life.AffectedArea;
 import com.msemu.world.client.life.Mob;
 import com.msemu.world.client.life.Summon;
@@ -32,8 +32,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.msemu.commons.data.enums.SkillStat.*;
 import static com.msemu.world.client.character.skills.CharacterTemporaryStat.*;
-import static com.msemu.world.enums.SkillStat.*;
 
 /**
  * Created by Weber on 2018/4/14.
