@@ -130,7 +130,7 @@ public class Aran  extends Job {
         if(isHandlerOfJob(character.getJob())) {
             Arrays.stream(addedSkills).forEach(skillId -> {
                 if(!character.hasSkill(skillId)) {
-                    Skill skill = SkillData.getSkillDeepCopyById(skillId);
+                    Skill skill = SkillData.getInstance().getSkillById(skillId);
                     if(skill == null)
                         return;
                     skill.setCurrentLevel(skill.getMasterLevel());
@@ -142,7 +142,7 @@ public class Aran  extends Job {
 
     public void handleBuff(InPacket packet, int skillID, byte slv) {
         Character character = getCharacter();
-        SkillInfo si = SkillData.getSkillInfoById(skillID);
+        SkillInfo si = SkillData.getInstance().getSkillInfoById(skillID);
         TemporaryStatManager tsm = getCharacter().getTemporaryStatManager();
         Option o1 = new Option();
         Option o2 = new Option();
@@ -215,7 +215,7 @@ public class Aran  extends Job {
 
     private void handleComboAbility(TemporaryStatManager tsm, AttackInfo attackInfo) {
         Option o = new Option();
-        SkillInfo comboInfo = SkillData.getSkillInfoById(矛之鬥氣);
+        SkillInfo comboInfo = SkillData.getInstance().getSkillInfoById(矛之鬥氣);
         int amount = 1;
         if(!getCharacter().hasSkill(矛之鬥氣)) {
             return;
@@ -236,7 +236,7 @@ public class Aran  extends Job {
 
     private void handleAdrenalinRush(int skillId, TemporaryStatManager tsm) {
         // 處理鬥氣爆發
-        SkillInfo adrenalinInfo = SkillData.getSkillInfoById(鬥氣爆發);
+        SkillInfo adrenalinInfo = SkillData.getInstance().getSkillInfoById(鬥氣爆發);
         if (getCharacter().hasSkill(鬥氣爆發)) {
             Option o = new Option();
             o.nOption = 1;
@@ -283,7 +283,7 @@ public class Aran  extends Job {
         boolean hasHitMobs = attackInfo.mobAttackInfo.size() > 0;
         int slv = 0;
         if (skill != null) {
-            si = SkillData.getSkillInfoById(skill.getSkillId());
+            si = SkillData.getInstance().getSkillInfoById(skill.getSkillId());
             slv = skill.getCurrentLevel();
             skillID = skill.getSkillId();
         }
@@ -433,7 +433,7 @@ public class Aran  extends Job {
         TemporaryStatManager tsm = chr.getTemporaryStatManager();
         SkillInfo si = null;
         if (skill != null) {
-            si = SkillData.getSkillInfoById(skillID);
+            si = SkillData.getInstance().getSkillInfoById(skillID);
         }
         chr.chatMessage(ChatMsgColor.YELLOW, "SkillID: " + skillID);
         if (isBuff(skillID)) {
@@ -454,7 +454,7 @@ public class Aran  extends Job {
                     chr.warp(toField);
                     break;
                 case 瑪哈的領域:
-                    SkillInfo mdi = SkillData.getSkillInfoById(瑪哈的領域);
+                    SkillInfo mdi = SkillData.getInstance().getSkillInfoById(瑪哈的領域);
                     AffectedArea aa = AffectedArea.getPassiveAA(skillID, slv);
                     aa.setMobOrigin((byte) 0);
                     aa.setCharID(chr.getId());

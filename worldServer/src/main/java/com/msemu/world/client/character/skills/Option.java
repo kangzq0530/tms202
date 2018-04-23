@@ -46,7 +46,7 @@ public class Option {
     }
 
     public Option(int skillID, byte slv) {
-        SkillInfo si = SkillData.getSkillInfoById(skillID);
+        SkillInfo si = SkillData.getInstance().getSkillInfoById(skillID);
         rOption = skillID;
         tOption = si.getValue(SkillStat.time, slv);
     }

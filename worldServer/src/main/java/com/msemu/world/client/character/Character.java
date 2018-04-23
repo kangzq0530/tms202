@@ -1,12 +1,19 @@
 package com.msemu.world.client.character;
 
+import com.msemu.commons.data.enums.InvType;
 import com.msemu.commons.database.DatabaseFactory;
 import com.msemu.commons.database.Schema;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.utils.types.FileTime;
 import com.msemu.commons.utils.types.Position;
-import com.msemu.world.client.GameClient;
-import com.msemu.world.client.guild.Guild;
+import com.msemu.core.network.GameClient;
+import com.msemu.core.network.packets.out.Stage.SetField;
+import com.msemu.core.network.packets.out.UserPool.UserEnterField;
+import com.msemu.core.network.packets.out.UserPool.UserLocal.ChatMsg;
+import com.msemu.core.network.packets.out.WvsContext.GuildResult;
+import com.msemu.core.network.packets.out.WvsContext.InventoryOperation;
+import com.msemu.core.network.packets.out.WvsContext.StatChanged;
+import com.msemu.core.network.packets.out.WvsContext.messages.IncExpMessage;
 import com.msemu.world.client.character.items.Equip;
 import com.msemu.world.client.character.items.Item;
 import com.msemu.world.client.character.party.Party;
@@ -16,6 +23,7 @@ import com.msemu.world.client.character.skills.Skill;
 import com.msemu.world.client.character.skills.TemporaryStatManager;
 import com.msemu.world.client.field.Field;
 import com.msemu.world.client.field.Portal;
+import com.msemu.world.client.guild.Guild;
 import com.msemu.world.client.guild.GuildMember;
 import com.msemu.world.client.guild.operations.GuildUpdate;
 import com.msemu.world.client.guild.operations.GuildUpdateMemberLogin;
@@ -29,17 +37,14 @@ import com.msemu.world.constants.SkillConstants;
 import com.msemu.world.data.ItemData;
 import com.msemu.world.data.SkillData;
 import com.msemu.world.enums.*;
-import com.msemu.core.network.packets.out.Stage.SetField;
-import com.msemu.core.network.packets.out.UserPool.UserEnterField;
-import com.msemu.core.network.packets.out.UserPool.UserLocal.ChatMsg;
-import com.msemu.core.network.packets.out.WvsContext.GuildResult;
-import com.msemu.core.network.packets.out.WvsContext.InventoryOperation;
-import com.msemu.core.network.packets.out.WvsContext.StatChanged;
-import com.msemu.core.network.packets.out.WvsContext.messages.IncExpMessage;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.Session;
 
 import javax.persistence.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.*;
 import java.util.function.Predicate;
 
@@ -50,7 +55,7 @@ import static com.msemu.world.enums.InventoryOperationType.*;
  * Created by Weber on 2018/3/29.
  */
 @Schema
-@MappedSuperclass
+@Entity
 @Table(name = "characters")
 public class Character {
 
@@ -591,7 +596,7 @@ public class Character {
      */
     public void consumeItem(int id, int quantity) {
         quantity -= 1;
-        Item checkItem = ItemData.getItemDeepCopy(id);
+        Item checkItem = ItemData.getInstance().getItemFromTemplate(id);
         Item item = getInventoryByType(checkItem.getInvType()).getItemByItemID(id);
         item.setQuantity(quantity);
         consumeItem(item);
@@ -627,16 +632,16 @@ public class Character {
             return 0;
         }
         Predicate<Item> p;
-        int id = weapon.getItemId();
+        int weaponItemId = weapon.getItemId();
 
-        if (ItemConstants.isClaw(id)) {
+        if (ItemConstants.類型.拳套(weaponItemId)) {
             p = i -> ItemConstants.isThrowingStar(i.getItemId());
-        } else if (ItemConstants.isBow(id)) {
-            p = i -> ItemConstants.isBowArrow(i.getItemId());
-        } else if (ItemConstants.isXBow(id)) {
-            p = i -> ItemConstants.isXBowArrow(i.getItemId());
-        } else if (ItemConstants.isGun(id)) {
-            p = i -> ItemConstants.isBullet(i.getItemId());
+        } else if (ItemConstants.類型.弓(weaponItemId)) {
+            p = i -> ItemConstants.類型.弓箭(i.getItemId());
+        } else if (ItemConstants.類型.弩(weaponItemId)) {
+            p = i -> ItemConstants.類型.弩箭(i.getItemId());
+        } else if (ItemConstants.類型.槍(weaponItemId)) {
+            p = i -> ItemConstants.類型.子彈(i.getItemId());
         } else {
             return 0;
         }
@@ -752,7 +757,7 @@ public class Character {
      * @return The new Skill.
      */
     private Skill createAndReturnSkill(int id) {
-        Skill skill = SkillData.getSkillDeepCopyById(id);
+        Skill skill = SkillData.getInstance().getSkillById(id);
         addSkill(skill);
         return skill;
     }
@@ -804,7 +809,7 @@ public class Character {
             getField().removeCharacter(this);
         }
         setField(toField);
-        toField.addChar(this);
+        toField.addCharacter(this);
         getClient().write(new SetField(this, toField, getClient().getChannel(), false, 0, characterData, hasBuffProtector(),
                 (byte) portal.getId(), false, 100, null, true, -1));
         if (characterData) {
@@ -813,7 +818,7 @@ public class Character {
                 write(new GuildResult(new GuildUpdate(getGuild())));
             }
         }
-        toField.spawnLifesForChar(this);
+        toField.spawnAllLifeForChar(this);
         for (Character c : toField.getCharacters()) {
             if (!c.equals(this)) {
                 write(new UserEnterField(c));
@@ -1277,8 +1282,8 @@ public class Character {
         }
 
         if (mask.isInMask(DBChar.QuestRecordEx)) {
-            outPacket.encodeShort(getQuestManager().getEx().size());
-            for (Quest quest : getQuestManager().getEx()) {
+            outPacket.encodeShort(getQuestManager().getQuests().size());
+            for (Quest quest : getQuestManager().getQuests()) {
                 outPacket.encodeInt(quest.getQRKey());
                 outPacket.encodeString(quest.getQRValue());
             }
@@ -1395,7 +1400,7 @@ public class Character {
         }
         //內在能力聲望訊息
         if (mask.isInMask(DBChar.HonorInfo)) {
-            outPacket.encodeInt(0); // honor level
+            outPacket.encodeInt(0); // honor maxLevel
             outPacket.encodeInt(0); // honor exp
             outPacket.encodeInt(0);
             outPacket.encodeInt(0);
@@ -1425,10 +1430,10 @@ public class Character {
             outPacket.encodeByte(MapleJob.is蒼龍俠客(getJob()) && MapleJob.is幻獸師(getJob()));
         }
 
-        if(mask.isInMask(DBChar.OXSystem)) {
+        if (mask.isInMask(DBChar.OXSystem)) {
             int size = 0;
             outPacket.encodeShort(size);
-            for(int i = 0 ; i < size;i++) {
+            for (int i = 0; i < size; i++) {
                 outPacket.encodeInt(0);
                 outPacket.encodeInt(0);
                 outPacket.encodeString("");
@@ -1443,10 +1448,10 @@ public class Character {
             }
         }
 
-        if(mask.isInMask(DBChar.ExpChairInfo)) {
+        if (mask.isInMask(DBChar.ExpChairInfo)) {
             int size = 0;
             outPacket.encodeInt(size);
-            for(int i = 0 ; i < size;i++) {
+            for (int i = 0; i < size; i++) {
                 outPacket.encodeInt(0);
                 outPacket.encodeByte(0);
                 outPacket.encodeShort(0);
@@ -1457,23 +1462,23 @@ public class Character {
 
         }
 
-        if(mask.isInMask(DBChar.RedLeafInfo)) {
+        if (mask.isInMask(DBChar.RedLeafInfo)) {
             int idarr[] = new int[]{9410165, 9410166, 9410167, 9410168, 9410198};
             outPacket.encodeInt(getAccId());
             outPacket.encodeInt(getId());
             int size = 5;
             outPacket.encodeInt(size);
             outPacket.encodeInt(0);
-            for(int i = 0 ; i < size;i++) {
+            for (int i = 0; i < size; i++) {
                 outPacket.encodeInt(idarr[i]);
                 outPacket.encodeInt(0); // fiendShipPoints
             }
         }
 
         if (mask.isInMask(DBChar.Flag2000000000000)) {
-            int size = 0 ;
+            int size = 0;
             outPacket.encodeShort(size);
-            for(int i = 0 ; i < size;i++) {
+            for (int i = 0; i < size; i++) {
                 outPacket.encodeInt(0);
                 outPacket.encodeInt(0);
                 outPacket.encodeInt(0);
@@ -1481,23 +1486,23 @@ public class Character {
                 outPacket.encodeLong(0);
                 outPacket.encodeInt(0);
                 int res = 0;
-                for(int j = 0 ; j < res; j++) {
+                for (int j = 0; j < res; j++) {
                     outPacket.encodeInt(0);
                 }
             }
         }
 
-        if(mask.isInMask(DBChar.EntryRecord)) {
+        if (mask.isInMask(DBChar.EntryRecord)) {
             boolean bool = true;
             outPacket.encodeByte(bool);
-            if(bool) {
-                int v1 = 0 ;
+            if (bool) {
+                int v1 = 0;
                 outPacket.encodeShort(v1);
-                for(int i = 0 ; i < v1; i++) {
+                for (int i = 0; i < v1; i++) {
                     outPacket.encodeShort(v1);
-                    int v2 = 0 ;
+                    int v2 = 0;
                     outPacket.encodeShort(v2);
-                    for(int j = 0 ; j < v2; j++) {
+                    for (int j = 0; j < v2; j++) {
                         outPacket.encodeInt(0);
                         outPacket.encodeInt(0);
                         //CharacterData::SetEntryRecord
@@ -1506,7 +1511,7 @@ public class Character {
             } else {
                 int v3 = 0;
                 outPacket.encodeShort(v3);
-                for(int i = 0 ; i < v3; i++) {
+                for (int i = 0; i < v3; i++) {
                     outPacket.encodeShort(0);
                     outPacket.encodeInt(0);
                     outPacket.encodeInt(0);
@@ -1526,7 +1531,7 @@ public class Character {
         }
 
 
-        if(mask.isInMask(DBChar.Flag20000000000000L)) {
+        if (mask.isInMask(DBChar.Flag20000000000000L)) {
             outPacket.encodeInt(0);
             outPacket.encodeInt(0);
             outPacket.encodeFT(new FileTime(-2));
@@ -1569,39 +1574,39 @@ public class Character {
 
         outPacket.encodeShort(0); // 先略過
 
-        if(mask.isInMask(0x4000000000000L)) {
+        if (mask.isInMask(0x4000000000000L)) {
             outPacket.encodeShort(0); // TODO:
         }
 
         outPacket.encodeInt(0); // loop for [4][str]
 
 
-        if(mask.isInMask(0x1000000000000000L)) {
+        if (mask.isInMask(0x1000000000000000L)) {
             outPacket.encodeShort(0); // loop for [4][4]
         }
 
-        if(mask.isInMask(DBChar.VMatrixInfo)) {
+        if (mask.isInMask(DBChar.VMatrixInfo)) {
             int vmatrix_size = 0;
             outPacket.encodeInt(vmatrix_size);
             // getVMatrixRecords().encode(outPacket)
         }
 
-        if(mask.isInMask(0x4000000000000000L)) {
+        if (mask.isInMask(0x4000000000000000L)) {
             outPacket.encodeInt(0);
         }
 
         // 跟克梅勒茲航海有關
-        if(mask.isInMask(0x4000000000000L)) {
+        if (mask.isInMask(0x4000000000000L)) {
             outPacket.encodeByte(false);
             outPacket.encodeShort(0);
             outPacket.encodeShort(0);
         }
 
-        if(mask.isInMask(0x8000000000000L)) {
+        if (mask.isInMask(0x8000000000000L)) {
             outPacket.encodeByte(0);
         }
 
-        if(mask.isInMask(0x10000000000000L)) {
+        if (mask.isInMask(0x10000000000000L)) {
             outPacket.encodeInt(0);
             outPacket.encodeInt(0);
         }
@@ -1617,7 +1622,7 @@ public class Character {
     }
 
     public void setOnline(boolean online) {
-        if(getGuild() != null) {
+        if (getGuild() != null) {
             Guild g = getGuild();
             GuildMember gm = g.getMemberByID(getId());
             gm.setOnline(online);
@@ -1643,6 +1648,17 @@ public class Character {
         getField().removeCharacter(this);
         DatabaseFactory.getInstance().saveToDB(this);
         getClient().getChannelInstance().removeCharacter(this);
+    }
+
+    public static Character findById(int id) {
+        Session session = DatabaseFactory.getInstance().getSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Character> query = builder.createQuery(Character.class);
+        Root<Character> root = query.from(Character.class);
+        query.select(root).where(builder.equal(root.get("id"), id));
+        Character result = session.createQuery(query).getSingleResult();
+        session.clear();
+        return result;
     }
 }
 

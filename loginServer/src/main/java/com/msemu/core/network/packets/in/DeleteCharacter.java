@@ -32,7 +32,6 @@ public class DeleteCharacter extends InPacket<LoginClient> {
     public void runImpl() {
         Account account = getClient().getAccount();
 
-
         if(!BCryptUtils.checkPassword(secondPassowrd, account.getPic())) {
             getClient().write(new DeleteCharacterResult(0, LoginResultType.InvalidSecondPassword));
             return;
@@ -42,7 +41,8 @@ public class DeleteCharacter extends InPacket<LoginClient> {
                 .findFirst().orElse(null);
 
         if (chr != null) {
-            DatabaseFactory.getInstance().deleteFromDB(chr);
+            Character dbChar = Character.getById(chr.getId());
+            DatabaseFactory.getInstance().deleteFromDB(dbChar);
             account.getCharacters().remove(chr);
             DatabaseFactory.getInstance().saveToDB(account);
 

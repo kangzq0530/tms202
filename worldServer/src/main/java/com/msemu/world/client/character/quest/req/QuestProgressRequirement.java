@@ -1,5 +1,8 @@
 package com.msemu.world.client.character.quest.req;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 
 /**
@@ -9,24 +12,11 @@ import javax.persistence.*;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Table(name = "questProgressRequirements")
 @DiscriminatorColumn(name = "progressType")
-public abstract class QuestProgressRequirement {
+public abstract class QuestProgressRequirement implements IQuestProgressRequirement {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter
+    @Setter
     private long id;
-
-    /**
-     * Returns whether this progress requirement has been completed by the player.
-     *
-     * @return Completeness.
-     */
-    public abstract boolean isComplete();
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 }

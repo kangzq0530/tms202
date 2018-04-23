@@ -122,7 +122,7 @@ public class Archer extends Job {
         if (isHandlerOfJob(character.getJob())) {
             for (int id : addedSkills) {
                 if (!character.hasSkill(id)) {
-                    Skill skill = SkillData.getSkillDeepCopyById(id);
+                    Skill skill = SkillData.getInstance().getSkillById(id);
                     skill.setCurrentLevel(skill.getMasterLevel());
                     character.addSkill(skill);
                 }
@@ -140,7 +140,7 @@ public class Archer extends Job {
         boolean hasHitMobs = attackInfo.mobAttackInfo.size() > 0;
         int slv = 0;
         if (skill != null) {
-            si = SkillData.getSkillInfoById(skill.getSkillId());
+            si = SkillData.getInstance().getSkillInfoById(skill.getSkillId());
             slv = skill.getCurrentLevel();
             skillID = skill.getSkillId();
         }
@@ -262,7 +262,7 @@ public class Archer extends Job {
         }
         TemporaryStatManager tsm = getCharacter().getTemporaryStatManager();
         Skill skill = getCharacter().getSkill(AGGRESSIVE_RESISTANCE);
-        SkillInfo si = SkillData.getSkillInfoById(AGGRESSIVE_RESISTANCE);
+        SkillInfo si = SkillData.getInstance().getSkillInfoById(AGGRESSIVE_RESISTANCE);
         byte slv = (byte) skill.getCurrentLevel();
         Option o = tsm.getOptByCTSAndSkill(DamAbsorbShield, AGGRESSIVE_RESISTANCE);
         Option o1 = new Option();
@@ -289,7 +289,7 @@ public class Archer extends Job {
         TemporaryStatManager tsm = getCharacter().getTemporaryStatManager();
         Option o = new Option();
         Skill skill = getCharacter().getSkill(AGGRESSIVE_RESISTANCE);
-        SkillInfo si = SkillData.getSkillInfoById(AGGRESSIVE_RESISTANCE);
+        SkillInfo si = SkillData.getInstance().getSkillInfoById(AGGRESSIVE_RESISTANCE);
         byte slv = (byte) skill.getCurrentLevel();
         o.nOption = 1;
         o.rOption = AGGRESSIVE_RESISTANCE;
@@ -305,7 +305,7 @@ public class Archer extends Job {
         byte slv;
         if (getCharacter().hasSkill(MORTAL_BLOW_BOW)) {
             skill = getCharacter().getSkill(MORTAL_BLOW_BOW);
-            si = SkillData.getSkillInfoById(skill.getSkillId());
+            si = SkillData.getInstance().getSkillInfoById(skill.getSkillId());
             slv = (byte) skill.getCurrentLevel();
             Option o;
             if (!tsm.hasStat(BowMasterMortalBlow)) {
@@ -318,7 +318,7 @@ public class Archer extends Job {
             getClient().write(new TemporaryStatSet(tsm));
         } else if (getCharacter().hasSkill(MORTAL_BLOW_XBOW)) {
             skill = getCharacter().getSkill(MORTAL_BLOW_BOW);
-            //si = SkillData.getSkillInfoById(skill.getSkillId());
+            //si = SkillData.getInstance().getSkillInfoById(skill.getSkillId());
             //slv = (byte) skill.getCurrentLevel();
         }
     }
@@ -336,7 +336,7 @@ public class Archer extends Job {
         }
         Skill skill = getCharacter().getSkill(FOCUSED_FURY);
         byte slv = (byte) skill.getCurrentLevel();
-        SkillInfo si = SkillData.getSkillInfoById(FOCUSED_FURY);
+        SkillInfo si = SkillData.getInstance().getSkillInfoById(FOCUSED_FURY);
         o.nOption = Math.min(o.nOption + si.getValue(x, slv), 100);
         o.tOption = si.getValue(time, slv);
         tsm.putCharacterStatValue(AsrR, o);
@@ -350,7 +350,7 @@ public class Archer extends Job {
         }
         Skill skill = chr.hasSkill(ENCHANTED_QUIVER) ? chr.getSkill(ENCHANTED_QUIVER)
                 : chr.getSkill(QUIVER_CARTRIDGE);
-        SkillInfo si = SkillData.getSkillInfoById(skill.getSkillId());
+        SkillInfo si = SkillData.getInstance().getSkillInfoById(skill.getSkillId());
         for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
             Mob mob = (Mob) chr.getField().getLifeByObjectID(mai.mobId);
             MobTemporaryStat mts = mob.getTemporaryStat();
@@ -387,7 +387,7 @@ public class Archer extends Job {
 //                        ForceAtomInfo forceAtomInfo = new ForceAtomInfo(1, inc, 15, 15,
 //                                num, 0, (int) System.currentTimeMillis(), 1, 0,
 //                                new Position());
-//                        chr.getField().broadcastPacket(Field.createForceAtom(false, 0, chr.getId(), type,
+//                        chr.getField().broadcastPacket(Field.createForceAtom(false, 0, chr.getItemId(), type,
 //                                true, mobId, QUIVER_CARTRIDGE_ATOM, forceAtomInfo, new Rect(), 0, 300,
 //                                mob.getPosition(), 0, mob.getPosition()));
 //                    }
@@ -485,7 +485,7 @@ public class Archer extends Job {
         Skill skill = chr.getSkill(skillID);
         SkillInfo si = null;
         if (skill != null) {
-            si = SkillData.getSkillInfoById(skillID);
+            si = SkillData.getInstance().getSkillInfoById(skillID);
         }
         if (isBuff(skillID)) {
             handleBuff(inPacket, skillID, slv);
@@ -512,7 +512,7 @@ public class Archer extends Job {
                     skill = getCharacter().getSkill(EVASION_BOOST_XBOW);
                 }
                 byte slv = (byte) skill.getCurrentLevel();
-                SkillInfo si = SkillData.getSkillInfoById(skill.getSkillId());
+                SkillInfo si = SkillData.getInstance().getSkillInfoById(skill.getSkillId());
                 TemporaryStatManager tsm = getCharacter().getTemporaryStatManager();
                 Option o = new Option();
                 o.nOption = 100;
@@ -527,7 +527,7 @@ public class Archer extends Job {
 
     private void handleBuff(InPacket inPacket, int skillID, byte slv) {
         Character chr = getCharacter();
-        SkillInfo si = SkillData.getSkillInfoById(skillID);
+        SkillInfo si = SkillData.getInstance().getSkillInfoById(skillID);
         TemporaryStatManager tsm = getCharacter().getTemporaryStatManager();
         Option o1 = new Option();
         Option o2 = new Option();
@@ -773,7 +773,7 @@ public class Archer extends Job {
 
     private int getFinalAttackProc() {
         Skill skill = getFinalAtkSkill(getCharacter());
-        SkillInfo si = SkillData.getSkillInfoById(skill.getSkillId());
+        SkillInfo si = SkillData.getInstance().getSkillInfoById(skill.getSkillId());
         byte slv = (byte) getCharacter().getSkill(skill.getSkillId()).getCurrentLevel();
         int proc = si.getValue(prop, slv);
 

@@ -3,7 +3,7 @@ package com.msemu.commons.data.enums;
 /**
  * Created by Weber on 2018/4/22.
  */
-public enum QuestActionDataType {
+public enum QuestActDataType {
     UNDEFINED,
     exp,
     item,
@@ -23,7 +23,7 @@ public enum QuestActionDataType {
     craftEXP,
     transferField,;
 
-    public static QuestActionDataType getQuestActionDataByName(String name) {
+    public static QuestActDataType getQuestActionDataByName(String name) {
         try {
             return valueOf(name);
         } catch (IllegalArgumentException ex) {

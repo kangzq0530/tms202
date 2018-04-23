@@ -82,7 +82,7 @@ public class Kanna extends Job {
         boolean hasHitMobs = attackInfo.mobAttackInfo.size() > 0;
         int slv = 0;
         if (skill != null) {
-            si = SkillData.getSkillInfoById(skill.getSkillId());
+            si = SkillData.getInstance().getSkillInfoById(skill.getSkillId());
             slv = skill.getCurrentLevel();
             skillID = skill.getSkillId();
         }
@@ -123,7 +123,7 @@ public class Kanna extends Job {
 
     public void handleBuff(InPacket inPacket, int skillID, byte slv) {
         Character chr = getCharacter();
-        SkillInfo si = SkillData.getSkillInfoById(skillID);
+        SkillInfo si = SkillData.getInstance().getSkillInfoById(skillID);
         TemporaryStatManager tsm = getCharacter().getTemporaryStatManager();
         Summon summon;
         Field field;
@@ -195,7 +195,7 @@ public class Kanna extends Job {
         Skill skill = chr.getSkill(skillID);
         SkillInfo si = null;
         if (skill != null) {
-            si = SkillData.getSkillInfoById(skillID);
+            si = SkillData.getInstance().getSkillInfoById(skillID);
         }
         chr.chatMessage(ChatMsgColor.YELLOW, "SkillID: " + skillID);
         if (isBuff(skillID)) {

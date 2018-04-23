@@ -1,106 +1,67 @@
 package com.msemu.world.client.character.quest.act;
 
-import com.msemu.commons.data.dat.DatSerializable;
+import com.msemu.commons.data.templates.quest.actions.QuestActData;
+import com.msemu.commons.data.templates.quest.actions.QuestItemActData;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.items.Item;
 import com.msemu.world.constants.ItemConstants;
 import com.msemu.world.data.ItemData;
+import lombok.Getter;
+import lombok.Setter;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Weber on 2018/4/13.
  */
 public class QuestItemAction implements IQuestAction {
-    private int id;
+    @Getter
+    @Setter
+    private int itemId;
+    @Getter
+    @Setter
     private short quantity;
+    @Getter
+    @Setter
     private String potentialGrade;
+    @Getter
+    @Setter
     private int status;
+    @Getter
+    @Setter
     private int prop;
+    @Getter
+    @Setter
     private int gender;
 
-    public int getId() {
-        return id;
-    }
+    @Getter
+    @Setter
+    private List<Short> jobs = new ArrayList<>();
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public short getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(short quantity) {
-        this.quantity = quantity;
-    }
 
     @Override
     public void action(Character chr) {
         Item item;
-        if(ItemConstants.isEquip(getId())) {
-            item = ItemData.getEquipFromTemplate(getId());
+        if (ItemConstants.isEquip(getItemId())) {
+            item = ItemData.getInstance().getEquipFromTemplate(getItemId());
         } else {
-            item = ItemData.getItemFromTemplate(getId());
+            item = ItemData.getInstance().getItemFromTemplate(getItemId());
             item.setQuantity(getQuantity());
         }
         chr.addItemToInventory(item);
     }
 
-    public void setPotentialGrade(String potentialGrade) {
-        this.potentialGrade = potentialGrade;
-    }
-
-    public String getPotentialGrade() {
-        return potentialGrade;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setProp(int prop) {
-        this.prop = prop;
-    }
-
-    public int getProp() {
-        return prop;
-    }
-
-    public void setGender(int gender) {
-        this.gender = gender;
-    }
-
-    public int getGender() {
-        return gender;
-    }
-
     @Override
-    public void write(DataOutputStream dos) throws IOException {
-        dos.writeInt(getId());
-        dos.writeShort(getQuantity());
-        dos.writeUTF(getPotentialGrade());
-        dos.writeInt(getStatus());
-        dos.writeInt(getProp());
-        dos.writeInt(getGender());
-    }
-
-    @Override
-    public DatSerializable load(DataInputStream dis) throws IOException {
-        QuestItemAction qir = new QuestItemAction();
-        qir.setId(dis.readInt());
-        qir.setQuantity(dis.readShort());
-        qir.setPotentialGrade(dis.readUTF());
-        qir.setStatus(dis.readInt());
-        qir.setProp(dis.readInt());
-        qir.setGender(dis.readInt());
-        return qir;
+    public void load(QuestActData actData) {
+        if (actData instanceof QuestItemActData) {
+            setItemId(((QuestItemActData) actData).getItemId());
+            setPotentialGrade(((QuestItemActData) actData).getPotentialGrade());
+            setGender(((QuestItemActData) actData).getGender());
+            setProp(((QuestItemActData) actData).getProp());
+            setQuantity(((QuestItemActData) actData).getQuantity());
+            jobs.addAll(((QuestItemActData)actData).getJobReqs());
+        }
     }
 }
 

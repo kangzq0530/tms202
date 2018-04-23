@@ -10,11 +10,15 @@ public enum ItemGrade {
     HIDDEN_UNIQUE(3),
     HIDDEN_EPIC(2),
     HIDDEN_RARE(1),
-    HIDDEN(-1), // buggy
+    HIDDEN(-1),
     NONE(0),
+    // 特殊
     RARE(17),
+    // 稀有
     EPIC(18),
+    // 罕見
     UNIQUE(19),
+    // 傳說
     LEGENDARY(20),
     ;
 

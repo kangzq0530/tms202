@@ -153,7 +153,7 @@ public class AffectedArea extends Life {
         int skillID = getSkillID();
         Skill skill = chr.getSkill(getSkillID());
         byte slv = getSlv();
-        SkillInfo si = SkillData.getSkillInfoById(skillID);
+        SkillInfo si = SkillData.getInstance().getSkillInfoById(skillID);
         MobTemporaryStat mts = mob.getTemporaryStat();
         Option o = new Option();
         Option o1 = new Option();
@@ -211,7 +211,7 @@ public class AffectedArea extends Life {
         tsm.addAffectedArea(this);
         int skillID = getSkillID();
         byte slv = getSlv();
-        SkillInfo si = SkillData.getSkillInfoById(skillID);
+        SkillInfo si = SkillData.getInstance().getSkillInfoById(skillID);
         Option o = new Option();
         Option o1 = new Option();
         Option o2 = new Option();

@@ -28,7 +28,7 @@ public enum InvType {
         return value;
     }
 
-    public static InvType getInvTypeByVal(int val) {
+    public static InvType getInvTypeByValue(int val) {
         return Arrays.stream(InvType.values()).filter(t -> t.getValue() == val).findFirst().orElse(null);
     }
 

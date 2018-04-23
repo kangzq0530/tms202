@@ -28,7 +28,7 @@ public class CharacterCard {
     @Getter
     @Setter
     private int job;
-    @Column(name = "maxLevel")
+    @Column(name = "level")
     @Getter
     @Setter
     private byte level;

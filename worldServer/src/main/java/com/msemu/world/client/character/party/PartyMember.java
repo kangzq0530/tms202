@@ -1,16 +1,23 @@
 package com.msemu.world.client.character.party;
 
 import com.msemu.world.client.character.Character;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Created by Weber on 2018/4/13.
  */
 public class PartyMember {
 
+    @Getter
     private final Character character;
 
-    private int partyBossCharacterId;
+    @Getter
+    @Setter
+    private int partyLeaderId;
 
+    @Getter
+    @Setter
     private TownPortal townPortal;
 
     public PartyMember(Character character) {
@@ -18,59 +25,39 @@ public class PartyMember {
     }
 
     public int getCharacterID() {
-        return character.getId();
+        return getCharacter().getId();
     }
 
     public String getCharacterName() {
-        return character.getName();
+        return getCharacter().getName();
     }
 
     public short getCharacterJob() {
-        return character.getJob();
+        return getCharacter().getJob();
     }
 
     public short getCharacterSubJob() {
-        return character.getSubJob();
+        return getCharacter().getSubJob();
     }
 
     public short getSubSob() {
-        return (short) character.getAvatarData().getCharacterStat().getSubJob();
+        return (short) getCharacter().getAvatarData().getCharacterStat().getSubJob();
     }
 
     public int getCharacterLevel() {
-        return character.getLevel();
+        return getCharacter().getLevel();
     }
 
     public boolean isOnline() {
-        return character.isOnline();
-    }
-
-    public Character getCharacter() {
-        return character;
-    }
-
-    public int getPartyBossCharacterID() {
-        return partyBossCharacterId;
-    }
-
-    public void setPartyBossCharacterID(int partyBossCharacterID) {
-        this.partyBossCharacterId = partyBossCharacterID;
+        return getCharacter().isOnline();
     }
 
     public int getChannel() {
-        return character.getClient().getChannelID();
+        return character.getClient().getChannel();
     }
 
     public int getFieldID() {
         return character.getFieldID();
-    }
-
-    public TownPortal getTownPortal() {
-        return townPortal;
-    }
-
-    public void setTownPortal(TownPortal townPortal) {
-        this.townPortal = townPortal;
     }
 
     @Override

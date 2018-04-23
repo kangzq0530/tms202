@@ -1,6 +1,6 @@
 package com.msemu.commons.data.templates.quest.reqs;
 
-import com.msemu.commons.data.enums.QuestRequirementType;
+import com.msemu.commons.data.enums.QuestRequirementDataType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,10 +11,10 @@ public class QuestEndMesoReqData extends QuestReqData {
 
     @Getter
     @Setter
-    private long meso;
+    private int meso;
 
     @Override
-    public QuestRequirementType getType() {
-        return QuestRequirementType.endmeso;
+    public QuestRequirementDataType getType() {
+        return QuestRequirementDataType.endmeso;
     }
 }

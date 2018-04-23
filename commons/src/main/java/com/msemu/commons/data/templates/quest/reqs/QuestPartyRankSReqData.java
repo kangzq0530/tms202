@@ -1,6 +1,6 @@
 package com.msemu.commons.data.templates.quest.reqs;
 
-import com.msemu.commons.data.enums.QuestRequirementType;
+import com.msemu.commons.data.enums.QuestRequirementDataType;
 
 /**
  * Created by Weber on 2018/4/22.
@@ -11,7 +11,7 @@ public class QuestPartyRankSReqData extends QuestReqData {
 
     @Override
 
-    public QuestRequirementType getType() {
-        return QuestRequirementType.partyQuest_S;
+    public QuestRequirementDataType getType() {
+        return QuestRequirementDataType.partyQuest_S;
     }
 }

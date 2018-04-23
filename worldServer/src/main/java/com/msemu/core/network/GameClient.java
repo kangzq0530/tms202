@@ -24,12 +24,8 @@ public class GameClient extends Client<GameClient> {
     @Setter
     private Character character;
 
+    @Getter
     private com.msemu.world.channel.Channel channelInstance;
-
-    private int worldID;
-
-    private int channelID;
-
 
     public GameClient(Connection<GameClient> connection) {
         super(connection);
@@ -63,33 +59,8 @@ public class GameClient extends Client<GameClient> {
         }
     }
 
-    public Character getCharacter() {
-        return character;
-    }
-
-    public int getWorldID() {
-        return worldID;
-    }
-
-    public void setWorldID(int worldID) {
-        this.worldID = worldID;
-    }
-
-    public int getChannelID() {
-        return channelID;
-    }
-
-    public void setChannelID(int channelID) {
-        this.channelID = channelID;
-    }
-
-    public com.msemu.world.channel.Channel getChannelInstance() {
-        return channelInstance;
-    }
-
     public void setChannel(com.msemu.world.channel.Channel channelInstance) {
         this.channelInstance = channelInstance;
-        this.channelID = channelInstance.getChannelId();
     }
 
     public int getChannel() {

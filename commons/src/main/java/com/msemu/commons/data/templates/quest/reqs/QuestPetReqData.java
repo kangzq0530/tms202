@@ -1,6 +1,6 @@
 package com.msemu.commons.data.templates.quest.reqs;
 
-import com.msemu.commons.data.enums.QuestRequirementType;
+import com.msemu.commons.data.enums.QuestRequirementDataType;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ public class QuestPetReqData extends QuestReqData {
     private List<Integer> petItems = new ArrayList<>();
 
     @Override
-    public QuestRequirementType getType() {
-        return QuestRequirementType.pet;
+    public QuestRequirementDataType getType() {
+        return QuestRequirementDataType.pet;
     }
 }

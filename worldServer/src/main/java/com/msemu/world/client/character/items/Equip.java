@@ -1,11 +1,12 @@
 package com.msemu.world.client.character.items;
 
 
+import com.msemu.commons.data.enums.*;
+import com.msemu.commons.data.templates.EquipTemplate;
+import com.msemu.commons.database.Schema;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.utils.Rand;
 import com.msemu.commons.utils.types.FileTime;
-import com.msemu.world.constants.ItemConstants;
-import com.msemu.world.enums.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,148 +19,283 @@ import java.util.TreeMap;
 /**
  * Created on 11/23/2017.
  */
+@Schema
 @Entity
-@Table(name = "equipTemplates")
+@Table(name = "Equips")
 @PrimaryKeyJoinColumn(name = "itemId")
 public class Equip extends Item {
     @Column(name = "serialNumber")
     private long serialNumber;
     @Column(name = "title")
+    @Getter
+    @Setter
     private String title;
     @JoinColumn(name = "equippedDate")
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @Getter
+    @Setter
     private FileTime equippedDate = new FileTime();
     @Column(name = "prevBonusExpRate")
+    @Getter
+    @Setter
     private int prevBonusExpRate;
     @Column(name = "tuc")
+    @Getter
+    @Setter
     private short ruc;
     @Column(name = "cuc")
+    @Getter
+    @Setter
     private short cuc;
     @Column(name = "iStr")
+    @Getter
+    @Setter
     private short iStr;
     @Column(name = "iDex")
+    @Getter
+    @Setter
     private short iDex;
     @Column(name = "iInt")
+    @Getter
+    @Setter
     private short iInt;
     @Column(name = "iLuk")
+    @Getter
+    @Setter
     private short iLuk;
     @Column(name = "iMaxHp")
+    @Getter
+    @Setter
     private short iMaxHp;
     @Column(name = "iMaxMp")
+    @Getter
+    @Setter
     private short iMaxMp;
     @Column(name = "iPad")
+    @Getter
+    @Setter
     private short iPad;
     @Column(name = "iMad")
+    @Getter
+    @Setter
     private short iMad;
     @Column(name = "iPDD")
+    @Getter
+    @Setter
     private short iPDD;
     @Column(name = "iMDD")
+    @Getter
+    @Setter
     private short iMDD;
     @Column(name = "iAcc")
+    @Getter
+    @Setter
     private short iAcc;
     @Column(name = "iEva")
+    @Getter
+    @Setter
     private short iEva;
     @Column(name = "iCraft")
+    @Getter
+    @Setter
     private short iCraft;
     @Column(name = "iSpeed")
+    @Getter
+    @Setter
     private short iSpeed;
     @Column(name = "iJump")
+    @Getter
+    @Setter
     private short iJump;
     @Column(name = "attribute")
+    @Getter
+    @Setter
     private short attribute;
     @Column(name = "levelUpType")
+    @Getter
+    @Setter
     private short levelUpType;
     @Column(name = "level")
+    @Getter
+    @Setter
     private short level;
     @Column(name = "exp")
+    @Getter
+    @Setter
     private short exp;
     @Column(name = "durability")
+    @Getter
+    @Setter
     private short durability;
     @Column(name = "iuc")
+    @Getter
+    @Setter
     private short iuc;
     @Column(name = "iPvpDamage")
+    @Getter
+    @Setter
     private short iPvpDamage;
     @Column(name = "iReduceReq")
+    @Getter
+    @Setter
     private short iReduceReq;
     @Column(name = "specialAttribute")
+    @Getter
+    @Setter
     private short specialAttribute;
     @Column(name = "durabilityMax")
+    @Getter
+    @Setter
     private short durabilityMax;
     @Column(name = "iIncReq")
+    @Getter
+    @Setter
     private short iIncReq;
     @Column(name = "growthEnchant")
+    @Getter
+    @Setter
     private short growthEnchant;
     @Column(name = "psEnchant")
+    @Getter
+    @Setter
     private short psEnchant;
     @Column(name = "bdr")
+    @Getter
+    @Setter
     private short bdr;
     @Column(name = "imdr")
+    @Getter
+    @Setter
     private short imdr;
     @Column(name = "damR")
+    @Getter
+    @Setter
     private short damR;
     @Column(name = "statR")
+    @Getter
+    @Setter
     private short statR;
     @Column(name = "cuttable")
+    @Getter
+    @Setter
     private short cuttable;
     @Column(name = "exGradeOption")
+    @Getter
+    @Setter
     private short exGradeOption;
     @Column(name = "itemState")
+    @Getter
+    @Setter
     private short itemState;
     @Column(name = "chuc")
+    @Getter
+    @Setter
     private short chuc;
     @Column(name = "soulOptionId")
+    @Getter
+    @Setter
     private short soulOptionId;
     @Column(name = "soulSocketId")
+    @Getter
+    @Setter
     private short soulSocketId;
     @Column(name = "soulOption")
+    @Getter
+    @Setter
     private short soulOption;
     @Column(name = "rStr")
+    @Getter
+    @Setter
     private short rStr;
     @Column(name = "rDex")
+    @Getter
+    @Setter
     private short rDex;
     @Column(name = "rInt")
+    @Getter
+    @Setter
     private short rInt;
     @Column(name = "rLuk")
+    @Getter
+    @Setter
     private short rLuk;
     @Column(name = "rLevel")
+    @Getter
+    @Setter
     private short rLevel;
     @Column(name = "rJob")
+    @Getter
+    @Setter
     private short rJob;
     @Column(name = "rPop")
+    @Getter
+    @Setter
     private short rPop;
     @ElementCollection
     @CollectionTable(name = "options", joinColumns = @JoinColumn(name = "equipId"))
     @Column(name = "optionId")
+    @Getter
+    @Setter
     private List<Integer> options = new ArrayList<>(); // base + add pot
     @Column(name = "specialGrade")
+    @Getter
+    @Setter
     private int specialGrade;
     @Column(name = "fixedPotential")
+    @Getter
+    @Setter
     private boolean fixedPotential;
     @Column(name = "tradeBlock")
+    @Getter
+    @Setter
     private boolean tradeBlock;
     @Column(name = "isOnly")
+    @Getter
+    @Setter
     private boolean only;
     @Column(name = "notSale")
+    @Getter
+    @Setter
     private boolean notSale;
     @Column(name = "attackSpeed")
+    @Getter
+    @Setter
     private int attackSpeed;
     @Column(name = "price")
+    @Getter
+    @Setter
     private int price;
     @Column(name = "charmEXP")
+    @Getter
+    @Setter
     private int charmEXP;
     @Column(name = "expireOnLogout")
+    @Getter
+    @Setter
     private boolean expireOnLogout;
     @Column(name = "setItemID")
+    @Getter
+    @Setter
     private int setItemID;
     @Column(name = "exItem")
+    @Getter
+    @Setter
     private boolean exItem;
     @Column(name = "equipTradeBlock")
+    @Getter
+    @Setter
     private boolean equipTradeBlock;
     @Column(name = "iSlot")
+    @Getter
+    @Setter
     private String iSlot;
     @Column(name = "vSlot")
+    @Getter
+    @Setter
     private String vSlot;
     @Column(name = "fixedGrade")
+    @Getter
+    @Setter
     private int fixedGrade;
 
     @Getter
@@ -176,88 +312,91 @@ public class Equip extends Item {
         super();
     }
 
-    public Equip(int itemId, int bagIndex, long cashItemSerialNumber, FileTime dateExpire, long serialNumber,
-                 String title, FileTime equippedDate, int prevBonusExpRate, short ruc, short cuc, short iStr,
-                 short iDex, short iInt, short iLuk, short iMaxHp, short iMaxMp, short iPad, short iMad, short iPDD,
-                 short iMDD, short iAcc, short iEva, short iCraft, short iSpeed, short iJump, short attribute,
-                 short levelUpType, short level, short exp, short durability, short iuc, short iPvpDamage,
-                 short iReduceReq, short specialAttribute, short durabilityMax, short iIncReq, short growthEnchant,
-                 short psEnchant, short bdr, short imdr, short damR, short statR, short cuttable, short exGradeOption,
-                 short itemState, short chuc, short soulOptionId, short soulSocketId, short soulOption,
-                 short rStr, short rDex, short rInt, short rLuk, short rLevel, short rJob, short rPop, boolean isCash,
-                 String iSlot, String vSlot, int fixedGrade, List<Integer> options, int specialGrade, boolean fixedPotential,
-                 boolean tradeBlock, boolean only, boolean notSale, int attackSpeed, int price, int charmEXP,
-                 boolean expireOnLogout, int setItemID, boolean exItem, boolean hasEquipTradeBlock, String owner) {
-        super(itemId, bagIndex, cashItemSerialNumber, dateExpire, InvType.EQUIP, isCash, Type.EQUIP);
-        this.serialNumber = serialNumber;
-        this.title = title;
-        this.equippedDate = equippedDate;
-        this.prevBonusExpRate = prevBonusExpRate;
-        this.ruc = ruc;
-        this.cuc = cuc;
-        this.iStr = iStr;
-        this.iDex = iDex;
-        this.iInt = iInt;
-        this.iLuk = iLuk;
-        this.iMaxHp = iMaxHp;
-        this.iMaxMp = iMaxMp;
-        this.iPad = iPad;
-        this.iMad = iMad;
-        this.iPDD = iPDD;
-        this.iMDD = iMDD;
-        this.iAcc = iAcc;
-        this.iEva = iEva;
-        this.iCraft = iCraft;
-        this.iSpeed = iSpeed;
-        this.iJump = iJump;
-        this.attribute = attribute;
-        this.levelUpType = levelUpType;
-        this.level = level;
-        this.exp = exp;
-        this.durability = durability;
-        this.iuc = iuc;
-        this.iPvpDamage = iPvpDamage;
-        this.iReduceReq = iReduceReq;
-        this.specialAttribute = specialAttribute;
-        this.durabilityMax = durabilityMax;
-        this.iIncReq = iIncReq;
-        this.growthEnchant = growthEnchant;
-        this.psEnchant = psEnchant;
-        this.bdr = bdr;
-        this.imdr = imdr;
-        this.damR = damR;
-        this.statR = statR;
-        this.cuttable = cuttable;
-        this.exGradeOption = exGradeOption;
-        this.itemState = itemState;
-        this.chuc = chuc;
-        this.soulOptionId = soulOptionId;
-        this.soulSocketId = soulSocketId;
-        this.soulOption = soulOption;
-        this.rStr = rStr;
-        this.rDex = rDex;
-        this.rInt = rInt;
-        this.rLuk = rLuk;
-        this.rLevel = rLevel;
-        this.rJob = rJob;
-        this.rPop = rPop;
-        this.iSlot = iSlot;
-        this.vSlot = vSlot;
-        this.fixedGrade = fixedGrade;
-        this.options = options;
-        this.specialGrade = specialGrade;
-        this.fixedPotential = fixedPotential;
-        this.tradeBlock = tradeBlock;
-        this.only = only;
-        this.notSale = notSale;
-        this.attackSpeed = attackSpeed;
-        this.price = price;
-        this.charmEXP = charmEXP;
-        this.expireOnLogout = expireOnLogout;
-        this.setItemID = setItemID;
-        this.exItem = exItem;
-        this.equipTradeBlock = hasEquipTradeBlock;
-        this.setOwner(owner);
+    public Equip(EquipTemplate t) {
+        super(t);
+        this.itemId = t.getItemId();
+        this.title = t.getTitle();
+        // TODO 時間暫時永久
+        this.equippedDate = FileTime.getFileTimeFromType(FileTime.Type.ZERO_TIME);
+        this.prevBonusExpRate = t.getPrevBonusExpRate();
+        this.ruc = t.getTuc();
+        this.cuc = t.getCuc();
+        this.iStr = t.getIStr();
+        this.iDex = t.getIDex();
+        this.iInt = t.getIInt();
+        this.iLuk = t.getILuk();
+        this.iMaxHp = t.getIMaxHp();
+        this.iMaxMp = t.getIMaxMp();
+        this.iPad = t.getIPad();
+        this.iMad = t.getIMad();
+        this.iAcc = t.getIAcc();
+        this.iPDD = t.getIPDD();
+        this.iMDD = t.getIMDD();
+        this.iEva = t.getIEva();
+        this.iCraft = t.getICraft();
+        this.iSpeed = t.getISpeed();
+        this.iJump = t.getIJump();
+        this.iPvpDamage = t.getIPvpDamage();
+        this.iReduceReq = t.getIReduceReq();
+        this.durabilityMax = t.getDurabilityMax();
+        this.iIncReq = t.getIIncReq();
+        this.bdr = t.getBdr();
+        this.imdr = t.getImdr();
+        this.damR = t.getDamR();
+        this.statR = t.getStatR();
+
+        this.attribute = 0;
+        this.levelUpType = 0;
+        this.level = 0;
+        this.exp = 0;
+        this.durability = 0;
+        this.iuc = 0;
+        this.specialAttribute = 0;
+        this.growthEnchant = 0;
+        this.psEnchant = 0;
+
+        this.cuttable = t.getCuttable();
+        this.exGradeOption = t.getExGradeOption();
+        this.itemState = t.getItemState();
+        this.chuc = t.getChuc();
+        this.soulOptionId = t.getSoulOptionId();
+        this.soulSocketId = t.getSoulSocketId();
+        this.soulOption = t.getSoulOption();
+        this.rStr = t.getRStr();
+        this.rDex = t.getRDex();
+        this.rInt = t.getRInt();
+        this.rLuk = t.getRLuk();
+        this.rLevel = t.getRLevel();
+        this.rJob = t.getRJob();
+        this.rPop = t.getRPop();
+        this.iSlot = t.getISlot();
+        this.vSlot = t.getVSlot();
+        this.fixedGrade = t.getFixedGrade();
+        this.options = new ArrayList<>();
+        t.getOptions().values().forEach(option -> {
+            this.options.add(option.getOption());
+        });
+        this.specialGrade = t.getSpecialGrade();
+        this.fixedPotential = t.isFixedPotential();
+        this.tradeBlock = t.isTradeBlock();
+
+        this.only = t.isOnly();
+        this.notSale = t.isNotSale();
+        this.attackSpeed = t.getAttackSpeed();
+        this.price = t.getPrice();
+        this.charmEXP = t.getCharmEXP();
+        this.expireOnLogout = t.isExpireOnLogout();
+        this.setItemID = t.getSetItemID();
+        this.exItem = t.isExItem();
+        this.equipTradeBlock = t.isEquipTradeBlock();
+        this.setOwner(getOwner());
+        this.itemId = t.getItemId();
+        this.cashItemSerialNumber = t.getSerialNumber();
+        this.dateExpire = FileTime.getFileTimeFromType(FileTime.Type.ZERO_TIME);
+        this.invType = t.getInvType();
+        this.type = Type.EQUIP;
+        this.isCash = t.isCash();
+
     }
 
     public Equip deepCopy() {
@@ -345,230 +484,10 @@ public class Equip extends Item {
         return getId();
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public FileTime getEquippedDate() {
-        return equippedDate;
-    }
-
-    public int getPrevBonusExpRate() {
-        return prevBonusExpRate;
-    }
-
-    public short getRuc() {
-        return ruc;
-    }
-
-    public short getCuc() {
-        return cuc;
-    }
-
-    public void setCuc(short cuc) {
-        this.cuc = cuc;
-    }
-
-    public short getiStr() {
-        return iStr;
-    }
-
-    public void setiStr(short iStr) {
-        this.iStr = iStr;
-    }
-
-    public short getiDex() {
-        return iDex;
-    }
-
-    public void setiDex(short iDex) {
-        this.iDex = iDex;
-    }
-
-    public short getiInt() {
-        return iInt;
-    }
-
-    public void setiInt(short iInt) {
-        this.iInt = iInt;
-    }
-
-    public short getiLuk() {
-        return iLuk;
-    }
-
-    public void setiLuk(short iLuk) {
-        this.iLuk = iLuk;
-    }
-
-    public short getiMaxHp() {
-        return iMaxHp;
-    }
-
-    public void setiMaxHp(short iMaxHp) {
-        this.iMaxHp = iMaxHp;
-    }
-
-    public short getiMaxMp() {
-        return iMaxMp;
-    }
-
-    public void setiMaxMp(short iMaxMp) {
-        this.iMaxMp = iMaxMp;
-    }
-
-    public short getiPad() {
-        return iPad;
-    }
-
-    public void setiPad(short iPad) {
-        this.iPad = iPad;
-    }
-
-    public short getiMad() {
-        return iMad;
-    }
-
-    public void setiMad(short iMad) {
-        this.iMad = iMad;
-    }
-
-    public short getiPDD() {
-        return iPDD;
-    }
-
-    public void setiPDD(short iPDD) {
-        this.iPDD = iPDD;
-    }
-
-    public short getiMDD() {
-        return iMDD;
-    }
-
-    public void setiMDD(short iMDD) {
-        this.iMDD = iMDD;
-    }
-
-    public short getiAcc() {
-        return iAcc;
-    }
-
-    public void setiAcc(short iAcc) {
-        this.iAcc = iAcc;
-    }
-
-    public short getiEva() {
-        return iEva;
-    }
-
-    public void setiEva(short iEva) {
-        this.iEva = iEva;
-    }
-
-    public short getiCraft() {
-        return iCraft;
-    }
-
-    public void setiCraft(short iCraft) {
-        this.iCraft = iCraft;
-    }
-
-    public short getiSpeed() {
-        return iSpeed;
-    }
-
-    public void setiSpeed(short iSpeed) {
-        this.iSpeed = iSpeed;
-    }
-
-    public short getiJump() {
-        return iJump;
-    }
-
-    public void setiJump(short iJump) {
-        this.iJump = iJump;
-    }
-
-    public short getAttribute() {
-        return attribute;
-    }
-
-    public void setAttribute(short attribute) {
-        this.attribute = attribute;
-    }
-
     public void addAttribute(EquipAttribute ea) {
         short attr = getAttribute();
         attr |= ea.getValue();
         setAttribute(attr);
-    }
-
-    public short getLevelUpType() {
-        return levelUpType;
-    }
-
-    public void setLevelUpType(short levelUpType) {
-        this.levelUpType = levelUpType;
-    }
-
-    public short getLevel() {
-        return level;
-    }
-
-    public void setLevel(short level) {
-        this.level = level;
-    }
-
-    public short getExp() {
-        return exp;
-    }
-
-    public void setExp(short exp) {
-        this.exp = exp;
-    }
-
-    public short getDurability() {
-        return durability;
-    }
-
-    public void setDurability(short durability) {
-        this.durability = durability;
-    }
-
-    public short getIuc() {
-        return iuc;
-    }
-
-    public void setIuc(short iuc) {
-        this.iuc = iuc;
-    }
-
-    public short getiPvpDamage() {
-        return iPvpDamage;
-    }
-
-    public void setiPvpDamage(short iPvpDamage) {
-        this.iPvpDamage = iPvpDamage;
-    }
-
-    public short getiReduceReq() {
-        return iReduceReq;
-    }
-
-    public void setiReduceReq(short iReduceReq) {
-        this.iReduceReq = iReduceReq;
-    }
-
-    public short getSpecialAttribute() {
-        return specialAttribute;
-    }
-
-    public void setSpecialAttribute(short specialAttribute) {
-        this.specialAttribute = specialAttribute;
     }
 
     public void addSpecialAttribute(EquipSpecialAttribute esa) {
@@ -577,93 +496,6 @@ public class Equip extends Item {
         setSpecialAttribute(attr);
     }
 
-    public short getExGradeOption() {
-        return exGradeOption;
-    }
-
-    public void setExGradeOption(short exGradeOption) {
-        this.exGradeOption = exGradeOption;
-    }
-
-    public short getCuttable() {
-        return cuttable;
-    }
-
-    public void setCuttable(short cuttable) {
-        this.cuttable = cuttable;
-    }
-
-    public short getStatR() {
-        return statR;
-    }
-
-    public void setStatR(short statR) {
-        this.statR = statR;
-    }
-
-    public short getDamR() {
-        return damR;
-    }
-
-    public void setDamR(short damR) {
-        this.damR = damR;
-    }
-
-    public short getImdr() {
-        return imdr;
-    }
-
-    public void setImdr(short imdr) {
-        this.imdr = imdr;
-    }
-
-    public short getBdr() {
-        return bdr;
-    }
-
-    public void setBdr(short bdr) {
-        this.bdr = bdr;
-    }
-
-    public short getPsEnchant() {
-        return psEnchant;
-    }
-
-    public void setPsEnchant(short psEnchant) {
-        this.psEnchant = psEnchant;
-    }
-
-    public short getGrowthEnchant() {
-        return growthEnchant;
-    }
-
-    public void setGrowthEnchant(short growthEnchant) {
-        this.growthEnchant = growthEnchant;
-    }
-
-    public short getiIncReq() {
-        return iIncReq;
-    }
-
-    public void setiIncReq(short iIncReq) {
-        this.iIncReq = iIncReq;
-    }
-
-    public short getDurabilityMax() {
-        return durabilityMax;
-    }
-
-    public void setDurabilityMax(short durabilityMax) {
-        this.durabilityMax = durabilityMax;
-    }
-
-    public short getItemState() {
-        return itemState;
-    }
-
-    public void setItemState(short itemState) {
-        this.itemState = itemState;
-    }
 
     public short getGrade() {
         ItemGrade ig = ItemGrade.getGradeByVal(Math.min(getBaseGrade(), getBonusGrade()));
@@ -685,243 +517,6 @@ public class Equip extends Item {
         return ItemGrade.getGradeByOption(getOptionBonus(0)).getValue();
     }
 
-
-    public short getChuc() {
-        return chuc;
-    }
-
-    public void setChuc(short chuc) {
-        this.chuc = chuc;
-    }
-
-    public short getSoulOptionId() {
-        return soulOptionId;
-    }
-
-    public void setSoulOptionId(short soulOptionId) {
-        this.soulOptionId = soulOptionId;
-    }
-
-    public short getSoulSocketId() {
-        return soulSocketId;
-    }
-
-    public void setSoulSocketId(short soulSocketId) {
-        this.soulSocketId = soulSocketId;
-    }
-
-    public short getSoulOption() {
-        return soulOption;
-    }
-
-    public void setSoulOption(short soulOption) {
-        this.soulOption = soulOption;
-    }
-
-    public short getrPop() {
-        return rPop;
-    }
-
-    public void setrPop(short rPop) {
-        this.rPop = rPop;
-    }
-
-    public short getrJob() {
-        return rJob;
-    }
-
-    public void setrJob(short rJob) {
-        this.rJob = rJob;
-    }
-
-    public short getrLevel() {
-        return rLevel;
-    }
-
-    public void setrLevel(short rLevel) {
-        this.rLevel = rLevel;
-    }
-
-    public short getrLuk() {
-        return rLuk;
-    }
-
-    public void setrLuk(short rLuk) {
-        this.rLuk = rLuk;
-    }
-
-    public short getrInt() {
-        return rInt;
-    }
-
-    public void setrInt(short rInt) {
-        this.rInt = rInt;
-    }
-
-    public short getrDex() {
-        return rDex;
-    }
-
-    public void setrDex(short rDex) {
-        this.rDex = rDex;
-    }
-
-    public short getrStr() {
-        return rStr;
-    }
-
-    public void setrStr(short rStr) {
-        this.rStr = rStr;
-    }
-
-    public List<Integer> getOptions() {
-        return options;
-    }
-
-    public void setOptions(List<Integer> options) {
-        this.options = options;
-    }
-
-    public String getiSlot() {
-        return iSlot;
-    }
-
-    public void setiSlot(String iSlot) {
-        this.iSlot = iSlot;
-    }
-
-    public String getvSlot() {
-        return vSlot;
-    }
-
-    public void setvSlot(String vSlot) {
-        this.vSlot = vSlot;
-    }
-
-    public int getSpecialGrade() {
-        return specialGrade;
-    }
-
-    public boolean isFixedPotential() {
-        return fixedPotential;
-    }
-
-    public boolean isTradeBlock() {
-        return tradeBlock;
-    }
-
-    public boolean isOnly() {
-        return only;
-    }
-
-    public boolean isNotSale() {
-        return notSale;
-    }
-
-    public int getAttackSpeed() {
-        return attackSpeed;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public int getCharmEXP() {
-        return charmEXP;
-    }
-
-    public boolean isExpireOnLogout() {
-        return expireOnLogout;
-    }
-
-    public int getSetItemID() {
-        return setItemID;
-    }
-
-    public int getFixedGrade() {
-        return fixedGrade;
-    }
-
-    public boolean isExItem() {
-        return exItem;
-    }
-
-    public boolean isEquipTradeBlock() {
-        return equipTradeBlock;
-    }
-
-    public void setSerialNumber(long serialNumber) {
-        this.serialNumber = serialNumber;
-    }
-
-    public void setEquippedDate(FileTime equippedDate) {
-        this.equippedDate = equippedDate;
-    }
-
-    public void setPrevBonusExpRate(int prevBonusExpRate) {
-        this.prevBonusExpRate = prevBonusExpRate;
-    }
-
-    public void setRuc(short ruc) {
-        this.ruc = ruc;
-    }
-
-    public void setSpecialGrade(int specialGrade) {
-        this.specialGrade = specialGrade;
-    }
-
-    public void setFixedPotential(boolean fixedPotential) {
-        this.fixedPotential = fixedPotential;
-    }
-
-    public void setTradeBlock(boolean tradeBlock) {
-        this.tradeBlock = tradeBlock;
-    }
-
-    public void setOnly(boolean only) {
-        this.only = only;
-    }
-
-    public void setNotSale(boolean notSale) {
-        this.notSale = notSale;
-    }
-
-    public void setAttackSpeed(int attackSpeed) {
-        this.attackSpeed = attackSpeed;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
-    }
-
-    public void setCharmEXP(int charmEXP) {
-        this.charmEXP = charmEXP;
-    }
-
-    public void setExpireOnLogout(boolean expireOnLogout) {
-        this.expireOnLogout = expireOnLogout;
-    }
-
-    public void setSetItemID(int setItemID) {
-        this.setItemID = setItemID;
-    }
-
-    public void setExItem(boolean exItem) {
-        this.exItem = exItem;
-    }
-
-    public void setEquipTradeBlock(boolean equipTradeBlock) {
-        this.equipTradeBlock = equipTradeBlock;
-    }
-
-    public void setFixedGrade(int fixedGrade) {
-        this.fixedGrade = fixedGrade;
-    }
-
-
-
-
-
     public void encode(OutPacket outPacket) {
         // GW_ItemSlotBase
         super.encode(outPacket);
@@ -938,40 +533,40 @@ public class Equip extends Item {
             outPacket.encodeByte(getCuc());
         }
         if (hasStat(EquipBaseStat.iStr)) {
-            outPacket.encodeShort(getiStr());
+            outPacket.encodeShort(getIStr());
         }
         if (hasStat(EquipBaseStat.iDex)) {
-            outPacket.encodeShort(getiDex());
+            outPacket.encodeShort(getIDex());
         }
         if (hasStat(EquipBaseStat.iInt)) {
-            outPacket.encodeShort(getiInt());
+            outPacket.encodeShort(getIInt());
         }
         if (hasStat(EquipBaseStat.iLuk)) {
-            outPacket.encodeShort(getiLuk());
+            outPacket.encodeShort(getILuk());
         }
         if (hasStat(EquipBaseStat.iMaxHP)) {
-            outPacket.encodeShort(getiMaxHp());
+            outPacket.encodeShort(getIMaxHp());
         }
         if (hasStat(EquipBaseStat.iMaxMP)) {
-            outPacket.encodeShort(getiMaxMp());
+            outPacket.encodeShort(getIMaxMp());
         }
         if (hasStat(EquipBaseStat.iPAD)) {
-            outPacket.encodeShort(getiPad());
+            outPacket.encodeShort(getIPad());
         }
         if (hasStat(EquipBaseStat.iMAD)) {
-            outPacket.encodeShort(getiMad());
+            outPacket.encodeShort(getIMad());
         }
         if (hasStat(EquipBaseStat.iPDD)) {
-            outPacket.encodeShort(getiPDD());
+            outPacket.encodeShort(getIPDD());
         }
         if (hasStat(EquipBaseStat.iCraft)) {
-            outPacket.encodeShort(getiCraft());
+            outPacket.encodeShort(getICraft());
         }
         if (hasStat(EquipBaseStat.iSpeed)) {
-            outPacket.encodeShort(getiSpeed());
+            outPacket.encodeShort(getISpeed());
         }
         if (hasStat(EquipBaseStat.iJump)) {
-            outPacket.encodeShort(getiJump());
+            outPacket.encodeShort(getIJump());
         }
         if (hasStat(EquipBaseStat.attribute)) {
             outPacket.encodeInt(getAttribute());
@@ -992,10 +587,10 @@ public class Equip extends Item {
             outPacket.encodeInt(getIuc()); // hammer
         }
         if (hasStat(EquipBaseStat.iPvpDamage)) {
-            outPacket.encodeShort(getiPvpDamage());
+            outPacket.encodeShort(getIPvpDamage());
         }
         if (hasStat(EquipBaseStat.iReduceReq)) {
-            outPacket.encodeByte(getiReduceReq());
+            outPacket.encodeByte(getIReduceReq());
         }
         if (hasStat(EquipBaseStat.specialAttribute)) {
             outPacket.encodeShort(getSpecialAttribute());
@@ -1004,7 +599,7 @@ public class Equip extends Item {
             outPacket.encodeInt(getDurabilityMax());
         }
         if (hasStat(EquipBaseStat.iIncReq)) {
-            outPacket.encodeByte(getrLevel());
+            outPacket.encodeByte(getIIncReq());
         }
         if (hasStat(EquipBaseStat.growthEnchant)) {
             outPacket.encodeByte(getGrowthEnchant()); // ygg
@@ -1036,36 +631,50 @@ public class Equip extends Item {
         }
         // GW_ItemSlotEquipOpt
         outPacket.encodeString(getOwner());
+        //潛能等級
         outPacket.encodeByte(getGrade());
+        //裝備星級
         outPacket.encodeByte(getChuc());
+        //潛在能力 * 3 附加潛能 * 3 鐵砧
         for (int i = 0; i < 7; i++) {
             outPacket.encodeShort(getOptions().get(i)); // 7x, last is fusion anvil
         }
+        // Alien Stone
         outPacket.encodeShort(getSocketState()); // socket state
+        // Alien Stone能力(Item.wz/Install/0306.img) > 0 = 安裝, 0 = 空, -1 = 無.
         for (int i = 0; i < 3; i++) {
             outPacket.encodeShort(getSockets().get(i)); // sockets 0 through 2 (-1 = none, 0 = empty, >0 = filled
         }
 
+        // uniqueId
         outPacket.encodeLong(getId()); // ?
+        // // ftEquipped
         outPacket.encodeFT(FileTime.getFileTimeFromType(FileTime.Type.ZERO_TIME));
-        outPacket.encodeInt(-1); // ftEquipped
-        // GW_CashItemOption
+        // nPrevBonusExpRate
+        outPacket.encodeInt(-1);
+        // GW_CashItemOption {
         outPacket.encodeLong(getCashItemSerialNumber());
+        // ftExpireDate
         getDateExpire().encode(outPacket);
+        // anOption
         for (int i = 0; i < 3; i++) {
             outPacket.encodeInt(0);
         }
+        // }
         // 靈魂寶珠
         outPacket.encodeShort(getSoulOptionId());
+        // 靈魂捲軸
         outPacket.encodeShort(getSoulSocketId());
+        // 靈魂潛能
         outPacket.encodeShort(getSoulOption());
         if (getItemId() / 10000 == 172) {
             outPacket.encodeShort(0);
             outPacket.encodeInt(0);
             outPacket.encodeShort(0);
         }
+        // 突破傷害上限
         outPacket.encodeInt(0); //outPacket.encodeInt(ItemConstants.類型.武器(getItemId()) ? ItemConstants.getMaxDamageLimitBreak(getItemId()) : 0;);
-        outPacket.encodeFT(FileTime.getFileTimeFromType(FileTime.Type.ZERO_TIME));
+        FileTime.getFileTimeFromType(FileTime.Type.ZERO_TIME).encodeR(outPacket);
     }
 
     private boolean hasStat(EquipBaseStat ebs) {
@@ -1091,49 +700,49 @@ public class Equip extends Item {
                 setCuc((short) amount);
                 break;
             case iStr:
-                setiStr((short) amount);
+                setIStr((short) amount);
                 break;
             case iDex:
-                setiDex((short) amount);
+                setIDex((short) amount);
                 break;
             case iInt:
-                setiInt((short) amount);
+                setIInt((short) amount);
                 break;
             case iLuk:
-                setiLuk((short) amount);
+                setILuk((short) amount);
                 break;
             case iMaxHP:
-                setiMaxHp((short) amount);
+                setIMaxHp((short) amount);
                 break;
             case iMaxMP:
-                setiMaxMp((short) amount);
+                setIMaxMp((short) amount);
                 break;
             case iPAD:
-                setiPad((short) amount);
+                setIPad((short) amount);
                 break;
             case iMAD:
-                setiMad((short) amount);
+                setIMad((short) amount);
                 break;
             case iPDD:
-                setiPDD((short) amount);
+                setIPDD((short) amount);
                 break;
             case iMDD:
-                setiMDD((short) amount);
+                setIMDD((short) amount);
                 break;
             case iACC:
-                setiAcc((short) amount);
+                setIAcc((short) amount);
                 break;
             case iEVA:
-                setiEva((short) amount);
+                setIEva((short) amount);
                 break;
             case iCraft:
-                setiCraft((short) amount);
+                setICraft((short) amount);
                 break;
             case iSpeed:
-                setiSpeed((short) amount);
+                setISpeed((short) amount);
                 break;
             case iJump:
-                setiJump((short) amount);
+                setIJump((short) amount);
                 break;
             case attribute:
                 setAttribute((short) amount);
@@ -1154,10 +763,10 @@ public class Equip extends Item {
                 setIuc((short) amount);
                 break;
             case iPvpDamage:
-                setiPvpDamage((short) amount);
+                setIPvpDamage((short) amount);
                 break;
             case iReduceReq:
-                setiReduceReq((short) amount);
+                setIReduceReq((short) amount);
                 break;
             case specialAttribute:
                 setSpecialAttribute((short) amount);
@@ -1166,7 +775,7 @@ public class Equip extends Item {
                 setDurabilityMax((short) amount);
                 break;
             case iIncReq:
-                setiIncReq((short) amount);
+                setIIncReq((short) amount);
                 break;
             case growthEnchant:
                 setGrowthEnchant((short) amount);
@@ -1205,35 +814,35 @@ public class Equip extends Item {
             case cuc:
                 return getCuc();
             case iStr:
-                return getiStr();
+                return getIStr();
             case iDex:
-                return getiDex();
+                return getIDex();
             case iInt:
-                return getiInt();
+                return getIInt();
             case iLuk:
-                return getiLuk();
+                return getILuk();
             case iMaxHP:
-                return getiMaxHp();
+                return getIMaxHp();
             case iMaxMP:
-                return getiMaxMp();
+                return getIMaxMp();
             case iPAD:
-                return getiPad();
+                return getIPad();
             case iMAD:
-                return getiMad();
+                return getIMad();
             case iPDD:
-                return getiPDD();
+                return getIPDD();
             case iMDD:
-                return getiMDD();
+                return getIMDD();
             case iACC:
-                return getiAcc();
+                return getIAcc();
             case iEVA:
-                return getiEva();
+                return getIEva();
             case iCraft:
-                return getiCraft();
+                return getICraft();
             case iSpeed:
-                return getiSpeed();
+                return getISpeed();
             case iJump:
-                return getiJump();
+                return getIJump();
             case attribute:
                 return getAttribute();
             case levelUpType:
@@ -1247,15 +856,15 @@ public class Equip extends Item {
             case iuc:
                 return getIuc();
             case iPvpDamage:
-                return getiPvpDamage();
+                return getIPvpDamage();
             case iReduceReq:
-                return getiReduceReq();
+                return getIReduceReq();
             case specialAttribute:
                 return getSpecialAttribute();
             case durabilityMax:
                 return getDurabilityMax();
             case iIncReq:
-                return getiIncReq();
+                return getIIncReq();
             case growthEnchant:
                 return getGrowthEnchant();
             case psEnchant:
@@ -1342,17 +951,10 @@ public class Equip extends Item {
     }
 
     public int getRandomOption(boolean bonus) {
-        List<Integer> data = ItemConstants.getWeightedOptionsByEquip(this, bonus);
-        return data.get(Rand.get(data.size() - 1));
+        // TODO Random OPtion
+        return options.get(Rand.get(options.size() - 1));
     }
 
-    /**
-     * Resets the potential of this equip's base options. Takes the value of an ItemGrade (1-4), and sets the appropriate values.
-     * Also calculates if a third line should be added.
-     *
-     * @param val             The value of the item's grade (HIDDEN_RARE~HIDDEN_LEGENDARY).getValue().
-     * @param thirdLineChance The chance of a third line being added.
-     */
     public void setHiddenOptionBase(short val, int thirdLineChance) {
         int max = 3;
         if (getOptionBase(3) == 0) {
@@ -1380,19 +982,7 @@ public class Equip extends Item {
     }
 
     public void releaseOptions(boolean bonus) {
-        if (bonus) {
-            for (int i = 0; i < 3; i++) {
-                if (getOptionBonus(i) != 0) {
-                    setOptionBonus(i, getRandomOption(bonus));
-                }
-            }
-        } else {
-            for (int i = 0; i < 3; i++) {
-                if (getOptionBase(i) != 0) {
-                    setOptionBase(i, getRandomOption(bonus));
-                }
-            }
-        }
+        // 重置潛能
     }
 }
 

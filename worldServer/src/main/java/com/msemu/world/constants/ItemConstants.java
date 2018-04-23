@@ -1,15 +1,11 @@
 package com.msemu.world.constants;
 
-import com.msemu.world.client.character.items.Equip;
-import com.msemu.world.client.character.items.ItemOption;
-import com.msemu.world.data.ItemData;
-import com.msemu.world.enums.ItemGrade;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by Weber on 2018/3/31.
@@ -265,17 +261,6 @@ public class ItemConstants {
         return itemID / 1000 == 2060;
     }
 
-    public static boolean isFamiliar(int itemID) {
-        return itemID / 10000 == 287;
-    }
-
-    public static boolean isEnhancementScroll(int scrollID) {
-        return scrollID / 100 == 20493;
-    }
-
-    public static boolean isHat(int itemID) {
-        return itemID / 10000 == 100;
-    }
 
     public static boolean isWeapon(int itemID) {
         return itemID >= 1210000 && itemID < 1600000 || isSecondary(itemID);
@@ -283,46 +268,6 @@ public class ItemConstants {
 
     private static boolean isSecondary(int itemID) {
         return itemID / 10000 == 135;
-    }
-
-    public static boolean isAccessory(int itemID) {
-        return (itemID >= 1010000 && itemID < 1040000) || (itemID >= 1122000 && itemID < 1153000) ||
-                (itemID >= 1112000 && itemID < 1113000) || (itemID >= 1670000 && itemID < 1680000);
-    }
-
-    public static boolean isTop(int itemID) {
-        return itemID / 10000 == 104;
-    }
-
-    public static boolean isOverall(int itemID) {
-        return itemID / 10000 == 105;
-    }
-
-    public static boolean isBottom(int itemID) {
-        return itemID / 10000 == 106;
-    }
-
-    public static boolean isShoe(int itemID) {
-        return itemID / 10000 == 107;
-    }
-
-    public static boolean isGlove(int itemID) {
-        return itemID / 10000 == 108;
-    }
-
-    public static boolean isArmor(int itemID) {
-        return !isAccessory(itemID) && !isWeapon(itemID);
-    }
-
-    public static int getTierUpChance(int id) {
-        int res = 0;
-        switch(id) {
-            case 5062009: // Red cube
-            case 5062500: // Bonus potential cube
-                res = 30;
-                break;
-        }
-        return res;
     }
 
     public static boolean isEquip(int id) {
@@ -337,9 +282,6 @@ public class ItemConstants {
         return id / 10000 == 145;
     }
 
-    public static boolean isXBow(int id) {
-        return id / 10000 == 146;
-    }
 
     public static boolean isGun(int id) {
         return id / 10000 == 149;
@@ -347,97 +289,6 @@ public class ItemConstants {
 
     public static boolean isXBowArrow(int id) {
         return id / 1000 == 2061;
-    }
-
-    public static List<Integer> getWeightedOptionsByEquip(Equip equip, boolean bonus) {
-        List<Integer> res = new ArrayList<>();
-        List<ItemOption> data = getOptionsByEquip(equip, bonus);
-        for(ItemOption io : data) {
-            for (int i = 0; i < io.getWeight(); i++) {
-                res.add(io.getId());
-            }
-        }
-        return res;
-    }
-    public static List<ItemOption> getOptionsByEquip(Equip equip, boolean bonus) {
-        int id = equip.getItemId();
-        List<ItemOption> data = ItemData.getItemOptions();
-        for(ItemOption io : data) {
-            // TODO: Debug data, remove once prime line logic is completed (chance for prime/lower tier pot)
-            ItemGrade ioGrade = ItemGrade.getGradeByOption(io.getId());
-            ItemGrade itemGrade = ItemGrade.getGradeByVal(equip.getBaseGrade());
-            boolean jwz = io.hasMatchingGrade(bonus ? equip.getBonusGrade() : equip.getBaseGrade());
-            boolean zwj = io.isBonus() == bonus;
-            int i = 0;
-            i += 3;
-        }
-        List<ItemOption> res = data.stream().filter(
-                io -> io.getOptionType() == 0 &&
-                        io.hasMatchingGrade(bonus ? equip.getBonusGrade() : equip.getBaseGrade()) && io.isBonus() == bonus)
-                .collect(Collectors.toList());
-        if (isWeapon(id)) {
-            res.addAll(data.stream().filter(
-                    io -> io.getOptionType() == 10
-                            &&  io.hasMatchingGrade(bonus ? equip.getBonusGrade() : equip.getBaseGrade()) && io.isBonus() == bonus
-            ).collect(Collectors.toList()));
-        } else {
-            res.addAll(data.stream().filter(
-                    io -> io.getOptionType() == 11
-                            && io.hasMatchingGrade(bonus ? equip.getBonusGrade() : equip.getBaseGrade()) && io.isBonus() == bonus)
-                    .collect(Collectors.toList()));
-            if (isAccessory(id)) {
-                res.addAll(data.stream().filter(
-                        io -> io.getOptionType() == 40
-                                && io.hasMatchingGrade(bonus ? equip.getBonusGrade() : equip.getBaseGrade()) && io.isBonus() == bonus)
-                        .collect(Collectors.toList()));
-            } else {
-                res.addAll(data.stream().filter(
-                        io -> io.getOptionType() == 20
-                                && io.hasMatchingGrade(bonus ? equip.getBonusGrade() : equip.getBaseGrade()) && io.isBonus() == bonus)
-                        .collect(Collectors.toList()));
-                if (isHat(id)) {
-                    res.addAll(data.stream().filter(
-                            io -> io.getOptionType() == 51
-                                    && io.hasMatchingGrade(bonus ? equip.getBonusGrade() : equip.getBaseGrade()) && io.isBonus() == bonus)
-                            .collect(Collectors.toList()));
-                }
-                if (isTop(id)) {
-                    res.addAll(data.stream().filter(
-                            io -> io.getOptionType() == 52
-                                    && io.hasMatchingGrade(bonus ? equip.getBonusGrade() : equip.getBaseGrade()) && io.isBonus() == bonus)
-                            .collect(Collectors.toList()));
-                }
-                if (isBottom(id)) {
-                    res.addAll(data.stream().filter(
-                            io -> io.getOptionType() == 53
-                                    && io.hasMatchingGrade(bonus ? equip.getBonusGrade() : equip.getBaseGrade()) && io.isBonus() == bonus)
-                            .collect(Collectors.toList()));
-                }
-                if (isOverall(id)) {
-                    res.addAll(data.stream().filter(
-                            io -> io.getOptionType() == 52
-                                    && io.hasMatchingGrade(bonus ? equip.getBonusGrade() : equip.getBaseGrade()) && io.isBonus() == bonus)
-                            .collect(Collectors.toList()));
-                    res.addAll(data.stream().filter(
-                            io -> io.getOptionType() == 53
-                                    && io.hasMatchingGrade(bonus ? equip.getBonusGrade() : equip.getBaseGrade()) && io.isBonus() == bonus)
-                            .collect(Collectors.toList()));
-                }
-                if (isGlove(id)) {
-                    res.addAll(data.stream().filter(
-                            io -> io.getOptionType() == 54
-                                    && io.hasMatchingGrade(bonus ? equip.getBonusGrade() : equip.getBaseGrade()) && io.isBonus() == bonus)
-                            .collect(Collectors.toList()));
-                }
-                if (isShoe(id)) {
-                    res.addAll(data.stream().filter(
-                            io -> io.getOptionType() == 55
-                                    && io.hasMatchingGrade(bonus ? equip.getBonusGrade() : equip.getBaseGrade()) && io.isBonus() == bonus)
-                            .collect(Collectors.toList()));
-                }
-            }
-        }
-        return res.stream().filter(io -> io.getReqLevel() <= equip.getrLevel()).collect(Collectors.toList());
     }
 
     public static class 類型 {
@@ -709,6 +560,14 @@ public class ItemConstants {
 
         public static boolean 子彈(int itemid) {
             return itemid / 10000 == 233;
+        }
+
+        public static boolean 弓箭(int itemid) {
+            return itemid / 1000 == 2060;
+        }
+
+        public static boolean 弩箭(int itemid) {
+            return itemid / 1000 == 2061;
         }
 
         public static boolean 寵物(int id) {

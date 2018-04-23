@@ -1,73 +1,92 @@
 package com.msemu.world.client.character.items;
 
+import com.msemu.commons.data.enums.InvType;
+import com.msemu.commons.data.templates.ItemTemplate;
+import com.msemu.commons.database.Schema;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.utils.types.FileTime;
 import com.msemu.world.constants.ItemConstants;
-import com.msemu.world.enums.InvType;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Arrays;
 
+import static com.msemu.world.client.character.items.Item.Type.ITEM;
+
 /**
  * Created by Weber on 2018/4/11.
  */
+@Schema
 @Entity
-@Table(name = "itemTemplates")
+@Table(name = "items")
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Item implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
+    @Getter
+    @Setter
     private long id;
     @Column(name = "inventoryId")
+    @Getter
+    @Setter
     protected int inventoryId;
     @Column(name = "itemId")
+    @Getter
+    @Setter
     protected int itemId;
     @Column(name = "bagIndex")
+    @Getter
     protected int bagIndex;
     @Column(name = "cashItemSerialNumber")
+    @Getter
+    @Setter
     protected long cashItemSerialNumber;
     @JoinColumn(name = "dateExpire")
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @Getter
+    @Setter
     protected FileTime dateExpire = FileTime.getFileTimeFromType(FileTime.Type.PERMANENT);
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "invType")
+    @Getter
+    @Setter
     protected InvType invType;
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "type")
+    @Getter
+    @Setter
     protected Type type;
     @Column(name = "isCash")
+    @Getter
+    @Setter
     protected boolean isCash;
     @Column(name = "quantity")
+    @Getter
+    @Setter
     protected int quantity;
     @Column(name = "owner")
+    @Getter
+    @Setter
     private String owner = "";
 
-    public long getId() {
-        return id;
+    public Item() {
+
     }
 
-    public void setId(long id) {
-        this.id = id;
+
+    public Item(ItemTemplate template) {
+        this.setType(ITEM);
+        this.setInvType(template.getInvType());
+        this.setQuantity(1);
+        this.setItemId(template.getItemId());
+        this.setCash(template.isCash());
+        this.setOwner("");
     }
 
-    public int getInventoryId() {
-        return inventoryId;
-    }
-
-    public void setInventoryId(int inventoryId) {
-        this.inventoryId = inventoryId;
-    }
-
-    public String getOwner() {
-        return owner;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
-    }
 
     public void drop() {
         setBagIndex(0);
@@ -89,7 +108,6 @@ public class Item implements Serializable {
         EQUIP(1),
         ITEM(2),
         PET(3);
-
         private byte val;
 
         Type(byte val) {
@@ -109,9 +127,6 @@ public class Item implements Serializable {
         }
     }
 
-    public Item() {
-    }
-
     public Item(int itemId, int bagIndex, long cashItemSerialNumber, FileTime dateExpire, InvType invType,
                 boolean isCash, Type type) {
         this.itemId = itemId;
@@ -123,70 +138,11 @@ public class Item implements Serializable {
         this.type = type;
     }
 
-    public int getItemId() {
-        return itemId;
-    }
-
-    public int getBagIndex() {
-        return bagIndex;
-    }
 
     public void setBagIndex(int bagIndex) {
         this.bagIndex = Math.abs(bagIndex);
     }
 
-    public long getCashItemSerialNumber() {
-        return cashItemSerialNumber;
-    }
-
-    public FileTime getDateExpire() {
-        return dateExpire;
-    }
-
-    public InvType getInvType() {
-        return invType;
-    }
-
-    public Type getType() {
-        return type;
-    }
-
-    public boolean isCash() {
-        return isCash;
-    }
-
-
-    public void setItemId(int itemId) {
-        this.itemId = itemId;
-    }
-
-    public void setCashItemSerialNumber(long cashItemSerialNumber) {
-        this.cashItemSerialNumber = cashItemSerialNumber;
-    }
-
-    public void setDateExpire(FileTime dateExpire) {
-        this.dateExpire = dateExpire;
-    }
-
-    public void setInvType(InvType invType) {
-        this.invType = invType;
-    }
-
-    public void setType(Type type) {
-        this.type = type;
-    }
-
-    public void setCash(boolean cash) {
-        isCash = cash;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
 
     @Override
     public String toString() {
@@ -205,7 +161,7 @@ public class Item implements Serializable {
         }
         getDateExpire().encode(outPacket);
         outPacket.encodeInt(getBagIndex());
-        if (getType() == Type.ITEM) {
+        if (getType() == ITEM) {
             outPacket.encodeShort(getQuantity()); // nQuantity
             outPacket.encodeString(getOwner()); // sOwner
             outPacket.encodeShort(0); // flag
@@ -215,9 +171,9 @@ public class Item implements Serializable {
             }
             // TODO 萌寵
             outPacket.encodeInt(0); // familiarId
-            outPacket.encodeShort(0); // level
-            outPacket.encodeShort(0); // level
-            outPacket.encodeShort(0); // level
+            outPacket.encodeShort(0); // maxLevel
+            outPacket.encodeShort(0); // maxLevel
+            outPacket.encodeShort(0); // maxLevel
             outPacket.encodeShort(0); // option 1
             outPacket.encodeShort(0); // option 2
             outPacket.encodeShort(0); // option 3
@@ -225,7 +181,7 @@ public class Item implements Serializable {
         } else if (getType() == Type.PET) {
             // TODO 寵物
             outPacket.encodeString("", 13); // name
-            outPacket.encodeByte(0); // level
+            outPacket.encodeByte(0); // maxLevel
             outPacket.encodeShort(0); // 親密度
             outPacket.encodeByte(0); // 飢餓
             outPacket.encodeFT(new FileTime(-1)); // 期限

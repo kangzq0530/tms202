@@ -264,7 +264,7 @@ public class Life {
     public Mob createMobFromLife() {
         Mob mob = null;
         if (getLifeType().equalsIgnoreCase("m")) {
-            mob = MobData.getMobDeepCopyById(getTemplateId());
+            mob = MobData.getInstance().createMobFromTemplate(getTemplateId());
             mob.setObjectId(getObjectId());
             mob.setLifeType(getLifeType());
             mob.setTemplateId(getTemplateId());
@@ -327,7 +327,7 @@ public class Life {
     public Npc createNpcFromLife() {
         Npc npc = null;
         if("n".equalsIgnoreCase(getLifeType())) {
-            npc = NpcData.getNpcDeepCopyById(getTemplateId());
+            npc = NpcData.getInstance().getNpcFromTemplate(getTemplateId());
             npc.setObjectId(getObjectId());
             npc.setLifeType(getLifeType());
             npc.setX(getX());

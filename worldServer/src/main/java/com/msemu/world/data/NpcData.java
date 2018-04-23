@@ -1,118 +1,69 @@
 package com.msemu.world.data;
 
-import com.msemu.commons.utils.DirUtils;
-import com.msemu.commons.utils.StringUtils;
-import com.msemu.commons.utils.XMLApi;
-import com.msemu.core.configs.CoreConfig;
+import com.msemu.commons.data.templates.NpcTemplate;
+import com.msemu.commons.reload.IReloadable;
+import com.msemu.commons.reload.Reloadable;
+import com.msemu.core.startup.StartupComponent;
 import com.msemu.world.client.life.Npc;
-import org.w3c.dom.Node;
+import com.msemu.world.client.life.skills.MobSkillInfo;
+import lombok.Getter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import java.io.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Created by Weber on 2018/4/12.
  */
-public class NpcData {
+@Reloadable(name = "npc", group = "all")
+@StartupComponent("Data")
+public class NpcData implements IReloadable {
 
-    private static Set<Npc> npcs = new HashSet<>();
 
-    private static void loadNpcsFromWz() {
-        String wzDir = CoreConfig.WZ_PATH + "/Npc.wz";
-        for(File file : new File(wzDir).listFiles()) {
-            Npc npc = new Npc(-1);
-            Node node = XMLApi.getRoot(file);
-            Node mainNode = XMLApi.getAllChildren(node).get(0);
-            int id = Integer.parseInt(XMLApi.getNamedAttribute(mainNode, "name")
-                    .replace(".xml", "").replace(".img", ""));
-            npc.setTemplateId(id);
-            Node scriptNode = XMLApi.getFirstChildByNameBF(mainNode, "script");
-            if(scriptNode != null) {
-                for (Node idNode : XMLApi.getAllChildren(scriptNode)) {
-                    String scriptIDString = XMLApi.getNamedAttribute(idNode, "name");
-                    if(!StringUtils.isNumber(scriptIDString)) {
-                        continue;
-                    }
-                    int scriptID = Integer.parseInt(XMLApi.getNamedAttribute(idNode, "name"));
-                    Node scriptValueNode = XMLApi.getFirstChildByNameDF(idNode, "script");
-                    if(scriptValueNode != null) {
-                        String scriptName = XMLApi.getNamedAttribute(scriptValueNode, "value");
-                        npc.getScripts().put(scriptID, scriptName);
-                    }
+    private static final Logger log = LoggerFactory.getLogger(QuestData.class);
+
+    @Getter
+    private final Map<Integer, NpcTemplate> npcTemplates = new HashMap<>();
+
+    private static final AtomicReference<NpcData> instance = new AtomicReference<>();
+
+
+    public static NpcData getInstance() {
+        NpcData value = instance.get();
+        if (value == null) {
+            synchronized (instance) {
+                value = instance.get();
+                if (value == null) {
+                    value = new NpcData();
+                    instance.set(value);
                 }
             }
-            getBaseNpcs().add(npc);
         }
+        return value;
     }
 
-    public static void saveNpcsToDat(String dir) {
-        DirUtils.makeDirIfAbsent(dir);
-        for(Npc npc : getBaseNpcs()) {
-            File file = new File(dir + "/" + npc.getTemplateId() + ".dat");
-            try {
-                DataOutputStream das = new DataOutputStream(new FileOutputStream(file));
-                das.writeInt(npc.getTemplateId());
-                das.writeShort(npc.getScripts().size());
-                npc.getScripts().forEach((key, val) -> {
-                    try {
-                        das.writeInt(key);
-                        das.writeUTF(val);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                });
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+    public NpcData() {
+        load();
     }
 
-    private static Npc getNpc(int id) {
-        return getBaseNpcs().stream().filter(npc -> npc.getTemplateId() == id).findFirst().orElse(null);
+    public void load() {
+        log.info("{} NpcTemplate loaded", this.npcTemplates.size());
     }
 
-    public static Npc getNpcDeepCopyById(int id) {
-        Npc res = getNpc(id);
-        if (res == null) {
-            File file = new File(CoreConfig.DAT_PATH + "/npc/" + id + ".dat");
-            if(file.exists()) {
-                res = loadNpcFromDat(file);
-                getBaseNpcs().add(res);
-            }
-        }
-        return res.deepCopy();
+    public void clear() {
+        this.npcTemplates.clear();
     }
 
-    private static Npc loadNpcFromDat(File file) {
-        try {
-            DataInputStream dis = new DataInputStream(new FileInputStream(file));
-            Npc npc = new Npc(-1);
-            npc.setTemplateId(dis.readInt());
-            short size = dis.readShort();
-            for (int i = 0; i < size; i++) {
-                int id = dis.readInt();
-                String val = dis.readUTF();
-                npc.getScripts().put(id, val);
-            }
-            getBaseNpcs().add(npc);
-            return npc;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+    @Override
+    public void reload() {
+        clear();
+        load();
     }
 
-    public static void generateDatFiles() {
-        loadNpcsFromWz();
-        saveNpcsToDat(CoreConfig.DAT_PATH + "/npc");
-    }
-
-    public static Set<Npc> getBaseNpcs() {
-        return npcs;
-    }
-
-    public static void main(String[] args) {
-        generateDatFiles();
+    public Npc getNpcFromTemplate(int templateId) {
+        throw new NotImplementedException();
     }
 }

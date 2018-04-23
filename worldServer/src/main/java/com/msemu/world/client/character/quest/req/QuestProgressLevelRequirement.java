@@ -1,5 +1,12 @@
 package com.msemu.world.client.character.quest.req;
 
+import com.msemu.commons.data.templates.quest.reqs.QuestLevelMinReqData;
+import com.msemu.commons.data.templates.quest.reqs.QuestReqData;
+import com.msemu.commons.database.Schema;
+import com.msemu.world.client.character.quest.Quest;
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -7,20 +14,22 @@ import javax.persistence.Entity;
 /**
  * Created by Weber on 2018/4/13.
  */
+@Schema
 @Entity
-@DiscriminatorValue("maxLevel")
+@DiscriminatorValue("level")
 public class QuestProgressLevelRequirement extends QuestProgressRequirement {
 
     @Column(name = "requiredCount")
+    @Getter
+    @Setter
     private int level;
     @Column(name = "currentCount")
+    @Getter
+    @Setter
     private int curLevel;
 
-    public QuestProgressLevelRequirement() {
-    }
-
-    public QuestProgressLevelRequirement(int level){
-        this.level = level;
+    public QuestProgressLevelRequirement(){
+        this.level = 0;
     }
 
     @Override
@@ -28,21 +37,11 @@ public class QuestProgressLevelRequirement extends QuestProgressRequirement {
         return getCurLevel() >= getLevel();
     }
 
-    public int getLevel() {
-        return level;
+    @Override
+    public void load(QuestReqData reqData) {
+        if(reqData instanceof QuestLevelMinReqData) {
+            setLevel(((QuestLevelMinReqData)reqData).getMinLevel());
+        }
     }
-
-    public void setLevel(int level) {
-        this.level = level;
-    }
-
-    public int getCurLevel() {
-        return curLevel;
-    }
-
-    public void setCurLevel(int curLevel) {
-        this.curLevel = curLevel;
-    }
-
 }
 

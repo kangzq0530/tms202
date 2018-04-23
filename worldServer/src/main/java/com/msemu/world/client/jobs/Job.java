@@ -1,7 +1,7 @@
 package com.msemu.world.client.jobs;
 
 import com.msemu.commons.network.packets.InPacket;
-import com.msemu.world.client.GameClient;
+import com.msemu.core.network.GameClient;
 import com.msemu.world.client.character.AttackInfo;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.HitInfo;
@@ -86,7 +86,7 @@ public abstract class Job {
     }
 
     public SkillInfo getInfo(int skillID) {
-        return SkillData.getSkillInfoById(skillID);
+        return SkillData.getInstance().getSkillInfoById(skillID);
     }
 
     public void handleLevelUp() {

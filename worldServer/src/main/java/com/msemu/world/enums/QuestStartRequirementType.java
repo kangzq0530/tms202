@@ -1,6 +1,6 @@
 package com.msemu.world.enums;
 
-import com.msemu.world.client.character.quest.requirements.*;
+import com.msemu.world.client.character.quest.req.*;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -42,25 +42,5 @@ public enum QuestStartRequirementType {
     public static QuestStartRequirementType getQPRTByVal(byte val) {
         return Arrays.stream(QuestStartRequirementType.values())
                 .filter(qprt -> qprt.getVal() == val).findFirst().orElse(null);
-    }
-
-
-    public IQuestStartRequirement load(DataInputStream dis) throws IOException {
-        switch(this) {
-            case QUEST:
-                return (IQuestStartRequirement) new QuestStartCompletionRequirement().load(dis);
-            case ITEM:
-                return (IQuestStartRequirement) new QuestStartItemRequirement().load(dis);
-            case JOB:
-                return (IQuestStartRequirement) new QuestStartJobRequirement().load(dis);
-            case MARRIAGE:
-                return (IQuestStartRequirement) new QuestStartMarriageRequirement().load(dis);
-            case MAX_LEVEL:
-                return (IQuestStartRequirement) new QuestStartMaxLevelRequirement().load(dis);
-            case MIN_STAT:
-                return (IQuestStartRequirement) new QuestStartMinStatRequirement().load(dis);
-            default:
-                return null;
-        }
     }
 }

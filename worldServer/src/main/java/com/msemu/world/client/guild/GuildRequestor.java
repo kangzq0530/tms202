@@ -1,5 +1,6 @@
 package com.msemu.world.client.guild;
 
+import com.msemu.commons.database.Schema;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.world.client.character.Character;
 import lombok.Getter;
@@ -10,6 +11,7 @@ import javax.persistence.*;
 /**
  * Created by Weber on 2018/4/13.
  */
+@Schema
 @Entity
 @Table(name = "guildrequestors")
 public class GuildRequestor {

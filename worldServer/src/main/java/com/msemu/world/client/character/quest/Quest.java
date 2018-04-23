@@ -4,7 +4,7 @@ import com.msemu.commons.database.Schema;
 import com.msemu.commons.utils.types.FileTime;
 import com.msemu.commons.utils.StringUtils;
 import com.msemu.world.client.character.items.Item;
-import com.msemu.world.client.character.quest.requirements.*;
+import com.msemu.world.client.character.quest.req.*;
 import com.msemu.world.enums.QuestStatus;
 import org.hibernate.annotations.Cascade;
 

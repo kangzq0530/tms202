@@ -1,6 +1,6 @@
 package com.msemu.commons.data.templates.quest.actions;
 
-import com.msemu.commons.data.enums.QuestActionType;
+import com.msemu.commons.data.enums.QuestActDataType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,7 +15,7 @@ public class QuestSpActionData extends QuestActData {
 
 
     @Override
-    public QuestActionType getType() {
-        return QuestActionType.sp;
+    public QuestActDataType getType() {
+        return QuestActDataType.sp;
     }
 }

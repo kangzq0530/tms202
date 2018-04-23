@@ -1,41 +1,27 @@
 package com.msemu.world.client.character.quest.req;
 
-import com.msemu.commons.data.dat.DatSerializable;
+import com.msemu.commons.data.templates.quest.reqs.QuestLevelMinReqData;
+import com.msemu.commons.data.templates.quest.reqs.QuestPopReqData;
+import com.msemu.commons.data.templates.quest.reqs.QuestReqData;
 import com.msemu.world.client.character.Character;
+import com.msemu.world.client.character.quest.act.QuestPopAction;
 import com.msemu.world.enums.Stat;
-
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Created by Weber on 2018/4/13.
  */
-public class QuestStartMinStatRequirement implements IQuestStartRequirement {
+public class QuestStartMinStatRequirement implements IQuestStartRequirements {
 
+    @Getter
+    @Setter
     private Stat stat;
+
+    @Getter
+    @Setter
     private short reqAmount;
 
-    public QuestStartMinStatRequirement(Stat stat, short reqAmount) {
-        this.reqAmount = reqAmount;
-        this.stat = stat;
-    }
-
-    public QuestStartMinStatRequirement() {
-
-    }
-
-    private void setReqAmount(short reqAmount) {
-        this.reqAmount = reqAmount;
-    }
-
-    private short getReqAmount() {
-        return reqAmount;
-    }
-
-    private Stat getStat() {
-        return stat;
-    }
 
     @Override
     public boolean hasRequirements(Character chr) {
@@ -43,13 +29,35 @@ public class QuestStartMinStatRequirement implements IQuestStartRequirement {
     }
 
     @Override
-    public void write(DataOutputStream dos) throws IOException {
-        dos.writeLong(stat.getValue());
-        dos.writeShort(getReqAmount());
-    }
-
-    @Override
-    public DatSerializable load(DataInputStream dis) throws IOException {
-        return new QuestStartMinStatRequirement(Stat.getByVal(dis.readInt()), dis.readShort());
+    public void load(QuestReqData reqData) {
+        switch (reqData.getType()) {
+            case charismaMin:
+                setStat(Stat.CHARISMA);
+                // TODO
+            case craftMin:
+                setStat(Stat.CRAFT);
+                // TODO
+                break;
+            case lvmin:
+                setStat(Stat.LEVEL);
+                setReqAmount((short) ((QuestLevelMinReqData)reqData).getMinLevel());
+                break;
+            case insightMin:
+                setStat(Stat.INSIGHT);
+                // TODO
+                break;
+            case senseMin:
+                setStat(Stat.SENSE);
+                // TODO
+                break;
+            case charmMin:
+                setStat(Stat.CHARM);
+                // TODO
+                break;
+            case pop:
+                setStat(Stat.POP);
+                setReqAmount((short) ((QuestPopReqData)reqData).getPop());
+                break;
+        }
     }
 }

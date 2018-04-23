@@ -1,5 +1,6 @@
 package com.msemu.world.client.character.quest.act;
 
+import com.msemu.commons.data.templates.quest.actions.QuestActData;
 import com.msemu.world.client.character.Character;
 
 /**
@@ -10,6 +11,8 @@ public interface IQuestAction {
      * Gives the reward of this QuestReward to a {@link Character}
      * @param chr The Char to give the reward to.
      */
-    void giveReward(Character chr);
+    void action(Character chr);
+
+    void load(QuestActData actData);
 }
 

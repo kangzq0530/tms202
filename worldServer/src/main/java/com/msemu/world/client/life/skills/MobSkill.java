@@ -254,7 +254,7 @@ public class MobSkill {
         MobTemporaryStat mts = mob.getTemporaryStat();
         short skill = (short) getSkill();
         short level = (short) getLevel();
-        MobSkillInfo msi = SkillData.getMobSkillInfoByIdAndLevel(skill, level);
+        MobSkillInfo msi = SkillData.getInstance().getMobSkillInfoByIdAndLevel(skill, level);
         MobSkillID msID = MobSkillID.getMobSkillIDByValue(skill);
         Option o = new Option(skill);
         o.slv = level;

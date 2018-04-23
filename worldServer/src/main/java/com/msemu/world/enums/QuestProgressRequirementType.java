@@ -1,6 +1,6 @@
 package com.msemu.world.enums;
 
-import com.msemu.world.client.character.quest.requirements.*;
+import com.msemu.world.client.character.quest.req.*;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -38,18 +38,4 @@ public enum QuestProgressRequirementType {
                 .filter(qprt -> qprt.getVal() == val).findFirst().orElse(null);
     }
 
-    public QuestProgressRequirement load(DataInputStream dis) throws IOException {
-        switch(this) {
-            case ITEM:
-                return (QuestProgressRequirement) new QuestProgressItemRequirement().load(dis);
-            case LEVEL:
-                return (QuestProgressRequirement) new QuestProgressLevelRequirement(0).load(dis);
-            case MOB:
-                return (QuestProgressRequirement) new QuestProgressMobRequirement().load(dis);
-            case MONEY:
-                return (QuestProgressRequirement) new QuestProgressMoneyRequirement(0).load(dis);
-            default:
-                return null;
-        }
-    }
 }

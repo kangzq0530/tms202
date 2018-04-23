@@ -1,5 +1,6 @@
 package com.msemu.world.client.character.skills;
 
+import com.msemu.commons.database.Schema;
 import com.msemu.commons.utils.types.FileTime;
 
 import javax.persistence.*;
@@ -7,6 +8,7 @@ import javax.persistence.*;
 /**
  * Created by Weber on 2018/4/13.
  */
+@Schema
 @Entity
 @Table(name = "skills")
 public class Skill {
@@ -27,7 +29,6 @@ public class Skill {
     private int currentLevel;
     @Column(name = "masterLevel")
     private int masterLevel;
-    @Column
     @JoinColumn(name = "dateExpire")
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     protected FileTime dateExpire = FileTime.getFileTimeFromType(FileTime.Type.PERMANENT);

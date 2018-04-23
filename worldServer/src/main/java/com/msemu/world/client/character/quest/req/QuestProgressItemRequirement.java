@@ -1,5 +1,8 @@
 package com.msemu.world.client.character.quest.req;
 
+import com.msemu.commons.data.templates.quest.reqs.QuestReqData;
+import com.msemu.commons.database.Schema;
+
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -7,6 +10,7 @@ import javax.persistence.Entity;
 /**
  * Created by Weber on 2018/4/13.
  */
+@Schema
 @Entity
 @DiscriminatorValue("item")
 public class QuestProgressItemRequirement extends QuestProgressRequirement implements IQuestValueRequirement {
@@ -65,5 +69,10 @@ public class QuestProgressItemRequirement extends QuestProgressRequirement imple
 
     public void addItem(int quantity) {
         incCurrentCount(quantity);
+    }
+
+    @Override
+    public void load(QuestReqData reqData) {
+
     }
 }

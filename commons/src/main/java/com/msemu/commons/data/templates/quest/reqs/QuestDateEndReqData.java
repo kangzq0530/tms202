@@ -1,6 +1,6 @@
 package com.msemu.commons.data.templates.quest.reqs;
 
-import com.msemu.commons.data.enums.QuestRequirementType;
+import com.msemu.commons.data.enums.QuestRequirementDataType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,7 +13,7 @@ public class QuestDateEndReqData extends QuestReqData {
     private long date;
 
     @Override
-    public QuestRequirementType getType() {
-        return QuestRequirementType.end;
+    public QuestRequirementDataType getType() {
+        return QuestRequirementDataType.end;
     }
 }

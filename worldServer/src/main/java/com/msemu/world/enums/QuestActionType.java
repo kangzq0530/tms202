@@ -37,20 +37,4 @@ public enum QuestActionType {
         return Arrays.stream(QuestActionType.values())
                 .filter(qprt -> qprt.getVal() == val).findFirst().orElse(null);
     }
-
-
-    public IQuestAction load(DataInputStream dis) throws IOException {
-        switch(this) {
-            case EXP:
-                return (IQuestAction) new QuestExpAction().load(dis);
-            case ITEM:
-                return (IQuestAction) new QuestItemAction().load(dis);
-            case MONEY:
-                return (IQuestAction) new QuestMoneyAction().load(dis);
-            case POP:
-                return (IQuestAction) new QuestPopAction().load(dis);
-            default:
-                return null;
-        }
-    }
 }

@@ -70,7 +70,7 @@ public class CharacterStat {
     private int mixHairBaseProb;
     @Getter
     @Setter
-    @Column(name = "maxLevel")
+    @Column(name = "level")
     private int level;
     @Getter
     @Setter

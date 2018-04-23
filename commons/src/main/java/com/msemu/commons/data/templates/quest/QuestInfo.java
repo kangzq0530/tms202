@@ -32,16 +32,16 @@ public class QuestInfo {
 
 
     @Getter
-    private Set<QuestActData> startActs = new HashSet<>();
+    private Set<QuestActData> startActsData = new HashSet<>();
 
     @Getter
-    private Set<QuestActData> completeActs = new HashSet<>();
+    private Set<QuestActData> completeActsData = new HashSet<>();
 
     @Getter
-    Set<QuestReqData> startReqs = new HashSet<>();
+    Set<QuestReqData> startReqsData = new HashSet<>();
 
     @Getter
-    Set<QuestReqData> completeReqs = new HashSet<>();
+    Set<QuestReqData> completeReqsData = new HashSet<>();
 
 
     @Override

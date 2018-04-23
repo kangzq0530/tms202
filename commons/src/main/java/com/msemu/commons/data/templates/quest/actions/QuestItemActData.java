@@ -1,6 +1,6 @@
 package com.msemu.commons.data.templates.quest.actions;
 
-import com.msemu.commons.data.enums.QuestActionType;
+import com.msemu.commons.data.enums.QuestActDataType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,7 +14,11 @@ public class QuestItemActData extends QuestActData {
 
     @Getter
     @Setter
-    private int quantity;
+    private int itemId;
+
+    @Getter
+    @Setter
+    private short quantity;
 
     @Getter
     @Setter
@@ -25,79 +29,107 @@ public class QuestItemActData extends QuestActData {
     private String potentialGrade;
 
     @Getter
+    @Setter
+    private byte gender;
+
+    @Getter
     private List<Short> jobReqs = new ArrayList<>();
 
+    @Getter
+    private List<Short> jobExReqs = new ArrayList<>();
+
     @Override
-    public QuestActionType getType() {
-        return QuestActionType.item;
+    public QuestActDataType getType() {
+        return QuestActDataType.item;
     }
 
-    private void addJob(int job) {
-        getJobReqs().add((short)job);
+    public void setJobEx(int mask) {
+        jobExReqs.addAll(getJobExFromMask(mask));
+    }
+    public void setJob(int mask) {
+        jobReqs.addAll(getJobFromMask(mask));
     }
 
-    public void setJobReqs(int mask) {
+    private List<Short> getJobFromMask(int mask) {
+        List<Short> jobs = new ArrayList<>();
+        if((mask & 0x1) != 0) {
+            jobs.add((short)200);
+        }
+        if((mask & 0x2) != 0) {
+            jobs.add((short)300);
+        }
+        if((mask & 0x3) != 0) {
+            jobs.add((short)400);
+        }
+        if((mask & 0x4) != 0) {
+            jobs.add((short)500);
+        }
+        return jobs;
+    }
+
+    private List<Short> getJobExFromMask(int mask) {
+        List<Short> jobs = new ArrayList<>();
         if ((mask & 0x1) != 0) {
-            addJob(0);
+            jobs.add((short) 0);
         }
         if ((mask & 0x2) != 0) {
-            addJob(1);
+            jobs.add((short) 100);
         }
         if ((mask & 0x4) != 0) {
-            addJob(200);
+            jobs.add((short) 200);
         }
         if ((mask & 0x8) != 0) {
-            addJob(300);
+            jobs.add((short) 300);
         }
         if ((mask & 0x10) != 0) {
-            addJob(400);
+            jobs.add((short) 400);
         }
         if ((mask & 0x20) != 0) {
-            addJob(500);
+            jobs.add((short) 500);
         }
         if ((mask & 0x400) != 0) {
-            addJob(1000);
+            jobs.add((short) 1000);
         }
         if ((mask & 0x800) != 0) {
-            addJob(1100);
+            jobs.add((short) 1100);
         }
         if ((mask & 0x1000) != 0) {
-            addJob(1100);
+            jobs.add((short) 1100);
         }
         if ((mask & 0x2000) != 0) {
-            addJob(1300);
+            jobs.add((short) 1300);
         }
         if ((mask & 0x4000) != 0) {
-            addJob(1400);
+            jobs.add((short) 1400);
         }
         if ((mask & 0x8000) != 0) {
-            addJob(1500);
+            jobs.add((short) 1500);
         }
         if ((mask & 0x20000) != 0) {
-            addJob(2001);
-            addJob(2200);
+            jobs.add((short) 2001);
+            jobs.add((short) 2200);
         }
         if ((mask & 0x100000) != 0) {
-            addJob(2000);
-            addJob(2001);
+            jobs.add((short) 2000);
+            jobs.add((short) 2001);
         }
         if ((mask & 0x200000) != 0) {
-            addJob(2100);
+            jobs.add((short) 2100);
         }
         if ((mask & 0x400000) != 0) {
-            addJob(2001);
-            addJob(2200);
+            jobs.add((short) 2001);
+            jobs.add((short) 2200);
         }
         if ((mask & 0x1000000) != 0) {
-            addJob(2003);
-            addJob(2400);
+            jobs.add((short) 2003);
+            jobs.add((short) 2400);
         }
         if ((mask & 0x40000000) != 0) {
-            addJob(3000);
-            addJob(3200);
-            addJob(3300);
-            addJob(3500);
+            jobs.add((short) 3000);
+            jobs.add((short) 3200);
+            jobs.add((short) 3300);
+            jobs.add((short) 3500);
         }
-
+        return jobs;
     }
 }

@@ -1,8 +1,9 @@
 package com.msemu.world.client.character;
 
+import com.msemu.commons.data.enums.InvType;
+import com.msemu.commons.database.Schema;
 import com.msemu.world.client.character.items.Item;
 import com.msemu.world.enums.BodyPart;
-import com.msemu.world.enums.InvType;
 import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 /**
  * Created by Weber on 2018/4/13.
  */
+@Schema
 @Entity
 @Table(name = "inventories")
 public class Inventory {

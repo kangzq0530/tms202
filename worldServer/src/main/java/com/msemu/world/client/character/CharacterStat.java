@@ -426,7 +426,7 @@ public class CharacterStat {
         outPacket.encodeInt(getPvpPoint());
         outPacket.encodeByte(6);
         /* Fuck that, setting the above byte lower than 2 will make all 3rd and 4th job that have the property
-         ((skillID % 10000) / 10000 == 0) be bugged (you see the level, but can't actually use it). ?????????????*/
+         ((skillID % 10000) / 10000 == 0) be bugged (you see the maxLevel, but can't actually use it). ?????????????*/
         outPacket.encodeByte(getPvpModeType());
         outPacket.encodeInt(getEventPoint());
 //        outPacket.encodeByte(getAlbaActivityID()); // part time job

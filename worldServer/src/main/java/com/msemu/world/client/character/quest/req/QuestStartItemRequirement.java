@@ -1,39 +1,22 @@
 package com.msemu.world.client.character.quest.req;
 
-import com.msemu.commons.data.dat.DatSerializable;
+import com.msemu.commons.data.templates.quest.reqs.QuestItemReqData;
+import com.msemu.commons.data.templates.quest.reqs.QuestReqData;
 import com.msemu.world.client.character.Character;
-
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Created by Weber on 2018/4/13.
  */
-public class QuestStartItemRequirement implements IQuestStartRequirement {
+public class QuestStartItemRequirement implements IQuestStartRequirements {
+
+    @Getter
+    @Setter
     private int id;
+    @Getter
+    @Setter
     private int quantity;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public void addReqItem(int reqItem, int count) {
-        setId(reqItem);
-        setQuantity(count);
-    }
 
     @Override
     public boolean hasRequirements(Character chr) {
@@ -41,16 +24,10 @@ public class QuestStartItemRequirement implements IQuestStartRequirement {
     }
 
     @Override
-    public void write(DataOutputStream dos) throws IOException {
-        dos.writeInt(getId());
-        dos.writeInt(getQuantity());
-    }
-
-    @Override
-    public DatSerializable load(DataInputStream dis) throws IOException {
-        QuestStartItemRequirement qsir = new QuestStartItemRequirement();
-        qsir.setId(dis.readInt());
-        qsir.setQuantity(dis.readInt());
-        return qsir;
+    public void load(QuestReqData reqData) {
+        if(reqData instanceof QuestItemReqData) {
+            setId(((QuestItemReqData)reqData).getItemId());
+            setQuantity(((QuestItemReqData)reqData).getQuantity());
+        }
     }
 }

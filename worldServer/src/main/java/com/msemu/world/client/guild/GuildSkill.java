@@ -1,5 +1,6 @@
 package com.msemu.world.client.guild;
 
+import com.msemu.commons.database.Schema;
 import com.msemu.commons.utils.types.FileTime;
 import com.msemu.commons.network.packets.OutPacket;
 import lombok.Getter;
@@ -10,6 +11,7 @@ import javax.persistence.*;
 /**
  * Created by Weber on 2018/4/13.
  */
+@Schema
 @Entity
 public class GuildSkill {
     @Id
@@ -50,11 +52,4 @@ public class GuildSkill {
         outPacket.encodeString(getExtendCharacterName());
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 }

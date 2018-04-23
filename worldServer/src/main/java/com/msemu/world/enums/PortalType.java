@@ -25,21 +25,21 @@ public enum PortalType {
     PortalCollisionInvisibleChangable(14), // ?
     PortalUnk(15), // ? On map ID 910800200
     ;
-    private byte val;
+    private byte value;
 
     PortalType(byte val) {
-        this.val = val;
+        this.value = val;
     }
 
     PortalType(int val) {
         this((byte) val);
     }
 
-    public byte getVal() {
-        return val;
+    public byte getValue() {
+        return value;
     }
 
     public static PortalType getTypeByInt(int i) {
-        return Arrays.stream(values()).filter(p -> p.getVal() == i).findFirst().orElse(null);
+        return Arrays.stream(values()).filter(p -> p.getValue() == i).findFirst().orElse(null);
     }
 }

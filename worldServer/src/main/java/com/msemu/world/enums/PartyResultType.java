@@ -9,12 +9,10 @@ public enum PartyResultType {
     ApplyRequest(4),
     PartyApplyRequestPurple(5), // member -> party request
     PartyJoinRequestBlue(8), // party -> member request
-
     UserUpdate(15),
     Create(16),
     AlreadyJoinedPartyMsg(17),
     BeginnerCantCreatePartyMsg(18),
-
     Leave(21),
     YetToJoinAPartyMsg(22),
 

@@ -1,6 +1,6 @@
 package com.msemu.commons.data.templates.quest.reqs;
 
-import com.msemu.commons.data.enums.QuestRequirementType;
+import com.msemu.commons.data.enums.QuestRequirementDataType;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -16,8 +16,8 @@ public class QuestJobReqData extends QuestReqData {
 
 
     @Override
-    public QuestRequirementType getType() {
-        return QuestRequirementType.job;
+    public QuestRequirementDataType getType() {
+        return QuestRequirementDataType.job;
     }
 
     public void addJob(int job) {

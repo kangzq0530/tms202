@@ -3,7 +3,6 @@ package com.msemu.core.network;
 import com.msemu.commons.network.IClientFactory;
 import com.msemu.commons.network.NetworkThread;
 import com.msemu.commons.network.handler.AbstractPacketHandlerFactory;
-import com.msemu.world.client.GameClient;
 
 /**
  * Created by Weber on 2018/4/18.

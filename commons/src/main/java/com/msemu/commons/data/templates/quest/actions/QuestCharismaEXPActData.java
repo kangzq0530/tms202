@@ -1,6 +1,6 @@
 package com.msemu.commons.data.templates.quest.actions;
 
-import com.msemu.commons.data.enums.QuestActionType;
+import com.msemu.commons.data.enums.QuestActDataType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,7 +14,7 @@ public class QuestCharismaEXPActData extends QuestActData {
     private int charismaEXP;
 
     @Override
-    public QuestActionType getType() {
-        return QuestActionType.charismaEXP;
+    public QuestActDataType getType() {
+        return QuestActDataType.charismaEXP;
     }
 }

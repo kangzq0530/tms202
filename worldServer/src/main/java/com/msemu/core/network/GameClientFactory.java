@@ -2,9 +2,6 @@ package com.msemu.core.network;
 
 import com.msemu.commons.network.Connection;
 import com.msemu.commons.network.IClientFactory;
-import com.msemu.commons.utils.Rand;
-import com.msemu.world.client.GameClient;
-import io.netty.channel.Channel;
 
 import java.util.concurrent.atomic.AtomicReference;
 

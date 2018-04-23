@@ -5,6 +5,7 @@ package com.msemu.world.client.guild;
  */
 
 
+import com.msemu.commons.database.Schema;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.utils.types.FileTime;
 import com.msemu.world.client.character.Character;
@@ -12,7 +13,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-
+@Schema
 @Entity
 @Table(name = "guildmembers")
 public class GuildMember {

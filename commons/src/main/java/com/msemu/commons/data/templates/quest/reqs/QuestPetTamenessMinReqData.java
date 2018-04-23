@@ -1,6 +1,6 @@
 package com.msemu.commons.data.templates.quest.reqs;
 
-import com.msemu.commons.data.enums.QuestRequirementType;
+import com.msemu.commons.data.enums.QuestRequirementDataType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,7 +14,7 @@ public class QuestPetTamenessMinReqData extends QuestReqData {
     private int petTamenessMin;
 
     @Override
-    public QuestRequirementType getType() {
-        return QuestRequirementType.pettamenessmin;
+    public QuestRequirementDataType getType() {
+        return QuestRequirementDataType.pettamenessmin;
     }
 }

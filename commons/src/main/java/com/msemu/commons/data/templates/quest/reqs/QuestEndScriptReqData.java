@@ -1,6 +1,6 @@
 package com.msemu.commons.data.templates.quest.reqs;
 
-import com.msemu.commons.data.enums.QuestRequirementType;
+import com.msemu.commons.data.enums.QuestRequirementDataType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,7 +13,7 @@ public class QuestEndScriptReqData extends QuestReqData {
     private String endScript;
 
     @Override
-    public QuestRequirementType getType() {
-        return QuestRequirementType.endscript;
+    public QuestRequirementDataType getType() {
+        return QuestRequirementDataType.endscript;
     }
 }

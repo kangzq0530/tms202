@@ -4,6 +4,7 @@ import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.thread.EventManager;
 import com.msemu.commons.utils.types.Position;
 import com.msemu.commons.utils.types.Rect;
+import com.msemu.core.network.GameClient;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.items.Item;
 import com.msemu.world.client.character.skills.SkillInfo;
@@ -27,11 +28,14 @@ import com.msemu.core.network.packets.out.SummonPool.SummonEnterField;
 import com.msemu.core.network.packets.out.SummonPool.SummonLeaveField;
 import com.msemu.core.network.packets.out.UserPool.UserEnterField;
 import com.msemu.core.network.packets.out.UserPool.UserLeaveField;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.awt.*;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -41,22 +45,55 @@ import static com.msemu.world.enums.SkillStat.time;
  * Created by Weber on 2018/4/11.
  */
 public class Field {
+    @Getter
+    @Setter
     private Rectangle rect;
+    @Getter
+    @Setter
     private double mobRate;
+    @Getter
+    @Setter
     private int id;
+    @Getter
+    @Setter
     private int returnMap, forcedReturn, createMobInterval, timeOut, timeLimit, lvLimit, lvForceMove;
+    @Getter
+    @Setter
     private int consumeItemCoolTime, link;
+    @Getter
+    @Setter
     private long uniqueId;
+    @Getter
+    @Setter
     private boolean town, swim, fly, reactorShuffle, expeditionOnly, partyOnly, needSkillForFly;
+    @Getter
+    @Setter
     private Set<Portal> portals;
+    @Getter
+    @Setter
     private Set<Foothold> footholds;
+    @Getter
+    @Setter
     private List<Life> lifes;
+    @Getter
+    @Setter
     private List<Character> chars;
+    @Getter
+    @Setter
     private Map<Life, Character> lifeToControllers;
+    @Getter
+    @Setter
     private Map<Life, ScheduledFuture> lifeSchedules;
+    @Getter
+    @Setter
     private String onFirstUserEnter = "", onUserEnter = "";
+    @Getter
+    @Setter
     private int fixedMobCapacity;
-    private int objectIDCounter = 1000000;
+    @Setter
+    private AtomicInteger objectIDCounter = new AtomicInteger(1000000);
+    @Getter
+    @Setter
     private boolean userFirstEnter = false;
 
     public Field(int fieldID, long uniqueId) {
@@ -71,14 +108,6 @@ public class Field {
         this.lifeSchedules = new HashMap<>();
     }
 
-    public Rectangle getRect() {
-        return rect;
-    }
-
-    public void setRect(Rectangle rect) {
-        this.rect = rect;
-    }
-
     public int getWidth() {
         return (int) getRect().getWidth();
     }
@@ -87,194 +116,37 @@ public class Field {
         return (int) getRect().getHeight();
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public long getUniqueId() {
-        return uniqueId;
-    }
-
-    public void setUniqueId(long uniqueId) {
-        this.uniqueId = uniqueId;
-    }
-
-    public Set<Portal> getPortals() {
-        return portals;
-    }
-
-    public void setPortals(Set<Portal> portals) {
-        this.portals = portals;
-    }
-
     public void addPortal(Portal portal) {
         getPortals().add(portal);
     }
 
-    public int getReturnMap() {
-        return returnMap;
-    }
-
-    public void setReturnMap(int returnMap) {
-        this.returnMap = returnMap;
-    }
-
-    public int getForcedReturn() {
-        return forcedReturn;
-    }
-
-    public void setForcedReturn(int forcedReturn) {
-        this.forcedReturn = forcedReturn;
-    }
-
-    public double getMobRate() {
-        return mobRate;
-    }
-
-    public void setMobRate(double mobRate) {
-        this.mobRate = mobRate;
-    }
-
-    public int getCreateMobInterval() {
-        return createMobInterval;
-    }
-
-    public void setCreateMobInterval(int createMobInterval) {
-        this.createMobInterval = createMobInterval;
-    }
-
-    public int getTimeOut() {
-        return timeOut;
-    }
-
-    public void setTimeOut(int timeOut) {
-        this.timeOut = timeOut;
-    }
-
-    public int getTimeLimit() {
-        return timeLimit;
-    }
-
-    public void setTimeLimit(int timeLimit) {
-        this.timeLimit = timeLimit;
-    }
-
-    public int getLvLimit() {
-        return lvLimit;
-    }
-
-    public void setLvLimit(int lvLimit) {
-        this.lvLimit = lvLimit;
-    }
-
-    public int getLvForceMove() {
-        return lvForceMove;
-    }
-
-    public void setLvForceMove(int lvForceMove) {
-        this.lvForceMove = lvForceMove;
-    }
-
-    public int getConsumeItemCoolTime() {
-        return consumeItemCoolTime;
-    }
-
-    public void setConsumeItemCoolTime(int consumeItemCoolTime) {
-        this.consumeItemCoolTime = consumeItemCoolTime;
-    }
-
-    public int getLink() {
-        return link;
-    }
-
-    public void setLink(int link) {
-        this.link = link;
-    }
-
-    public boolean isTown() {
-        return town;
-    }
-
-    public void setTown(boolean town) {
-        this.town = town;
-    }
-
-    public boolean isSwim() {
-        return swim;
-    }
-
-    public void setSwim(boolean swim) {
-        this.swim = swim;
-    }
-
-    public boolean isFly() {
-        return fly;
-    }
-
-    public void setFly(boolean fly) {
-        this.fly = fly;
-    }
-
-    public boolean isReactorShuffle() {
-        return reactorShuffle;
-    }
-
-    public void setReactorShuffle(boolean reactorShuffle) {
-        this.reactorShuffle = reactorShuffle;
-    }
-
-    public boolean isExpeditionOnly() {
-        return expeditionOnly;
-    }
-
-    public void setExpeditionOnly(boolean expeditionONly) {
-        this.expeditionOnly = expeditionONly;
-    }
-
-    public boolean isPartyOnly() {
-        return partyOnly;
-    }
-
-    public void setPartyOnly(boolean partyOnly) {
-        this.partyOnly = partyOnly;
-    }
-
-    public boolean isNeedSkillForFly() {
-        return needSkillForFly;
-    }
-
-    public void setNeedSkillForFly(boolean needSkillForFly) {
-        this.needSkillForFly = needSkillForFly;
-    }
-
-    public String getOnFirstUserEnter() {
-        return onFirstUserEnter;
-    }
-
-    public void setOnFirstUserEnter(String onFirstUserEnter) {
-        this.onFirstUserEnter = onFirstUserEnter;
-    }
-
-    public String getOnUserEnter() {
-        return onUserEnter;
-    }
-
-    public void setOnUserEnter(String onUserEnter) {
-        this.onUserEnter = onUserEnter;
-    }
-
+    /**
+     * Returns a Portal object in this field. The name argument is a specifier that is related to portal name
+     * @param name the portal name
+     * @return the portal with the specified name
+     * @see Portal
+     */
     public Portal getPortalByName(String name) {
         return getPortals().stream().filter(portal -> portal.getName().equals(name)).findAny().orElse(null);
     }
 
+    /**
+     * Returns a Portal object in this field. The id argument is a specifier that is related to portal id
+     * @param id
+     * @return the portal with the specified id
+     * @see Portal
+     */
     public Portal getPortalByID(int id) {
         return getPortals().stream().filter(portal -> portal.getId() == id).findAny().orElse(null);
     }
 
+    /**
+     * Returns a Foothold object that is below a specified position
+     * @param pos position to find below foothold
+     * @see Position
+     * @return the foothold object
+     * @see Foothold
+     */
     public Foothold findFootHoldBelow(Position pos) {
         Set<Foothold> footholds = getFootholds().stream().filter(fh -> fh.getX1() <= pos.getX() && fh.getX2() >= pos.getX()).collect(Collectors.toSet());
         Foothold res = null;
@@ -294,30 +166,22 @@ public class Field {
         return res;
     }
 
-    public Set<Foothold> getFootholds() {
-        return footholds;
-    }
-
-    public void setFootholds(Set<Foothold> footholds) {
-        this.footholds = footholds;
-    }
-
+    /**
+     * Add a Foothold object to this field
+     * @param foothold a Foothold object that will be added.
+     * @see Foothold
+     */
     public void addFoothold(Foothold foothold) {
         getFootholds().add(foothold);
     }
 
-    public void setFixedMobCapacity(int fixedMobCapacity) {
-        this.fixedMobCapacity = fixedMobCapacity;
-    }
-
-    public int getFixedMobCapacity() {
-        return fixedMobCapacity;
-    }
-
-    public List<Life> getLifes() {
-        return lifes;
-    }
-
+    /**
+     * Add a Life object to this map
+     * @param life the life object
+     * @see Npc
+     * @see Mob
+     * @see Summon
+     */
     public void addLife(Life life) {
         if (life.getObjectId() < 0) {
             life.setObjectId(getNewObjectID());
@@ -422,7 +286,7 @@ public class Field {
         return getCharacters().stream().filter(c -> c.getId() == id).findFirst().orElse(null);
     }
 
-    public void addChar(Character chr) {
+    public void addCharacter(Character chr) {
         if (!getCharacters().contains(chr)) {
             getCharacters().add(chr);
             if (!isUserFirstEnter() && hasUserFirstEnterScript()) {
@@ -452,27 +316,15 @@ public class Field {
         });
     }
 
-    public Map<Life, Character> getLifeToControllers() {
-        return lifeToControllers;
-    }
-
-    public void setLifeToControllers(Map<Life, Character> lifeToControllers) {
-        this.lifeToControllers = lifeToControllers;
-    }
-
     public void putLifeController(Life life, Character chr) {
         getLifeToControllers().put(life, chr);
-    }
-
-    public void changeLifeController(Life life) {
-
     }
 
     public Life getLifeByObjectID(int mobId) {
         return getLifes().stream().filter(mob -> mob.getObjectId() == mobId).findFirst().orElse(null);
     }
 
-    public void spawnLifesForChar(Character chr) {
+    public void spawnAllLifeForChar(Character chr) {
         for (Life life : getLifes()) {
             spawnLife(life, chr);
         }
@@ -480,7 +332,7 @@ public class Field {
 
     @Override
     public String toString() {
-        return "" + getId();
+        return "[Field] ID = " + getId();
     }
 
     public void respawn(Mob mob) {
@@ -490,7 +342,7 @@ public class Field {
         spawnLife(mob, null);
     }
 
-    public void broadcastPacket(OutPacket outPacket) {
+    public void broadcastPacket(OutPacket<GameClient> outPacket) {
         for (Character c : getCharacters()) {
             c.getClient().write(outPacket);
         }
@@ -498,7 +350,7 @@ public class Field {
 
     public void spawnAffectedArea(AffectedArea aa) {
         addLife(aa);
-        SkillInfo si = SkillData.getSkillInfoById(aa.getSkillID());
+        SkillInfo si = SkillData.getInstance().getSkillInfoById(aa.getSkillID());
         if (si != null) {
             int duration = si.getValue(time, aa.getSlv()) * 1000;
             ScheduledFuture sf = EventManager.getInstance().addEvent(() -> removeLife(aa.getObjectId(), true), duration);
@@ -513,12 +365,8 @@ public class Field {
         return getLifes().stream().filter(life -> life instanceof Mob).map(l -> (Mob) l).collect(Collectors.toList());
     }
 
-    public void setObjectIDCounter(int idCounter) {
-        objectIDCounter = idCounter;
-    }
-
     public int getNewObjectID() {
-        return objectIDCounter++;
+        return objectIDCounter.getAndIncrement();
     }
 
     public List<Life> getLifesInRect(Rect rect) {
@@ -565,10 +413,6 @@ public class Field {
         }
     }
 
-    public Map<Life, ScheduledFuture> getLifeSchedules() {
-        return lifeSchedules;
-    }
-
     public void addLifeSchedule(Life life, ScheduledFuture scheduledFuture) {
         getLifeSchedules().put(life, scheduledFuture);
     }
@@ -588,11 +432,9 @@ public class Field {
     }
 
     public void checkMobInAffectedAreas(Mob mob) {
-        for (AffectedArea aa : getAffectedAreas()) {
-            if (aa.getRect().hasPositionInside(mob.getPosition())) {
-                aa.handleMobInside(mob);
-            }
-        }
+        getAffectedAreas().stream().filter(aa -> aa.getRect().hasPositionInside(mob.getPosition())).forEach(aa -> {
+            aa.handleMobInside(mob);
+        });
     }
 
     public void checkCharInAffectedAreas(Character chr) {
@@ -638,9 +480,9 @@ public class Field {
         Drop drop = new Drop(-1);
         drop.setOwnerID(ownerID);
         if (itemID != 0) {
-            item = ItemData.getEquipDeepCopyFromId(itemID);
+            item = ItemData.getInstance().getEquipFromTemplate(itemID);
             if (item == null) {
-                item = ItemData.getItemDeepCopy(itemID);
+                item = ItemData.getInstance().getItemFromTemplate(itemID);
             }
             drop.setItem(item);
         } else {
@@ -699,7 +541,7 @@ public class Field {
         }
     }
 
-    public List<Portal> getclosestPortal(Rect rect) {
+    public List<Portal> getPortalsInRange(Rect rect) {
         List<Portal> portals = new ArrayList<>();
         for (Portal portals2 : getPortals()) {
             int x = portals2.getX();
@@ -712,7 +554,7 @@ public class Field {
         return portals;
     }
 
-    public Character getCharByName(String name) {
+    public Character getCharacterByName(String name) {
         return getCharacters().stream().filter(chr -> chr.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
     }
 
@@ -722,13 +564,5 @@ public class Field {
         }
         String script = getOnUserEnter();
         chr.getScriptManager().startScript(getId(), script, ScriptType.FIELD);
-    }
-
-    public boolean isUserFirstEnter() {
-        return userFirstEnter;
-    }
-
-    public void setUserFirstEnter(boolean userFirstEnter) {
-        this.userFirstEnter = userFirstEnter;
     }
 }

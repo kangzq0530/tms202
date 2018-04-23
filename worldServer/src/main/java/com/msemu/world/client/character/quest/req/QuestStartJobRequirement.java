@@ -1,30 +1,24 @@
 package com.msemu.world.client.character.quest.req;
 
-import com.msemu.commons.data.dat.DatSerializable;
+import com.msemu.commons.data.templates.quest.reqs.QuestJobReqData;
+import com.msemu.commons.data.templates.quest.reqs.QuestReqData;
 import com.msemu.world.client.character.Character;
+import lombok.Getter;
+import lombok.Setter;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  * Created by Weber on 2018/4/13.
  */
-public class QuestStartJobRequirement implements IQuestStartRequirement {
+public class QuestStartJobRequirement implements IQuestStartRequirements {
+    @Getter
+    @Setter
     private Set<Short> jobReq;
 
     public QuestStartJobRequirement() {
         this.jobReq = new HashSet<>();
-    }
-
-    public Set<Short> getJobReq() {
-        return jobReq;
-    }
-
-    public void addJobReq(short job) {
-        getJobReq().add(job);
     }
 
     @Override
@@ -33,20 +27,9 @@ public class QuestStartJobRequirement implements IQuestStartRequirement {
     }
 
     @Override
-    public void write(DataOutputStream dos) throws IOException {
-        dos.writeShort(getJobReq().size());
-        for(short s : getJobReq()) {
-            dos.writeShort(s);
+    public void load(QuestReqData reqData) {
+        if(reqData instanceof QuestJobReqData) {
+            getJobReq().addAll(((QuestJobReqData)reqData).getJobs());
         }
-    }
-
-    @Override
-    public DatSerializable load(DataInputStream dis) throws IOException {
-        QuestStartJobRequirement qsjr = new QuestStartJobRequirement();
-        short size = dis.readShort();
-        for (int i = 0; i < size; i++) {
-            qsjr.addJobReq(dis.readShort());
-        }
-        return qsjr;
     }
 }

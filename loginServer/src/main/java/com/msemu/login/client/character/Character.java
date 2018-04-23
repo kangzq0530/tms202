@@ -13,6 +13,7 @@ import com.msemu.login.enums.CharCreateItemFlag;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -249,4 +250,13 @@ public class Character {
         return result.size() > 0;
     }
 
+    public static Character getById(int userId) {
+        Character chr;
+        Session session = DatabaseFactory.getInstance().getSession();
+        Transaction transaction = session.beginTransaction();
+        chr = session.get(Character.class, userId);
+        transaction.commit();
+        session.close();
+        return chr;
+    }
 }

@@ -2,7 +2,6 @@ package com.msemu.core.network;
 
 import com.msemu.commons.network.handler.PropertiesPacketHandlerFactory;
 import com.msemu.core.startup.StartupComponent;
-import com.msemu.world.client.GameClient;
 
 import java.util.concurrent.atomic.AtomicReference;
 

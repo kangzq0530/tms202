@@ -178,7 +178,7 @@ public class Summon extends Life {
     }
 
     public static Summon getSummonBy(Character character, int skillID, byte slv) {
-        SkillInfo si = SkillData.getSkillInfoById(skillID);
+        SkillInfo si = SkillData.getInstance().getSkillInfoById(skillID);
         Summon summon = new Summon(-1);
         summon.setCharID(character.getId());
         summon.setSkillID(skillID);

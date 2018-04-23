@@ -1,6 +1,6 @@
 package com.msemu.commons.data.templates.quest.reqs;
 
-import com.msemu.commons.data.enums.QuestRequirementType;
+import com.msemu.commons.data.enums.QuestRequirementDataType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,7 +14,7 @@ public class QuestPopReqData extends QuestReqData {
     private int pop;
 
     @Override
-    public QuestRequirementType getType() {
-        return QuestRequirementType.pop;
+    public QuestRequirementDataType getType() {
+        return QuestRequirementDataType.pop;
     }
 }

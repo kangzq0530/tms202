@@ -1,7 +1,6 @@
 package com.msemu.commons.data.templates.quest.reqs;
 
-import com.msemu.commons.data.enums.QuestRequirementType;
-import com.msemu.commons.data.templates.quest.QuestItem;
+import com.msemu.commons.data.enums.QuestRequirementDataType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,10 +13,19 @@ import java.util.List;
 public class QuestItemReqData  extends QuestReqData {
 
     @Getter
-    public List<QuestItem> items = new ArrayList<>();
+    @Setter
+    private int itemId;
+
+    @Getter
+    @Setter
+    private int quantity;
+
+    @Getter
+    @Setter
+    private int order;
 
     @Override
-    public QuestRequirementType getType() {
-        return QuestRequirementType.item;
+    public QuestRequirementDataType getType() {
+        return QuestRequirementDataType.item;
     }
 }

@@ -52,7 +52,7 @@ public class Channel {
     }
 
     private Field createAndReturnNewField(int id) {
-        Field newField = FieldData.getFieldCopyById(id);
+        Field newField = FieldData.getInstance().getFieldFromTemplate(id);
         getFields().add(newField);
         return newField;
     }
@@ -89,18 +89,18 @@ public class Channel {
         return name;
     }
 
-    public boolean isAccountOnPending(int accountId) {
-        return getPendingByAccId(accountId) != null;
+    public boolean isAccountTransfered(int accountId) {
+        return getTransferByAccountId(accountId) != null;
     }
 
     @Synchronized
-    public List<Character> getPendings() {
+    public List<Character> getTransferCharacters() {
         return transfers.values().stream()
                 .collect(Collectors.toList());
     }
 
-    public Character getPendingByAccId(int accountId) {
-        return getPendings().stream()
+    public Character getTransferByAccountId(int accountId) {
+        return getTransferCharacters().stream()
                 .filter(chr -> chr.getAccId() == accountId)
                 .findFirst()
                 .orElse(null);
@@ -132,5 +132,12 @@ public class Channel {
 
     public void removeCharacter(Character character) {
         this.characters.remove(character.getAccId());
+    }
+
+    public void addTransfer(int accountId, int characterId) {
+        Character character = Character.findById(characterId);
+        if(character != null) {
+            getTransferCharacters().add(character);
+        }
     }
 }

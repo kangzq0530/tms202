@@ -1,16 +1,21 @@
 package com.msemu.world.client.character.quest;
+import com.msemu.commons.data.templates.ItemTemplate;
+import com.msemu.commons.data.templates.quest.QuestInfo;
+import com.msemu.commons.data.templates.quest.reqs.QuestReqData;
 import com.msemu.commons.database.Schema;
 import com.msemu.commons.utils.types.FileTime;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.items.Item;
-import com.msemu.world.client.character.quest.requirements.IQuestStartRequirement;
-import com.msemu.world.client.character.quest.requirements.QuestProgressItemRequirement;
-import com.msemu.world.client.character.quest.requirements.QuestStartCompletionRequirement;
-import com.msemu.world.client.character.quest.rewards.IQuestReward;
+import com.msemu.world.client.character.quest.req.IQuestStartRequirements;
+import com.msemu.world.client.character.quest.req.QuestProgressItemRequirement;
+import com.msemu.world.client.character.quest.act.IQuestAction;
+import com.msemu.world.client.character.quest.req.QuestStartCompletionRequirement;
 import com.msemu.world.client.life.Mob;
 import com.msemu.world.data.ItemData;
 import com.msemu.world.data.QuestData;
 import com.msemu.core.network.packets.out.WvsContext.messages.QuestRecordMessage;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.*;
@@ -31,69 +36,74 @@ public class QuestManager {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter
+    @Setter
     private long id;
 
     @ElementCollection
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @CollectionTable(name = "questlists")
     @MapKeyColumn(name = "questID")
-    private Map<Integer, Quest> questList = new HashMap<>();;
+    private Map<Integer, Quest> questsList = new HashMap<>();;
 
     @Transient
+    @Getter
+    @Setter
     private Character character;
-
-    public QuestManager() {
-    }
 
     public QuestManager(Character chr) {
         this.character = chr;
     }
 
-    public Collection<Quest> getEx() {
-        return getQuests().values();
-    }
+
 
     public Set<Quest> getCompletedQuests() {
-        return getQuests().entrySet().stream().filter(entry -> entry.getValue().getStatus() == COMPLETE).
+        return getQuestsList().entrySet().stream().filter(entry -> entry.getValue().getStatus() == COMPLETE).
                 map(Map.Entry::getValue).collect(Collectors.toSet());
     }
 
     public Set<Quest> getQuestsInProgress() {
-        return getQuests().entrySet().stream().filter(entry -> entry.getValue().getStatus() == STARTED).
+        return getQuestsList().entrySet().stream().filter(entry -> entry.getValue().getStatus() == STARTED).
                 map(Map.Entry::getValue).collect(Collectors.toSet());
     }
 
-    public int getSize() {
-        return questList.size();
-    }
-
-    public Map<Integer, Quest> getQuests() {
-        return questList;
-    }
-
     public boolean hasQuestInProgress(int questID) {
-        Quest quest = getQuests().get(questID);
+        Quest quest = getQuestsList().get(questID);
         return quest != null && quest.getStatus() == STARTED;
     }
 
     public boolean hasQuestCompleted(int questID) {
-        Quest quest = getQuests().get(questID);
+        Quest quest = getQuestsList().get(questID);
         return quest != null && quest.getStatus() == COMPLETE;
     }
 
+    public int getSize() {
+        return questsList.size();
+    }
+
+    public Collection<Quest> getQuests() {
+        return getQuestsList().values();
+    }
+
+    public Map<Integer, Quest> getQuestsList() {
+        return questsList;
+    }
+
+
+
     /**
-     * Adds a new {@link Quest} to this QuestManager's quests. If it already exists, doesn't do anything.
+     * Adds a new {@link Quest} to this QuestManager's questsList. If it already exists, doesn't do anything.
      * Use {@link #replaceQuest(Quest)} if a given quest should be overridden.
      * @param quest The Quest to add.
      */
     public void addQuest(Quest quest) {
-        if(!getQuests().containsKey(quest.getQRKey())) {
-            getQuests().put(quest.getQRKey(), quest);
-            character.write(new QuestRecordMessage(quest));
+        if(!getQuestsList().containsKey(quest.getQRKey())) {
+            getQuestsList().put(quest.getQRKey(), quest);
+            getCharacter().write(new QuestRecordMessage(quest));
             if(quest.getStatus() == COMPLETE) {
-                character.chatMessage(YELLOW, "[Info] Completed quest " + quest.getQRKey());
+                getCharacter().chatMessage(YELLOW, "[Info] Completed quest " + quest.getQRKey());
             } else {
-                character.chatMessage(YELLOW, "[Info] Accepted quest " + quest.getQRKey());
+                getCharacter().chatMessage(YELLOW, "[Info] Accepted quest " + quest.getQRKey());
             }
         }
     }
@@ -103,8 +113,8 @@ public class QuestManager {
      * @param quest The Quest to add/replace.
      */
     public void replaceQuest(Quest quest) {
-        getQuests().put(quest.getQRKey(), quest);
-        character.write(new QuestRecordMessage(quest));
+        getQuestsList().put(quest.getQRKey(), quest);
+        getCharacter().write(new QuestRecordMessage(quest));
     }
 
     /**
@@ -113,48 +123,44 @@ public class QuestManager {
      * @return Whether or not the Char can start the quest.
      */
     public boolean canStartQuest(int questID) {
-        QuestInfo qi = QuestData.getQuestInfoById(questID);
-        Set<IQuestStartRequirement> questReqs = qi.getQuestStartRequirements().stream()
+        QuestData qd = QuestData.getInstance();
+        Set<IQuestStartRequirements> questReqs = qd.getStartReqsById(questID).stream()
                 .filter(qsr -> qsr instanceof QuestStartCompletionRequirement)
                 .collect(Collectors.toSet());
         boolean hasQuest = questReqs.size() == 0 ||
                 questReqs.stream().anyMatch(q -> q.hasRequirements(character));
-        return hasQuest && qi.getQuestStartRequirements().stream()
+        return hasQuest && qd.getStartReqsById(questID).stream()
                 .filter(qsr -> !(qsr instanceof QuestStartCompletionRequirement))
                 .allMatch(qsr -> qsr.hasRequirements(character));
     }
 
-    public Character getCharacter() {
-        return character;
-    }
-
     /**
      * Completes a quest. Assumes the check for in-progressness has already been done, so this method can be used
-     * to complete quests that the Char does not actually have.
+     * to complete questsList that the Char does not actually have.
      * @param questID The quest ID to finish.
      */
     public void completeQuest(int questID) {
-        QuestInfo questInfo = QuestData.getQuestInfoById(questID);
-        Quest quest = getQuests().get(questID);
+        QuestData questData = QuestData.getInstance();
+        Quest quest = getQuestsList().get(questID);
         if(quest == null) {
-            quest = QuestData.createQuestFromId(questID);
+            quest = QuestData.getInstance().createQuestFromId(questID);
             addQuest(quest);
         }
         quest.setStatus(COMPLETE);
         quest.setCompletedTime(FileTime.getTime());
-        character.chatMessage(YELLOW, "[Info] Completed quest " + quest.getQRKey());
-        character.write(new QuestRecordMessage(quest));
+        getCharacter().chatMessage(YELLOW, "[Info] Completed quest " + quest.getQRKey());
+        getCharacter().write(new QuestRecordMessage(quest));
         for(QuestProgressItemRequirement qpir : quest.getItemReqs()) {
-            character.consumeItem(qpir.getItemID(), qpir.getRequiredCount());
+            getCharacter().consumeItem(qpir.getItemID(), qpir.getRequiredCount());
         }
-        for(IQuestReward qr : questInfo.getQuestRewards()) {
-            qr.giveReward(character);
+        for(IQuestAction reward : questData.getCompleteActionsById(questID)) {
+            reward.action(character);
         }
     }
 
     public void handleMobKill(Mob mob) {
         for(int questID : mob.getQuests()) {
-            Quest q = getQuests().get(questID);
+            Quest q = getQuestsList().get(questID);
             if (q != null && !q.isComplete()) {
                 q.handleMobKill(mob.getTemplateId());
                 character.write(new QuestRecordMessage(q));
@@ -172,11 +178,11 @@ public class QuestManager {
     }
 
     public void handleItemGain(Item item) {
-        if(ItemData.getItemInfoByID(item.getItemId()) == null) {
+        ItemTemplate itemInfo = ItemData.getInstance().getItemInfo(item.getItemId());
+        if(itemInfo == null)
             return;
-        }
-        for(int questID : ItemData.getItemInfoByID(item.getItemId()).getQuestIDs()) {
-            Quest q = getQuests().get(questID);
+        for(int questID : itemInfo.getQuestIDs()) {
+            Quest q = getQuestsList().get(questID);
             if (q != null && !q.isComplete()) {
                 q.handleItemGain(item);
                 character.write(new QuestRecordMessage(q));
@@ -184,23 +190,11 @@ public class QuestManager {
         }
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public void setCharacter(Character character) {
-        this.character = character;
-    }
-
     public void removeQuest(int questID) {
-        Quest q = getQuests().get(questID);
+        Quest q = getQuestsList().get(questID);
         if(q != null) {
             q.setStatus(NOT_STARTED);
-            getQuests().remove(questID);
+            getQuestsList().remove(questID);
             character.write(new QuestRecordMessage(q));
         }
     }

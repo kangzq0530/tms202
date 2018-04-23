@@ -7,8 +7,7 @@ import com.msemu.commons.thread.EventManager;
 import com.msemu.core.configs.NetworkConfig;
 import com.msemu.world.World;
 import com.msemu.world.channel.Channel;
-import com.msemu.world.client.GameClient;
-import com.msemu.world.client.character.Character;
+import com.msemu.core.network.GameClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,9 +16,6 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
 
 /**
@@ -72,7 +68,7 @@ public class WorldServerRMI extends UnicastRemoteObject implements IWorldServerR
     }
 
     public void addClient(int channel, GameClient client) {
-      // TODO
+        // TODO
     }
 
     public void removeClient(Integer accID) {
@@ -86,7 +82,7 @@ public class WorldServerRMI extends UnicastRemoteObject implements IWorldServerR
 
     @Override
     public boolean isAccountOnServer(int accountId) throws RemoteException {
-        return World.getInstance().getChannels().stream().filter(ch-> ch.isAccountOnChannel(accountId)).findFirst().isPresent();
+        return World.getInstance().getChannels().stream().filter(ch -> ch.isAccountOnChannel(accountId)).findFirst().isPresent();
     }
 
     @Override
@@ -95,10 +91,26 @@ public class WorldServerRMI extends UnicastRemoteObject implements IWorldServerR
             World.getInstance().getChannels()
                     .stream()
                     .forEach(ch -> ch.getCharacters().stream()
-                    .forEach(chr -> chr.logout()));
+                            .forEach(chr -> chr.logout()));
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void addTransfer(int worldId, int channelId, int accountId, int characterId) throws RemoteException {
+
+        World world = World.getInstance();
+
+        kickByAccountId(accountId);
+
+        if (world.getWorldId() == worldId) {
+            Channel channel = world.getChannels().stream().filter(ch->ch.getChannelId()==channelId).findFirst().orElse(null);
+            if(channel != null) {
+                channel.addTransfer(accountId, characterId);
+            }
+        }
+
     }
 
     private void onConnectionLost() {

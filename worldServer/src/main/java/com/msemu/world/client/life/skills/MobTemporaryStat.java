@@ -516,7 +516,7 @@ public class MobTemporaryStat {
         BurnedInfo bu = getBurnedInfos().stream().
                 filter(b -> b.getSkillId() == skill.getId() && b.getCharacterId() == charId)
                 .findFirst().orElse(null);
-        SkillInfo si = SkillData.getSkillInfoById(skill.getSkillId());
+        SkillInfo si = SkillData.getInstance().getSkillInfoById(skill.getSkillId());
         int slv = skill.getCurrentLevel();
         BurnedInfo bi = new BurnedInfo();
         bi.setCharacterId(charId);

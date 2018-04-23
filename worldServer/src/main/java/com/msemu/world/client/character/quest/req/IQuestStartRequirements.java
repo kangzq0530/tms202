@@ -5,8 +5,7 @@ import com.msemu.world.client.character.Character;
 /**
  * Created by Weber on 2018/4/13.
  */
-public interface IQuestStartRequirements {
-
+public interface IQuestStartRequirements extends IQuestRequirement {
     /**
      * Returns whether or not a given {@link com.msemu.world.client.character.Character} has a requirement.
      *

@@ -3,6 +3,8 @@ package com.msemu.world.client.character.party;
 
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.world.client.character.Character;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -18,13 +20,23 @@ public class Party {
 
     private static final AtomicInteger partyIdGenerator = new AtomicInteger(1);
 
+    @Getter
     private final int id;
 
+    @Getter
     private final PartyMember[] partyMembers = new PartyMember[6];
 
+    @Getter
+    @Setter
     private boolean appliable;
+    @Getter
+    @Setter
     private String name;
+    @Getter
+    @Setter
     private int partyLeaderID;
+    @Getter
+    @Setter
     private Character applyingChar;
     private Map<Integer, Field> fields = new HashMap<>();
 
@@ -34,33 +46,40 @@ public class Party {
 
     }
 
-
-    public boolean isAppliable() {
-        return appliable;
-    }
-
-    public void setAppliable(boolean appliable) {
-        this.appliable = appliable;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public PartyMember[] getPartyMembers() {
-        return partyMembers;
-    }
-
     public boolean isFull() {
         return Arrays.stream(getPartyMembers()).noneMatch(Objects::isNull);
     }
 
     public boolean isEmpty() {
         return Arrays.stream(getPartyMembers()).allMatch(Objects::isNull);
+    }
+
+
+    public void addPartyMember(Character chr) {
+        if (isFull()) {
+            return;
+        }
+        PartyMember pm = new PartyMember(chr);
+        if (isEmpty()) {
+            setPartyLeaderID(chr.getId());
+        }
+        PartyMember[] partyMembers = getPartyMembers();
+        PartyJoinResult pjr = new PartyJoinResult(this, chr.getName());
+        for (int i = 0; i < partyMembers.length; i++) {
+            if (partyMembers[i] == null) {
+                partyMembers[i] = pm;
+                chr.setParty(this);
+                break;
+            }
+        }
+    }
+
+
+    private int getNewPartyId() {
+        return partyIdGenerator.getAndIncrement();
+    }
+
+    public void updateFull() {
     }
 
     public void encode(OutPacket outPacket) {
@@ -102,46 +121,5 @@ public class Party {
         outPacket.encodeByte(isAppliable() && !isFull());
         outPacket.encodeString(getName());
         outPacket.encodeArr(new byte[50]);
-    }
-
-    public int getPartyLeaderID() {
-        return partyLeaderID;
-    }
-
-    public void setPartyLeaderID(int partyLeaderID) {
-        this.partyLeaderID = partyLeaderID;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void addPartyMember(Character chr) {
-        if (isFull()) {
-            return;
-        }
-        PartyMember pm = new PartyMember(chr);
-        if (isEmpty()) {
-            setPartyLeaderID(chr.getId());
-        }
-        PartyMember[] partyMembers = getPartyMembers();
-        PartyJoinResult pjr = new PartyJoinResult();
-        pjr.party = this;
-        pjr.joinerName = chr.getName();
-        for (int i = 0; i < partyMembers.length; i++) {
-            if (partyMembers[i] == null) {
-                partyMembers[i] = pm;
-                chr.setParty(this);
-                break;
-            }
-        }
-    }
-
-
-    private int getNewPartyId() {
-        return partyIdGenerator.getAndIncrement();
-    }
-
-    public void updateFull() {
     }
 }

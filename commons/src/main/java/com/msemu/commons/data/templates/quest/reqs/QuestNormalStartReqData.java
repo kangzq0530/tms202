@@ -1,6 +1,6 @@
 package com.msemu.commons.data.templates.quest.reqs;
 
-import com.msemu.commons.data.enums.QuestRequirementType;
+import com.msemu.commons.data.enums.QuestRequirementDataType;
 
 /**
  * Created by Weber on 2018/4/22.
@@ -8,7 +8,7 @@ import com.msemu.commons.data.enums.QuestRequirementType;
 public class QuestNormalStartReqData extends QuestReqData {
 
     @Override
-    public QuestRequirementType getType() {
-        return QuestRequirementType.normalAutoStart;
+    public QuestRequirementDataType getType() {
+        return QuestRequirementDataType.normalAutoStart;
     }
 }

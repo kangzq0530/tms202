@@ -2,10 +2,12 @@ package com.msemu.core.startup;
 
 import com.msemu.commons.utils.ServerInfoUtils;
 import com.msemu.commons.utils.versioning.Version;
+import com.msemu.core.network.WorldNetworkThread;
 import com.msemu.world.World;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.lang.management.ManagementFactory;
 
 /**
@@ -21,22 +23,23 @@ public enum StartupLevel implements IStartupLevel {
     Event,
     Database,
     Service,
+    Wz,
     Data,
     World,
     Network,
     AfterStart {
         public void invokeDepends() {
-
             System.gc();
             System.runFinalization();
             for (final String line : ServerInfoUtils.getMemUsage()) {
                 StartupLevel.log.info(line);
             }
-//            try {
-//                //GameNetworkThread.getInstance().startup();
-//            } catch (IOException | InterruptedException e) {
-//                StartupLevel.log.error("Error while starting network thread", e);
-//            }
+
+            try {
+                WorldNetworkThread.getInstance().startup();
+            } catch (IOException | InterruptedException e) {
+                StartupLevel.log.error("Error while starting network thread", e);
+            }
             StartupLevel.log.info("Server loaded in {} millisecond(s).", ServerInfoUtils.formatNumber(ManagementFactory.getRuntimeMXBean().getUptime()));
         }
     };
