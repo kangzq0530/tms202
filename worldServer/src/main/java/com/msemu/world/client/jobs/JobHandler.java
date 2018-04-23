@@ -12,11 +12,11 @@ import com.msemu.world.enums.Stat;
 /**
  * Created by Weber on 2018/4/12.
  */
-public abstract class Job {
+public abstract class JobHandler {
 
     private Character character;
 
-    public Job(Character character) {
+    public JobHandler(Character character) {
         this.character = character;
     }
 
