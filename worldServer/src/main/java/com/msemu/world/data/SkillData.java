@@ -89,4 +89,8 @@ public class SkillData implements IReloadable {
     public MobSkillInfo getMobSkillInfoByIdAndLevel(short skill, short level) {
         throw new NotImplementedException();
     }
+
+    public List<Skill> getSkillsByJob(short id) {
+        throw new NotImplementedException();
+    }
 }

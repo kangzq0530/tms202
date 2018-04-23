@@ -39,8 +39,8 @@ public class Channel {
     private boolean adultChannel;
     @Getter
     private List<Field> fields;
-    private Map<Integer, Character> transfers;
-    private Map<Integer, Character> characters;
+    private Map<Integer, Character> transfers; // key -> accountId
+    private Map<Integer, Character> characters; // key -> accountId
 
     public Channel(String worldName, int worldId, int channelId) {
         this.name = worldName + "-" + channelId;
@@ -65,36 +65,37 @@ public class Channel {
         return newField;
     }
 
-    public boolean isAccountTransfered(int accountId) {
-        return getTransferByAccountId(accountId) != null;
-    }
-
-    @Synchronized
-    public List<Character> getTransferCharacters() {
-        return transfers.values().stream()
+    public List<Character> getTransferList() {
+        return getTransfers().values().stream()
                 .collect(Collectors.toList());
     }
 
-    public Character getTransferByAccountId(int accountId) {
-        return getTransferCharacters().stream()
-                .filter(chr -> chr.getAccId() == accountId)
-                .findFirst()
-                .orElse(null);
+    @Synchronized
+    private Map<Integer, Character> getTransfers() {
+        return transfers;
     }
 
-    public Character getTransferByCharacterId(int characterId) {
-        return getTransferCharacters().stream()
+    @Synchronized
+    public Character getTransferAndRemoveByCharacterId(int characterId) {
+        Character ret = getTransferList().stream()
                 .filter(chr -> chr.getId() == characterId)
                 .findFirst()
                 .orElse(null);
+        getTransfers().remove(ret.getAccId());
+        return ret;
     }
 
-    public List<Character> getCharacters() {
+    public List<Character> getCharactersList() {
         return characters.values().stream().collect(Collectors.toList());
     }
 
+    @Synchronized
+    public Map<Integer, Character> getCharacters() {
+        return characters;
+    }
+
     public Character getCharacterByAccId(int accountId) {
-        return getCharacters().stream()
+        return getCharactersList().stream()
                 .filter(chr -> chr.getAccId() == accountId)
                 .findFirst().orElse(null);
     }
@@ -103,7 +104,7 @@ public class Channel {
         ChannelInfo channelInfo = new ChannelInfo();
         channelInfo.setName(getName());
         channelInfo.setChannel(getChannelId());
-        channelInfo.setConnectedClients(getCharacters().size());
+        channelInfo.setConnectedClients(getCharactersList().size());
         channelInfo.setMaxConnectedClients(WorldConfig.CHANNEL_MAX_LOADING);
         channelInfo.setWorldId(getWorldId());
         channelInfo.setHost(getHost());
@@ -119,10 +120,21 @@ public class Channel {
         this.characters.remove(character.getAccId());
     }
 
+    @Synchronized
     public void addTransfer(int accountId, int characterId) {
         Character character = Character.findById(characterId);
-        if(character != null) {
-            getTransferCharacters().add(character);
+        if (character != null) {
+            getTransfers().put(character.getAccId(), character);
         }
+    }
+
+    public void addCharacter(Character chr) {
+        getCharacters().put(chr.getAccId(), chr);
+    }
+
+    public boolean hasTransferByCharacterId(int characterId) {
+        return getTransferList()
+                .stream().filter(chr -> chr.getId() == characterId)
+                .count() > 0;
     }
 }

@@ -5,14 +5,14 @@ import com.msemu.world.client.character.AttackInfo;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.HitInfo;
 import com.msemu.world.client.character.skills.TemporaryStatManager;
-import com.msemu.world.client.jobs.Job;
+import com.msemu.world.client.jobs.JobHandler;
 
 import java.util.Arrays;
 
 /**
  * Created by Weber on 2018/4/12.
  */
-public class Evan extends Job {
+public class Evan extends JobHandler {
 
     // 龍魔導士一轉
     public static final int 魔力之環I = 22001010;

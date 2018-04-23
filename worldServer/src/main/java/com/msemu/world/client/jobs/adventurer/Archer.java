@@ -14,7 +14,7 @@ import com.msemu.world.client.character.skills.SkillInfo;
 import com.msemu.world.client.character.skills.TemporaryStatManager;
 import com.msemu.world.client.field.Field;
 import com.msemu.world.client.field.Foothold;
-import com.msemu.world.client.jobs.Job;
+import com.msemu.world.client.jobs.JobHandler;
 import com.msemu.world.client.life.AffectedArea;
 import com.msemu.world.client.life.Mob;
 import com.msemu.world.client.life.Summon;
@@ -38,7 +38,7 @@ import static com.msemu.world.enums.SkillStat.*;
 /**
  * Created by Weber on 2018/4/14.
  */
-public class Archer extends Job {
+public class Archer extends JobHandler {
     public static final int MAPLE_RETURN = 1281;
 
     public static final int SOUL_ARROW_BOW = 3101004;

@@ -90,7 +90,7 @@ public class WorldServerRMI extends UnicastRemoteObject implements IWorldServerR
         if (isAccountOnServer(accountId)) {
             World.getInstance().getChannels()
                     .stream()
-                    .forEach(ch -> ch.getCharacters().stream()
+                    .forEach(ch -> ch.getCharactersList().stream()
                             .forEach(chr -> chr.logout()));
             return true;
         }

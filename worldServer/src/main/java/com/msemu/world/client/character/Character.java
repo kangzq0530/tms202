@@ -10,6 +10,7 @@ import com.msemu.core.network.GameClient;
 import com.msemu.core.network.packets.out.Stage.SetField;
 import com.msemu.core.network.packets.out.UserPool.UserEnterField;
 import com.msemu.core.network.packets.out.UserPool.UserLocal.ChatMsg;
+import com.msemu.core.network.packets.out.WvsContext.ChangeSkillRecordResult;
 import com.msemu.core.network.packets.out.WvsContext.GuildResult;
 import com.msemu.core.network.packets.out.WvsContext.InventoryOperation;
 import com.msemu.core.network.packets.out.WvsContext.StatChanged;
@@ -27,13 +28,11 @@ import com.msemu.world.client.guild.Guild;
 import com.msemu.world.client.guild.GuildMember;
 import com.msemu.world.client.guild.operations.GuildUpdate;
 import com.msemu.world.client.guild.operations.GuildUpdateMemberLogin;
-import com.msemu.world.client.jobs.Job;
+import com.msemu.world.client.jobs.JobHandler;
+import com.msemu.world.client.jobs.JobManager;
 import com.msemu.world.client.life.AffectedArea;
 import com.msemu.world.client.life.Pet;
-import com.msemu.world.constants.GameConstants;
-import com.msemu.world.constants.ItemConstants;
-import com.msemu.world.constants.MapleJob;
-import com.msemu.world.constants.SkillConstants;
+import com.msemu.world.constants.*;
 import com.msemu.world.data.ItemData;
 import com.msemu.world.data.SkillData;
 import com.msemu.world.enums.*;
@@ -222,7 +221,7 @@ public class Character {
     @Transient
     @Getter
     @Setter
-    private Job jobHandler;
+    private JobHandler jobHandler;
 
     @Transient
     @Getter
@@ -299,10 +298,16 @@ public class Character {
     @Transient
     private short foothold;
     @Transient
+    @Getter
+    @Setter
     private int tamingMobLevel;
     @Transient
+    @Getter
+    @Setter
     private int tamingMobExp;
     @Transient
+    @Getter
+    @Setter
     private int tamingMobFatigue;
     @Transient
     private MiniRoom miniRoom;
@@ -391,7 +396,7 @@ public class Character {
         return getQuestManager().hasQuestInProgress(questReq);
     }
 
-    public void write(OutPacket outPacket) {
+    public void write(OutPacket<GameClient> outPacket) {
         if (getClient() != null) {
             getClient().write(outPacket);
         }
@@ -516,9 +521,25 @@ public class Character {
                 getAvatarData().getCharacterStat().setLevel(amount);
                 notifyChanges();
                 break;
-            case JOB:
-                getAvatarData().getCharacterStat().setJob(amount);
+
         }
+    }
+
+    public void setJob(MapleJob job) {
+        setJob(job.getId());
+    }
+
+    public void setJob(int jobId) {
+        MapleJob job = MapleJob.getById(jobId);
+        if(job == null)
+            return;
+        setJobHandler(JobManager.getJobHandler((short) job.getId(), this));
+        getAvatarData().getCharacterStat().setJob(job.getId());
+        List<Skill> skills = SkillData.getInstance().getSkillsByJob((short) job.getId());
+        skills.forEach(this::addSkill);
+        getClient().write(new ChangeSkillRecordResult(skills, true,
+                false, false, false));
+        notifyChanges();
     }
 
     private void notifyChanges() {
@@ -624,6 +645,10 @@ public class Character {
             stats.put(Stat.MONEY, newMoney);
             write(new StatChanged(stats));
         }
+    }
+
+    public void renewBulletIDForAttack() {
+        setBulletIDForAttack(calculateBulletIDForAttack());
     }
 
     public int calculateBulletIDForAttack() {

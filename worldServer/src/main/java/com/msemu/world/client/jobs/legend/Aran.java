@@ -11,7 +11,7 @@ import com.msemu.world.client.character.skills.Skill;
 import com.msemu.world.client.character.skills.SkillInfo;
 import com.msemu.world.client.character.skills.TemporaryStatManager;
 import com.msemu.world.client.field.Field;
-import com.msemu.world.client.jobs.Job;
+import com.msemu.world.client.jobs.JobHandler;
 import com.msemu.world.client.life.AffectedArea;
 import com.msemu.world.client.life.Mob;
 import com.msemu.world.client.life.skills.MobTemporaryStat;
@@ -29,7 +29,7 @@ import static com.msemu.world.enums.SkillStat.*;
 /**
  * Created by Weber on 2018/4/13.
  */
-public class Aran  extends Job {
+public class Aran  extends JobHandler {
 
     public static final int 找回記憶 = 20000194;
     public static final int 戰鬥衝刺 = 20001295;
