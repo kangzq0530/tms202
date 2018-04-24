@@ -268,7 +268,7 @@ public class Life {
     public Mob createMobFromLife() {
         Mob mob = null;
         if (getLifeType().equalsIgnoreCase("m")) {
-            mob = MobData.getInstance().createMobFromTemplate(getTemplateId());
+            mob = MobData.getInstance().getNpcFromTemplate(getTemplateId());
             mob.setObjectId(getObjectId());
             mob.setLifeType(getLifeType());
             mob.setTemplateId(getTemplateId());

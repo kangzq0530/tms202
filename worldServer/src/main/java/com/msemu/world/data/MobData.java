@@ -63,7 +63,7 @@ public class MobData implements IReloadable{
         load();
     }
 
-    public Mob createMobFromTemplate(int templateId) {
+    public Mob getNpcFromTemplate(int templateId) {
         MobTemplate mt = getMobTemplates().get(templateId);
         Mob mob = new Mob(-1 , mt);
         mob.init();

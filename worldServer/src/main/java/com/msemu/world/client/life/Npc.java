@@ -1,13 +1,19 @@
 package com.msemu.world.client.life;
 
+import com.msemu.commons.data.templates.NpcTemplate;
 import com.msemu.commons.network.packets.OutPacket;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
  * Created by Weber on 2018/4/11.
  */
+@Getter
+@Setter
 public class Npc extends Life {
     private boolean enabled = true;
     private int presentItemID;
@@ -18,11 +24,11 @@ public class Npc extends Life {
     private int alpha; // if hideToLocalUser is true
     private String localRepeatEffect;
     private ScreenInfo screenInfo;
-    private Map<Integer, String> scripts = new HashMap<>();
+    private NpcTemplate template;
 
-
-    public Npc(int objectId) {
+    public Npc(int objectId, NpcTemplate template) {
         super(objectId);
+        this.template = template;
     }
 
     public void encode(OutPacket outPacket) {
@@ -51,81 +57,9 @@ public class Npc extends Life {
         }
     }
 
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public int getPresentItemID() {
-        return presentItemID;
-    }
-
-    public void setPresentItemID(int presentItemID) {
-        this.presentItemID = presentItemID;
-    }
-
-    public byte getPresentItemState() {
-        return presentItemState;
-    }
-
-    public void setPresentItemState(byte presentItemState) {
-        this.presentItemState = presentItemState;
-    }
-
-    public int getPresentItemTime() {
-        return presentItemTime;
-    }
-
-    public void setPresentItemTime(int presentItemTime) {
-        this.presentItemTime = presentItemTime;
-    }
-
-    public int getNoticeBoardType() {
-        return noticeBoardType;
-    }
-
-    public void setNoticeBoardType(int noticeBoardType) {
-        this.noticeBoardType = noticeBoardType;
-    }
-
-    public int getNoticeBoardValue() {
-        return noticeBoardValue;
-    }
-
-    public void setNoticeBoardValue(int noticeBoardValue) {
-        this.noticeBoardValue = noticeBoardValue;
-    }
-
-    public int getAlpha() {
-        return alpha;
-    }
-
-    public void setAlpha(int alpha) {
-        this.alpha = alpha;
-    }
-
-    public String getLocalRepeatEffect() {
-        return localRepeatEffect;
-    }
-
-    public void setLocalRepeatEffect(String localRepeatEffect) {
-        this.localRepeatEffect = localRepeatEffect;
-    }
-
-    public ScreenInfo getScreenInfo() {
-        return screenInfo;
-    }
-
-    public void setScreenInfo(ScreenInfo screenInfo) {
-        this.screenInfo = screenInfo;
-    }
-
     @Override
     public Npc deepCopy() {
-        Npc copy = new Npc(getObjectId());
+        Npc copy = new Npc(getObjectId(), getTemplate());
         copy.setLifeType(getLifeType());
         copy.setTemplateId(getTemplateId());
         copy.setX(getX());
@@ -147,11 +81,11 @@ public class Npc extends Life {
         copy.setMobTimeOnDie(isMobTimeOnDie());
         copy.setRegenStart(getRegenStart());
         copy.setMobAliveReq(getMobAliveReq());
-        copy.getScripts().putAll(getScripts());
+        copy.getScripts().addAll(getScripts());
         return copy;
     }
 
-    public Map<Integer, String> getScripts() {
-        return scripts;
+    public List<String> getScripts() {
+        return getTemplate().getScripts();
     }
 }

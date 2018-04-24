@@ -1,10 +1,14 @@
 package com.msemu.world.client.life;
 
 import com.msemu.commons.network.packets.OutPacket;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Created by Weber on 2018/4/13.
  */
+@Getter
+@Setter
 public class Pet extends Life {
     private int id;
     private int idx;
@@ -23,21 +27,6 @@ public class Pet extends Life {
         return 0;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getIdx() {
-        return idx;
-    }
-
-    public void setIdx(int idx) {
-        this.idx = idx;
-    }
 
     public void encode(OutPacket outPacket) {
         outPacket.encodeInt(getId());
@@ -53,52 +42,5 @@ public class Pet extends Life {
 
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public long getPetLockerSN() {
-        return petLockerSN;
-    }
-
-    public void setPetLockerSN(long petLockerSN) {
-        this.petLockerSN = petLockerSN;
-    }
-
-    public int getHue() {
-        return hue;
-    }
-
-    public void setHue(int hue) {
-        this.hue = hue;
-    }
-
-    public short getGiantRate() {
-        return giantRate;
-    }
-
-    public void setGiantRate(short giantRate) {
-        this.giantRate = giantRate;
-    }
-
-    public boolean isTransformed() {
-        return transformed;
-    }
-
-    public void setTransformed(boolean transformed) {
-        this.transformed = transformed;
-    }
-
-    public boolean isReinforced() {
-        return reinforced;
-    }
-
-    public void setReinforced(boolean reinforced) {
-        this.reinforced = reinforced;
-    }
 }
 

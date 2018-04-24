@@ -531,8 +531,4 @@ public class Field {
         chr.getScriptManager().startScript(getId(), script, ScriptType.FIELD);
     }
 
-
-    public void init() {
-
-    }
 }
