@@ -1,6 +1,7 @@
 package com.msemu.world.client.life;
 
 import com.msemu.commons.network.packets.OutPacket;
+import com.msemu.core.network.GameClient;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,7 +29,7 @@ public class Pet extends Life {
     }
 
 
-    public void encode(OutPacket outPacket) {
+    public void encode(OutPacket<GameClient> outPacket) {
         outPacket.encodeInt(getId());
         outPacket.encodeString(getName());
         outPacket.encodeLong(getPetLockerSN());

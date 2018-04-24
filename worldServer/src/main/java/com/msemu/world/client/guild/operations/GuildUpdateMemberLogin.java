@@ -1,6 +1,7 @@
 package com.msemu.world.client.guild.operations;
 
 import com.msemu.commons.network.packets.OutPacket;
+import com.msemu.core.network.GameClient;
 import com.msemu.world.enums.GuildResultType;
 
 /**
@@ -33,7 +34,7 @@ public class GuildUpdateMemberLogin implements IGuildResultInfo {
     }
 
     @Override
-    public void encode(OutPacket outPacket) {
+    public void encode(OutPacket<GameClient> outPacket) {
         outPacket.encodeInt(guildID);
         outPacket.encodeInt(charID);
         outPacket.encodeByte(online);

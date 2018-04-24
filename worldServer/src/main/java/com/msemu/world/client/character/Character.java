@@ -844,11 +844,9 @@ public class Character {
             }
         }
         toField.spawnAllLifeForChar(this);
-        for (Character c : toField.getCharacters()) {
-            if (!c.equals(this)) {
-                write(new UserEnterField(c));
-            }
-        }
+        toField.getCharacters().stream().filter(c -> !c.equals(this)).forEach(c -> {
+            write(new UserEnterField(c));
+        });
         notifyChanges();
         toField.execUserEnterScript(this);
     }

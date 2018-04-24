@@ -2,6 +2,7 @@ package com.msemu.login.client.character;
 
 import com.msemu.commons.database.Schema;
 import com.msemu.commons.network.packets.OutPacket;
+import com.msemu.core.network.LoginClient;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -47,7 +48,7 @@ public class FuncKeyMap {
         return null;
     }
 
-    public void encode(OutPacket outPacket) {
+    public void encode(OutPacket<LoginClient> outPacket) {
         if(getKeymap().size() == 0) {
             outPacket.encodeByte(true);
         } else {

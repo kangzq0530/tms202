@@ -1,6 +1,7 @@
 package com.msemu.commons.utils.types;
 
 import com.msemu.commons.database.Schema;
+import com.msemu.commons.network.Client;
 import com.msemu.commons.network.packets.OutPacket;
 
 import javax.persistence.*;
@@ -115,7 +116,7 @@ public class FileTime implements Serializable {
         outPacket.encodeInt(getHighDateTime());
     }
 
-    public void encode(OutPacket outPacket) {
+    public void encode(OutPacket<? extends Client> outPacket) {
         outPacket.encodeInt(getHighDateTime());
         outPacket.encodeInt(getLowDateTime());
     }

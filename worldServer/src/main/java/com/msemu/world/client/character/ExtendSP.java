@@ -2,6 +2,7 @@ package com.msemu.world.client.character;
 
 import com.msemu.commons.database.Schema;
 import com.msemu.commons.network.packets.OutPacket;
+import com.msemu.core.network.GameClient;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public class ExtendSP {
         this.spSet = spSet;
     }
 
-    public void encode(OutPacket outPacket) {
+    public void encode(OutPacket<GameClient> outPacket) {
         outPacket.encodeByte(getSpSet().size());
         for(SPSet spSet : getSpSet()) {
             outPacket.encodeByte(spSet.getJobLevel());

@@ -3,6 +3,7 @@ package com.msemu.world.client.character;
 import com.msemu.commons.database.Schema;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.utils.types.FileTime;
+import com.msemu.core.network.GameClient;
 import com.msemu.world.constants.JobConstants;
 import com.msemu.world.constants.MapleJob;
 
@@ -369,7 +370,7 @@ public class CharacterStat {
 
 
 
-    public void encode(OutPacket outPacket) {
+    public void encode(OutPacket<GameClient> outPacket) {
         outPacket.encodeInt(getCharacterId());
         outPacket.encodeInt(getCharacterIdForLog());
         outPacket.encodeInt(getWorldIdForLog());

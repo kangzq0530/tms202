@@ -4,6 +4,7 @@ import com.msemu.commons.database.Schema;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.utils.types.FileTime;
 import com.msemu.commons.data.enums.InvType;
+import com.msemu.core.network.LoginClient;
 import com.msemu.world.constants.ItemConstants;
 import lombok.Getter;
 import lombok.Setter;
@@ -109,7 +110,7 @@ public class Item implements Serializable {
     }
 
 
-    public void encode(OutPacket outPacket) {
+    public void encode(OutPacket<LoginClient> outPacket) {
         outPacket.encodeByte(getType().getValue());
         // GW_ItemSlotBase
         outPacket.encodeInt(getItemId());

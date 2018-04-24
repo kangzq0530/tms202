@@ -2,6 +2,7 @@ package com.msemu.world.client.character;
 
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.utils.types.FileTime;
+import com.msemu.core.network.GameClient;
 
 /**
  * Created by Weber on 2018/4/14.
@@ -53,7 +54,7 @@ public class MiniGameRecord {
         this.rewardGradeQSize = rewardGradeQSize;
     }
 
-    public void encode(OutPacket outPacket) {
+    public void encode(OutPacket<GameClient> outPacket) {
         outPacket.encodeInt(getFileTime().getHighDateTime());
         outPacket.encodeInt(getsOwnerName());
         outPacket.encodeInt(getRewardGradeQ());

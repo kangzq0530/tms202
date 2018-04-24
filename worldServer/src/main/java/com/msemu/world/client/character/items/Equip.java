@@ -7,6 +7,7 @@ import com.msemu.commons.database.Schema;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.utils.Rand;
 import com.msemu.commons.utils.types.FileTime;
+import com.msemu.core.network.GameClient;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -517,7 +518,7 @@ public class Equip extends Item {
         return ItemGrade.getGradeByOption(getOptionBonus(0)).getValue();
     }
 
-    public void encode(OutPacket outPacket) {
+    public void encode(OutPacket<GameClient> outPacket) {
         // GW_ItemSlotBase
         super.encode(outPacket);
 

@@ -3,6 +3,7 @@ package com.msemu.world.client.character;
 import com.msemu.commons.database.Schema;
 import com.msemu.commons.utils.types.FileTime;
 import com.msemu.commons.network.packets.OutPacket;
+import com.msemu.core.network.GameClient;
 
 import javax.persistence.*;
 
@@ -108,7 +109,7 @@ public class NonCombatStatDayLimit {
         this.ftLastUpdateCharmByCashPR = ftLastUpdateCharmByCashPR;
     }
 
-    public void encode(OutPacket outPacket) {
+    public void encode(OutPacket<GameClient> outPacket) {
         outPacket.encodeShort(getCharisma());
         outPacket.encodeShort(getInsight());
         outPacket.encodeShort(getWill());

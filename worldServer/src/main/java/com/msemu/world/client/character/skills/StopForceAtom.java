@@ -1,6 +1,7 @@
 package com.msemu.world.client.character.skills;
 
 import com.msemu.commons.network.packets.OutPacket;
+import com.msemu.core.network.GameClient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +15,7 @@ public class StopForceAtom {
     private int weaponId;
     private List<Integer> angleInfo = new ArrayList<>();
 
-    public void encode(OutPacket outPacket) {
+    public void encode(OutPacket<GameClient> outPacket) {
         outPacket.encodeInt(getIdx());
         outPacket.encodeInt(getCount());
         outPacket.encodeInt(getWeaponId());

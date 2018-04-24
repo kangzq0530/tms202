@@ -2,6 +2,7 @@ package com.msemu.world.client.life;
 
 import com.msemu.commons.data.templates.NpcTemplate;
 import com.msemu.commons.network.packets.OutPacket;
+import com.msemu.core.network.GameClient;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -31,7 +32,7 @@ public class Npc extends Life {
         this.template = template;
     }
 
-    public void encode(OutPacket outPacket) {
+    public void encode(OutPacket<GameClient> outPacket) {
         // CNpc::Init
         outPacket.encodePosition(getPosition());
         outPacket.encodeByte(getMoveAction() != 0);

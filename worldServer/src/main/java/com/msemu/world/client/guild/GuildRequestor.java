@@ -2,6 +2,7 @@ package com.msemu.world.client.guild;
 
 import com.msemu.commons.database.Schema;
 import com.msemu.commons.network.packets.OutPacket;
+import com.msemu.core.network.GameClient;
 import com.msemu.world.client.character.Character;
 import lombok.Getter;
 import lombok.Setter;
@@ -69,7 +70,7 @@ public class GuildRequestor {
     }
 
 
-    public void encode(OutPacket outPacket) {
+    public void encode(OutPacket<GameClient> outPacket) {
         outPacket.encodeString(getName(), 13);
         outPacket.encodeInt(getJob());
         outPacket.encodeInt(getLevel());

@@ -1,6 +1,7 @@
 package com.msemu.world.client.character;
 
 import com.msemu.commons.network.packets.OutPacket;
+import com.msemu.core.network.GameClient;
 
 /**
  * Created by Weber on 2018/4/13.
@@ -133,7 +134,7 @@ public class ZeroInfo {
         this.mixHairBaseProb = mixHairBaseProb;
     }
 
-    public void encode(OutPacket outPacket) {
+    public void encode(OutPacket<GameClient> outPacket) {
         short mask = 0x1 | 0x2 | 0x4 | 0x40 | 0x80;
         outPacket.encodeShort(mask);
         if((mask & 0x1) != 0){

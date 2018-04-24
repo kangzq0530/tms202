@@ -3,6 +3,7 @@ package com.msemu.world.client.guild;
 import com.msemu.commons.database.Schema;
 import com.msemu.commons.utils.types.FileTime;
 import com.msemu.commons.network.packets.OutPacket;
+import com.msemu.core.network.GameClient;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -44,7 +45,7 @@ public class GuildSkill {
     @Setter
     private String extendCharacterName;
 
-    public void encode(OutPacket outPacket) {
+    public void encode(OutPacket<GameClient> outPacket) {
         // GUILDDATA::SKILLENTRY::Decode
         outPacket.encodeShort(getLevel());
         outPacket.encodeFT(getExpireDate());

@@ -3,6 +3,7 @@ package com.msemu.login.client.character;
 import com.msemu.commons.database.Schema;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.utils.types.FileTime;
+import com.msemu.core.network.LoginClient;
 import com.msemu.login.constants.JobConstants;
 import com.msemu.login.constants.MapleJob;
 import lombok.Getter;
@@ -271,7 +272,7 @@ public class CharacterStat {
         accountLastLogout = new SystemTime(1970, 1);
     }
 
-    public void encode(OutPacket outPacket) {
+    public void encode(OutPacket<LoginClient> outPacket) {
         outPacket.encodeInt(getCharacterId());
         outPacket.encodeInt(getCharacterIdForLog());
         outPacket.encodeInt(getWorldIdForLog());

@@ -1,6 +1,7 @@
 package com.msemu.login.client.character;
 
 import com.msemu.commons.network.packets.OutPacket;
+import com.msemu.core.network.LoginClient;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -33,7 +34,7 @@ public class Ranking {
         this(1,3,3,7);
     }
 
-    public void encode(OutPacket outPacket) {
+    public void encode(OutPacket<LoginClient> outPacket) {
         outPacket.encodeInt(getTotRank());
         outPacket.encodeInt(getTotRankGap());
         outPacket.encodeInt(getWorldRank());

@@ -2,6 +2,7 @@ package com.msemu.world.client.character.party;
 
 
 import com.msemu.commons.network.packets.OutPacket;
+import com.msemu.core.network.GameClient;
 import com.msemu.world.client.character.Character;
 import lombok.Getter;
 import lombok.Setter;
@@ -82,7 +83,7 @@ public class Party {
     public void updateFull() {
     }
 
-    public void encode(OutPacket outPacket) {
+    public void encode(OutPacket<GameClient> outPacket) {
         for (PartyMember pm : partyMembers) {
             outPacket.encodeInt(pm != null ? pm.getCharacterID() : 0);
         }

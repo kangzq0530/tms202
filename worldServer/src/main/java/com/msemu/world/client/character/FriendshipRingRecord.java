@@ -1,6 +1,7 @@
 package com.msemu.world.client.character;
 
 import com.msemu.commons.network.packets.OutPacket;
+import com.msemu.core.network.GameClient;
 
 /**
  * Created by Weber on 2018/4/13.
@@ -10,7 +11,7 @@ public class FriendshipRingRecord {
     private long friendshipPairItemSN;
     private int itemID;
 
-    public void encode(OutPacket outPacket) {
+    public void encode(OutPacket<GameClient> outPacket) {
         outPacket.encodeInt(1); // can be more of the following 3 properties
         outPacket.encodeLong(getFriendshipItemSN());
         outPacket.encodeLong(getFriendshipPairItemSN());

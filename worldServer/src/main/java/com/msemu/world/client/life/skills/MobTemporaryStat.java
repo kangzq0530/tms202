@@ -3,6 +3,7 @@ package com.msemu.world.client.life.skills;
 import com.msemu.commons.data.templates.skill.SkillInfo;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.thread.EventManager;
+import com.msemu.core.network.GameClient;
 import com.msemu.world.client.character.skills.Option;
 import com.msemu.world.client.character.skills.Skill;
 import com.msemu.world.client.life.Mob;
@@ -78,7 +79,7 @@ public class MobTemporaryStat {
         return getRemovedStatVals().getOrDefault(mobStat, null);
     }
 
-    public void encode(OutPacket outPacket) {
+    public void encode(OutPacket<GameClient> outPacket) {
         // DecodeBuffer(12) + MobStat::DecodeTemporary
         int[] mask = getNewMask();
         for (int i = 0; i < mask.length; i++) {

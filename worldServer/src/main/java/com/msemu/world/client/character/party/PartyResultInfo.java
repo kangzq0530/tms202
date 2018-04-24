@@ -1,6 +1,7 @@
 package com.msemu.world.client.character.party;
 
 import com.msemu.commons.network.packets.OutPacket;
+import com.msemu.core.network.GameClient;
 import com.msemu.world.enums.PartyResultType;
 
 /**
@@ -10,6 +11,6 @@ public interface PartyResultInfo {
 
     PartyResultType getType();
 
-    void encode(OutPacket outPacket);
+    void encode(OutPacket<GameClient> outPacket);
 
 }

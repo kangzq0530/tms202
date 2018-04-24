@@ -1,6 +1,7 @@
 package com.msemu.world.client.field.effect;
 
 import com.msemu.commons.network.packets.OutPacket;
+import com.msemu.core.network.GameClient;
 import com.msemu.world.client.life.Mob;
 import com.msemu.world.enums.FieldEffectType;
 
@@ -21,7 +22,7 @@ public class MobHPTagFieldEffect implements IFieldEffect {
     }
 
     @Override
-    public void encode(OutPacket outPacket) {
+    public void encode(OutPacket<GameClient> outPacket) {
         outPacket.encodeInt(mob.getTemplateId());
         int maxHP = (int) Math.min(Integer.MAX_VALUE, mob.getMaxHp());
         double ratio = mob.getMaxHp() / (double) Integer.MAX_VALUE;

@@ -3,6 +3,7 @@ package com.msemu.world.client.character;
 
 import com.msemu.commons.database.Schema;
 import com.msemu.commons.network.packets.OutPacket;
+import com.msemu.core.network.GameClient;
 import com.msemu.world.constants.ItemConstants;
 import com.msemu.world.constants.MapleJob;
 
@@ -281,7 +282,7 @@ public class AvatarLook {
         this.kaiserTailID = kaiserTailID;
     }
 
-    public void encode(OutPacket outPacket) {
+    public void encode(OutPacket<GameClient> outPacket) {
         outPacket.encodeByte(getGender());
         outPacket.encodeByte(getSkin());
         outPacket.encodeInt(getFace());

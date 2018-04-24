@@ -2,6 +2,7 @@ package com.msemu.login.client.character;
 
 import com.msemu.commons.database.Schema;
 import com.msemu.commons.network.packets.OutPacket;
+import com.msemu.core.network.LoginClient;
 import com.msemu.login.constants.MapleJob;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,7 +39,7 @@ public class AvatarData {
     private AvatarLook zeroAvatarLook;
 
 
-    public void encode(OutPacket outPacket) {
+    public void encode(OutPacket<LoginClient> outPacket) {
         characterStat.encode(outPacket);
         outPacket.encodeInt(0);
         avatarLook.encode(outPacket);

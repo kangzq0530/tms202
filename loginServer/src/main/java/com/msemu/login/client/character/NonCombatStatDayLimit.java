@@ -3,6 +3,7 @@ package com.msemu.login.client.character;
 import com.msemu.commons.database.Schema;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.utils.types.FileTime;
+import com.msemu.core.network.LoginClient;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -72,7 +73,7 @@ public class NonCombatStatDayLimit {
         this((short) 0, (short) 0, (byte) 0, (short) 0, (short) 0, (short) 0, (short) 0, FileTime.getFTFromLong(0));
     }
 
-    public void encode(OutPacket outPacket) {
+    public void encode(OutPacket<LoginClient> outPacket) {
         outPacket.encodeShort(getCharisma());
         outPacket.encodeShort(getInsight());
         outPacket.encodeShort(getWill());

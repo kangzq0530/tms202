@@ -1,6 +1,7 @@
 package com.msemu.world.client.character.skills;
 
 import com.msemu.commons.network.packets.OutPacket;
+import com.msemu.core.network.GameClient;
 import com.msemu.world.client.character.Character;
 import com.msemu.core.network.packets.out.UserPool.UserLocal.IncLarknessResponse;
 
@@ -71,7 +72,7 @@ public class LarknessManager {
         this.unk = unk;
     }
 
-    public void encode(OutPacket outPacket) {
+    public void encode(OutPacket<GameClient> outPacket) {
         outPacket.encodeInt(getDarkGauge());
         outPacket.encodeInt(getLightGauge());
 //        outPacket.encodeInt(getDarkFeathers());

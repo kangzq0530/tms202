@@ -2,6 +2,7 @@ package com.msemu.world.client.character.party;
 
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.utils.types.Position;
+import com.msemu.core.network.GameClient;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,7 +28,7 @@ public class TownPortal {
     private Position position;
 
 
-    public void encode(OutPacket outPacket) {
+    public void encode(OutPacket<GameClient> outPacket) {
         outPacket.encodeInt(getTownID());
         outPacket.encodeInt(getFieldID());
         outPacket.encodeInt(getSkillID());

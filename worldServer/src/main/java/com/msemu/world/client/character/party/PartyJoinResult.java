@@ -1,6 +1,7 @@
 package com.msemu.world.client.character.party;
 
 import com.msemu.commons.network.packets.OutPacket;
+import com.msemu.core.network.GameClient;
 import com.msemu.world.enums.PartyResultType;
 import lombok.Getter;
 
@@ -25,7 +26,7 @@ public class PartyJoinResult implements PartyResultInfo {
     }
 
     @Override
-    public void encode(OutPacket outPacket) {
+    public void encode(OutPacket<GameClient> outPacket) {
         outPacket.encodeInt(party.getId());
         outPacket.encodeString(joinerName);
         party.encode(outPacket);

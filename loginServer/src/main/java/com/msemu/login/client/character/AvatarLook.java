@@ -3,6 +3,7 @@ package com.msemu.login.client.character;
 
 import com.msemu.commons.database.Schema;
 import com.msemu.commons.network.packets.OutPacket;
+import com.msemu.core.network.LoginClient;
 import com.msemu.login.constants.MapleJob;
 import com.msemu.world.constants.ItemConstants;
 import lombok.Getter;
@@ -170,7 +171,7 @@ public class AvatarLook {
         return res;
     }
 
-    public void encode(OutPacket outPacket) {
+    public void encode(OutPacket<LoginClient> outPacket) {
         outPacket.encodeByte(getGender());
         outPacket.encodeByte(getSkin());
         outPacket.encodeInt(getFace());

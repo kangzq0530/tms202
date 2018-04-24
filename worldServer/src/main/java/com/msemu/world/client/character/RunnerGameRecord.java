@@ -2,6 +2,7 @@ package com.msemu.world.client.character;
 
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.utils.types.FileTime;
+import com.msemu.core.network.GameClient;
 
 /**
  * Created by Weber on 2018/4/14.
@@ -14,7 +15,7 @@ public class RunnerGameRecord {
     private int runnerPoint;
     private int totalLeft;
 
-    public void encode(OutPacket outPacket) {
+    public void encode(OutPacket<GameClient> outPacket) {
         outPacket.encodeInt(getCharacterID());
         outPacket.encodeInt(getLastScore());
         outPacket.encodeInt(getHighScore());

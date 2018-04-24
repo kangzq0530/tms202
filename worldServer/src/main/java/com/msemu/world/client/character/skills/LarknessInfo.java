@@ -1,6 +1,7 @@
 package com.msemu.world.client.character.skills;
 
 import com.msemu.commons.network.packets.OutPacket;
+import com.msemu.core.network.GameClient;
 
 /**
  * Created by Weber on 2018/4/11.
@@ -20,7 +21,7 @@ public class LarknessInfo {
         this.dark = dark;
     }
 
-    public void encode(OutPacket outPacket) {
+    public void encode(OutPacket<GameClient> outPacket) {
         outPacket.encodeInt(getrLarkness());
         outPacket.encodeInt(gettLarkness());
     }

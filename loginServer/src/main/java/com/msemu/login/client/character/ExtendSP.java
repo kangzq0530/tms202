@@ -2,6 +2,7 @@ package com.msemu.login.client.character;
 
 import com.msemu.commons.database.Schema;
 import com.msemu.commons.network.packets.OutPacket;
+import com.msemu.core.network.LoginClient;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -44,7 +45,7 @@ public class ExtendSP {
     }
 
 
-    public void encode(OutPacket outPacket) {
+    public void encode(OutPacket<LoginClient> outPacket) {
         outPacket.encodeByte(getSpSet().size());
         for(SPSet spSet : getSpSet()) {
             outPacket.encodeByte(spSet.getJobLevel());

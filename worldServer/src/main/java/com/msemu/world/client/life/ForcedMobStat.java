@@ -1,6 +1,7 @@
 package com.msemu.world.client.life;
 
 import com.msemu.commons.network.packets.OutPacket;
+import com.msemu.core.network.GameClient;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,7 +14,7 @@ public class ForcedMobStat {
     private long maxHP, maxMP, exp;
     private int pad, mad, pdr, mdr, acc, eva, pushed, speed, level, userCount;
 
-    public void encode(OutPacket outPacket) {
+    public void encode(OutPacket<GameClient> outPacket) {
         outPacket.encodeLong(getMaxHP());
         outPacket.encodeInt((int) getMaxMP());
         outPacket.encodeInt((int) getExp());

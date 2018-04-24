@@ -2,6 +2,7 @@ package com.msemu.login.client.character;
 
 import com.msemu.commons.database.Schema;
 import com.msemu.commons.network.packets.OutPacket;
+import com.msemu.core.network.LoginClient;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -41,7 +42,7 @@ public class CharacterCard {
         this.level = level;
     }
 
-    public void encode(OutPacket outPacket) {
+    public void encode(OutPacket<LoginClient> outPacket) {
         //CHARACTERCARD::Decode
         for(int i = 0; i < 9; i++) {
             outPacket.encodeInt(getCharacterId());

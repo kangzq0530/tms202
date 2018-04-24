@@ -2,6 +2,7 @@ package com.msemu.world.client.character;
 
 import com.msemu.commons.database.Schema;
 import com.msemu.commons.network.packets.OutPacket;
+import com.msemu.core.network.GameClient;
 import com.msemu.world.constants.MapleJob;
 
 import javax.persistence.*;
@@ -44,7 +45,7 @@ public class AvatarData {
         this.zeroAvatarLook = zeroAvatarLook;
     }
 
-    public void encode(OutPacket outPacket) {
+    public void encode(OutPacket<GameClient> outPacket) {
         characterStat.encode(outPacket);
         avatarLook.encode(outPacket);
         if(MapleJob.is神之子(getCharacterStat().getJob())) {

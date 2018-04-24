@@ -1,6 +1,7 @@
 package com.msemu.world.client.field;
 
 import com.msemu.commons.network.packets.OutPacket;
+import com.msemu.core.network.GameClient;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,7 +15,7 @@ public class FieldCustom {
     private String bgm;
     private int bgFieldID;
 
-    public void encode(OutPacket outPacket) {
+    public void encode(OutPacket<GameClient> outPacket) {
         outPacket.encodeInt(getPartyBonusExpRate());
         outPacket.encodeString(getBgm());
         outPacket.encodeInt(getBgFieldID());

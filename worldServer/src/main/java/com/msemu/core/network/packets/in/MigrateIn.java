@@ -5,15 +5,14 @@ import com.msemu.commons.network.packets.InPacket;
 import com.msemu.commons.utils.DateUtils;
 import com.msemu.core.network.GameClient;
 import com.msemu.core.network.packets.out.Field.SetQuestClear;
-import com.msemu.core.network.packets.out.WvsContext.EventNameTagInfo;
-import com.msemu.core.network.packets.out.WvsContext.HourChanged;
-import com.msemu.core.network.packets.out.WvsContext.RequestEventList;
-import com.msemu.core.network.packets.out.WvsContext.SetTamingMobInfo;
+import com.msemu.core.network.packets.out.FuncKeyMappedMan.FuncKeyMappedInit;
+import com.msemu.core.network.packets.out.WvsContext.*;
 import com.msemu.world.World;
 import com.msemu.world.channel.Channel;
 import com.msemu.world.client.Account;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.field.Field;
+import com.msemu.world.constants.MapleJob;
 
 /**
  * Created by Weber on 2018/4/22.
@@ -51,8 +50,8 @@ public class MigrateIn extends InPacket<GameClient> {
         }
 
         // TODO 這邊可能有雙登問題
-        Character character = channel.getTransferAndRemoveByCharacterId(characterId);
-        if (character == null) {
+        Character chr = channel.getTransferAndRemoveByCharacterId(characterId);
+        if (chr == null) {
             getClient().close();
             return;
         }
@@ -60,23 +59,43 @@ public class MigrateIn extends InPacket<GameClient> {
         //TODO 確認登入伺服器跟現在的IP一樣
 
         if (getClient().compareAndSetState(ClientState.CONNECTED, ClientState.AUTHED)) {
-            Account account = Account.findById(character.getAccId());
+            Account account = Account.findById(chr.getAccId());
             getClient().setAccount(account);
             getClient().setChannel(channel);
-            getClient().setCharacter(character);
-            getClient().getChannelInstance().addCharacter(character);
+            getClient().setCharacter(chr);
+            getClient().getChannelInstance().addCharacter(chr);
             getClient().getCharacter().setOnline(true);
             getClient().write(new EventNameTagInfo());
             getClient().write(new RequestEventList(true));
-            character.renewBulletIDForAttack();
-            Field field = channel.getField(character.getFieldID() <= 0 ? 100000000 : character.getFieldID());
-            character.warp(field);
+            chr.renewBulletIDForAttack();
+            Field field = channel.getField(chr.getFieldID() <= 0 ? 100000000 : chr.getFieldID());
+            chr.warp(field);
+            // TODO  c.announce(CCashShop.onAuthenCodeChanged()); // Enable CashShop
             getClient().write(new SetQuestClear());
             getClient().write(new HourChanged(DateUtils.getCurrentDayOfWeek()));
-            getClient().write(new SetTamingMobInfo(character, false));
+            getClient().write(new SetTamingMobInfo(chr, false));
             //0x020F:
+            getClient().write(new ChangeSkillRecordResult(chr.getSkills(), true,
+                    false, false, false));
 
+            // TODO update VSkillRecord
+            getClient().write(new ForcedStatReset());
 
+            //TODO c.announce(CWvsContext.broadcastMsg(channelServer.getServerMessage(player.getWorld())));
+            // GM hide
+            /**
+             *         if (player.getQuestNoAdd(MapleQuest.getInstance(GameConstants.墜飾欄)) != null
+             && player.getQuestNoAdd(MapleQuest.getInstance(GameConstants.墜飾欄)).getCustomData() != null
+             && "0".equals(player.getQuestNoAdd(MapleQuest.getInstance(GameConstants.墜飾欄)).getCustomData())) {//更新永久墜飾欄
+             c.announce(CWvsContext.updatePendantSlot(0));
+             }
+             */
+            if (MapleJob.is幻獸師(chr.getJob())) {
+                // ??
+                getClient().write(new FuncKeyMappedInit(chr.getFuncKeyMap()));
+            } else {
+                getClient().write(new FuncKeyMappedInit(chr.getFuncKeyMap()));
+            }
 
         }
 
