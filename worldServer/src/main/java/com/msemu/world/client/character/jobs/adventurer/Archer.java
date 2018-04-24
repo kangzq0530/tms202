@@ -1,6 +1,6 @@
 package com.msemu.world.client.character.jobs.adventurer;
 
-import com.msemu.commons.data.templates.Foothold;
+import com.msemu.commons.data.templates.field.Foothold;
 import com.msemu.commons.data.templates.skill.SkillInfo;
 import com.msemu.commons.network.packets.InPacket;
 import com.msemu.commons.utils.Rand;
@@ -21,7 +21,7 @@ import com.msemu.world.client.life.Summon;
 import com.msemu.world.client.life.skills.MobTemporaryStat;
 import com.msemu.world.constants.MapleJob;
 import com.msemu.world.data.SkillData;
-import com.msemu.world.enums.MobStat;
+import com.msemu.commons.data.enums.MobStat;
 import com.msemu.world.enums.MoveAbility;
 import com.msemu.world.enums.Stat;
 import com.msemu.core.network.packets.out.WvsContext.StatChanged;

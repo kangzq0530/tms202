@@ -1,4 +1,4 @@
-package com.msemu.commons.data.templates;
+package com.msemu.commons.data.templates.field;
 
 import com.msemu.commons.utils.types.Position;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class Foothold {
+public class Foothold implements Comparable<Foothold> {
     protected int id;
     protected int layerId;
     protected int groupId;
@@ -40,6 +40,7 @@ public class Foothold {
         this.layerId = layerId;
         this.groupId = groupId;
     }
+
     public Foothold() {
     }
 
@@ -54,6 +55,18 @@ public class Foothold {
         return "Id: " + getId() + ", Start = " + new Position(getX1(), getY1()) + ", End = " + new Position(getX2(), getY2());
     }
 
+    public boolean isWall() {
+        return x1 == x2;
+    }
+
+    public boolean isPlateform() {
+        return y1 == y2;
+    }
+
+    public boolean isSlope() {
+        return y1 != y2;
+    }
+
     public int getYFromX(int x) {
         // interpolate between the two foothold ends for the y value below pos.x
         int x1 = getX1();
@@ -61,5 +74,27 @@ public class Foothold {
         x = x - x1;
         double perc = (double) x / (double) x2;
         return (int) (getY1() + (perc * (getY2() - getY1())));
+    }
+
+    @Override
+    public int compareTo(Foothold o) {
+        Foothold other = o;
+        if (y2 < other.getY1()) {
+            return -1;
+        } else if (y1 > other.getY2()) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Foothold)) {
+            return false;
+        }
+        final Foothold oth = (Foothold) o;
+        return oth.getY1() == getY1() && oth.getY2() == getY2()
+                && oth.getX1() == getX1() && oth.getX2() == getX2() && getId() == oth.getId();
     }
 }

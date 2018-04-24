@@ -1,12 +1,11 @@
 package com.msemu.world.client.life.skills;
 
 import com.msemu.commons.data.templates.skill.MobSkillInfo;
-import com.msemu.commons.database.Schema;
 import com.msemu.world.client.character.skills.Option;
 import com.msemu.world.client.life.Mob;
 import com.msemu.world.data.SkillData;
 import com.msemu.world.enums.MobSkillID;
-import com.msemu.world.enums.MobStat;
+import com.msemu.commons.data.enums.MobStat;
 import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;

@@ -1,4 +1,4 @@
-package com.msemu.world.enums;
+package com.msemu.commons.data.enums;
 
 /**
  * Created by Weber on 2018/4/12.

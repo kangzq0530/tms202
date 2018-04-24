@@ -1,7 +1,7 @@
 package com.msemu.world.client.field;
 
-import com.msemu.commons.data.FieldTemplate;
-import com.msemu.commons.data.templates.Foothold;
+import com.msemu.commons.data.templates.field.FieldTemplate;
+import com.msemu.commons.data.templates.field.Foothold;
 import com.msemu.commons.data.templates.field.Portal;
 import com.msemu.commons.data.templates.skill.SkillInfo;
 import com.msemu.commons.network.packets.OutPacket;
@@ -34,9 +34,7 @@ import com.msemu.world.enums.ScriptType;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.awt.*;
 import java.util.*;
-import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
@@ -47,48 +45,32 @@ import static com.msemu.commons.data.enums.SkillStat.time;
 /**
  * Created by Weber on 2018/4/11.
  */
-public class Field extends FieldTemplate{
-    @Getter
-    @Setter
-    private Rectangle rect;
+public class Field {
     @Getter
     @Setter
     private long uniqueId;
-
     @Getter
-    @Setter
-    private Set<Portal> portals;
-
+    private final List<Life> lifes;
     @Getter
-    @Setter
-    private List<Life> lifes;
+    private final List<Character> chars;
     @Getter
-    @Setter
-    private List<Character> chars;
+    private final Map<Life, Character> lifeToControllers;
     @Getter
-    @Setter
-    private Map<Life, Character> lifeToControllers;
-    @Getter
-    @Setter
-    private Map<Life, ScheduledFuture> lifeSchedules;
-    @Getter
-    @Setter
-    private String onFirstUserEnter = "", onUserEnter = "";
-    @Getter
-    @Setter
-    private int fixedMobCapacity;
+    private final Map<Life, ScheduledFuture> lifeSchedules;
     @Setter
     private AtomicInteger objectIDCounter = new AtomicInteger(1000000);
     @Getter
+    private final FieldTemplate fieldData;
+    @Getter
     @Setter
-    private boolean userFirstEnter = false;
+    private FieldCustom fieldCustom;
+    @Getter
+    @Setter
+    private boolean isUserFirstEnter;
 
-    public Field(int fieldID, long uniqueId) {
-        this.id = fieldID;
+    public Field(long uniqueId, FieldTemplate template) {
         this.uniqueId = uniqueId;
-        this.rect = new Rectangle(800, 600);
-        this.portals = new HashSet<>();
-        this.footholds = new HashSet<>();
+        this.fieldData = template;
         this.lifes = new ArrayList<>();
         this.chars = new ArrayList<>();
         this.lifeToControllers = new HashMap<>();
@@ -96,15 +78,31 @@ public class Field extends FieldTemplate{
     }
 
     public int getWidth() {
-        return (int) getRect().getWidth();
+        return getFieldData().getRect().getWidth();
     }
 
     public int getHeight() {
-        return (int) getRect().getHeight();
+        return getFieldData().getRect().getHeight();
     }
 
-    public void addPortal(Portal portal) {
-        getPortals().add(portal);
+    public int getId() {
+        return getFieldData().getId();
+    }
+
+    public Set<Portal> getPortals() {
+        return getFieldData().getPortals();
+    }
+
+    public int getMobRate() {
+        return getFieldData().getMobRate();
+    }
+
+    public String getOnUserEnter() {
+        return getFieldData().getOnUserEnter();
+    }
+
+    public String getOnFirstUserEnter() {
+        return getFieldData().getOnFirstUserEnter();
     }
 
     /**
@@ -138,32 +136,7 @@ public class Field extends FieldTemplate{
      * @see Foothold
      */
     public Foothold findFootHoldBelow(Position pos) {
-        Set<Foothold> footholds = getFootholds().stream().filter(fh -> fh.getX1() <= pos.getX() && fh.getX2() >= pos.getX()).collect(Collectors.toSet());
-        Foothold res = null;
-        int lastY = Integer.MAX_VALUE;
-        for (Foothold fh : footholds) {
-            if (res == null) {
-                res = fh;
-                lastY = fh.getYFromX(pos.getX());
-            } else {
-                int y = fh.getYFromX(pos.getX());
-                if (y < lastY && y >= pos.getY()) {
-                    res = fh;
-                    lastY = y;
-                }
-            }
-        }
-        return res;
-    }
-
-    /**
-     * Add a Foothold object to this field
-     *
-     * @param foothold a Foothold object that will be added.
-     * @see Foothold
-     */
-    public void addFoothold(Foothold foothold) {
-        getFootholds().add(foothold);
+        return getFieldData().getFootholdTree().findBelow(pos, false);
     }
 
     /**
@@ -267,7 +240,7 @@ public class Field extends FieldTemplate{
     }
 
     public Foothold getFootholdById(int fh) {
-        return getFootholds().stream().filter(f -> f.getId() == fh).findFirst().orElse(null);
+        return getFieldData().getFootholdTree().getFootholds().stream().filter(f -> f.getId() == fh).findFirst().orElse(null);
     }
 
     public List<Character> getCharacters() {
@@ -556,5 +529,10 @@ public class Field extends FieldTemplate{
         }
         String script = getOnUserEnter();
         chr.getScriptManager().startScript(getId(), script, ScriptType.FIELD);
+    }
+
+
+    public void init() {
+
     }
 }

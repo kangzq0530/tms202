@@ -5,7 +5,6 @@ import com.msemu.commons.reload.IReloadable;
 import com.msemu.commons.reload.Reloadable;
 import com.msemu.core.startup.StartupComponent;
 import com.msemu.world.client.life.Npc;
-import com.msemu.world.client.life.skills.MobSkillInfo;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

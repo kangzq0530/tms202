@@ -7,7 +7,7 @@ import com.msemu.world.client.character.skills.Option;
 import com.msemu.world.client.character.skills.Skill;
 import com.msemu.world.client.life.Mob;
 import com.msemu.world.data.SkillData;
-import com.msemu.world.enums.MobStat;
+import com.msemu.commons.data.enums.MobStat;
 import com.msemu.core.network.packets.out.MobPool.MobStatReset;
 import com.msemu.core.network.packets.out.MobPool.MobStatSet;
 
@@ -17,7 +17,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.stream.Collectors;
 
 import static com.msemu.commons.data.enums.SkillStat.*;
-import static com.msemu.world.enums.MobStat.*;
+import static com.msemu.commons.data.enums.MobStat.*;
 
 /**
  * Created by Weber on 2018/4/12.

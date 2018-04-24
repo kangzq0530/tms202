@@ -1,19 +1,18 @@
 package com.msemu.world.data;
 
-import com.msemu.commons.data.FieldTemplate;
+import com.msemu.commons.data.loader.wz.FieldTemplateLoader;
+import com.msemu.commons.data.templates.field.FieldTemplate;
 import com.msemu.commons.reload.IReloadable;
 import com.msemu.commons.reload.Reloadable;
+import com.msemu.commons.wz.WzManager;
 import com.msemu.core.startup.StartupComponent;
 import com.msemu.world.client.field.Field;
 import com.msemu.world.client.life.DropInfo;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -25,10 +24,8 @@ import java.util.concurrent.atomic.AtomicReference;
 public class FieldData implements IReloadable {
     private static final Logger log = LoggerFactory.getLogger(QuestData.class);
 
-    private static List<FieldTemplate> fields = new ArrayList<>();
-
     @Getter
-    private final Map<Integer, DropInfo> fieldTemplates = new HashMap<>();
+    private static final HashMap<Integer, FieldTemplate> fieldTemplates = new HashMap<>();
 
     private static final AtomicReference<FieldData> instance = new AtomicReference<>();
 
@@ -52,11 +49,13 @@ public class FieldData implements IReloadable {
     }
 
     public void load() {
-        log.info("{} fieldTemplates laoded", this.fieldTemplates.size());
+        WzManager wzManager = new WorldWzManager();
+        getFieldTemplates().putAll(new FieldTemplateLoader().load(wzManager));
+        log.info("{} fieldTemplates loaded", getFieldTemplates().size());
     }
 
     public void clear() {
-        this.fieldTemplates.clear();
+        getFieldTemplates().clear();
     }
 
     @Override
@@ -65,7 +64,10 @@ public class FieldData implements IReloadable {
         load();
     }
 
-    public Field getFieldFromTemplate(int id) {
-        throw new NotImplementedException();
+    public Field getFieldFromTemplate(int templateId) {
+        FieldTemplate template = getFieldTemplates().get(templateId);
+        Field field = new Field(templateId, template);
+        field.init();
+        return field;
     }
 }

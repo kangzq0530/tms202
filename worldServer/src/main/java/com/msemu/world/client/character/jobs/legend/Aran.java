@@ -17,7 +17,7 @@ import com.msemu.world.client.life.Mob;
 import com.msemu.world.client.life.skills.MobTemporaryStat;
 import com.msemu.world.data.SkillData;
 import com.msemu.world.enums.ChatMsgColor;
-import com.msemu.world.enums.MobStat;
+import com.msemu.commons.data.enums.MobStat;
 import com.msemu.core.network.packets.out.WvsContext.ModCombo;
 import com.msemu.core.network.packets.out.WvsContext.TemporaryStatSet;
 

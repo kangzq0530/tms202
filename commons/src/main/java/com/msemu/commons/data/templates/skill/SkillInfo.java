@@ -1,5 +1,6 @@
 package com.msemu.commons.data.templates.skill;
 
+import com.msemu.commons.data.enums.Element;
 import com.msemu.commons.data.enums.SkillStat;
 import com.msemu.commons.data.templates.skill.ReqSkill;
 import com.msemu.commons.utils.StringUtils;
@@ -72,7 +73,7 @@ public class SkillInfo {
 
     @Getter
     @Setter
-    private String elemAttr;
+    private Element elemAttr;
 
     @Getter
     private List<Integer> psdSkills = new ArrayList<>();

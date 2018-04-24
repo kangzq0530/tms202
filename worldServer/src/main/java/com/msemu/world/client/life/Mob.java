@@ -1,21 +1,22 @@
 package com.msemu.world.client.life;
 
 
-import com.msemu.commons.data.templates.Foothold;
+import com.msemu.commons.data.templates.MobTemplate;
+import com.msemu.commons.data.templates.field.Foothold;
 import com.msemu.commons.thread.EventManager;
 import com.msemu.commons.utils.types.Position;
 import com.msemu.commons.utils.types.Tuple;
-import com.msemu.world.client.character.ExpIncreaseInfo;
-import com.msemu.world.client.character.Character;
-import com.msemu.world.client.field.Field;
-import com.msemu.world.client.field.effect.MobHPTagFieldEffect;
-import com.msemu.world.client.life.skills.ForcedMobStat;
-import com.msemu.world.client.life.skills.MobSkill;
-import com.msemu.world.client.life.skills.MobTemporaryStat;
-import com.msemu.world.enums.DeathType;
 import com.msemu.core.network.packets.out.Field.FieldEffect;
 import com.msemu.core.network.packets.out.MobPool.MobHpIndicator;
 import com.msemu.core.network.packets.out.MobPool.MobLeaveField;
+import com.msemu.world.client.character.Character;
+import com.msemu.world.client.character.ExpIncreaseInfo;
+import com.msemu.world.client.field.Field;
+import com.msemu.world.client.field.effect.MobHPTagFieldEffect;
+import com.msemu.world.client.life.skills.MobSkill;
+import com.msemu.world.client.life.skills.MobTemporaryStat;
+import com.msemu.world.enums.DeathType;
+import lombok.Getter;
 
 import java.util.*;
 
@@ -105,10 +106,12 @@ public class Mob extends Life {
     private Set<DropInfo> drops = new HashSet<>();
     private List<MobSkill> skills = new ArrayList<>();
     private Set<Integer> quests = new HashSet<>();
+    @Getter
+    private final MobTemplate template;
 
-    public Mob(int templateId, int objectId) {
+    public Mob(int objectId, MobTemplate template) {
         super(objectId);
-        super.templateId = templateId;
+        this.template = template;
         forcedMobStat = new ForcedMobStat();
         temporaryStat = new MobTemporaryStat(this);
         scale = 100;
@@ -116,7 +119,7 @@ public class Mob extends Life {
     }
 
     public Mob deepCopy() {
-        Mob copy = new Mob(getTemplateId(), getObjectId());
+        Mob copy = new Mob(getObjectId(), getTemplate());
         // start life
         copy.setLifeType(getLifeType());
         copy.setTemplateId(getTemplateId());
@@ -1186,5 +1189,9 @@ public class Mob extends Life {
 
     public void addQuest(int questID) {
         getQuests().add(questID);
+    }
+
+    public void init() {
+
     }
 }

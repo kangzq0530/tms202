@@ -59,8 +59,8 @@ public class Channel {
         return getFields().stream().filter(field -> field.getId() == id).findFirst().orElse(createAndReturnNewField(id));
     }
 
-    private Field createAndReturnNewField(int id) {
-        Field newField = FieldData.getInstance().getFieldFromTemplate(id);
+    private Field createAndReturnNewField(int templateId) {
+        Field newField = FieldData.getInstance().getFieldFromTemplate(templateId);
         getFields().add(newField);
         return newField;
     }

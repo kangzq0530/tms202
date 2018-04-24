@@ -5,10 +5,14 @@ import com.msemu.commons.utils.types.Rect;
 import com.msemu.world.client.field.Field;
 import com.msemu.world.data.MobData;
 import com.msemu.world.data.NpcData;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Created by Weber on 2018/4/11.
  */
+@Getter
+@Setter
 public class Life {
     private Position position;
     private int objectId;
