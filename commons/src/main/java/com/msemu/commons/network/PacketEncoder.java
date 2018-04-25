@@ -25,18 +25,17 @@ public class PacketEncoder<TClient extends Client<TClient>> extends MessageToByt
             if (CoreConfig.SHOW_PACKET ) {
                 log.warn("[Out]\t|" + packet);
             }
-            byte[] iv = client.getSiv();
-            byte[] head = cipher.getSendHeader(data.length, iv);
             client.acquireEncoderState();
             try {
+                byte[] iv = client.getSiv();
+                byte[] head = cipher.getSendHeader(data.length, iv);
                 cipher.crypt(data, iv);
                 iv = cipher.getNewIv(iv);
                 client.setSiv(iv);
+                byteBuf.writeBytes(head);
             } finally {
                 client.releaseEncodeState();
             }
-
-            byteBuf.writeBytes(head);
             byteBuf.writeBytes(data);
         } else {
             byteBuf.writeBytes(data);

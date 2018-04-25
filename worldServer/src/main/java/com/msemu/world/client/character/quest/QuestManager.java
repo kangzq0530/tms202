@@ -51,6 +51,10 @@ public class QuestManager {
     @Setter
     private Character character;
 
+    public QuestManager() {
+
+    }
+
     public QuestManager(Character chr) {
         this.character = chr;
     }

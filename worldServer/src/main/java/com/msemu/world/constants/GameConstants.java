@@ -78,4 +78,8 @@ public class GameConstants {
             charExp[i] = (long) (charExp[i - 1] * 1.01);
         }
     }
+
+    public static boolean isBanBanBaseField(int dwFieldID) {
+        return (dwFieldID / 0xA) == 10520011 || (dwFieldID / 0xA) == 10520051 || dwFieldID == 105200519;
+    }
 }

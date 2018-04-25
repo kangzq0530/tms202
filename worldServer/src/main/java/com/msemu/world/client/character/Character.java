@@ -284,18 +284,32 @@ public class Character {
     private int chocoCount;
 
     @Transient
+    @Getter
+    @Setter
     private int activeEffectItemID;
     @Transient
+    @Getter
+    @Setter
     private int monkeyEffectItemID;
     @Transient
+    @Getter
+    @Setter
     private int completedSetItemID;
     @Transient
+    @Getter
+    @Setter
     private short fieldSeatID;
     @Transient
+    @Getter
+    @Setter
     private int portableChairID;
     @Transient
+    @Getter
+    @Setter
     private String portableChairMsg;
     @Transient
+    @Getter
+    @Setter
     private short foothold;
     @Transient
     @Getter
@@ -310,44 +324,84 @@ public class Character {
     @Setter
     private int tamingMobFatigue;
     @Transient
+    @Getter
+    @Setter
     private MiniRoom miniRoom;
     @Transient
+    @Getter
+    @Setter
     private String ADBoardRemoteMsg;
     @Transient
+    @Getter
+    @Setter
     private boolean inCouple;
     @Transient
+    @Getter
+    @Setter
     private CoupleRecord couple;
     @Transient
-    private FriendshipRingRecord friendshipRingRecord;
+    @Getter
+    @Setter
+    private List<FriendshipRingRecord> friendshipRingRecord;
     @Transient
+    @Getter
+    @Setter
     private int evanDragonGlide;
     @Transient
+    @Getter
+    @Setter
     private int kaiserMorphRotateHueExtern;
     @Transient
+    @Getter
+    @Setter
     private int kaiserMorphPrimiumBlack;
     @Transient
+    @Getter
+    @Setter
     private int kaiserMorphRotateHueInnner;
     @Transient
+    @Getter
+    @Setter
     private int makingMeisterSkillEff;
     @Transient
+    @Getter
+    @Setter
     private FarmUserInfo farmUserInfo;
     @Transient
+    @Getter
+    @Setter
     private int customizeEffect;
     @Transient
+    @Getter
+    @Setter
     private String customizeEffectMsg;
     @Transient
+    @Getter
+    @Setter
     private byte soulEffect;
     @Transient
-    private FreezeHotEventInfo freezeHotEventInfo;
+    @Getter
+    @Setter
+    private FreezeHotEventInfo freezeHotEventInfo = new FreezeHotEventInfo();
     @Transient
+    @Getter
+    @Setter
     private int eventBestFriendAID;
     @Transient
+    @Getter
+    @Setter
     private int mesoChairCount;
     @Transient
+    @Getter
+    @Setter
     private boolean beastFormWingOn;
     @Transient
+    @Getter
+    @Setter
     private int activeNickItemID;
     @Transient
+    @Getter
+    @Setter
     private int mechanicHue;
     @Transient
     private boolean online;
@@ -369,6 +423,19 @@ public class Character {
     public Character() {
         avatarData = new AvatarData();
         avatarData.setAvatarLook(new AvatarLook());
+        stolenSkills = new ArrayList<>();
+        chosenSkills = new ArrayList<>();
+        questManager = new QuestManager(this);
+        itemPots = new ArrayList<>();
+        friends = new ArrayList<>();
+        expConsumeItems = new ArrayList<>();
+        skills = new ArrayList<>();
+        temporaryStatManager = new TemporaryStatManager(this);
+        pets = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            pets.add(new Pet(-1));
+        }
+        setFieldInstanceType(FieldInstanceType.CHANNEL);
     }
 
 
@@ -827,9 +894,9 @@ public class Character {
      */
     public void warp(Field toField, Portal portal, boolean characterData) {
         TemporaryStatManager tsm = getTemporaryStatManager();
-        for (AffectedArea aa : tsm.getAffectedAreas()) {
-            tsm.removeStatsBySkill(aa.getSkillID());
-        }
+//        for (AffectedArea aa : tsm.getAffectedAreas()) {
+//            tsm.removeStatsBySkill(aa.getSkillID());
+//        }
         if (getField() != null) {
             getField().removeCharacter(this);
         }
@@ -960,7 +1027,7 @@ public class Character {
 
         if (mask.isInMask(DBChar.AdminShopCount)) {
             // ???
-            outPacket.encodeFT(new FileTime(-2));
+            outPacket.encodeFT(FileTime.getFileTimeFromType(FileTime.Type.ZERO_TIME));
         }
         if (mask.isInMask(DBChar.ItemSlotEquip)) {
             outPacket.encodeByte(0); // ?
@@ -1680,9 +1747,19 @@ public class Character {
         Root<Character> root = query.from(Character.class);
         query.select(root).where(builder.equal(root.get("id"), id));
         Character result = session.createQuery(query).getSingleResult();
-        session.clear();
+        session.close();
         return result;
     }
+
+    public int getTotalChuc() {
+        return getInventoryByType(InvType.EQUIPPED).getItems().stream().mapToInt(i -> ((Equip) i).getChuc()).sum();
+    }
+
+    public boolean hasFriendshipItem() {
+        // TODO
+        return false;
+    }
+
 }
 
 

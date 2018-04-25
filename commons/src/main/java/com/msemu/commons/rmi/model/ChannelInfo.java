@@ -40,7 +40,7 @@ public class ChannelInfo implements Serializable {
 
     public int getChannelLoading() {
         if (getMaxConnectedClients() > 0)
-            return getConnectedClients() * Integer.MAX_VALUE / (getMaxConnectedClients());
+            return getConnectedClients() * 1200 / (getMaxConnectedClients()) + 1;
         else
             return 0;
     }

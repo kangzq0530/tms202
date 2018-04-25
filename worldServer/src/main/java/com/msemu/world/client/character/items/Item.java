@@ -155,7 +155,7 @@ public class Item implements Serializable {
         outPacket.encodeByte(getType().getValue());
         // GW_ItemSlotBase
         outPacket.encodeInt(getItemId());
-        boolean hasSN = getCashItemSerialNumber() > 0;
+        boolean hasSN = getCashItemSerialNumber() > 0 && !ItemConstants.類型.結婚戒指(getItemId()) && getItemId() / 10000 != 166;
         outPacket.encodeByte(hasSN);
         if (hasSN) {
             outPacket.encodeLong(getId());
@@ -165,7 +165,7 @@ public class Item implements Serializable {
         if (getType() == ITEM) {
             outPacket.encodeShort(getQuantity()); // nQuantity
             outPacket.encodeString(getOwner()); // sOwner
-            outPacket.encodeShort(0); // flag
+            outPacket.encodeShort(0); // TODO flag
             if (ItemConstants.類型.可充值道具(getItemId()) || ItemConstants.類型.isFamiliar(getItemId()) ||
                     getItemId() / 10000 == 302) {
                 outPacket.encodeLong(getInventoryId());

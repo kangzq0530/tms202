@@ -98,17 +98,15 @@ public class WorldServerRMI extends UnicastRemoteObject implements IWorldServerR
     }
 
     @Override
-    public void addTransfer(int worldId, int channelId, int accountId, int characterId) throws RemoteException {
+    public void addTransfer(int channelId, int accountId, int characterId) throws RemoteException {
 
         World world = World.getInstance();
 
         kickByAccountId(accountId);
 
-        if (world.getWorldId() == worldId) {
-            Channel channel = world.getChannels().stream().filter(ch->ch.getChannelId()==channelId).findFirst().orElse(null);
-            if(channel != null) {
-                channel.addTransfer(accountId, characterId);
-            }
+        Channel channel = world.getChannels().stream().filter(ch->ch.getChannelId()==channelId).findFirst().orElse(null);
+        if(channel != null) {
+            channel.addTransfer(accountId, characterId);
         }
 
     }

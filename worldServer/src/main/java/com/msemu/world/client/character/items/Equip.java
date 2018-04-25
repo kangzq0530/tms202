@@ -8,6 +8,7 @@ import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.utils.Rand;
 import com.msemu.commons.utils.types.FileTime;
 import com.msemu.core.network.GameClient;
+import com.msemu.world.constants.ItemConstants;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -374,9 +375,7 @@ public class Equip extends Item {
         this.vSlot = t.getVSlot();
         this.fixedGrade = t.getFixedGrade();
         this.options = new ArrayList<>();
-        t.getOptions().values().forEach(option -> {
-            this.options.add(option.getOption());
-        });
+        t.getOptions().forEach((index, option) -> this.options.add(option.getOption()));
         this.specialGrade = t.getSpecialGrade();
         this.fixedPotential = t.isFixedPotential();
         this.tradeBlock = t.isTradeBlock();
@@ -646,9 +645,12 @@ public class Equip extends Item {
         for (int i = 0; i < 3; i++) {
             outPacket.encodeShort(getSockets().get(i)); // sockets 0 through 2 (-1 = none, 0 = empty, >0 = filled
         }
+        boolean hasUniqueId = getSerialNumber() > 0 && !ItemConstants.類型.結婚戒指(getItemId()) && getItemId() / 10000 != 166;
 
         // uniqueId
-        outPacket.encodeLong(getId()); // ?
+        if (!hasUniqueId) {
+            outPacket.encodeLong(getId()); // ?
+        }
         // // ftEquipped
         outPacket.encodeFT(FileTime.getFileTimeFromType(FileTime.Type.ZERO_TIME));
         // nPrevBonusExpRate

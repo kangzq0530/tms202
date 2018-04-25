@@ -19,7 +19,7 @@ public class Npc extends Life {
     private boolean enabled = true;
     private int presentItemID;
     private byte presentItemState;
-    private int presentItemTime;
+    private int presentItemTime = -1;
     private int noticeBoardType;
     private int noticeBoardValue;
     private int alpha; // if hideToLocalUser is true
@@ -41,7 +41,6 @@ public class Npc extends Life {
         outPacket.encodeShort(getRx0()); // rgHorz.low
         outPacket.encodeShort(getRx1()); // rgHorz.high
         outPacket.encodeByte(isEnabled());
-        outPacket.encodeInt(0); // ?
         outPacket.encodeInt(getPresentItemID());
         outPacket.encodeByte(getPresentItemState());
         outPacket.encodeInt(getPresentItemTime());
@@ -50,6 +49,7 @@ public class Npc extends Life {
             outPacket.encodeInt(getNoticeBoardValue());
         }
         outPacket.encodeInt(getAlpha());
+        outPacket.encodeInt(0);
         outPacket.encodeString(getLocalRepeatEffect());
         ScreenInfo si = getScreenInfo();
         outPacket.encodeByte(si != null);

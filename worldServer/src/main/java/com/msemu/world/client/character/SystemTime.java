@@ -16,9 +16,9 @@ public class SystemTime {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
-    @Column(name = "yr")
+    @Column(name = "year")
     private int year;
-    @Column(name = "mnth")
+    @Column(name = "month")
     private int month;
 
     public SystemTime(){}

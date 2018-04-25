@@ -50,7 +50,7 @@ public class MigrateIn extends InPacket<GameClient> {
         }
 
         // TODO 這邊可能有雙登問題
-        Character chr = channel.getTransferAndRemoveByCharacterId(characterId);
+        Character chr = channel.getTransferIdAndRemoveByCharacterId(characterId);
         if (chr == null) {
             getClient().close();
             return;
@@ -59,6 +59,7 @@ public class MigrateIn extends InPacket<GameClient> {
         //TODO 確認登入伺服器跟現在的IP一樣
 
         if (getClient().compareAndSetState(ClientState.CONNECTED, ClientState.AUTHED)) {
+            chr.setClient(getClient());
             Account account = Account.findById(chr.getAccId());
             getClient().setAccount(account);
             getClient().setChannel(channel);
@@ -69,7 +70,7 @@ public class MigrateIn extends InPacket<GameClient> {
             getClient().write(new RequestEventList(true));
             chr.renewBulletIDForAttack();
             Field field = channel.getField(chr.getFieldID() <= 0 ? 100000000 : chr.getFieldID());
-            chr.warp(field);
+            chr.warp(field, true);
             // TODO  c.announce(CCashShop.onAuthenCodeChanged()); // Enable CashShop
             getClient().write(new SetQuestClear());
             getClient().write(new HourChanged(DateUtils.getCurrentDayOfWeek()));

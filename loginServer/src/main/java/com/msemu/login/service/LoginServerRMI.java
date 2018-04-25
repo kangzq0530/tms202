@@ -70,6 +70,7 @@ public class LoginServerRMI extends UnicastRemoteObject implements ILoginServerR
         }
         WorldInfo info = new WorldInfo();
         info.update(rmi, worldInfo);
+        info.setConnection(rmi);
         worlds.put(info.getWorldId(), info);
         log.info("世界伺服器 - {}({}) 連線成功", worldInfo.getName(), worldInfo.getWorldId());
         return WorldRegisterResult.SUCCESS;
@@ -80,6 +81,7 @@ public class LoginServerRMI extends UnicastRemoteObject implements ILoginServerR
         if (!worlds.containsKey(worldInfo.getWorldId()))
             return;
         worlds.get(worldInfo.getWorldId()).update(rmi, worldInfo);
+        worlds.get(worldInfo.getWorldId()).setConnection(rmi);
     }
 
     public List<WorldInfo> getWorlds() {

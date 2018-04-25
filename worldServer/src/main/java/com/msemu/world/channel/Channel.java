@@ -76,13 +76,12 @@ public class Channel {
     }
 
     @Synchronized
-    public Character getTransferAndRemoveByCharacterId(int characterId) {
-        Character ret = getTransferList().stream()
-                .filter(chr -> chr.getId() == characterId)
-                .findFirst()
-                .orElse(null);
-        getTransfers().remove(ret.getAccId());
-        return ret;
+    public Character getTransferIdAndRemoveByCharacterId(int characterId) {
+        Character chr = getTransferList().stream()
+                .filter(c -> c.getId() == characterId)
+                .findFirst().orElse(null);
+        getTransfers().remove(chr.getAccId());
+        return chr;
     }
 
     public List<Character> getCharactersList() {
@@ -122,10 +121,10 @@ public class Channel {
 
     @Synchronized
     public void addTransfer(int accountId, int characterId) {
-        Character character = Character.findById(characterId);
-        if (character != null) {
-            getTransfers().put(character.getAccId(), character);
-        }
+        Character chr = Character.findById(characterId);
+        if(chr == null)
+            return;
+        getTransfers().put(accountId, chr);
     }
 
     public void addCharacter(Character chr) {

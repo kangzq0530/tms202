@@ -10,9 +10,11 @@ import com.msemu.core.network.packets.out.Login.SelectCharacterResult;
 import com.msemu.login.LoginServer;
 import com.msemu.login.client.Account;
 import com.msemu.login.enums.LoginResultType;
+import org.slf4j.LoggerFactory;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.rmi.RemoteException;
 
 /**
  * Created by Weber on 2018/4/22.
@@ -56,9 +58,11 @@ public class SelectCharacter extends InPacket<LoginClient> {
             return;
         }
         try {
+            worldInfo.getConnection().addTransfer(channelInfo.getChannel(), account.getId(), characterID);
             InetAddress hostAddress = InetAddress.getByName(channelInfo.getHost());
-            getClient().write(new SelectCharacterResult(LoginResultType.LoginSuccess, new byte[]{(byte)192, (byte)168, (byte)156, 1}, channelInfo.getPort(), 0));
-        } catch (UnknownHostException e) {
+            getClient().write(new SelectCharacterResult(LoginResultType.LoginSuccess, new byte[]{(byte) 192, (byte) 168, (byte) 156, 1}, channelInfo.getPort(), characterID));
+        } catch (UnknownHostException | RemoteException e) {
+            LoggerFactory.getLogger(SelectCharacter.class).error("QQ", e);
             getClient().write(new SelectCharacterResult(LoginResultType.ServerError, new byte[]{0, 0, 0, 0}, (short) 0, 0));
         }
     }

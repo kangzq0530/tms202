@@ -14,6 +14,6 @@ public interface IWorldServerRMI extends Remote {
 
     boolean kickByAccountId(int accountId) throws RemoteException;
 
-    void addTransfer(int worldId, int channelId, int accountId, int character) throws RemoteException;
+    void addTransfer(int channelId, int accountId, int characterId) throws RemoteException;
 
 }
