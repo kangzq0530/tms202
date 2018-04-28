@@ -376,6 +376,9 @@ public class Equip extends Item {
         t.getOptions().values().forEach(option -> {
             this.options.add(option.getOption());
         });
+        while(this.options.size() <  7) {
+            this.options.add(0);
+        }
         this.specialGrade = t.getSpecialGrade();
         this.fixedPotential = t.isFixedPotential();
         this.tradeBlock = t.isTradeBlock();

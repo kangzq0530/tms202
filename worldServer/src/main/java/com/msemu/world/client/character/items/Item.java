@@ -161,7 +161,7 @@ public class Item implements Serializable {
             outPacket.encodeLong(getId());
         }
         getDateExpire().encode(outPacket);
-        outPacket.encodeInt(getBagIndex());
+        outPacket.encodeInt(-1); // TODO extendedSlots index
         if (getType() == ITEM) {
             outPacket.encodeShort(getQuantity()); // nQuantity
             outPacket.encodeString(getOwner()); // sOwner

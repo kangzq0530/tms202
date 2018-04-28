@@ -67,6 +67,8 @@ public class Field {
     @Getter
     @Setter
     private boolean isUserFirstEnter;
+    @Getter
+    private final FootholdTree footholdTree;
 
     public Field(long uniqueId, FieldTemplate template) {
         this.uniqueId = uniqueId;
@@ -75,6 +77,10 @@ public class Field {
         this.chars = new ArrayList<>();
         this.lifeToControllers = new HashMap<>();
         this.lifeSchedules = new HashMap<>();
+        Position lBound = new Position(fieldData.getRect().getLeft(), fieldData.getRect().getTop());
+        Position rBound = new Position(fieldData.getRect().getRight(), fieldData.getRect().getBottom());
+        this.footholdTree = new FootholdTree(lBound, rBound);
+        this.fieldData.getFootholds().forEach(this.footholdTree::insertFoothold);
     }
 
     public int getWidth() {
@@ -136,7 +142,7 @@ public class Field {
      * @see Foothold
      */
     public Foothold findFootHoldBelow(Position pos) {
-        return getFieldData().getFootholdTree().findBelow(pos, false);
+        return getFootholdTree().findBelow(pos, false);
     }
 
     /**
@@ -240,7 +246,7 @@ public class Field {
     }
 
     public Foothold getFootholdById(int fh) {
-        return getFieldData().getFootholdTree().getFootholds().stream().filter(f -> f.getId() == fh).findFirst().orElse(null);
+        return getFootholdTree().getFootholds().stream().filter(f -> f.getId() == fh).findFirst().orElse(null);
     }
 
     public List<Character> getCharacters() {

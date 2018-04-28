@@ -1,6 +1,6 @@
 package com.msemu.world.data;
 
-import com.msemu.commons.wz.WzManager;
+import com.msemu.commons.data.loader.wz.WzManager;
 import com.msemu.core.startup.StartupComponent;
 
 import java.util.concurrent.atomic.AtomicReference;
@@ -29,7 +29,7 @@ public class WorldWzManager extends WzManager {
     }
 
     public WorldWzManager() {
-        super(WzManager.QUEST);
+        super();
         //super(WzManager.ETC, WzManager.ITEM, WzManager.CHARACTER, WzManager.STRING, WzManager.NPC, WzManager.MAP, WzManager.QUEST, WzManager.SKILL);
     }
 

@@ -1,8 +1,12 @@
 package com.msemu.commons.data.templates.quest.reqs;
 
 import com.msemu.commons.data.enums.QuestRequirementDataType;
+import com.msemu.commons.data.loader.dat.DatSerializable;
 import lombok.Getter;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,5 +21,20 @@ public class QuestPetReqData extends QuestReqData {
     @Override
     public QuestRequirementDataType getType() {
         return QuestRequirementDataType.pet;
+    }
+
+    @Override
+    public void write(DataOutputStream dos) throws IOException {
+        dos.writeInt(petItems.size());
+        for (Integer val : petItems)
+            dos.writeInt(val);
+    }
+
+    @Override
+    public DatSerializable load(DataInputStream dis) throws IOException {
+        int petItemsSize = dis.readInt();
+        for(int i = 0 ; i < petItemsSize; i++)
+            petItems.add(dis.readInt());
+        return this;
     }
 }

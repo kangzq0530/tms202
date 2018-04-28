@@ -50,7 +50,7 @@ public class ExtendSP {
         outPacket.encodeByte(getSpSet().size());
         for(SPSet spSet : getSpSet()) {
             outPacket.encodeByte(spSet.getJobLevel());
-            outPacket.encodeByte(spSet.getSp());
+            outPacket.encodeInt(spSet.getSp());
         }
     }
 

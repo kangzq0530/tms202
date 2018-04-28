@@ -15,7 +15,8 @@ import java.io.Serializable;
 @Table(name = "filetimes")
 public class FileTime implements Serializable {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
     @Column(name = "lowDateTime")
@@ -48,8 +49,7 @@ public class FileTime implements Serializable {
 
     public enum FileTimeType {
         DATE_19000101_444(-35635200, 21968699),
-        DATE_20790101_424(-1157267456, 35120710),
-        ;
+        DATE_20790101_424(-1157267456, 35120710),;
 
         private int low;
         private int high;
@@ -69,7 +69,7 @@ public class FileTime implements Serializable {
         this.highDateTime = highDateTime;
     }
 
-    public FileTime(){
+    public FileTime() {
 
     }
 
@@ -112,13 +112,13 @@ public class FileTime implements Serializable {
     }
 
     public void encodeR(OutPacket outPacket) {
-        outPacket.encodeInt(getLowDateTime());
         outPacket.encodeInt(getHighDateTime());
+        outPacket.encodeInt(getLowDateTime());
     }
 
     public void encode(OutPacket<? extends Client> outPacket) {
-        outPacket.encodeInt(getHighDateTime());
         outPacket.encodeInt(getLowDateTime());
+        outPacket.encodeInt(getHighDateTime());
     }
 
     public int getId() {

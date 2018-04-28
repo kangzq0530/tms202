@@ -1,11 +1,11 @@
 package com.msemu.login.data;
 
+import com.msemu.commons.data.loader.dat.EquipTemplateDatLoader;
+import com.msemu.commons.data.loader.dat.ItemOptionDatLoader;
+import com.msemu.commons.data.loader.dat.ItemTemplateDatLoader;
 import com.msemu.commons.data.templates.EquipTemplate;
-import com.msemu.commons.data.loader.wz.EquipTemplateLoader;
-import com.msemu.commons.data.loader.wz.ItemOptionLoader;
-import com.msemu.commons.data.templates.ItemOption;
+import com.msemu.commons.data.templates.ItemOptionInfo;
 import com.msemu.commons.data.templates.ItemTemplate;
-import com.msemu.commons.data.loader.wz.ItemTemplateLoader;
 import com.msemu.commons.reload.IReloadable;
 import com.msemu.commons.reload.Reloadable;
 import com.msemu.core.startup.StartupComponent;
@@ -16,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -29,7 +28,7 @@ public class ItemData implements IReloadable {
     private static final Logger log = LoggerFactory.getLogger(ItemData.class);
 
     @Getter(value = AccessLevel.PRIVATE)
-    private final Map<Integer, List<ItemOption>> itemOptions = new HashMap<>();
+    private final Map<Integer, ItemOptionInfo> itemOptions = new HashMap<>();
 
     @Getter(value = AccessLevel.PRIVATE)
     private final Map<Integer, EquipTemplate> equipTemplates = new HashMap<>();
@@ -60,11 +59,11 @@ public class ItemData implements IReloadable {
 
     public void load() {
         LoginWzManager wzManager = LoginWzManager.getInstance();
-        itemOptions.putAll(new ItemOptionLoader().load(wzManager));
+        itemOptions.putAll(new ItemOptionDatLoader().load(null));
         log.info("{} ItemOptions loaded.", itemOptions.size());
-        itemTemplates.putAll(new ItemTemplateLoader().load(wzManager));
+        itemTemplates.putAll(new ItemTemplateDatLoader().load(null));
         log.info("{} ItemTemplate loaded.", itemTemplates.size());
-        equipTemplates.putAll(new EquipTemplateLoader().load(wzManager));
+        equipTemplates.putAll(new EquipTemplateDatLoader().load(null));
         log.info("{} EquipTemplate loaded.", equipTemplates.size());
         System.gc();
     }
@@ -82,7 +81,7 @@ public class ItemData implements IReloadable {
 
     public Equip getEquipFromTemplate(int itemID) {
         EquipTemplate template = getEquipTemplates().get(itemID);
-        if(template == null)
+        if (template == null)
             return null;
         Equip equip = new Equip(template);
         return equip;

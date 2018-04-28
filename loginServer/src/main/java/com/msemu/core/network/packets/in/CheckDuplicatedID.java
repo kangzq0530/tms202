@@ -26,7 +26,7 @@ public class CheckDuplicatedID extends InPacket<LoginClient> {
     public void runImpl() {
 
         boolean used = Character.isNameExists(charName) ||
-                StringData.getInstance().getForbiddenNames().contains(charName);
+                StringData.getInstance().getForbiddenName().getNames().contains(charName);
         client.write(new CheckDuplicatedIDResult(charName, used));
     }
 }

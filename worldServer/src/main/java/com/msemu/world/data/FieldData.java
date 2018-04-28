@@ -1,11 +1,12 @@
 package com.msemu.world.data;
 
+import com.msemu.commons.data.loader.dat.FieldTemplateDatLoader;
 import com.msemu.commons.data.loader.wz.FieldTemplateLoader;
 import com.msemu.commons.data.templates.field.FieldTemplate;
 import com.msemu.commons.reload.IReloadable;
 import com.msemu.commons.reload.Reloadable;
 import com.msemu.commons.utils.types.Position;
-import com.msemu.commons.wz.WzManager;
+import com.msemu.commons.data.loader.wz.WzManager;
 import com.msemu.core.startup.StartupComponent;
 import com.msemu.world.client.field.Field;
 import com.msemu.world.client.life.Mob;
@@ -51,7 +52,7 @@ public class FieldData implements IReloadable {
 
     public void load() {
         WzManager wzManager = new WorldWzManager();
-        getFieldTemplates().putAll(new FieldTemplateLoader().load(wzManager));
+        getFieldTemplates().putAll(new FieldTemplateDatLoader().load(null));
         log.info("{} fieldTemplates loaded", getFieldTemplates().size());
     }
 
@@ -92,7 +93,7 @@ public class FieldData implements IReloadable {
                 npc.setPosition(new Position(npc.getX(), npc.getY()));
                 field.addLife(npc);
             } else if (lifeData.getType().equalsIgnoreCase("m")) {
-                Mob mob = MobData.getInstance().getNpcFromTemplate(lifeData.getId());
+                Mob mob = MobData.getInstance().getMobFromTemplate(lifeData.getId());
                 mob.setLifeType(lifeData.getType());
                 mob.setX(lifeData.getX());
                 mob.setY(lifeData.getY());

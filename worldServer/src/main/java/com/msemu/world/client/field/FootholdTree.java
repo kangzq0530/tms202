@@ -1,5 +1,6 @@
-package com.msemu.commons.data.templates.field;
+package com.msemu.world.client.field;
 
+import com.msemu.commons.data.templates.field.Foothold;
 import com.msemu.commons.utils.types.Position;
 import com.msemu.commons.utils.types.Tuple;
 import lombok.Getter;
@@ -18,13 +19,17 @@ public class FootholdTree {
     private FootholdTree sw = null;
     private FootholdTree se = null;
     private final List<Foothold> footholds = new LinkedList<>();
-    private final Position leftBound;
-    private final Position rightBound;
-    private final Position center;
+    private Position leftBound;
+    private Position rightBound;
+    private Position center;
     private int depth = 0;
     private static final byte MAX_DEPTH = 8;
     private int maxDropX;
     private int minDropX;
+
+    public FootholdTree() {
+
+    }
 
     public FootholdTree(final Position leftBound, final Position rightBound) {
         this.leftBound = leftBound;
@@ -393,6 +398,5 @@ public class FootholdTree {
     public final int getMinDropX() {
         return minDropX + 25;
     }
-
 
 }

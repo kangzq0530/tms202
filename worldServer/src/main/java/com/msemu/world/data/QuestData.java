@@ -1,12 +1,13 @@
 package com.msemu.world.data;
 
+import com.msemu.commons.data.loader.dat.QuestInfoDatLoader;
 import com.msemu.commons.data.loader.wz.QuestInfoLoader;
 import com.msemu.commons.data.templates.quest.QuestInfo;
 import com.msemu.commons.data.templates.quest.actions.QuestActData;
 import com.msemu.commons.data.templates.quest.reqs.QuestReqData;
 import com.msemu.commons.reload.IReloadable;
 import com.msemu.commons.reload.Reloadable;
-import com.msemu.commons.wz.WzManager;
+import com.msemu.commons.data.loader.wz.WzManager;
 import com.msemu.core.startup.StartupComponent;
 import com.msemu.world.client.character.quest.Quest;
 import com.msemu.world.client.character.quest.act.*;
@@ -71,7 +72,7 @@ public class QuestData implements IReloadable {
 
     private void load() {
         WzManager wzManager = WorldWzManager.getInstance();
-        getQuestsInfo().putAll(new QuestInfoLoader().load(wzManager));
+        getQuestsInfo().putAll(new QuestInfoDatLoader().load(null));
         log.info("{} QuestInfo loaded", getQuestsInfo().size());
         transformToQuestObjects();
         log.info("{} QuestStartActions loaded", getQuestsStartActions().size());

@@ -116,6 +116,7 @@ public class Mob extends Life {
         temporaryStat = new MobTemporaryStat(this);
         scale = 100;
         calcDamageIndex = 1;
+        templateId = template.getId();
     }
 
     public Mob deepCopy() {

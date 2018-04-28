@@ -1,10 +1,10 @@
 package com.msemu.commons.data.loader;
 
-import com.msemu.commons.wz.WzManager;
+import java.io.IOException;
 
 /**
  * Created by Weber on 2018/4/21.
  */
 public interface IDataLoader<T, V> {
-    T load(V wzManager);
+    T load(V source) throws IOException;
 }

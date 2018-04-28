@@ -1,16 +1,11 @@
 package com.msemu.commons.data.templates.quest;
 
 import com.msemu.commons.data.loader.wz.QuestInfoLoader;
-import com.msemu.commons.utils.StringUtils;
 import com.msemu.commons.wz.WzDirectory;
-import com.msemu.commons.wz.WzImage;
-import com.msemu.commons.wz.WzManager;
-import com.msemu.commons.wz.properties.WzSubProperty;
+import com.msemu.commons.data.loader.wz.WzManager;
 import com.msemu.core.configs.CoreConfig;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**

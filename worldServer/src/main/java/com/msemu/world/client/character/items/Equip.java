@@ -238,7 +238,7 @@ public class Equip extends Item {
     @Column(name = "optionId")
     @Getter
     @Setter
-    private List<Integer> options = new ArrayList<>(); // base + add pot
+    private List<Integer> options = new ArrayList<>(7); // base + add pot
     @Column(name = "specialGrade")
     @Getter
     @Setter
@@ -312,6 +312,10 @@ public class Equip extends Item {
 
     public Equip() {
         super();
+        while(this.options.size() < 7)
+            this.options.add(0);
+        while(this.sockets.size() < 3)
+            this.sockets.add((short) 0);
     }
 
     public Equip(EquipTemplate t) {
@@ -356,7 +360,6 @@ public class Equip extends Item {
         this.specialAttribute = 0;
         this.growthEnchant = 0;
         this.psEnchant = 0;
-
         this.cuttable = t.getCuttable();
         this.exGradeOption = t.getExGradeOption();
         this.itemState = t.getItemState();
@@ -376,6 +379,10 @@ public class Equip extends Item {
         this.fixedGrade = t.getFixedGrade();
         this.options = new ArrayList<>();
         t.getOptions().forEach((index, option) -> this.options.add(option.getOption()));
+        while(this.options.size() < 7)
+            this.options.add(0);
+        while(this.sockets.size() < 3)
+            this.sockets.add((short) 0);
         this.specialGrade = t.getSpecialGrade();
         this.fixedPotential = t.isFixedPotential();
         this.tradeBlock = t.isTradeBlock();
@@ -456,8 +463,10 @@ public class Equip extends Item {
         ret.iSlot = iSlot;
         ret.vSlot = vSlot;
         ret.fixedGrade = fixedGrade;
-        ret.options = new ArrayList<>();
+        ret.options = new ArrayList<>(7);
         ret.options.addAll(options);
+        while(this.options.size() < 7)
+            this.options.add(0);
         ret.specialGrade = specialGrade;
         ret.fixedPotential = fixedPotential;
         ret.tradeBlock = tradeBlock;
@@ -481,7 +490,7 @@ public class Equip extends Item {
     }
 
     public long getSerialNumber() {
-        return getId();
+        return serialNumber;
     }
 
     public void addAttribute(EquipAttribute ea) {
@@ -643,7 +652,7 @@ public class Equip extends Item {
         outPacket.encodeShort(getSocketState()); // socket state
         // Alien Stone能力(Item.wz/Install/0306.img) > 0 = 安裝, 0 = 空, -1 = 無.
         for (int i = 0; i < 3; i++) {
-            outPacket.encodeShort(getSockets().get(i)); // sockets 0 through 2 (-1 = none, 0 = empty, >0 = filled
+            outPacket.encodeShort(/*getSockets().get(i)*/ 0); // sockets 0 through 2 (-1 = none, 0 = empty, >0 = filled
         }
         boolean hasUniqueId = getSerialNumber() > 0 && !ItemConstants.類型.結婚戒指(getItemId()) && getItemId() / 10000 != 166;
 
@@ -659,6 +668,7 @@ public class Equip extends Item {
         outPacket.encodeLong(getCashItemSerialNumber());
         // ftExpireDate
         getDateExpire().encode(outPacket);
+        outPacket.encodeInt(getGrade());
         // anOption
         for (int i = 0; i < 3; i++) {
             outPacket.encodeInt(0);

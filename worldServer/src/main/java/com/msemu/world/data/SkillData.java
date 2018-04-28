@@ -1,11 +1,12 @@
 package com.msemu.world.data;
 
+import com.msemu.commons.data.loader.dat.SkillInfoDatLoader;
 import com.msemu.commons.data.loader.wz.SkillInfoLoader;
 import com.msemu.commons.data.templates.skill.MobSkillInfo;
 import com.msemu.commons.data.templates.skill.SkillInfo;
 import com.msemu.commons.reload.IReloadable;
 import com.msemu.commons.reload.Reloadable;
-import com.msemu.commons.wz.WzManager;
+import com.msemu.commons.data.loader.wz.WzManager;
 import com.msemu.core.startup.StartupComponent;
 import com.msemu.world.client.character.skills.Skill;
 import lombok.Getter;
@@ -57,7 +58,7 @@ public class SkillData implements IReloadable {
 
     public void load() {
         WzManager wzManager = WorldWzManager.getInstance();
-        this.skillsInfo.putAll(new SkillInfoLoader().load(wzManager));
+        this.skillsInfo.putAll(new SkillInfoDatLoader().load(null));
         log.info("{} SkillInfo loaded", this.skillsInfo.size());
     }
 

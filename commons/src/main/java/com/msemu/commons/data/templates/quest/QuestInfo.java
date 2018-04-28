@@ -1,48 +1,32 @@
 package com.msemu.commons.data.templates.quest;
 
+import com.msemu.commons.data.loader.dat.DatSerializable;
 import com.msemu.commons.data.templates.quest.actions.QuestActData;
 import com.msemu.commons.data.templates.quest.reqs.QuestReqData;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  * Created by Weber on 2018/4/22.
  */
-public class QuestInfo {
-
-    @Getter
-    @Setter
-    private String name;
-
-    @Getter
-    @Setter
+@Getter
+@Setter
+public class QuestInfo implements DatSerializable{
+    private String name = "";
     private int id;
-
-    @Getter
-    @Setter
     private boolean autoStart = false, autoAccept = false, autoPreComplete = false, autoCancel = false,
             autoCompleteAction = false, isTimeEvent = false, blocked = false;
-
-    @Getter
-    @Setter
     private int dailyPlayTime = 0, timeLimit2 = 0, viewMedalItem = 0, medalCategory, selectedSkillID = 0;
-
-
-    @Getter
     private Set<QuestActData> startActsData = new HashSet<>();
-
-    @Getter
     private Set<QuestActData> completeActsData = new HashSet<>();
-
-    @Getter
     Set<QuestReqData> startReqsData = new HashSet<>();
-
-    @Getter
     Set<QuestReqData> completeReqsData = new HashSet<>();
-
 
     @Override
     public String toString() {
@@ -54,4 +38,40 @@ public class QuestInfo {
     }
 
 
+    @Override
+    public void write(DataOutputStream dos) throws IOException {
+        dos.writeUTF(this.name);
+        dos.writeInt(this.id);
+        dos.writeBoolean(this.autoStart);
+        dos.writeBoolean(this.autoAccept);
+        dos.writeBoolean(this.autoPreComplete);
+        dos.writeBoolean(this.autoCancel);
+        dos.writeBoolean(this.autoCompleteAction);
+        dos.writeBoolean(this.isTimeEvent);
+        dos.writeBoolean(this.blocked);
+        dos.writeInt(this.dailyPlayTime);
+        dos.writeInt(this.timeLimit2);
+        dos.writeInt(this.viewMedalItem);
+        dos.writeInt(this.medalCategory);
+        dos.writeInt(this.selectedSkillID);
+    }
+
+    @Override
+    public DatSerializable load(DataInputStream dis) throws IOException {
+        this.setName(dis.readUTF());
+        this.setId(dis.readInt());
+        this.setAutoStart(dis.readBoolean());
+        this.setAutoAccept(dis.readBoolean());
+        this.setAutoPreComplete(dis.readBoolean());
+        this.setAutoCancel(dis.readBoolean());
+        this.setAutoCompleteAction(dis.readBoolean());
+        this.setTimeEvent(dis.readBoolean());
+        this.setBlocked(dis.readBoolean());
+        this.setDailyPlayTime(dis.readInt());
+        this.setTimeLimit2(dis.readInt());
+        this.setViewMedalItem(dis.readInt());
+        this.setMedalCategory(dis.readInt());
+        this.setSelectedSkillID(dis.readInt());
+        return this;
+    }
 }

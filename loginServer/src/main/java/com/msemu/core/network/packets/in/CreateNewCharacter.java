@@ -71,7 +71,7 @@ public class CreateNewCharacter extends InPacket<LoginClient> {
         boolean checkLogin = getClient().getLoginResult() == LoginResultType.LoginSuccess;
 
         boolean used = Character.isNameExists(charName) ||
-                StringData.getInstance().getForbiddenNames().contains(charName);
+                StringData.getInstance().getForbiddenName().getNames().contains(charName);
 
         if (used && checkLogin) {
             getClient().write(new CreateNewCharacterResult(LoginResultType.Nop, null));

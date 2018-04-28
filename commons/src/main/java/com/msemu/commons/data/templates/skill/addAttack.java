@@ -14,5 +14,4 @@ public class addAttack {
     private int reqCount;
     private int pattern;
     private int patternType;
-
 }

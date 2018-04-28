@@ -53,6 +53,7 @@ public enum DBChar {
     Flag20000000000000L(0x20000000000000L),
     LikePoint(0x40000000000L),
     RunnerGameRecord(0x80000000000L),
+    Flag20000000000(0x20000000000L),
 
     ;
 

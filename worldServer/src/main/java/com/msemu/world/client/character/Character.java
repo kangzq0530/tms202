@@ -1,6 +1,7 @@
 package com.msemu.world.client.character;
 
 import com.msemu.commons.data.enums.InvType;
+import com.msemu.commons.data.templates.field.Portal;
 import com.msemu.commons.database.DatabaseFactory;
 import com.msemu.commons.database.Schema;
 import com.msemu.commons.network.packets.OutPacket;
@@ -17,22 +18,23 @@ import com.msemu.core.network.packets.out.WvsContext.StatChanged;
 import com.msemu.core.network.packets.out.WvsContext.messages.IncExpMessage;
 import com.msemu.world.client.character.items.Equip;
 import com.msemu.world.client.character.items.Item;
+import com.msemu.world.client.character.jobs.JobHandler;
+import com.msemu.world.client.character.jobs.JobManager;
 import com.msemu.world.client.character.party.Party;
 import com.msemu.world.client.character.quest.Quest;
 import com.msemu.world.client.character.quest.QuestManager;
 import com.msemu.world.client.character.skills.Skill;
 import com.msemu.world.client.character.skills.TemporaryStatManager;
 import com.msemu.world.client.field.Field;
-import com.msemu.commons.data.templates.field.Portal;
 import com.msemu.world.client.guild.Guild;
 import com.msemu.world.client.guild.GuildMember;
 import com.msemu.world.client.guild.operations.GuildUpdate;
 import com.msemu.world.client.guild.operations.GuildUpdateMemberLogin;
-import com.msemu.world.client.character.jobs.JobHandler;
-import com.msemu.world.client.character.jobs.JobManager;
-import com.msemu.world.client.life.AffectedArea;
 import com.msemu.world.client.life.Pet;
-import com.msemu.world.constants.*;
+import com.msemu.world.constants.GameConstants;
+import com.msemu.world.constants.ItemConstants;
+import com.msemu.world.constants.MapleJob;
+import com.msemu.world.constants.SkillConstants;
 import com.msemu.world.data.ItemData;
 import com.msemu.world.data.SkillData;
 import com.msemu.world.enums.*;
@@ -598,7 +600,7 @@ public class Character {
 
     public void setJob(int jobId) {
         MapleJob job = MapleJob.getById(jobId);
-        if(job == null)
+        if (job == null)
             return;
         setJobHandler(JobManager.getJobHandler((short) job.getId(), this));
         getAvatarData().getCharacterStat().setJob(job.getId());
@@ -984,7 +986,7 @@ public class Character {
             outPacket.encodeByte(false); // ultimate explorer, deprecated
 
             outPacket.encodeFT(FileTime.getTime());
-            outPacket.encodeFT(new FileTime(-2));
+            outPacket.encodeFT(FileTime.getFileTimeFromType(FileTime.Type.ZERO_TIME));
 
             //sub_510BF0
             int v7 = 2;
@@ -1030,7 +1032,8 @@ public class Character {
             outPacket.encodeFT(FileTime.getFileTimeFromType(FileTime.Type.ZERO_TIME));
         }
         if (mask.isInMask(DBChar.ItemSlotEquip)) {
-            outPacket.encodeByte(0); // ?
+            boolean v248 = false;
+            outPacket.encodeByte(v248); // ?
             List<Item> equippedItems = getEquippedInventory().getItems();
             equippedItems.sort(Comparator.comparingInt(Item::getBagIndex));
             for (Item item : equippedItems) {
@@ -1043,22 +1046,24 @@ public class Character {
             outPacket.encodeShort(0);
             for (Item item : getEquippedInventory().getItems()) {
                 Equip equip = (Equip) item;
-                if (item.getBagIndex() > 100 && item.getBagIndex() < 1000) {
+                if (item.getBagIndex() > 100 && item.getBagIndex() < 900) {
                     outPacket.encodeShort(equip.getBagIndex());
                     equip.encode(outPacket);
                 }
             }
             outPacket.encodeShort(0);
-            for (Item item : getEquipInventory().getItems()) {
-                Equip equip = (Equip) item;
-                outPacket.encodeShort(equip.getBagIndex());
-                equip.encode(outPacket);
+            if (!v248) {
+                for (Item item : getEquipInventory().getItems()) {
+                    Equip equip = (Equip) item;
+                    outPacket.encodeShort(equip.getBagIndex());
+                    equip.encode(outPacket);
+                }
+                outPacket.encodeShort(0);
             }
-            outPacket.encodeShort(0);
             // NonBPEquip::Decode
             int[] NonBPEquipBasePos = {1000, 1100, 1200, 1300, 1400, 1500, 5100, 1600, 5200, 5000, 6000};
             int[] NonBPEquipEndPos = {1004, 1105, 1207, 1305, 1425, 1512, 5106, 1606, 5201, 5003, 6025};
-            for (int i = 0; i < NonBPEquipBasePos.length; i++) {
+            for (int i = 0; i < 11; i++) {
                 int beginPos = NonBPEquipBasePos[i];
                 int endPos = NonBPEquipEndPos[i];
                 for (Item item : getEquippedInventory().getItems()) {
@@ -1071,45 +1076,32 @@ public class Character {
                 outPacket.encodeShort(0);
             }
 
-            // VirtualEquipInventory::Decode
-            for (Item item : getEquippedInventory().getItems()) {
-                Equip equip = (Equip) item;
-                if (item.getBagIndex() >= 20000 && item.getBagIndex() < 20024) {
-                    outPacket.encodeShort(equip.getBagIndex());
-                    equip.encode(outPacket);
+            int[] virtualEqpRangeBase = new int[]{20000, 21000};
+            int[] virtualEqpRangeEnd = new int[]{20024, 21024};
+            for (int i = 0; i < 2; i++) {
+                int beginPos = virtualEqpRangeBase[i];
+                int endPos = virtualEqpRangeEnd[i];
+                for (Item item : getEquippedInventory().getItems()) {
+                    Equip equip = (Equip) item;
+                    if (item.getBagIndex() >= beginPos && item.getBagIndex() < endPos) {
+                        outPacket.encodeShort(equip.getBagIndex());
+                        equip.encode(outPacket);
+                    }
                 }
+                outPacket.encodeShort(0);
             }
-            outPacket.encodeShort(0);
-            for (Item item : getEquippedInventory().getItems()) {
-                Equip equip = (Equip) item;
-                if (item.getBagIndex() >= 21000 && item.getBagIndex() < 21024) {
-                    outPacket.encodeShort(equip.getBagIndex());
-                    equip.encode(outPacket);
-                }
-            }
-            outPacket.encodeShort(0);
 
             /////
             // 201 +
             int v151 = 0;
             outPacket.encodeInt(v151);
-            for (int i = 0; i < v151; i++) {
-                outPacket.encodeLong(0);
-                // sub_4EBE40
-                outPacket.encodeShort(0);
-                outPacket.encodeShort(0);
-                outPacket.encodeShort(0);
-                outPacket.encodeString("");
-                outPacket.encodeInt(0);
-                outPacket.encodeLong(0);
-            }
         }
         if (mask.isInMask(DBChar.ItemSlotInstall)) {
             // v202 sub_502EA0
             // 不知道是啥
             int[] unkItemBasePos = {20001, 20049};
             int[] unkItemEndPos = {20048, 20051};
-            for (int i = 0; i < unkItemBasePos.length; i++) {
+            for (int i = 0; i < 2; i++) {
                 int beginPos = unkItemBasePos[i];
                 int endPos = unkItemEndPos[i];
                 for (Item item : getEquippedInventory().getItems()) {
@@ -1165,10 +1157,7 @@ public class Character {
             // TODO
             outPacket.encodeInt(0);
         }
-        if (mask.isInMask(DBChar.ItemSlotCash)) {
-            // TODO
-            outPacket.encodeInt(0);
-        }
+
         // End bagdatas
 
         if (mask.isInMask(DBChar.CoreAura)) {
@@ -1188,7 +1177,7 @@ public class Character {
             }
         }
         if (mask.isInMask(DBChar.ItemPot)) {
-            boolean hasItemPot = getItemPots() != null;
+            boolean hasItemPot = getItemPots() != null && getItemPots().size() > 0;
             outPacket.encodeByte(hasItemPot);
             if (hasItemPot) {
                 for (int i = 0; i < getItemPots().size(); i++) {
@@ -1199,7 +1188,7 @@ public class Character {
         }
 
         if (mask.isInMask(DBChar.SkillRecord)) {
-            boolean encodeSkills = getSkills().size() > 0;
+            boolean encodeSkills = true;
             outPacket.encodeByte(encodeSkills);
             if (encodeSkills) {
                 short size = (short) getSkills().size();
@@ -1321,7 +1310,7 @@ public class Character {
             outPacket.encodeShort(completedQuests.size());
             for (Quest quest : completedQuests) {
                 outPacket.encodeInt(quest.getQRKey());
-                outPacket.encodeInt(0); // Timestamp of completion
+                quest.getCompletedTime().encode(outPacket);
             }
             if (!removeAllOldEntries) {
                 short size = 0;
@@ -1358,16 +1347,13 @@ public class Character {
 
         if (mask.isInMask(DBChar.MapTransfer)) {
             for (int i = 0; i < 5; i++) {
-                outPacket.encodeInt(0);
+                outPacket.encodeInt(999999999);
             }
             for (int i = 0; i < 10; i++) {
-                outPacket.encodeInt(0);
+                outPacket.encodeInt(999999999);
             }
             for (int i = 0; i < 13; i++) {
-                outPacket.encodeInt(0);
-            }
-            for (int i = 0; i < 13; i++) {
-                outPacket.encodeInt(0);
+                outPacket.encodeInt(999999999);
             }
         }
 
@@ -1384,7 +1370,7 @@ public class Character {
             outPacket.encodeShort(size);
             for (int i = 0; i < size; i++) {
                 outPacket.encodeInt(0); // sValue
-                new AvatarLook().encode(outPacket);
+                getAvatarData().getAvatarLook().encode(outPacket);
             }
         }
         if (mask.isInMask(DBChar.Flag80000)) {
@@ -1457,6 +1443,7 @@ public class Character {
                 for (Skill skill : getStolenSkills()) {
                     outPacket.encodeInt(skill.getSkillId());
                 }
+
             } else {
                 outPacket.encodeZeroBytes(60);
             }
@@ -1480,6 +1467,8 @@ public class Character {
                 outPacket.encodeByte(0); // nGrade
             }
         }
+
+
         if (mask.isInMask(DBChar.SoulCollection)) {
             short size = 0;
             outPacket.encodeShort(size);
@@ -1516,8 +1505,10 @@ public class Character {
             outPacket.encodeInt(0);
             outPacket.encodeInt(0);
 
-            outPacket.encodeLong(0);
+            outPacket.encodeLong(FileTime.getTime().getLongValue() + 86400000L);
             outPacket.encodeByte(MapleJob.is蒼龍俠客(getJob()) && MapleJob.is幻獸師(getJob()));
+
+            outPacket.encodeByte(1);
         }
 
         if (mask.isInMask(DBChar.OXSystem)) {
@@ -1540,7 +1531,7 @@ public class Character {
 
         if (mask.isInMask(DBChar.ExpChairInfo)) {
             int size = 0;
-            outPacket.encodeInt(size);
+            outPacket.encodeShort(size);
             for (int i = 0; i < size; i++) {
                 outPacket.encodeInt(0);
                 outPacket.encodeByte(0);
@@ -1624,7 +1615,7 @@ public class Character {
         if (mask.isInMask(DBChar.Flag20000000000000L)) {
             outPacket.encodeInt(0);
             outPacket.encodeInt(0);
-            outPacket.encodeFT(new FileTime(-2));
+            outPacket.encodeFT(FileTime.getFileTimeFromType(FileTime.Type.ZERO_TIME));
         }
 
         // 進化系統
@@ -1647,11 +1638,18 @@ public class Character {
             }
         }
 
+        if (mask.isInMask(DBChar.Flag20000000000)) {
+            outPacket.encodeByte(false);
+        }
+
         if (mask.isInMask(DBChar.LikePoint)) {
             new LikePoint().encode(outPacket);
         }
         if (mask.isInMask(DBChar.RunnerGameRecord)) {
-            new RunnerGameRecord().encode(outPacket);
+            // TODO
+            RunnerGameRecord runnerGameRecord = new RunnerGameRecord();
+            runnerGameRecord.setCharacterID(getId());
+            runnerGameRecord.encode(outPacket);
         }
 
         if (mask.isInMask(0x800000000000000L)) {
@@ -1687,9 +1685,29 @@ public class Character {
 
         // 跟克梅勒茲航海有關
         if (mask.isInMask(0x4000000000000L)) {
-            outPacket.encodeByte(false);
-            outPacket.encodeShort(0);
-            outPacket.encodeShort(0);
+            boolean v190 = true;
+            outPacket.encodeByte(v190);
+            if(v190) {
+                outPacket.encodeByte(0);
+                outPacket.encodeInt(1);
+                outPacket.encodeInt(0);
+                outPacket.encodeInt(0);
+                FileTime.getTime().encode(outPacket);
+            }
+            short v192 = 0;
+            outPacket.encodeShort(v192);
+            for(int i = 0; i < v192;i++) {
+                outPacket.encodeInt(0);
+                outPacket.encodeInt(0);
+                outPacket.encodeLong(0);
+            }
+            short v194 = 0;
+            outPacket.encodeShort(v194);
+            for(int i = 0; i < v194;i++) {
+                outPacket.encodeByte(0);
+                outPacket.encodeInt(0);
+                outPacket.encodeInt(0);
+            }
         }
 
         if (mask.isInMask(0x8000000000000L)) {
@@ -1698,7 +1716,9 @@ public class Character {
 
         if (mask.isInMask(0x10000000000000L)) {
             outPacket.encodeInt(0);
+            // loop [short][short]
             outPacket.encodeInt(0);
+            // loop [short][int]
         }
 
         // TODO: 這個包有點醜 // sub_538480 [1] [4] * ??????

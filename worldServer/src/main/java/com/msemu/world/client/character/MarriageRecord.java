@@ -23,8 +23,8 @@ public class MarriageRecord {
         outPacket.encodeShort(getStatus());
         outPacket.encodeInt(getGroomItemId());
         outPacket.encodeInt(getBrideItemId());
-        outPacket.encodeString(getGroomName(), 13); //max length 13
-        outPacket.encodeString(getBridgeName(), 13);
+        outPacket.encodeString(getGroomName(), 15); //max length 13
+        outPacket.encodeString(getBridgeName(), 15);
     }
 
     public int getMarriageNo() {

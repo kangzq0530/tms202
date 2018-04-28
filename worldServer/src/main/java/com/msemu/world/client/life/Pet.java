@@ -25,7 +25,7 @@ public class Pet extends Life {
     }
 
     public int getActiveSkillCoolTime() {
-        return 0;
+        return -1;
     }
 
 

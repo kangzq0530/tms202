@@ -1,7 +1,11 @@
 package com.msemu.world.data;
 
+import com.msemu.commons.data.loader.dat.EquipTemplateDatLoader;
+import com.msemu.commons.data.loader.dat.ItemOptionDatLoader;
+import com.msemu.commons.data.loader.dat.ItemTemplateDatLoader;
 import com.msemu.commons.data.templates.EquipTemplate;
 import com.msemu.commons.data.templates.ItemOption;
+import com.msemu.commons.data.templates.ItemOptionInfo;
 import com.msemu.commons.data.templates.ItemTemplate;
 import com.msemu.commons.data.loader.wz.EquipTemplateLoader;
 import com.msemu.commons.data.loader.wz.ItemOptionLoader;
@@ -31,7 +35,7 @@ public class ItemData implements IReloadable {
     private static final Logger log = LoggerFactory.getLogger(ItemData.class);
 
     @Getter(value = AccessLevel.PRIVATE)
-    private final Map<Integer, List<ItemOption>> itemOptions = new HashMap<>();
+    private final Map<Integer, ItemOptionInfo> itemOptions = new HashMap<>();
 
     @Getter(value = AccessLevel.PRIVATE)
     private final Map<Integer, EquipTemplate> equipTemplates = new HashMap<>();
@@ -62,11 +66,11 @@ public class ItemData implements IReloadable {
 
     public void load() {
         WorldWzManager wzManager = WorldWzManager.getInstance();
-        itemOptions.putAll(new ItemOptionLoader().load(wzManager));
+        itemOptions.putAll(new ItemOptionDatLoader().load(null));
         log.info("{} ItemOptions loaded.", itemOptions.size());
-        itemTemplates.putAll(new ItemTemplateLoader().load(wzManager));
+        itemTemplates.putAll(new ItemTemplateDatLoader().load(null));
         log.info("{} ItemTemplate loaded.", itemTemplates.size());
-        equipTemplates.putAll(new EquipTemplateLoader().load(wzManager));
+        equipTemplates.putAll(new EquipTemplateDatLoader().load(null));
         log.info("{} EquipTemplate loaded.", equipTemplates.size());
         System.gc();
     }

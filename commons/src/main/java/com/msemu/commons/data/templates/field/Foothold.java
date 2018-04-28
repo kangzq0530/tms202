@@ -1,15 +1,20 @@
 package com.msemu.commons.data.templates.field;
 
+import com.msemu.commons.data.loader.dat.DatSerializable;
 import com.msemu.commons.utils.types.Position;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
 /**
  * Created by Weber on 2018/4/11.
  */
 @Getter
 @Setter
-public class Foothold implements Comparable<Foothold> {
+public class Foothold implements Comparable<Foothold>, DatSerializable {
     protected int id;
     protected int layerId;
     protected int groupId;
@@ -96,5 +101,36 @@ public class Foothold implements Comparable<Foothold> {
         final Foothold oth = (Foothold) o;
         return oth.getY1() == getY1() && oth.getY2() == getY2()
                 && oth.getX1() == getX1() && oth.getX2() == getX2() && getId() == oth.getId();
+    }
+
+    @Override
+    public void write(DataOutputStream dos) throws IOException {
+        dos.writeInt(id);
+        dos.writeInt(layerId);
+        dos.writeInt(groupId);
+        dos.writeInt(x1);
+        dos.writeInt(y1);
+        dos.writeInt(x2);
+        dos.writeInt(y2);
+        dos.writeInt(next);
+        dos.writeInt(prev);
+        dos.writeInt(force);
+        dos.writeBoolean(forbidFallDown);
+    }
+
+    @Override
+    public DatSerializable load(DataInputStream dis) throws IOException {
+        setId(dis.readInt());
+        setLayerId(dis.readInt());
+        setGroupId(dis.readInt());
+        setX1(dis.readInt());
+        setY1(dis.readInt());
+        setX2(dis.readInt());
+        setY2(dis.readInt());
+        setNext(dis.readInt());
+        setPrev(dis.readInt());
+        setForce(dis.readInt());
+        setForbidFallDown(dis.readBoolean());
+        return this;
     }
 }

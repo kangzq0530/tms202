@@ -374,13 +374,13 @@ public class CharacterStat {
         outPacket.encodeInt(getCharacterId());
         outPacket.encodeInt(getCharacterIdForLog());
         outPacket.encodeInt(getWorldIdForLog());
-        outPacket.encodeString(getName(), 13);
+        outPacket.encodeString(getName(), 15);
         outPacket.encodeByte(getGender());
-        outPacket.encodeByte(getSkin());
         outPacket.encodeByte(0); // unk
+        outPacket.encodeByte(getSkin());
         outPacket.encodeInt(getFace());
         outPacket.encodeInt(getHair());
-        outPacket.encodeByte(getMixBaseHairColor());
+        outPacket.encodeByte(-1/*getMixBaseHairColor()*/);
         outPacket.encodeByte(getMixAddHairColor());
         outPacket.encodeByte(getMixHairBaseProb());
         outPacket.encodeByte(getLevel());
@@ -426,9 +426,10 @@ public class CharacterStat {
         outPacket.encodeByte(getPvpGrade());
         outPacket.encodeInt(getPvpPoint());
         outPacket.encodeByte(6);
+        outPacket.encodeByte(7);
         /* Fuck that, setting the above byte lower than 2 will make all 3rd and 4th job that have the property
          ((skillID % 10000) / 10000 == 0) be bugged (you see the maxLevel, but can't actually use it). ?????????????*/
-        outPacket.encodeByte(getPvpModeType());
+        //outPacket.encodeByte(getPvpModeType());
         outPacket.encodeInt(getEventPoint());
 //        outPacket.encodeByte(getAlbaActivityID()); // part time job
 //        getAlbaStartTime().encode(outPacket); // long
@@ -436,7 +437,7 @@ public class CharacterStat {
 //        outPacket.encodeByte(getAlbaSpecialReward());
         outPacket.encodeInt(0);
         getCharacterCard().encode(outPacket);
-        getLastLogout().encode(outPacket);
+        getLastLogout().encodeR(outPacket);
         //
         outPacket.encodeLong(0);
         outPacket.encodeLong(0);

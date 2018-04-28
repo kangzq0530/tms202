@@ -8,7 +8,7 @@ import com.msemu.core.network.GameClient;
  * Created by Weber on 2018/4/14.
  */
 public class RunnerGameRecord {
-    private FileTime lastPlayed = new FileTime();
+    private FileTime lastPlayed = FileTime.getFileTimeFromType(FileTime.Type.ZERO_TIME);
     private int characterID;
     private int lastScore;
     private int highScore;

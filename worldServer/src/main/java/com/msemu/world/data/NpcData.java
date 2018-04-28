@@ -1,20 +1,18 @@
 package com.msemu.world.data;
 
+import com.msemu.commons.data.loader.dat.NpcTemplateDatLoader;
 import com.msemu.commons.data.loader.wz.NpcTemplateLoader;
 import com.msemu.commons.data.templates.NpcTemplate;
 import com.msemu.commons.reload.IReloadable;
 import com.msemu.commons.reload.Reloadable;
-import com.msemu.commons.wz.WzManager;
+import com.msemu.commons.data.loader.wz.WzManager;
 import com.msemu.core.startup.StartupComponent;
 import com.msemu.world.client.life.Npc;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -54,7 +52,7 @@ public class NpcData implements IReloadable {
 
     public void load() {
         WzManager wzManager = WorldWzManager.getInstance();
-        getNpcTemplates().addAll(new NpcTemplateLoader().load(wzManager));
+        getNpcTemplates().addAll(new NpcTemplateDatLoader().load(null));
         log.info("{} NpcTemplate loaded", this.npcTemplates.size());
     }
 

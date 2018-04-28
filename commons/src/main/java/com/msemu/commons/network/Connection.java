@@ -124,7 +124,7 @@ public class Connection<TClient extends Client<TClient>> extends ChannelInboundH
         } else {
             if (except instanceof ReadTimeoutException) {
                 log.error("User has been disconnected due ReadTimeoutException.");
-              //  client.onIdle();
+                client.onIdle();
             }
         }
 

@@ -23,13 +23,14 @@ public class Npc extends Life {
     private int noticeBoardType;
     private int noticeBoardValue;
     private int alpha; // if hideToLocalUser is true
-    private String localRepeatEffect;
+    private String localRepeatEffect = "";
     private ScreenInfo screenInfo;
     private NpcTemplate template;
 
     public Npc(int objectId, NpcTemplate template) {
         super(objectId);
         this.template = template;
+        this.templateId = template.getId();
     }
 
     public void encode(OutPacket<GameClient> outPacket) {

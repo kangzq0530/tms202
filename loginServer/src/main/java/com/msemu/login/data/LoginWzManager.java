@@ -1,6 +1,6 @@
 package com.msemu.login.data;
 
-import com.msemu.commons.wz.WzManager;
+import com.msemu.commons.data.loader.wz.WzManager;
 import com.msemu.core.startup.StartupComponent;
 
 import java.util.concurrent.atomic.AtomicReference;
@@ -29,7 +29,8 @@ public class LoginWzManager extends WzManager {
     }
 
     public LoginWzManager() {
-        super(WzManager.ETC, WzManager.ITEM, WzManager.CHARACTER);
+        super();
+        //super(WzManager.ETC, WzManager.ITEM, WzManager.CHARACTER);
     }
 
 }

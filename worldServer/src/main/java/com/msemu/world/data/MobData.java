@@ -1,16 +1,15 @@
 package com.msemu.world.data;
 
-import com.msemu.commons.data.loader.wz.MobTemplateLoader;
+import com.msemu.commons.data.loader.dat.MobTemplateDatLoader;
 import com.msemu.commons.data.templates.MobTemplate;
 import com.msemu.commons.reload.IReloadable;
 import com.msemu.commons.reload.Reloadable;
-import com.msemu.commons.wz.WzManager;
+import com.msemu.commons.data.loader.wz.WzManager;
 import com.msemu.core.startup.StartupComponent;
 import com.msemu.world.client.life.Mob;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -49,7 +48,7 @@ public class MobData implements IReloadable{
 
     public void load() {
         WzManager wzManager = WorldWzManager.getInstance();
-        getMobTemplates().putAll(new MobTemplateLoader().load(wzManager));
+        getMobTemplates().putAll(new MobTemplateDatLoader().load(null));
         log.info("{} MobTemplates laoded", this.mobTemplates.size());
     }
 
@@ -63,7 +62,7 @@ public class MobData implements IReloadable{
         load();
     }
 
-    public Mob getNpcFromTemplate(int templateId) {
+    public Mob getMobFromTemplate(int templateId) {
         MobTemplate mt = getMobTemplates().get(templateId);
         Mob mob = new Mob(-1 , mt);
         mob.init();

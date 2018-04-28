@@ -15,7 +15,7 @@ public class FriendRecord {
 
     public void encode(OutPacket<GameClient> outPacket) {
         outPacket.encodeInt(getPairCharacterId());
-        outPacket.encodeString(getPairCharacterName(), 13);
+        outPacket.encodeString(getPairCharacterName(), 15);
         outPacket.encodeLong(getSn());
         outPacket.encodeLong(getPairSn());
         outPacket.encodeInt(getFriendItemId());

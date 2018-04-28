@@ -1,5 +1,6 @@
 package com.msemu.world.client.life;
 
+import com.msemu.commons.data.templates.NpcTemplate;
 import com.msemu.commons.utils.types.Position;
 import com.msemu.commons.utils.types.Rect;
 import com.msemu.world.client.field.Field;
@@ -263,38 +264,6 @@ public class Life {
         copy.setRegenStart(getRegenStart());
         copy.setMobAliveReq(getMobAliveReq());
         return copy;
-    }
-
-    public Mob createMobFromLife() {
-        Mob mob = null;
-        if (getLifeType().equalsIgnoreCase("m")) {
-            mob = MobData.getInstance().getNpcFromTemplate(getTemplateId());
-            mob.setObjectId(getObjectId());
-            mob.setLifeType(getLifeType());
-            mob.setTemplateId(getTemplateId());
-            mob.setX(getX());
-            mob.setY(getY());
-            mob.setHomePosition(new Position(getX(), getY()));
-            mob.setPosition(new Position(getX(), getY()));
-            mob.setMobTime(getMobTime());
-            mob.setF(getF());
-            mob.setHide(isHide());
-            mob.setFh(getFh());
-            mob.setCy(getCy());
-            mob.setRx0(getRx0());
-            mob.setRx1(getRx1());
-            mob.setLimitedName(getLimitedName());
-            mob.setUseDay(isUseDay());
-            mob.setUseNight(isUseNight());
-            mob.setHold(isHold());
-            mob.setNoFoothold(isNoFoothold());
-            mob.setDummy(isDummy());
-            mob.setSpine(isSpine());
-            mob.setMobTimeOnDie(isMobTimeOnDie());
-            mob.setRegenStart(getRegenStart());
-            mob.setMobAliveReq(getMobAliveReq());
-        }
-        return mob;
     }
 
     @Override

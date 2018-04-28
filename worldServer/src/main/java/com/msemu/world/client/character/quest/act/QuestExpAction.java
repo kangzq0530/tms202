@@ -1,15 +1,10 @@
 package com.msemu.world.client.character.quest.act;
 
-import com.msemu.commons.data.dat.DatSerializable;
 import com.msemu.commons.data.templates.quest.actions.QuestActData;
 import com.msemu.commons.data.templates.quest.actions.QuestExpActionData;
 import com.msemu.world.client.character.Character;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 
 /**
  * Created by Weber on 2018/4/13.

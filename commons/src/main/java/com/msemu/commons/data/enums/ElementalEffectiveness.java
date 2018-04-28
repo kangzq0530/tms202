@@ -17,8 +17,24 @@ public enum ElementalEffectiveness {
         return value;
     }
 
+    public static int getNumber(ElementalEffectiveness elementalEffectiveness) {
+        switch (elementalEffectiveness) {
+            case NORMAL:
+                return 0;
+            case IMMUNE:
+                return 1;
+            case STRONG:
+                return 2;
+            case WEAK:
+                return 3;
+        }
+        return -1;
+    }
+
     public static ElementalEffectiveness getByNumber(int num) {
         switch (num) {
+            case 0:
+                return NORMAL;
             case 1:
                 return IMMUNE;
             case 2:

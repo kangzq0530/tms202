@@ -71,7 +71,7 @@ public class GuildRequestor {
 
 
     public void encode(OutPacket<GameClient> outPacket) {
-        outPacket.encodeString(getName(), 13);
+        outPacket.encodeString(getName(), 15);
         outPacket.encodeInt(getJob());
         outPacket.encodeInt(getLevel());
         outPacket.encodeInt(0);

@@ -9,7 +9,6 @@ public enum Element {
 
     NEUTRAL(0), PHYSICAL(1), FIRE(2, true), ICE(3, true), LIGHTING(4), POISON(5), HOLY(6, true), DARKNESS(7);
 
-    @Getter
     private final int value;
     private boolean special = false;
 
@@ -20,6 +19,10 @@ public enum Element {
     private Element(int v, boolean special) {
         this.value = v;
         this.special = special;
+    }
+
+    public int getValue() {
+        return this.value;
     }
 
     public boolean isSpecial() {
