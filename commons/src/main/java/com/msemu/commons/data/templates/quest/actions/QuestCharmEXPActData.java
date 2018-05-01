@@ -12,25 +12,25 @@ import java.io.IOException;
 /**
  * Created by Weber on 2018/4/22.
  */
-public class QuestInfoNumberActData extends QuestActData {
+public class QuestCharmEXPActData extends QuestActData {
 
     @Getter
     @Setter
-    private int infoNumber;
+    private int charmEXP;
 
     @Override
     public QuestActDataType getType() {
-        return QuestActDataType.infoNumber;
+        return QuestActDataType.charmEXP;
     }
 
     @Override
     public void write(DataOutputStream dos) throws IOException {
-        dos.writeInt(infoNumber);
+        dos.writeInt(charmEXP);
     }
 
     @Override
     public DatSerializable load(DataInputStream dis) throws IOException {
-        setInfoNumber(dis.readInt());
+        setCharmEXP(dis.readInt());
         return this;
     }
 }

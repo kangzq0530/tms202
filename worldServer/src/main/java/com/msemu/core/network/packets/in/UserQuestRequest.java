@@ -84,14 +84,14 @@ public class UserQuestRequest extends InPacket<GameClient> {
             case 4:
                 String startScript = qi.getStartScript();
                 if (startScript.isEmpty()) {
-                    startScript = String.format("%d%s.py", questID, ScriptManager.QUEST_START_SCRIPT_END_TAG);
+                    startScript = String.format("%d%s%s", questID, ScriptManager.QUEST_START_SCRIPT_END_TAG, ScriptManager.SCRIPT_ENGINE_EXTENSION);
                 }
                 chr.getScriptManager().startScript(questID, startScript, ScriptType.QUEST);
                 break;
             case 5:
                 String endScript = qi.getEndScript();
                 if (endScript.isEmpty()) {
-                    endScript = String.format("%d%s.py", questID, ScriptManager.QUEST_COMPLETE_SCRIPT_END_TAG);
+                    endScript = String.format("%d%s%s", questID, ScriptManager.QUEST_COMPLETE_SCRIPT_END_TAG, ScriptManager.SCRIPT_ENGINE_EXTENSION);
                 }
                 chr.getScriptManager().startScript(questID, endScript, ScriptType.QUEST);
                 break;

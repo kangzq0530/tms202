@@ -6,7 +6,7 @@ import com.msemu.commons.rmi.model.WorldInfo;
 import com.msemu.commons.utils.BCryptUtils;
 import com.msemu.core.configs.LoginConfig;
 import com.msemu.core.network.LoginClient;
-import com.msemu.core.network.packets.out.Login.SelectCharacterResult;
+import com.msemu.core.network.packets.out.login.SelectCharacterResult;
 import com.msemu.login.LoginServer;
 import com.msemu.login.client.Account;
 import com.msemu.login.enums.LoginResultType;

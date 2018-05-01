@@ -1,7 +1,7 @@
 package com.msemu.world.client.character.quest.act;
 
 import com.msemu.commons.data.templates.quest.actions.QuestActData;
-import com.msemu.commons.data.templates.quest.actions.QuestMoneyActionData;
+import com.msemu.commons.data.templates.quest.actions.QuestMoneyActData;
 import com.msemu.world.client.character.Character;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,8 +21,8 @@ public class QuestMoneyAction implements IQuestAction {
 
     @Override
     public void load(QuestActData actData) {
-        if (actData instanceof QuestMoneyActionData) {
-            setMoney(((QuestMoneyActionData) actData).getMoney());
+        if (actData instanceof QuestMoneyActData) {
+            setMoney(((QuestMoneyActData) actData).getMoney());
         }
     }
 

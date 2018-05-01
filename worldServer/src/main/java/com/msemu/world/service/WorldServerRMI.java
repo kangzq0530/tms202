@@ -39,18 +39,18 @@ public class WorldServerRMI extends UnicastRemoteObject implements IWorldServerR
             final WorldRegisterResult registerResult = this.connection.registerWorld(this, World.getInstance().getWorldInfo());
             switch (registerResult) {
                 case SUCCESS: {
-                    log.info("Connected to Login server successfully.");
+                    log.info("Connected to login server successfully.");
                     break;
                 }
                 default: {
-                    log.warn("Connection to Login server failed. Reason: {}", registerResult.toString());
+                    log.warn("Connection to login server failed. Reason: {}", registerResult.toString());
                     break;
                 }
             }
         } catch (ConnectException e2) {
-            log.warn("Login server isn't available. Make sure it's up and running. {}", e2);
+            log.warn("login server isn't available. Make sure it's up and running. {}", e2);
         } catch (Exception e) {
-            log.error("Connection to Login server failed", e);
+            log.error("Connection to login server failed", e);
         } finally {
             this.reconnectTask = null;
             if (this.connection == null) {
@@ -115,10 +115,10 @@ public class WorldServerRMI extends UnicastRemoteObject implements IWorldServerR
         if (this.reconnectTask != null) {
             return;
         }
-        log.info("Connection with Login server lost.");
+        log.info("Connection with login server lost.");
         this.connection = null;
         reconnectTask = EventManager.getInstance().addEvent(() -> {
-            log.info("Reconnecting to Login server...");
+            log.info("Reconnecting to login server...");
             connectToLoginServer();
         }, 2000);
     }

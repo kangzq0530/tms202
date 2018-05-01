@@ -1,14 +1,11 @@
 package com.msemu.core.network.packets.in;
 
 import com.msemu.commons.network.packets.InPacket;
-import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.rmi.model.WorldInfo;
 import com.msemu.core.network.LoginClient;
-import com.msemu.core.network.packets.out.Login.CheckPasswordResult;
-import com.msemu.core.network.packets.out.Login.WorldInformation;
-import com.msemu.core.network.packets.out.Login.WorldInformationEnd;
+import com.msemu.core.network.packets.out.login.WorldInformation;
+import com.msemu.core.network.packets.out.login.WorldInformationEnd;
 import com.msemu.login.LoginServer;
-import com.msemu.login.client.Account;
 
 import java.util.List;
 

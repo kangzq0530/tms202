@@ -2,7 +2,7 @@ package com.msemu.core.network.packets.in;
 
 import com.msemu.commons.network.packets.InPacket;
 import com.msemu.core.network.LoginClient;
-import com.msemu.core.network.packets.out.Login.CheckSPWExistResult;
+import com.msemu.core.network.packets.out.login.CheckSPWExistResult;
 
 /**
  * Created by Weber on 2018/4/19.

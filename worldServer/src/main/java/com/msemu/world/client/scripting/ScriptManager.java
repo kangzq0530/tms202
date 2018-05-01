@@ -21,7 +21,7 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class ScriptManager {
     private static final String SCRIPT_ENGINE_NAME = "nashorn";
-    private static final String SCRIPT_ENGINE_EXTENSION = ".js";
+    public static final String SCRIPT_ENGINE_EXTENSION = ".js";
     private static final String DEFAULT_SCRIPT = "undefined";
     public static final String QUEST_START_SCRIPT_END_TAG = "s";
     public static final String QUEST_COMPLETE_SCRIPT_END_TAG = "e";

@@ -1,9 +1,13 @@
 package com.msemu.commons.data.templates.quest.actions;
 
 import com.msemu.commons.data.enums.QuestActDataType;
+import com.msemu.commons.data.loader.dat.DatSerializable;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -131,5 +135,38 @@ public class QuestItemActData extends QuestActData {
             jobs.add((short) 3500);
         }
         return jobs;
+    }
+
+    @Override
+    public void write(DataOutputStream dos) throws IOException {
+        dos.writeUTF(potentialGrade);
+        dos.writeInt(itemId);
+        dos.writeShort(quantity);
+        dos.writeInt(prop);
+        dos.writeByte(gender);
+        dos.writeInt(jobReqs.size());
+        for(Short v : jobReqs) {
+            dos.writeShort(v);
+        }
+        dos.writeInt(jobExReqs.size());
+        for(Short v : jobExReqs) {
+            dos.writeShort(v);
+        }
+    }
+
+    @Override
+    public DatSerializable load(DataInputStream dis) throws IOException {
+        setPotentialGrade(dis.readUTF());
+        setItemId(dis.readInt());
+        setQuantity(dis.readShort());
+        setProp(dis.readInt());
+        setGender(dis.readByte());
+        int sizeJob = dis.readInt();
+        for(int i = 0 ; i < sizeJob ;i++)
+            jobReqs.add(dis.readShort());
+        int sizeJobex = dis.readInt();
+        for(int i = 0 ; i < sizeJobex ;i++)
+            jobExReqs.add(dis.readShort());
+        return this;
     }
 }

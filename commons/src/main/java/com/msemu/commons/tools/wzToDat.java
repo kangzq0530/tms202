@@ -22,10 +22,10 @@ public class wzToDat {
 //        new ItemTemplateLoader().saveToDat(wzManager);
 //        new EquipTemplateLoader().saveToDat(wzManager);
 //        new FieldTemplateLoader().saveToDat(wzManager);
-        new NpcTemplateLoader().saveToDat(wzManager);
+//        new NpcTemplateLoader().saveToDat(wzManager);
 //
 //        new SkillInfoLoader().saveToDat(wzManager);
-//        new QuestInfoLoader().saveToDat(wzManager);
+        new QuestInfoLoader().saveToDat(wzManager);
 //        new MobTemplateLoader().saveToDat(wzManager);
 //        new FieldTemplateLoader().saveToDat(wzManager);
 

@@ -6,7 +6,7 @@ package com.msemu.login.constants;
 public class JobConstants {
 
     public static final boolean enableJobs = true;
-    // UI.wz/Login.img/RaceSelect_new/order
+    // UI.wz/login.img/RaceSelect_new/order
     public static final int jobOrder = 194;
 
 

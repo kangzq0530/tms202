@@ -124,7 +124,7 @@ public class QuestData implements IReloadable {
             transformActs(questInfo.getId(), questInfo.getStartActsData(), getQuestsStartActions());
             transformActs(questInfo.getId(), questInfo.getCompleteActsData(), getQuestsCompleteActions());
             transformStartReqs(questInfo.getId(), questInfo.getStartReqsData(), getQuestsStartRequirements());
-            transformProgressReqs(questInfo.getId(), questInfo.getStartReqsData(), getQuestsProgressRequirements());
+            transformProgressReqs(questInfo.getId(), questInfo.getCompleteReqsData(), getQuestsProgressRequirements());
         });
 
     }

@@ -9,7 +9,9 @@ import lombok.Setter;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -17,7 +19,7 @@ import java.util.Set;
  */
 @Getter
 @Setter
-public class QuestInfo implements DatSerializable{
+public class QuestInfo implements DatSerializable {
     private String name = "";
     private String startScript = "", endScript = "";
     private int id;
@@ -26,8 +28,8 @@ public class QuestInfo implements DatSerializable{
     private int dailyPlayTime = 0, timeLimit2 = 0, viewMedalItem = 0, medalCategory, selectedSkillID = 0;
     private Set<QuestActData> startActsData = new HashSet<>();
     private Set<QuestActData> completeActsData = new HashSet<>();
-    Set<QuestReqData> startReqsData = new HashSet<>();
-    Set<QuestReqData> completeReqsData = new HashSet<>();
+    private Set<QuestReqData> startReqsData = new HashSet<>();
+    private Set<QuestReqData> completeReqsData = new HashSet<>();
 
     @Override
     public String toString() {
@@ -64,6 +66,33 @@ public class QuestInfo implements DatSerializable{
         dos.writeInt(this.viewMedalItem);
         dos.writeInt(this.medalCategory);
         dos.writeInt(this.selectedSkillID);
+        dos.writeInt(this.getStartActsData().size());
+        for (QuestActData actData : getStartActsData()) {
+            String clazzName = actData.getClass().getSimpleName();
+            dos.writeUTF(clazzName);
+            actData.write(dos);
+        }
+        dos.writeInt(this.getCompleteActsData().size());
+        for (QuestActData actData : getCompleteActsData()) {
+            String clazzName = actData.getClass().getSimpleName();
+            dos.writeUTF(clazzName);
+            actData.write(dos);
+        }
+        dos.writeInt(this.getStartReqsData().size());
+        for (QuestReqData reqData : getStartReqsData()) {
+            if(reqData.getClass() == null) {
+
+            }
+            String clazzName = reqData.getClass().getSimpleName();
+            dos.writeUTF(clazzName);
+            reqData.write(dos);
+        }
+        dos.writeInt(this.getCompleteReqsData().size());
+        for (QuestReqData reqData : getCompleteReqsData()) {
+            String clazzName = reqData.getClass().getSimpleName();
+            dos.writeUTF(clazzName);
+            reqData.write(dos);
+        }
     }
 
     @Override
@@ -84,6 +113,61 @@ public class QuestInfo implements DatSerializable{
         this.setViewMedalItem(dis.readInt());
         this.setMedalCategory(dis.readInt());
         this.setSelectedSkillID(dis.readInt());
+
+        int size = dis.readInt();
+        for (int i = 0; i < size; i++) {
+            String clazzName = dis.readUTF();
+            try {
+                Class<?> clazz = Class.forName("com.msemu.commons.data.templates.quest.actions." + clazzName);
+                QuestActData actData = (QuestActData) clazz.newInstance();
+                actData.load(dis);
+                getStartActsData().add(actData);
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+
+        size = dis.readInt();
+        for (int i = 0; i < size; i++) {
+            String clazzName = dis.readUTF();
+            try {
+                Class<?> clazz = Class.forName("com.msemu.commons.data.templates.quest.actions." + clazzName);
+                QuestActData actData = (QuestActData) clazz.newInstance();
+                actData.load(dis);
+                getCompleteActsData().add(actData);
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+
+        }
+        size = dis.readInt();
+        for (int i = 0; i < size; i++) {
+            String clazzName = dis.readUTF();
+            try {
+                Class<?> clazz = Class.forName("com.msemu.commons.data.templates.quest.reqs." + clazzName);
+                QuestReqData reqData = (QuestReqData) clazz.newInstance();
+                reqData.load(dis);
+                getStartReqsData().add(reqData);
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+
+        }
+        size = dis.readInt();
+        for (int i = 0; i < size; i++) {
+            String clazzName = dis.readUTF();
+            try {
+                Class<?> clazz = Class.forName("com.msemu.commons.data.templates.quest.reqs." + clazzName);
+                QuestReqData reqData = (QuestReqData) clazz.newInstance();
+                reqData.load(dis);
+                getCompleteReqsData().add(reqData);
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+
+        }
         return this;
     }
 }

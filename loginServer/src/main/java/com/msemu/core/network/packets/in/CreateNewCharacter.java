@@ -3,7 +3,7 @@ package com.msemu.core.network.packets.in;
 import com.msemu.commons.database.DatabaseFactory;
 import com.msemu.commons.network.packets.InPacket;
 import com.msemu.core.network.LoginClient;
-import com.msemu.core.network.packets.out.Login.CreateNewCharacterResult;
+import com.msemu.core.network.packets.out.login.CreateNewCharacterResult;
 import com.msemu.login.client.Account;
 import com.msemu.login.client.character.Character;
 import com.msemu.login.client.character.CharacterStat;

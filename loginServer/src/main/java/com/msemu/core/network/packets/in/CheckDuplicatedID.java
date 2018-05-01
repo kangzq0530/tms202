@@ -2,7 +2,7 @@ package com.msemu.core.network.packets.in;
 
 import com.msemu.commons.network.packets.InPacket;
 import com.msemu.core.network.LoginClient;
-import com.msemu.core.network.packets.out.Login.CheckDuplicatedIDResult;
+import com.msemu.core.network.packets.out.login.CheckDuplicatedIDResult;
 import com.msemu.login.client.character.Character;
 import com.msemu.login.data.StringData;
 

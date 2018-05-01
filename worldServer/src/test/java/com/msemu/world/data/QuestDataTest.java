@@ -11,8 +11,7 @@ public class QuestDataTest {
 
     @Test
     public void testLoad() {
-        CoreConfig.WZ_PATH = "F:/repos/ZZMS_dev/wz";
-        WzManager wzManager = WorldWzManager.getInstance();
+        CoreConfig.DAT_PATH = "../dat";
         QuestData.getInstance();
     }
 

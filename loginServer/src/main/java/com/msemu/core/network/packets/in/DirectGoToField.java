@@ -4,7 +4,7 @@ import com.msemu.commons.network.packets.InPacket;
 import com.msemu.commons.rmi.model.ChannelInfo;
 import com.msemu.commons.rmi.model.WorldInfo;
 import com.msemu.core.network.LoginClient;
-import com.msemu.core.network.packets.out.Login.SelectCharacterResult;
+import com.msemu.core.network.packets.out.login.SelectCharacterResult;
 import com.msemu.login.LoginServer;
 import com.msemu.login.enums.LoginResultType;
 

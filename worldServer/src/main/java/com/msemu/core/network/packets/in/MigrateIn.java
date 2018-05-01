@@ -58,7 +58,7 @@ public class MigrateIn extends InPacket<GameClient> {
 
         //TODO 確認登入伺服器跟現在的IP一樣
 
-        if (getClient().compareAndSetState(ClientState.CONNECTED, ClientState.AUTHED)) {
+        if (getClient().compareAndSetState(ClientState.CONNECTED, ClientState.ENTERED)) {
             chr.setClient(getClient());
             Account account = Account.findById(chr.getAccId());
             getClient().setAccount(account);
