@@ -3,22 +3,23 @@ package com.msemu.world.client.guild.operations;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;
 import com.msemu.world.enums.GuildResultType;
+import lombok.Getter;
 
 /**
  * Created by Weber on 2018/4/17.
  */
 public class GuildUpdateMemberLogin implements IGuildResultInfo {
 
-    private int guildID;
-    private int charID;
-    private boolean online;
-    private boolean showBox;
+    @Getter
+    private int guildID, charID;
+    @Getter
+    private boolean online, showBox;
 
     public GuildUpdateMemberLogin(int guildID, int charID, boolean online) {
         this.guildID = guildID;
         this.charID = charID;
         this.online = online;
-        showBox = true;
+        this.showBox = true;
     }
 
     public GuildUpdateMemberLogin(int guildID, int charID, boolean online, boolean showBox) {

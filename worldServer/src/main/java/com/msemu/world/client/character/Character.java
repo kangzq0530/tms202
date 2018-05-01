@@ -8,16 +8,17 @@ import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.utils.types.FileTime;
 import com.msemu.commons.utils.types.Position;
 import com.msemu.core.network.GameClient;
-import com.msemu.core.network.packets.out.Stage.SetField;
-import com.msemu.core.network.packets.out.UserPool.UserEnterField;
-import com.msemu.core.network.packets.out.UserPool.UserLocal.ChatMsg;
-import com.msemu.core.network.packets.out.WvsContext.ChangeSkillRecordResult;
-import com.msemu.core.network.packets.out.WvsContext.GuildResult;
-import com.msemu.core.network.packets.out.WvsContext.InventoryOperation;
-import com.msemu.core.network.packets.out.WvsContext.StatChanged;
-import com.msemu.core.network.packets.out.WvsContext.messages.IncExpMessage;
-import com.msemu.world.client.character.items.Equip;
-import com.msemu.world.client.character.items.Item;
+import com.msemu.core.network.packets.out.stage.SetField;
+import com.msemu.core.network.packets.out.user.UserEnterField;
+import com.msemu.core.network.packets.out.user.local.ChatMsg;
+import com.msemu.core.network.packets.out.user.remote.UserAvatarModified;
+import com.msemu.core.network.packets.out.wvscontext.ChangeSkillRecordResult;
+import com.msemu.core.network.packets.out.wvscontext.GuildResult;
+import com.msemu.core.network.packets.out.wvscontext.InventoryOperation;
+import com.msemu.core.network.packets.out.wvscontext.StatChanged;
+import com.msemu.core.network.packets.out.wvscontext.messages.IncExpMessage;
+import com.msemu.world.client.character.inventory.items.Equip;
+import com.msemu.world.client.character.inventory.items.Item;
 import com.msemu.world.client.character.jobs.JobHandler;
 import com.msemu.world.client.character.jobs.JobManager;
 import com.msemu.world.client.character.party.Party;
@@ -31,10 +32,12 @@ import com.msemu.world.client.guild.GuildMember;
 import com.msemu.world.client.guild.operations.GuildUpdate;
 import com.msemu.world.client.guild.operations.GuildUpdateMemberLogin;
 import com.msemu.world.client.life.Pet;
+import com.msemu.world.client.scripting.ScriptManager;
 import com.msemu.world.constants.GameConstants;
 import com.msemu.world.constants.ItemConstants;
 import com.msemu.world.constants.MapleJob;
 import com.msemu.world.constants.SkillConstants;
+import com.msemu.world.data.FieldData;
 import com.msemu.world.data.ItemData;
 import com.msemu.world.data.SkillData;
 import com.msemu.world.enums.*;
@@ -49,7 +52,9 @@ import javax.persistence.criteria.Root;
 import java.util.*;
 import java.util.function.Predicate;
 
-import static com.msemu.world.enums.ChatMsgColor.YELLOW;
+import static com.msemu.commons.data.enums.InvType.EQUIP;
+import static com.msemu.commons.data.enums.InvType.EQUIPPED;
+import static com.msemu.world.enums.ChatMsgType.YELLOW;
 import static com.msemu.world.enums.InventoryOperationType.*;
 
 /**
@@ -82,13 +87,13 @@ public class Character {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @Getter
     @Setter
-    private Inventory equippedInventory = new Inventory(InvType.EQUIPPED, 50);
+    private Inventory equippedInventory = new Inventory(EQUIPPED, 50);
 
     @JoinColumn(name = "equipInventory")
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @Getter
     @Setter
-    private Inventory equipInventory = new Inventory(InvType.EQUIP, 50);
+    private Inventory equipInventory = new Inventory(EQUIP, 50);
 
     @JoinColumn(name = "consumeInventory")
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
@@ -416,6 +421,7 @@ public class Character {
     @Setter
     private FieldInstanceType fieldInstanceType;
     @Transient
+    @Getter
     private Map<Integer, Field> fields = new HashMap<>();
     @Transient
     @Getter
@@ -538,7 +544,7 @@ public class Character {
             case DEX:
                 return cs.getDex();
             case INT:
-                return cs.getInt();
+                return cs.getInte();
             case LUK:
                 return cs.getLuk();
             case HP:
@@ -566,7 +572,7 @@ public class Character {
                 getAvatarData().getCharacterStat().setDex(amount);
                 break;
             case INT:
-                getAvatarData().getCharacterStat().setInt(amount);
+                getAvatarData().getCharacterStat().setInte(amount);
                 break;
             case LUK:
                 getAvatarData().getCharacterStat().setLuk(amount);
@@ -636,6 +642,11 @@ public class Character {
                 getConsumeInventory(), getEtcInventory(), getInstallInventory(), getCashInventory()));
     }
 
+    public void renewAvatarLook() {
+        byte mask = AvatarModifiedMask.AvatarLook.getVal();
+        getField().broadcastPacket(new UserAvatarModified(this, mask, false));
+    }
+
     public Inventory getInventoryByType(InvType invType) {
         switch (invType) {
             case EQUIPPED:
@@ -667,11 +678,11 @@ public class Character {
             item.setQuantity(0);
             inventory.removeItem(item);
             write(new InventoryOperation(true, false,
-                    REMOVE, (short) item.getBagIndex(), (byte) -1, 0, item));
+                    REMOVE, item, item.getBagIndex()));
         } else {
             item.setQuantity(item.getQuantity() - 1);
             write(new InventoryOperation(true, false,
-                    UPDATE_QUANTITY, (short) item.getBagIndex(), (byte) -1, 0, item));
+                    UPDATE, item, item.getBagIndex()));
         }
         setBulletIDForAttack(calculateBulletIDForAttack());
     }
@@ -751,7 +762,7 @@ public class Character {
             if (existingItem != null && existingItem.getInvType().isStackable()) {
                 existingItem.addQuantity(item.getQuantity());
                 write(new InventoryOperation(true, false,
-                        UPDATE_BAG_QUANTITY, (short) existingItem.getBagIndex(), (byte) -1, 0, existingItem));
+                        UPDATE, existingItem, (short) existingItem.getBagIndex()));
             } else {
                 item.setInventoryId(inventory.getId());
                 if (!hasCorrectBagIndex) {
@@ -762,7 +773,7 @@ public class Character {
                     DatabaseFactory.getInstance().saveToDB(item);
                 }
                 write(new InventoryOperation(true, false,
-                        ADD, (short) item.getBagIndex(), (byte) -1, 0, item));
+                        ADD, item, item.getBagIndex()));
             }
             setBulletIDForAttack(calculateBulletIDForAttack());
         }
@@ -773,7 +784,7 @@ public class Character {
     }
 
     /**
-     * Sends a message to this Char with a default colour {@link ChatMsgColor#YELLOW}.
+     * Sends a message to this Char with a default colour {@link ChatMsgType#YELLOW}.
      *
      * @param msg The message to display.
      */
@@ -782,12 +793,12 @@ public class Character {
     }
 
     /**
-     * Sends a message to this Char with a given {@link ChatMsgColor colour}.
+     * Sends a message to this Char with a given {@link ChatMsgType colour}.
      *
      * @param clr The Colour this message should be in.
      * @param msg The message to display.
      */
-    public void chatMessage(ChatMsgColor clr, String msg) {
+    public void chatMessage(ChatMsgType clr, String msg) {
         getClient().write(new ChatMsg(clr, msg));
     }
 
@@ -867,9 +878,9 @@ public class Character {
     }
 
     /**
-     * Warps this Char to a given {@link Field}, with the Field's "sp" portal as spawn position.
+     * Warps this Char to a given {@link Field}, with the field's "sp" portal as spawn position.
      *
-     * @param toField       The Field to warp to.
+     * @param toField       The field to warp to.
      * @param characterData Whether or not the character data should be encoded.
      */
     public void warp(Field toField, boolean characterData) {
@@ -879,7 +890,7 @@ public class Character {
     /**
      * Warps this Char to a given {@link Field} and {@link Portal}. Will not include character data.
      *
-     * @param toField  The Field to warp to.
+     * @param toField  The field to warp to.
      * @param toPortal The Portal to spawn at.
      */
     public void warp(Field toField, Portal toPortal) {
@@ -908,7 +919,6 @@ public class Character {
                 (byte) portal.getId(), false, 100, null, true, -1));
         if (characterData) {
             if (getGuild() != null) {
-
                 write(new GuildResult(new GuildUpdate(getGuild())));
             }
         }
@@ -930,7 +940,8 @@ public class Character {
         setZeroInfo(zeroInfo);
     }
 
-    public void encode(OutPacket outPacket, DBChar mask) {
+
+    public void encode(OutPacket<GameClient> outPacket, DBChar mask) {
         // CharacterData::Decode
         outPacket.encodeLong(mask.get());
         outPacket.encodeByte(getCombatOrders());
@@ -1687,7 +1698,7 @@ public class Character {
         if (mask.isInMask(0x4000000000000L)) {
             boolean v190 = true;
             outPacket.encodeByte(v190);
-            if(v190) {
+            if (v190) {
                 outPacket.encodeByte(0);
                 outPacket.encodeInt(1);
                 outPacket.encodeInt(0);
@@ -1696,14 +1707,14 @@ public class Character {
             }
             short v192 = 0;
             outPacket.encodeShort(v192);
-            for(int i = 0; i < v192;i++) {
+            for (int i = 0; i < v192; i++) {
                 outPacket.encodeInt(0);
                 outPacket.encodeInt(0);
                 outPacket.encodeLong(0);
             }
             short v194 = 0;
             outPacket.encodeShort(v194);
-            for(int i = 0; i < v194;i++) {
+            for (int i = 0; i < v194; i++) {
                 outPacket.encodeByte(0);
                 outPacket.encodeInt(0);
                 outPacket.encodeInt(0);
@@ -1772,7 +1783,7 @@ public class Character {
     }
 
     public int getTotalChuc() {
-        return getInventoryByType(InvType.EQUIPPED).getItems().stream().mapToInt(i -> ((Equip) i).getChuc()).sum();
+        return getInventoryByType(EQUIPPED).getItems().stream().mapToInt(i -> ((Equip) i).getChuc()).sum();
     }
 
     public boolean hasFriendshipItem() {
@@ -1780,6 +1791,40 @@ public class Character {
         return false;
     }
 
+    public void renewCharacterStats() {
+        getAvatarData().getCharacterStat().renewCharacterStats();
+    }
+
+    public void enableActions() {
+        write(new StatChanged());
+    }
+
+    public void dropMessage() {
+
+    }
+
+    public Field getOrCreateFieldByCurrentInstanceType(int fieldID) {
+        Field res = null;
+        switch (getFieldInstanceType()) {
+            case SOLO:
+                if (getFields().containsKey(fieldID)) {
+                    res = getFields().get(fieldID);
+                } else {
+                    Field field = FieldData.getInstance().getFieldFromTemplate(fieldID);
+                    getFields().put(field.getId(), field);
+                    res = field;
+                }
+                break;
+            case PARTY:
+                res = getParty() != null ? getParty().getOrCreateFieldById(fieldID) : null;
+                break;
+            // TODO expedition
+            default:
+                res = getClient().getChannelInstance().getField(fieldID);
+                break;
+        }
+        return res;
+    }
 }
 
 

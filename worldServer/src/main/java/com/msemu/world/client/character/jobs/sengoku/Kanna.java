@@ -17,11 +17,11 @@ import com.msemu.world.client.life.Mob;
 import com.msemu.world.client.life.Summon;
 import com.msemu.world.client.life.skills.MobTemporaryStat;
 import com.msemu.world.data.SkillData;
-import com.msemu.world.enums.ChatMsgColor;
+import com.msemu.world.enums.ChatMsgType;
 import com.msemu.commons.data.enums.MobStat;
 import com.msemu.world.enums.MoveAbility;
-import com.msemu.core.network.packets.out.UserPool.FoxManEnterField;
-import com.msemu.core.network.packets.out.WvsContext.TemporaryStatSet;
+import com.msemu.core.network.packets.out.user.FoxManEnterField;
+import com.msemu.core.network.packets.out.wvscontext.TemporaryStatSet;
 
 import static com.msemu.commons.data.enums.SkillStat.*;
 import static com.msemu.world.client.character.skills.CharacterTemporaryStat.*;
@@ -154,7 +154,6 @@ public class Kanna extends JobHandler {
                 int x1 = chr.getPosition().deepCopy().getX() - 500;
                 int x2 = chr.getPosition().deepCopy().getX() + 500;
                 summon.setKishinPositions(new Position[]{new Position(x1, chr.getPosition().getY()), new Position(x2, chr.getPosition().getY())});
-
                 summon.setMoveAbility(MoveAbility.STATIC.getVal());
                 field.spawnAddSummon(summon);
                 break;
@@ -197,7 +196,7 @@ public class Kanna extends JobHandler {
         if (skill != null) {
             si = SkillData.getInstance().getSkillInfoById(skillID);
         }
-        chr.chatMessage(ChatMsgColor.YELLOW, "SkillID: " + skillID);
+        chr.chatMessage(ChatMsgType.YELLOW, "SkillID: " + skillID);
         if (isBuff(skillID)) {
             handleBuff(inPacket, skillID, slv);
         } else {

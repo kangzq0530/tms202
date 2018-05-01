@@ -3,7 +3,7 @@ package com.msemu.world.client.character.quest.act;
 import com.msemu.commons.data.templates.quest.actions.QuestActData;
 import com.msemu.commons.data.templates.quest.actions.QuestItemActData;
 import com.msemu.world.client.character.Character;
-import com.msemu.world.client.character.items.Item;
+import com.msemu.world.client.character.inventory.items.Item;
 import com.msemu.world.constants.ItemConstants;
 import com.msemu.world.data.ItemData;
 import lombok.Getter;

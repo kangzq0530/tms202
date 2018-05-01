@@ -1,8 +1,7 @@
 package com.msemu.commons.data.loader;
 
-import com.msemu.commons.data.loader.dat.DatManager;
 import com.msemu.commons.data.loader.dat.IDatExporter;
-import com.msemu.commons.utils.DirUtils;
+import com.msemu.commons.utils.FileUtils;
 import com.msemu.core.configs.CoreConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +20,7 @@ public abstract class DatDataLoader<T, K> implements IDataLoader<T, Void> , IDat
     protected abstract K create();
 
     protected DataOutputStream getDataOutputStream() throws FileNotFoundException {
-        DirUtils.makeDirIfAbsent(CoreConfig.DAT_PATH);
+        FileUtils.makeDirIfAbsent(CoreConfig.DAT_PATH);
         return new DataOutputStream(new FileOutputStream(CoreConfig.DAT_PATH + "/" + datFileName));
     }
 

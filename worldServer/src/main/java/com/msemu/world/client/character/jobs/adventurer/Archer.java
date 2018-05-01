@@ -24,9 +24,9 @@ import com.msemu.world.data.SkillData;
 import com.msemu.commons.data.enums.MobStat;
 import com.msemu.world.enums.MoveAbility;
 import com.msemu.world.enums.Stat;
-import com.msemu.core.network.packets.out.WvsContext.StatChanged;
-import com.msemu.core.network.packets.out.WvsContext.TemporaryStatSet;
-import com.msemu.core.network.packets.out.WvsContext.TemporaryStateSet;
+import com.msemu.core.network.packets.out.wvscontext.StatChanged;
+import com.msemu.core.network.packets.out.wvscontext.TemporaryStatSet;
+import com.msemu.core.network.packets.out.wvscontext.TemporaryStateSet;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -387,7 +387,7 @@ public class Archer extends JobHandler {
 //                        ForceAtomInfo forceAtomInfo = new ForceAtomInfo(1, inc, 15, 15,
 //                                num, 0, (int) System.currentTimeMillis(), 1, 0,
 //                                new Position());
-//                        chr.getField().broadcastPacket(Field.createForceAtom(false, 0, chr.getItemId(), type,
+//                        chr.getField().broadcastPacket(field.createForceAtom(false, 0, chr.getItemId(), type,
 //                                true, mobId, QUIVER_CARTRIDGE_ATOM, forceAtomInfo, new Rect(), 0, 300,
 //                                mob.getPosition(), 0, mob.getPosition()));
 //                    }

@@ -5,16 +5,15 @@ package com.msemu.world.enums;
  */
 public enum InventoryOperationType {
     ADD(0),
-    UPDATE_QUANTITY(1),
+    UPDATE(1),
     MOVE(2),
     REMOVE(3),
     ITEM_EXP(4),
-    UPDATE_BAG_POS(5),
-    UPDATE_BAG_QUANTITY(6),
-    UNK_1(7),
-    UPDATE_ITEM_INFO(8),
-    UNK_2(9),
-    UNK_3(10),
+    MOVE_TO_BAG(5),
+    UPDATE_IN_BAG(6),
+    REMOVE_IN_BAG(7),
+    MOVE_IN_BAG(8),
+    ADD_IN_BAG(9),
     ;
 
     private byte value;

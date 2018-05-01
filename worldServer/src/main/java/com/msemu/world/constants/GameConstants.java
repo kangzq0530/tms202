@@ -82,4 +82,31 @@ public class GameConstants {
     public static boolean isBanBanBaseField(int dwFieldID) {
         return (dwFieldID / 0xA) == 10520011 || (dwFieldID / 0xA) == 10520051 || dwFieldID == 105200519;
     }
+
+    public static int getHyperStatReqAp(int level) {
+        switch (level) {
+            case 1:
+                return 1;
+            case 2:
+                return 2;
+            case 3:
+                return 4;
+            case 4:
+                return 8;
+            case 5:
+                return 10;
+            case 6:
+                return 15;
+            case 7:
+                return 20;
+            case 8:
+                return 25;
+            case 9:
+                return 30;
+            case 10:
+                return 35;
+            default:
+                return 0;
+        }
+    }
 }

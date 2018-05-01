@@ -183,4 +183,113 @@ public class SkillConstants {
         return result;
     }
 
+    public static boolean is_super_nova_skill(int nSkillID) {
+        return nSkillID == 4221052 || nSkillID == 65121052;
+    }
+
+    public static boolean is_rw_multi_charge_skill(int nSkillID) {
+        boolean v1 = true;
+        if (nSkillID > 37110001) {
+            if (nSkillID == 37110004 || nSkillID == 37111000) {
+                return true;
+            }
+            v1 = nSkillID == 37111003;
+        } else {
+            if (nSkillID == 37110001) {
+                return true;
+            }
+            if (nSkillID > 37100002) {
+                v1 = nSkillID == 37101001;
+            } else {
+                if (nSkillID == 37100002 || nSkillID == 37000010) {
+                    return true;
+                }
+                v1 = nSkillID == 37001001;
+            }
+        }
+        return v1;
+    }
+
+    public static boolean is_unregisterd_skill(int nSkillID) {
+        boolean result;
+        int v1;
+        v1 = nSkillID / 10000;
+        if (nSkillID / 10000 == 8000) {
+            v1 = nSkillID / 100;
+        }
+        if (nSkillID > 0 && v1 == 9500) {
+            result = false;
+        } else {
+            result = nSkillID / 10000000 == 9;
+        }
+        return result;
+    }
+
+    public static boolean is_match_skill(boolean bIsBeta, int nSkillID) {
+        int v2 = nSkillID / 10000;
+        int v3 = nSkillID / 10000;
+        boolean result;
+        if (nSkillID / 10000 == 8000) {
+            v3 = nSkillID / 100;
+        }
+        if (v2 == 8000) {
+            v2 = nSkillID / 100;
+        }
+        if (MapleJob.isBeginner(v3) || (nSkillID > 0 && v2 == 9500)) {
+            result = true;
+        } else {
+            result = is_zero_alpha_skill(nSkillID) && !bIsBeta || is_zero_beta_skill(nSkillID) && bIsBeta;
+        }
+        return result;
+    }
+
+    public static boolean is_zero_alpha_skill(int nSkillID) {
+        boolean result;
+        int v2 = nSkillID / 10000;
+        if (nSkillID / 10000 == 8000) {
+            v2 = nSkillID / 100;
+        }
+        if (is_zero_skill(nSkillID) || MapleJob.isBeginner(v2)) {
+            result = false;
+        } else {
+            result = nSkillID % 1000 / 100 == 2;
+        }
+        return result;
+    }
+
+    public static boolean is_zero_beta_skill(int nSkillID) {
+        boolean result;
+        int v2 = nSkillID / 10000;
+        if (nSkillID / 10000 == 8000) {
+            v2 = nSkillID / 100;
+        }
+        if (is_zero_skill(nSkillID) || MapleJob.isBeginner(v2)) {
+            result = false;
+        } else {
+            result = nSkillID % 1000 / 100 == 1;
+        }
+        return result;
+    }
+
+    public static boolean is_zero_skill(int nSkillID) {
+        int v1 = nSkillID / 10000;
+        boolean v2;
+        if (nSkillID / 10000 == 8000) {
+            v1 = nSkillID / 100;
+        }
+        if (v1 == 10000 || v1 == 10100 || v1 == 10110 || v1 == 10111 || v1 == 10112) {
+            v2 = true;
+        } else {
+            v2 = false;
+        }
+        return v2;
+    }
+
+    public static int getAvailableVCoreSpace(int level) {
+        if (level >= 200) {
+            return 4 + (level - 250) / 5;
+        } else {
+            return 4;
+        }
+    }
 }

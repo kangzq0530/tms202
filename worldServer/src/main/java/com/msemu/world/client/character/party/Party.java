@@ -4,47 +4,39 @@ package com.msemu.world.client.character.party;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;
 import com.msemu.world.client.character.Character;
+import com.msemu.world.client.field.Field;
+import com.msemu.world.data.FieldData;
+import com.msemu.world.enums.FieldInstanceType;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by Weber on 2018/4/13.
  */
+@Getter
+@Setter
 public class Party {
 
     private static final AtomicInteger partyIdGenerator = new AtomicInteger(1);
 
-    @Getter
     private final int id;
 
-    @Getter
     private final PartyMember[] partyMembers = new PartyMember[6];
 
-    @Getter
-    @Setter
     private boolean appliable;
-    @Getter
-    @Setter
     private String name;
-    @Getter
-    @Setter
     private int partyLeaderID;
-    @Getter
-    @Setter
     private Character applyingChar;
+    @Getter(value = AccessLevel.PRIVATE)
     private Map<Integer, Field> fields = new HashMap<>();
 
 
     public Party() {
         id = getNewPartyId();
-
     }
 
     public boolean isFull() {
@@ -122,5 +114,35 @@ public class Party {
         outPacket.encodeByte(isAppliable() && !isFull());
         outPacket.encodeString(getName());
         outPacket.encodeArr(new byte[50]);
+    }
+
+    public Field getOrCreateFieldById(int fieldID) {
+        if (getFields().containsKey(fieldID)) {
+            return getFields().get(fieldID);
+        } else {
+            Field field = FieldData.getInstance().getFieldFromTemplate(fieldID);
+            getFields().put(field.getId(), field);
+            return field;
+        }
+    }
+
+    public void clearFieldInstances() {
+        Set<Character> chrs = new HashSet<>();
+        for(Field f : getFields().values()) {
+            chrs.addAll(f.getChars());
+        }
+        for(Character chr : chrs) {
+            chr.setFieldInstanceType(FieldInstanceType.CHANNEL);
+            int returnMap = chr.getField().getReturnMap();
+            if(returnMap != 999999999 && returnMap != chr.getField().getReturnMap()) {
+                Field field = chr.getClient().getChannelInstance().getField(returnMap);
+                chr.warp(field);
+            }
+        }
+        getFields().clear();
+    }
+
+    public PartyMember getPartyLeader() {
+        return Arrays.stream(getPartyMembers()).filter(p -> p != null && p.getCharacterID() == getPartyLeaderID()).findFirst().orElse(null);
     }
 }

@@ -9,20 +9,20 @@ import com.msemu.commons.thread.EventManager;
 import com.msemu.commons.utils.types.Position;
 import com.msemu.commons.utils.types.Rect;
 import com.msemu.core.network.GameClient;
-import com.msemu.core.network.packets.out.DropPool.DropEnterField;
-import com.msemu.core.network.packets.out.DropPool.DropLeaveField;
-import com.msemu.core.network.packets.out.Field.AffectedAreaCreated;
-import com.msemu.core.network.packets.out.Field.AffectedAreaRemoved;
-import com.msemu.core.network.packets.out.MobPool.MobChangeController;
-import com.msemu.core.network.packets.out.MobPool.MobEnterField;
-import com.msemu.core.network.packets.out.NpcPool.NpcChangeController;
-import com.msemu.core.network.packets.out.NpcPool.NpcEnterField;
-import com.msemu.core.network.packets.out.SummonPool.SummonEnterField;
-import com.msemu.core.network.packets.out.SummonPool.SummonLeaveField;
-import com.msemu.core.network.packets.out.UserPool.UserEnterField;
-import com.msemu.core.network.packets.out.UserPool.UserLeaveField;
+import com.msemu.core.network.packets.out.drops.DropEnterField;
+import com.msemu.core.network.packets.out.drops.DropLeaveField;
+import com.msemu.core.network.packets.out.field.AffectedAreaCreated;
+import com.msemu.core.network.packets.out.field.AffectedAreaRemoved;
+import com.msemu.core.network.packets.out.mob.MobChangeController;
+import com.msemu.core.network.packets.out.mob.MobEnterField;
+import com.msemu.core.network.packets.out.npc.NpcChangeController;
+import com.msemu.core.network.packets.out.npc.NpcEnterField;
+import com.msemu.core.network.packets.out.summon.SummonEnterField;
+import com.msemu.core.network.packets.out.summon.SummonLeaveField;
+import com.msemu.core.network.packets.out.user.UserEnterField;
+import com.msemu.core.network.packets.out.user.UserLeaveField;
 import com.msemu.world.client.character.Character;
-import com.msemu.world.client.character.items.Item;
+import com.msemu.world.client.character.inventory.items.Item;
 import com.msemu.world.client.character.skills.TemporaryStatManager;
 import com.msemu.world.client.life.*;
 import com.msemu.world.client.life.skills.MobTemporaryStat;
@@ -291,8 +291,17 @@ public class Field {
         getLifeToControllers().put(life, chr);
     }
 
-    public Life getLifeByObjectID(int mobId) {
-        return getLifes().stream().filter(mob -> mob.getObjectId() == mobId).findFirst().orElse(null);
+    public Life getLifeByObjectID(int objectID) {
+        return getLifes().stream()
+                .filter(life -> life.getObjectId() == objectID)
+                .findFirst().orElse(null);
+    }
+
+    public Npc getNpcByObjectID(int objectID) {
+        return getLifes().stream()
+                .filter(life -> life instanceof Npc && life.getObjectId() == objectID)
+                .map(life -> (Npc)life)
+                .findFirst().orElse(null);
     }
 
     public void spawnAllLifeForChar(Character chr) {
@@ -303,7 +312,7 @@ public class Field {
 
     @Override
     public String toString() {
-        return "[Field] ID = " + getId();
+        return "[field] ID = " + getId();
     }
 
     public void respawn(Mob mob) {
@@ -537,4 +546,7 @@ public class Field {
         chr.getScriptManager().startScript(getId(), script, ScriptType.FIELD);
     }
 
+    public int getReturnMap() {
+        return getFieldData().getReturnMap();
+    }
 }

@@ -1,4 +1,4 @@
-package com.msemu.world.client.character.items;
+package com.msemu.world.client.character.inventory.items;
 
 import com.msemu.commons.data.templates.ItemTemplate;
 

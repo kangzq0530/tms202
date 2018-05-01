@@ -83,11 +83,10 @@ public class Npc extends Life {
         copy.setMobTimeOnDie(isMobTimeOnDie());
         copy.setRegenStart(getRegenStart());
         copy.setMobAliveReq(getMobAliveReq());
-        copy.getScripts().addAll(getScripts());
         return copy;
     }
 
-    public List<String> getScripts() {
-        return getTemplate().getScripts();
+    public String getScript() {
+        return getTemplate().getScript();
     }
 }

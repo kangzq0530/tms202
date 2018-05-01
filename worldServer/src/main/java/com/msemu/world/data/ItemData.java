@@ -4,24 +4,19 @@ import com.msemu.commons.data.loader.dat.EquipTemplateDatLoader;
 import com.msemu.commons.data.loader.dat.ItemOptionDatLoader;
 import com.msemu.commons.data.loader.dat.ItemTemplateDatLoader;
 import com.msemu.commons.data.templates.EquipTemplate;
-import com.msemu.commons.data.templates.ItemOption;
 import com.msemu.commons.data.templates.ItemOptionInfo;
 import com.msemu.commons.data.templates.ItemTemplate;
-import com.msemu.commons.data.loader.wz.EquipTemplateLoader;
-import com.msemu.commons.data.loader.wz.ItemOptionLoader;
-import com.msemu.commons.data.loader.wz.ItemTemplateLoader;
 import com.msemu.commons.reload.IReloadable;
 import com.msemu.commons.reload.Reloadable;
 import com.msemu.core.startup.StartupComponent;
-import com.msemu.world.client.character.items.Equip;
-import com.msemu.world.client.character.items.Item;
+import com.msemu.world.client.character.inventory.items.Equip;
+import com.msemu.world.client.character.inventory.items.Item;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 

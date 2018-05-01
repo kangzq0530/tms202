@@ -16,10 +16,10 @@ import com.msemu.world.client.life.AffectedArea;
 import com.msemu.world.client.life.Mob;
 import com.msemu.world.client.life.skills.MobTemporaryStat;
 import com.msemu.world.data.SkillData;
-import com.msemu.world.enums.ChatMsgColor;
+import com.msemu.world.enums.ChatMsgType;
 import com.msemu.commons.data.enums.MobStat;
-import com.msemu.core.network.packets.out.WvsContext.ModCombo;
-import com.msemu.core.network.packets.out.WvsContext.TemporaryStatSet;
+import com.msemu.core.network.packets.out.wvscontext.ModCombo;
+import com.msemu.core.network.packets.out.wvscontext.TemporaryStatSet;
 
 import java.util.Arrays;
 
@@ -435,7 +435,7 @@ public class Aran  extends JobHandler {
         if (skill != null) {
             si = SkillData.getInstance().getSkillInfoById(skillID);
         }
-        chr.chatMessage(ChatMsgColor.YELLOW, "SkillID: " + skillID);
+        chr.chatMessage(ChatMsgType.YELLOW, "SkillID: " + skillID);
         if (isBuff(skillID)) {
             handleBuff(inPacket, skillID, slv);
         } else {

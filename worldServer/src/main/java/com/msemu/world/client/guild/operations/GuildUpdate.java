@@ -4,11 +4,13 @@ import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;
 import com.msemu.world.client.guild.Guild;
 import com.msemu.world.enums.GuildResultType;
+import lombok.Getter;
 
 /**
  * Created by Weber on 2018/4/14.
  */
 public class GuildUpdate implements IGuildResultInfo {
+    @Getter
     public Guild guild;
 
     public GuildUpdate(Guild guild) {

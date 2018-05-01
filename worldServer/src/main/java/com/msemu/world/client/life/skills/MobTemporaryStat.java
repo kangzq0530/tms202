@@ -1,34 +1,42 @@
 package com.msemu.world.client.life.skills;
 
+import com.msemu.commons.data.enums.MobStat;
 import com.msemu.commons.data.templates.skill.SkillInfo;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.thread.EventManager;
 import com.msemu.core.network.GameClient;
+import com.msemu.core.network.packets.out.mob.MobStatReset;
+import com.msemu.core.network.packets.out.mob.MobStatSet;
 import com.msemu.world.client.character.skills.Option;
 import com.msemu.world.client.character.skills.Skill;
 import com.msemu.world.client.life.Mob;
 import com.msemu.world.data.SkillData;
-import com.msemu.commons.data.enums.MobStat;
-import com.msemu.core.network.packets.out.MobPool.MobStatReset;
-import com.msemu.core.network.packets.out.MobPool.MobStatSet;
-
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.*;
 import java.util.concurrent.ScheduledFuture;
 import java.util.stream.Collectors;
 
-import static com.msemu.commons.data.enums.SkillStat.*;
 import static com.msemu.commons.data.enums.MobStat.*;
+import static com.msemu.commons.data.enums.MobStat.BurnedInfo;
+import static com.msemu.commons.data.enums.SkillStat.*;
 
 /**
  * Created by Weber on 2018/4/12.
  */
 public class MobTemporaryStat {
-    private List<BurnedInfo> burnedInfos = new ArrayList<>();
+    @Getter
+    private List<BurnedInfo> burnedInfo = new ArrayList<>();
+    @Getter
     private Map<Integer, ScheduledFuture> burnCancelSchedules = new HashMap<>();
+    @Getter
     private Map<Integer, ScheduledFuture> burnSchedules = new HashMap<>();
+    @Getter
+    @Setter
     private String linkTeam;
-    private Comparator<MobStat> mobStatComper = (k1, k2) -> {
+    @Getter
+    private Comparator<MobStat> mobStatComparator = (k1, k2) -> {
         int res = 0;
         if (k1.getPosition() < k2.getPosition()) {
             res = -1;
@@ -43,10 +51,16 @@ public class MobTemporaryStat {
         }
         return res;
     };
-    private TreeMap<MobStat, Option> currentStatVals = new TreeMap<>(mobStatComper);
-    private TreeMap<MobStat, Option> newStatVals = new TreeMap<>(mobStatComper);
-    private TreeMap<MobStat, Option> removedStatVals = new TreeMap<>(mobStatComper);
+    @Getter
+    private TreeMap<MobStat, Option> currentStatVals = new TreeMap<>(mobStatComparator);
+    @Getter
+    private TreeMap<MobStat, Option> newStatVals = new TreeMap<>(mobStatComparator);
+    @Getter
+    private TreeMap<MobStat, Option> removedStatVals = new TreeMap<>(mobStatComparator);
+    @Getter
     private Map<MobStat, ScheduledFuture> schedules = new HashMap<>();
+    @Getter
+    @Setter
     private Mob mob;
 
     public MobTemporaryStat(Mob mob) {
@@ -55,12 +69,11 @@ public class MobTemporaryStat {
 
     public MobTemporaryStat deepCopy() {
         MobTemporaryStat copy = new MobTemporaryStat(getMob());
-        copy.setBurnedInfos(new ArrayList<>());
-        for (BurnedInfo bi : getBurnedInfos()) {
-            copy.getBurnedInfos().add(bi.deepCopy());
+        for (BurnedInfo bi : getBurnedInfo()) {
+            copy.getBurnedInfo().add(bi.deepCopy());
         }
         copy.setLinkTeam(getLinkTeam());
-        copy.mobStatComper = getMobStatComper();
+        copy.mobStatComparator = getMobStatComparator();
         for (MobStat ms : getCurrentStatVals().keySet()) {
             copy.addStatOptions(ms, getCurrentStatVals().get(ms).deepCopy());
         }
@@ -239,8 +252,8 @@ public class MobTemporaryStat {
             outPacket.encodeInt(getNewOptionsByMobStat(Freeze).cOption);
         }
         if (hasNewMobStat(BurnedInfo)) {
-            outPacket.encodeByte(getBurnedInfos().size());
-            for (BurnedInfo bi : getBurnedInfos()) {
+            outPacket.encodeByte(getBurnedInfo().size());
+            for (BurnedInfo bi : getBurnedInfo()) {
                 bi.encode(outPacket);
             }
         }
@@ -354,7 +367,7 @@ public class MobTemporaryStat {
 
     public BurnedInfo getBurnBySkill(int skillID) {
         BurnedInfo res = null;
-        for (BurnedInfo bi : getBurnedInfos()) {
+        for (BurnedInfo bi : getBurnedInfo()) {
             if (bi.getSkillId() == skillID) {
                 res = bi;
             }
@@ -364,18 +377,6 @@ public class MobTemporaryStat {
 
     public boolean hasRemovedMobStat(MobStat mobStat) {
         return getRemovedStatVals().keySet().contains(mobStat);
-    }
-
-    public Map<MobStat, Option> getCurrentStatVals() {
-        return currentStatVals;
-    }
-
-    public TreeMap<MobStat, Option> getNewStatVals() {
-        return newStatVals;
-    }
-
-    public TreeMap<MobStat, Option> getRemovedStatVals() {
-        return removedStatVals;
     }
 
     public void removeMobStat(MobStat mobStat, Boolean fromSchedule) {
@@ -392,10 +393,12 @@ public class MobTemporaryStat {
     }
 
     public void removeBurnedInfo(Integer charId, Boolean fromSchedule) {
-        List<BurnedInfo> biList = getBurnedInfos().stream().filter(bi -> bi.getCharacterId() == charId).collect(Collectors.toList());
-        getBurnedInfos().removeAll(biList);
+        List<BurnedInfo> biList = getBurnedInfo()
+                .stream().filter(bi -> bi.getCharacterId() == charId)
+                .collect(Collectors.toList());
+        getBurnedInfo().removeAll(biList);
         getRemovedStatVals().put(BurnedInfo, getCurrentOptionsByMobStat(BurnedInfo));
-        if (getBurnedInfos().size() == 0) {
+        if (getBurnedInfo().size() == 0) {
             getCurrentStatVals().remove(BurnedInfo);
         }
         getMob().getField().broadcastPacket(new MobStatReset(getMob(), (byte) 1, false, biList));
@@ -449,52 +452,25 @@ public class MobTemporaryStat {
         }
     }
 
-
-    public List<BurnedInfo> getBurnedInfos() {
-        return burnedInfos;
-    }
-
-    public void setBurnedInfos(List<BurnedInfo> burnedInfos) {
-        this.burnedInfos = burnedInfos;
-    }
-
-    public Comparator getMobStatComper() {
-        return mobStatComper;
-    }
-
-    public String getLinkTeam() {
-        return linkTeam;
-    }
-
-    public void setLinkTeam(String linkTeam) {
-        this.linkTeam = linkTeam;
-    }
-
     public boolean hasNewMovementAffectingStat() {
-        return getNewStatVals().keySet().stream().anyMatch(MobStat::isMovementAffectingStat);
+        return getNewStatVals()
+                .keySet()
+                .stream()
+                .anyMatch(MobStat::isMovementAffectingStat);
     }
 
     public boolean hasCurrentMovementAffectingStat() {
-        return getCurrentStatVals().keySet().stream().anyMatch(MobStat::isMovementAffectingStat);
+        return getCurrentStatVals()
+                .keySet()
+                .stream()
+                .anyMatch(MobStat::isMovementAffectingStat);
     }
 
     public boolean hasRemovedMovementAffectingStat() {
-        return getRemovedStatVals().keySet().stream().anyMatch(MobStat::isMovementAffectingStat);
-    }
-
-    public Map<MobStat, ScheduledFuture> getSchedules() {
-        if (schedules == null) {
-            schedules = new HashMap<>();
-        }
-        return schedules;
-    }
-
-    public Mob getMob() {
-        return mob;
-    }
-
-    public void setMob(Mob mob) {
-        this.mob = mob;
+        return getRemovedStatVals()
+                .keySet()
+                .stream()
+                .anyMatch(MobStat::isMovementAffectingStat);
     }
 
     public void clear() {
@@ -514,7 +490,7 @@ public class MobTemporaryStat {
     }
 
     public void createAndAddBurnedInfo(int charId, Skill skill, int max) {
-        BurnedInfo bu = getBurnedInfos().stream().
+        BurnedInfo bu = getBurnedInfo().stream().
                 filter(b -> b.getSkillId() == skill.getId() && b.getCharacterId() == charId)
                 .findFirst().orElse(null);
         SkillInfo si = SkillData.getInstance().getSkillInfoById(skill.getSkillId());
@@ -537,7 +513,7 @@ public class MobTemporaryStat {
         if (bu != null) {
             removeBurnedInfo(charId, false);
         }
-        getBurnedInfos().add(bi);
+        getBurnedInfo().add(bi);
         addStatOptionsAndBroadcast(MobStat.BurnedInfo, new Option());
         ScheduledFuture sf = EventManager.getInstance().addEvent(() -> removeBurnedInfo(charId, true), time);
         ScheduledFuture burn = EventManager.getInstance().addFixedRateEvent(
@@ -546,11 +522,4 @@ public class MobTemporaryStat {
         getBurnSchedules().put(charId, burn);
     }
 
-    public Map<Integer, ScheduledFuture> getBurnCancelSchedules() {
-        return burnCancelSchedules;
-    }
-
-    public Map<Integer, ScheduledFuture> getBurnSchedules() {
-        return burnSchedules;
-    }
 }

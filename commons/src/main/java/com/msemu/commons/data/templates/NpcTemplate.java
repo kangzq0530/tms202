@@ -14,38 +14,35 @@ import java.util.stream.Collectors;
 /**
  * Created by Weber on 2018/4/22.
  */
-@Getter
-@Setter
+
 public class NpcTemplate implements DatSerializable {
-
+    @Getter
+    @Setter
     private int id;
-
+    @Getter
+    @Setter
     private String name = "";
-
-    private List<String> scripts = new ArrayList<>();
+    @Getter
+    @Setter
+    private String script = "";
 
     @Override
     public String toString() {
-        return String.format("[NPC] %s(%d) Scripts: %s", getName(), getId(), getScripts().stream().collect(Collectors.joining(", ")));
+        return String.format("[NPC] %s(%d) Scripts: %s", getName(), getId(), getScript());
     }
 
     @Override
     public void write(DataOutputStream dos) throws IOException {
         dos.writeInt(this.id);
         dos.writeUTF(this.name);
-        dos.writeInt(this.scripts.size());
-        for (String script : scripts) {
-            dos.writeUTF(script);
-        }
+        dos.writeUTF(this.script);
     }
 
     @Override
     public DatSerializable load(DataInputStream dis) throws IOException {
         this.setId(dis.readInt());
         this.setName(dis.readUTF());
-        int scriptSize = dis.readInt();
-        for (int i = 0; i < scriptSize; i++)
-            getScripts().add(dis.readUTF());
+        this.setScript(dis.readUTF());
         return this;
     }
 }

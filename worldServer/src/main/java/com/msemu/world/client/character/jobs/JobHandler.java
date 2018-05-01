@@ -82,7 +82,7 @@ public abstract class JobHandler {
 //
 //        character.setStat(Stat.MP, curMP);
 //        stats.put(Stat.MP, curMP);
-//        getClient().write(WvsContext.statChanged(stats));
+//        getClient().write(wvscontext.statChanged(stats));
     }
 
     public SkillInfo getInfo(int skillID) {

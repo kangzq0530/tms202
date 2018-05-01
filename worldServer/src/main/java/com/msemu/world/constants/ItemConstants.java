@@ -689,6 +689,10 @@ public class ItemConstants {
             return itemid / 10000 >= 500;
         }
 
+        public static boolean isHarvesting(final int itemId) {
+            return itemId >= 1500000 && itemId < 1520000;
+        }
+
         public static boolean 友誼戒指(int itemid) {
             switch (itemid) {
                 case 1112800:

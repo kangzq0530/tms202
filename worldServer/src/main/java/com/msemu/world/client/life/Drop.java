@@ -1,33 +1,40 @@
 package com.msemu.world.client.life;
 
 import com.msemu.commons.utils.types.FileTime;
-import com.msemu.world.client.character.items.Equip;
-import com.msemu.world.client.character.items.Item;
+import com.msemu.world.client.character.inventory.items.Equip;
+import com.msemu.world.client.character.inventory.items.Item;
 import com.msemu.world.enums.DropType;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Created by Weber on 2018/4/11.
  */
 public class Drop extends Life {
 
+    @Getter
     private Item item;
+    @Getter
     private int money;
+
+    @Getter
+    @Setter
     private DropType dropType;
+    @Getter
+    @Setter
     private int ownerID;
+    @Getter
+    @Setter
     private boolean explosiveDrop;
+    @Getter
+    @Setter
     private FileTime expireTime;
+    @Getter
+    @Setter
     private boolean byPet;
 
     public Drop(int objectId) {
         super(objectId);
-    }
-
-    public DropType getDropType() {
-        return dropType;
-    }
-
-    public void setDropType(DropType dropType) {
-        this.dropType = dropType;
     }
 
     public Drop(int objectID, Item item) {
@@ -44,17 +51,9 @@ public class Drop extends Life {
         expireTime = FileTime.getFileTimeFromType(FileTime.Type.ZERO_TIME);
     }
 
-    public Item getItem() {
-        return item;
-    }
-
     public void setItem(Item item) {
         this.item = item;
         setDropType(DropType.ITEM);
-    }
-
-    public int getMoney() {
-        return money;
     }
 
     public void setMoney(int money) {
@@ -64,38 +63,6 @@ public class Drop extends Life {
 
     public boolean isMoney() {
         return getDropType() == DropType.MONEY;
-    }
-
-    public int getOwnerID() {
-        return ownerID;
-    }
-
-    public void setOwnerID(int ownerID) {
-        this.ownerID = ownerID;
-    }
-
-    public boolean isExplosiveDrop() {
-        return explosiveDrop;
-    }
-
-    public void setExplosiveDrop(boolean explosiveDrop) {
-        this.explosiveDrop = explosiveDrop;
-    }
-
-    public FileTime getExpireTime() {
-        return expireTime;
-    }
-
-    public void setExpireTime(FileTime expireTime) {
-        this.expireTime = expireTime;
-    }
-
-    public boolean isByPet() {
-        return byPet;
-    }
-
-    public void setByPet(boolean byPet) {
-        this.byPet = byPet;
     }
 
     public byte getItemGrade() {

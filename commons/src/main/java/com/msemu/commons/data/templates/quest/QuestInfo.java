@@ -19,6 +19,7 @@ import java.util.Set;
 @Setter
 public class QuestInfo implements DatSerializable{
     private String name = "";
+    private String startScript = "", endScript = "";
     private int id;
     private boolean autoStart = false, autoAccept = false, autoPreComplete = false, autoCancel = false,
             autoCompleteAction = false, isTimeEvent = false, blocked = false;
@@ -37,10 +38,19 @@ public class QuestInfo implements DatSerializable{
                 " 鎖定: " + blocked;
     }
 
+    public boolean hasStartScript() {
+        return !startScript.isEmpty();
+    }
+
+    public boolean hasEndScript() {
+        return !startScript.isEmpty();
+    }
 
     @Override
     public void write(DataOutputStream dos) throws IOException {
         dos.writeUTF(this.name);
+        dos.writeUTF(this.startScript);
+        dos.writeUTF(this.endScript);
         dos.writeInt(this.id);
         dos.writeBoolean(this.autoStart);
         dos.writeBoolean(this.autoAccept);
@@ -59,6 +69,8 @@ public class QuestInfo implements DatSerializable{
     @Override
     public DatSerializable load(DataInputStream dis) throws IOException {
         this.setName(dis.readUTF());
+        this.setStartScript(dis.readUTF());
+        this.setEndScript(dis.readUTF());
         this.setId(dis.readInt());
         this.setAutoStart(dis.readBoolean());
         this.setAutoAccept(dis.readBoolean());

@@ -1,20 +1,13 @@
 package com.msemu.world.data;
 
-import com.msemu.commons.data.templates.NpcTemplate;
 import com.msemu.commons.reload.IReloadable;
 import com.msemu.commons.reload.Reloadable;
-import com.msemu.commons.utils.DirUtils;
-import com.msemu.commons.utils.XMLApi;
-import com.msemu.core.configs.CoreConfig;
 import com.msemu.core.startup.StartupComponent;
 import com.msemu.world.client.life.DropInfo;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 
-import java.io.*;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 

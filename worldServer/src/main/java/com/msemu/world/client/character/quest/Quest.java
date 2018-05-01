@@ -3,7 +3,7 @@ package com.msemu.world.client.character.quest;
 import com.msemu.commons.database.Schema;
 import com.msemu.commons.utils.types.FileTime;
 import com.msemu.commons.utils.StringUtils;
-import com.msemu.world.client.character.items.Item;
+import com.msemu.world.client.character.inventory.items.Item;
 import com.msemu.world.client.character.quest.req.*;
 import com.msemu.world.enums.QuestStatus;
 import org.hibernate.annotations.Cascade;

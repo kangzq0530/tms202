@@ -2,7 +2,7 @@ package com.msemu.world.client.character;
 
 import com.msemu.commons.data.enums.InvType;
 import com.msemu.commons.database.Schema;
-import com.msemu.world.client.character.items.Item;
+import com.msemu.world.client.character.inventory.items.Item;
 import com.msemu.world.enums.BodyPart;
 import org.hibernate.annotations.Cascade;
 

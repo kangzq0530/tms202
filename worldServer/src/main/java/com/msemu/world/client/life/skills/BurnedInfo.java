@@ -2,13 +2,21 @@ package com.msemu.world.client.life.skills;
 
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Created by Weber on 2018/4/12.
  */
 public class BurnedInfo {
+    @Getter
+    @Setter
     private int characterId, skillId, damage, interval, end, dotAnimation, dotCount, superPos, attackDelay, dotTickIdx, dotTickDamR;
+    @Getter
+    @Setter
     private int startTime;
+    @Getter
+    @Setter
     private int lastUpdate;
 
     public BurnedInfo deepCopy() {
@@ -27,110 +35,6 @@ public class BurnedInfo {
         copy.setLastUpdate(getLastUpdate());
         copy.setStartTime(getStartTime());
         return copy;
-    }
-
-    public int getCharacterId() {
-        return characterId;
-    }
-
-    public void setCharacterId(int characterId) {
-        this.characterId = characterId;
-    }
-
-    public int getSkillId() {
-        return skillId;
-    }
-
-    public void setSkillId(int skillId) {
-        this.skillId = skillId;
-    }
-
-    public int getDamage() {
-        return damage;
-    }
-
-    public void setDamage(int damage) {
-        this.damage = damage;
-    }
-
-    public int getInterval() {
-        return interval;
-    }
-
-    public void setInterval(int interval) {
-        this.interval = interval;
-    }
-
-    public int getEnd() {
-        return end;
-    }
-
-    public void setEnd(int end) {
-        this.end = end;
-    }
-
-    public int getDotAnimation() {
-        return dotAnimation;
-    }
-
-    public void setDotAnimation(int dotAnimation) {
-        this.dotAnimation = dotAnimation;
-    }
-
-    public int getDotCount() {
-        return dotCount;
-    }
-
-    public void setDotCount(int dotCount) {
-        this.dotCount = dotCount;
-    }
-
-    public int getSuperPos() {
-        return superPos;
-    }
-
-    public void setSuperPos(int superPos) {
-        this.superPos = superPos;
-    }
-
-    public int getAttackDelay() {
-        return attackDelay;
-    }
-
-    public void setAttackDelay(int attackDelay) {
-        this.attackDelay = attackDelay;
-    }
-
-    public int getDotTickIdx() {
-        return dotTickIdx;
-    }
-
-    public void setDotTickIdx(int dotTickIdx) {
-        this.dotTickIdx = dotTickIdx;
-    }
-
-    public int getDotTickDamR() {
-        return dotTickDamR;
-    }
-
-    public void setDotTickDamR(int dotTickDamR) {
-        this.dotTickDamR = dotTickDamR;
-    }
-
-    public int getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(int startTime) {
-        this.startTime = startTime;
-    }
-
-    public int getLastUpdate() {
-        return lastUpdate;
-    }
-
-    public void setLastUpdate(int lastUpdate) {
-        this.lastUpdate = lastUpdate;
     }
 
     public void encode(OutPacket<GameClient> outPacket) {

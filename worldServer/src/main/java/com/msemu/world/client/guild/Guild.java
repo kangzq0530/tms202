@@ -17,109 +17,64 @@ import java.util.stream.Collectors;
 @Schema
 @Entity
 @Table(name = "guilds")
+@Getter
+@Setter
 public class Guild {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Getter
-    @Setter
     private int id;
     @Column(name = "name")
-    @Getter
-    @Setter
     private String name;
     @JoinColumn(name = "leaderID")
-    @Getter
-    @Setter
     private int leaderID;
     @Column(name = "worldID")
-    @Getter
-    @Setter
     private int worldID;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @CollectionTable(name = "guildrequestors", joinColumns = @JoinColumn(name = "guildID"))
-    @Getter
-    @Setter
     private List<GuildRequestor> requestors = new ArrayList<>();
     @ElementCollection
     @CollectionTable(name = "gradeNames", joinColumns = @JoinColumn(name = "guildID"))
     @Column(name = "gradeName")
-    @Getter
-    @Setter
     private List<String> gradeNames = new ArrayList<>();
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "guildID")
-    @Getter
-    @Setter
     private List<GuildMember> members = new ArrayList<>();
     @Column(name = "markBg")
-    @Getter
-    @Setter
     private int markBg;
     @Column(name = "markBgColor")
-    @Getter
-    @Setter
     private int markBgColor;
     @Column(name = "mark")
-    @Getter
-    @Setter
     private int mark;
     @Column(name = "markColor")
-    @Getter
-    @Setter
     private int markColor;
     @Column(name = "maxMembers")
-    @Getter
-    @Setter
     private int maxMembers;
     @Column(name = "notice")
-    @Getter
-    @Setter
     private String notice;
     @Column(name = "points")
-    @Getter
-    @Setter
     private int points;
     @Column(name = "seasonPoints")
-    @Getter
-    @Setter
     private int seasonPoints;
     @Column(name = "allianceID")
-    @Getter
-    @Setter
     private int allianceID;
     @Column(name = "level")
-    @Getter
-    @Setter
     private int level;
     @Column(name = "rank")
-    @Getter
-    @Setter
     private int rank;
     @Column(name = "ggp")
-    @Getter
-    @Setter
     private int ggp;
-    // Start GUILDSETTING struct
     @Column(name = "appliable")
-    @Getter
-    @Setter
     private boolean appliable;
     @Column(name = "joinSetting")
-    @Getter
-    @Setter
     private int joinSetting;
     @Column(name = "reqLevel")
-    @Getter
-    @Setter
     private int reqLevel;
-    // End GUILDSETTING struct
+
 
     @ElementCollection
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @CollectionTable(name = "guildskills")
     @MapKeyColumn(name = "skillID")
-    @Getter
-    @Setter
     private Map<Integer, GuildSkill> skills = new HashMap<>();
 
     public Guild() {

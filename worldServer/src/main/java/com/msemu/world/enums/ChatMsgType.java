@@ -3,7 +3,7 @@ package com.msemu.world.enums;
 /**
  * Created by Weber on 2018/4/13.
  */
-public enum  ChatMsgColor {
+public enum ChatMsgType {
 
     GENERAL_CHAT_WHITE(0),
     WHISPER_GREEN(1),
@@ -16,11 +16,12 @@ public enum  ChatMsgColor {
     LESS_YELLOW(8),
     GAME_NOTICE(9),
     GM_CHAT(10),
-    GAME_MESSAGE(11),
+    GAME_MESSAGE_RED(11),
     GM_BLUE_CHAT(12),
     SMEGA(13),
     SMEGA_2(14),
     ITEM_SMEGA(15),
+    PURPLE(16),
     DARK_BLUE(16),
     ITEM_NOTICE(17),
     MEGA(18),
@@ -42,11 +43,11 @@ public enum  ChatMsgColor {
             ;
     private short value;
 
-    ChatMsgColor(short value) {
+    ChatMsgType(short value) {
         this.value = value;
     }
 
-    ChatMsgColor(int i) {
+    ChatMsgType(int i) {
         this((short) i);
     }
 

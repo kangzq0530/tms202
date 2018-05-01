@@ -2,11 +2,15 @@ package com.msemu.world.client.life;
 
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Created by Weber on 2018/4/12.
  */
 public class ShootingMoveStat {
+    @Getter
+    @Setter
     private int movePattern, moveRange, bulletUpgrade, moveSpeed, moveAngle;
 
     public ShootingMoveStat(int movePattern, int moveRange, int bulletUpgrade, int moveSpeed, int moveAngle) {
@@ -26,45 +30,5 @@ public class ShootingMoveStat {
         outPacket.encodeInt(getBulletUpgrade());
         outPacket.encodeInt(getMoveSpeed());
         outPacket.encodeInt(getMoveAngle());
-    }
-
-    public int getMovePattern() {
-        return movePattern;
-    }
-
-    public void setMovePattern(int movePattern) {
-        this.movePattern = movePattern;
-    }
-
-    public int getMoveRange() {
-        return moveRange;
-    }
-
-    public void setMoveRange(int moveRange) {
-        this.moveRange = moveRange;
-    }
-
-    public int getBulletUpgrade() {
-        return bulletUpgrade;
-    }
-
-    public void setBulletUpgrade(int bulletUpgrade) {
-        this.bulletUpgrade = bulletUpgrade;
-    }
-
-    public int getMoveSpeed() {
-        return moveSpeed;
-    }
-
-    public void setMoveSpeed(int moveSpeed) {
-        this.moveSpeed = moveSpeed;
-    }
-
-    public int getMoveAngle() {
-        return moveAngle;
-    }
-
-    public void setMoveAngle(int moveAngle) {
-        this.moveAngle = moveAngle;
     }
 }

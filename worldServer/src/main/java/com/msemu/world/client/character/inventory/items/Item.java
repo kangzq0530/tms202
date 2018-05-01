@@ -1,4 +1,4 @@
-package com.msemu.world.client.character.items;
+package com.msemu.world.client.character.inventory.items;
 
 import com.msemu.commons.data.enums.InvType;
 import com.msemu.commons.data.templates.ItemTemplate;
@@ -14,7 +14,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Arrays;
 
-import static com.msemu.world.client.character.items.Item.Type.ITEM;
+import static com.msemu.world.client.character.inventory.items.Item.Type.ITEM;
 
 /**
  * Created by Weber on 2018/4/11.

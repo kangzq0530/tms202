@@ -6,8 +6,12 @@ import com.msemu.commons.utils.types.FileTime;
 import com.msemu.core.network.GameClient;
 import com.msemu.world.constants.JobConstants;
 import com.msemu.world.constants.MapleJob;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Weber on 2018/3/29.
@@ -15,6 +19,8 @@ import javax.persistence.*;
 @Schema
 @Entity
 @Table(name = "characterStats")
+@Getter
+@Setter
 public class CharacterStat {
 
     @Id
@@ -156,219 +162,13 @@ public class CharacterStat {
         this.job = job;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public short getAp() {
-        return (short) ap;
-    }
-
-    public short getDex() {
-        return (short) dex;
-    }
-
-    public int getHp() {
-        return hp;
-    }
-
-    public short getInt() {
-        return (short) inte;
-    }
-
-    public short getJob() {
-        return (short) job;
-    }
-
-    public short getLevel() {
-        return (short) level;
-    }
-
-    public short getCharismaExp() {
-        return (short) charismaExp;
-    }
-
-    public short getLuk() {
-        return (short) luk;
-    }
-
-    public int getMaxHp() {
-        return maxHp;
-    }
-
-    public int getMaxMp() {
-        return maxMp;
-    }
-
-    public int getMp() {
-        return mp;
-    }
-
-    public short getPop() { //Fame
-        return (short) pop;
-    }
-
-    public short getSp() {
-        return (short) sp;
-    }
-
-    public short getStr() {
-        return (short) str;
-    }
-
-    public short getWp() {
-        return (short) wp;
-    }
-
-    public long getExp() {
-        return (short) exp;
-    }
-
-    public long getMoney() {
-        return money;
-    }
-
-    public ExtendSP getExtendSP() {
-        return extendSP;
-    }
-
-    public int getCharacterId() {
-        return characterId;
-    }
-
-    public int getCharacterIdForLog() {
-        return characterId;
-    }
-
-    public int getFace() {
-        return face;
-    }
-
-    public int getGender() {
-        return gender;
-    }
-
-    public int getHair() {
-        return hair;
-    }
-
-    public int getMixAddHairColor() {
-        return mixAddHairColor;
-    }
-
-    public int getMixBaseHairColor() {
-        return mixBaseHairColor;
-    }
-
-    public int getMixHairBaseProb() {
-        return mixHairBaseProb;
-    }
-
-    public int getSkin() {
-        return skin;
-    }
-
-    public int getWorldIdForLog() {
-        return worldIdForLog;
-    }
-
-    public short getCharmExp() {
-        return (short) charmExp;
-    }
-
-    public short getCraftExp() {
-        return (short) craftExp;
-    }
-
-    public int getAlbaActivityID() {
-        return albaActivityID;
-    }
-
-    public int getEventPoint() {
-        return eventPoint;
-    }
-
-    public int getPortal() {
-        return portal;
-    }
-
-    public int getAlbaDuration() {
-        return albaDuration;
-    }
-
-    public short getInsightExp() {
-        return (short) insightExp;
-    }
-
-    public int getAlbaSpecialReward() {
-        return albaSpecialReward;
-    }
-
-    public int getPvpExp() {
-        return pvpExp;
-    }
-
-    public int getPvpGrade() {
-        return pvpGrade;
-    }
-
-    public int getPvpModeLevel() {
-        return pvpModeLevel;
-    }
-
-    public int getPvpModeType() {
-        return pvpModeType;
-    }
-
-    public int getPvpPoint() {
-        return pvpPoint;
-    }
-
-    public short getSenseExp() {
-        return (short) senseExp;
-    }
-
-    public short getWillExp() {
-        return (short) willExp;
-    }
-
     public long getPosMap() {
         return posMap == 0 ? 931000000 : posMap;
     }
 
-    public CharacterCard getCharacterCard() {
-        return characterCard;
+
+    public void renewCharacterStats() {
     }
-
-    public NonCombatStatDayLimit getNonCombatStatDayLimit() {
-        return nonCombatStatDayLimit;
-    }
-
-    public FileTime getAlbaStartTime() {
-        return albaStartTime;
-    }
-
-    public int getDefFaceAcc() {
-        return defFaceAcc;
-    }
-
-    public int getFatigue() {
-        return fatigue;
-    }
-
-    public int getLastFatigueUpdateTime() {
-        return lastFatigueUpdateTime;
-    }
-
-    public int getSubJob() {
-        return subJob;
-    }
-
-    public SystemTime getAccountLastLogout() {
-        return accountLastLogout;
-    }
-
-
 
     public void encode(OutPacket<GameClient> outPacket) {
         outPacket.encodeInt(getCharacterId());
@@ -387,7 +187,7 @@ public class CharacterStat {
         outPacket.encodeShort(getJob());
         outPacket.encodeShort(getStr());
         outPacket.encodeShort(getDex());
-        outPacket.encodeShort(getInt());
+        outPacket.encodeShort(getInte());
         outPacket.encodeShort(getLuk());
         outPacket.encodeInt(getHp());
         outPacket.encodeInt(getMaxHp());
@@ -453,251 +253,6 @@ public class CharacterStat {
         outPacket.encodeByte(0);
         outPacket.encodeByte(isBurning()); // bBurning 不確定
     }
-
-    public FileTime getLastLogout() {
-        return lastLogout;
-    }
-
-    public void setLastLogout(FileTime lastLogout) {
-        this.lastLogout = lastLogout;
-    }
-
-    public boolean isBurning() {
-        return burning;
-    }
-
-    public void setBurning(boolean burning) {
-        this.burning = burning;
-    }
-
-    public void setJob(int job) {
-        this.job = job;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getGachExp() {
-        return gachExp;
-    }
-
-    public void setCharacterId(int characterId) {
-        this.characterId = characterId;
-    }
-
-    public void setCharacterIdForLog(int characterIdForLog) {
-        this.characterIdForLog = characterIdForLog;
-    }
-
-    public void setWorldIdForLog(int worldIdForLog) {
-        this.worldIdForLog = worldIdForLog;
-    }
-
-    public void setGender(int gender) {
-        this.gender = gender;
-    }
-
-    public void setSkin(int skin) {
-        this.skin = skin;
-    }
-
-    public void setFace(int face) {
-        this.face = face;
-    }
-
-    public void setHair(int hair) {
-        this.hair = hair;
-    }
-
-    public void setMixAddHairColor(int mixAddHairColor) {
-        this.mixAddHairColor = mixAddHairColor;
-    }
-
-    public void setMixHairBaseProb(int mixHairBaseProb) {
-        this.mixHairBaseProb = mixHairBaseProb;
-    }
-
-    public void setMixBaseHairColor(int mixBaseHairColor) {
-        this.mixBaseHairColor = mixBaseHairColor;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
-    }
-
-    public void setStr(int str) {
-        this.str = str;
-    }
-
-    public void setDex(int dex) {
-        this.dex = dex;
-    }
-
-    public void setInt(int inte) {
-        this.inte = inte;
-    }
-
-    public void setLuk(int luk) {
-        this.luk = luk;
-    }
-
-    public void setHp(int hp) {
-        this.hp = hp;
-    }
-
-    public void setMaxHp(int maxHp) {
-        this.maxHp = maxHp;
-    }
-
-    public void setMp(int mp) {
-        this.mp = mp;
-    }
-
-    public void setMaxMp(int maxMp) {
-        this.maxMp = maxMp;
-    }
-
-    public void setAp(int ap) {
-        this.ap = ap;
-    }
-
-    public void setSp(int sp) {
-        this.sp = sp;
-    }
-
-    public void setExp(long exp) {
-        this.exp = exp;
-    }
-
-    public void setPop(int pop) {
-        this.pop = pop;
-    }
-
-    public void setMoney(long money) {
-        this.money = money;
-    }
-
-    public void setWp(int wp) {
-        this.wp = wp;
-    }
-
-    public void setPosMap(long posMap) {
-        this.posMap = posMap;
-    }
-
-    public void setPortal(int portal) {
-        this.portal = portal;
-    }
-
-    public void setSubJob(int subJob) {
-        this.subJob = subJob;
-    }
-
-    public void setDefFaceAcc(int defFaceAcc) {
-        this.defFaceAcc = defFaceAcc;
-    }
-
-    public void setFatigue(int fatigue) {
-        this.fatigue = fatigue;
-    }
-
-    public void setLastFatigueUpdateTime(int lastFatigueUpdateTime) {
-        this.lastFatigueUpdateTime = lastFatigueUpdateTime;
-    }
-
-    public void setCharismaExp(int charismaExp) {
-        this.charismaExp = charismaExp;
-    }
-
-    public void setInsightExp(int insightExp) {
-        this.insightExp = insightExp;
-    }
-
-    public void setWillExp(int willExp) {
-        this.willExp = willExp;
-    }
-
-    public void setCraftExp(int craftExp) {
-        this.craftExp = craftExp;
-    }
-
-    public void setSenseExp(int senseExp) {
-        this.senseExp = senseExp;
-    }
-
-    public void setCharmExp(int charmExp) {
-        this.charmExp = charmExp;
-    }
-
-    public void setPvpExp(int pvpExp) {
-        this.pvpExp = pvpExp;
-    }
-
-    public void setPvpGrade(int pvpGrade) {
-        this.pvpGrade = pvpGrade;
-    }
-
-    public void setPvpPoint(int pvpPoint) {
-        this.pvpPoint = pvpPoint;
-    }
-
-    public void setPvpModeLevel(int pvpModeLevel) {
-        this.pvpModeLevel = pvpModeLevel;
-    }
-
-    public void setPvpModeType(int pvpModeType) {
-        this.pvpModeType = pvpModeType;
-    }
-
-    public void setEventPoint(int eventPoint) {
-        this.eventPoint = eventPoint;
-    }
-
-    public void setAlbaActivityID(int albaActivityID) {
-        this.albaActivityID = albaActivityID;
-    }
-
-    public void setAlbaDuration(int albaDuration) {
-        this.albaDuration = albaDuration;
-    }
-
-    public void setAlbaSpecialReward(int albaSpecialReward) {
-        this.albaSpecialReward = albaSpecialReward;
-    }
-
-    public void setGachExp(int gachExp) {
-        this.gachExp = gachExp;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setExtendSP(ExtendSP extendSP) {
-        this.extendSP = extendSP;
-    }
-
-    public void setNonCombatStatDayLimit(NonCombatStatDayLimit nonCombatStatDayLimit) {
-        this.nonCombatStatDayLimit = nonCombatStatDayLimit;
-    }
-
-    public void setAlbaStartTime(FileTime albaStartTime) {
-        this.albaStartTime = albaStartTime;
-    }
-
-    public void setCharacterCard(CharacterCard characterCard) {
-        this.characterCard = characterCard;
-    }
-
-    public void setAccountLastLogout(SystemTime accountLastLogout) {
-        this.accountLastLogout = accountLastLogout;
-    }
-
 
 }
 
