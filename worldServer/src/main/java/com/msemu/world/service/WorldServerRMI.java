@@ -132,4 +132,8 @@ public class WorldServerRMI extends UnicastRemoteObject implements IWorldServerR
             }
         }
     }
+
+    public void requestRelogin(String username, String token) {
+        this.connection.addReLoginCookie(username, token);
+    }
 }

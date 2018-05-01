@@ -16,4 +16,5 @@ public interface ILoginServerRMI extends Remote {
 
     void updateWorld(IWorldServerRMI rmi, WorldInfo worldInfo) throws RemoteException;
 
+    void addReLoginCookie(String username, String cookie);
 }

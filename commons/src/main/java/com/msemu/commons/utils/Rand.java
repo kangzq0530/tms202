@@ -83,4 +83,29 @@ public class Rand {
     public static <E> E get(List<E> list) {
         return list.get(get(list.size()));
     }
+
+    public static String nextString() {
+        String code = "";
+        for (int i = 0; i < 200; i++) {
+            switch (get(10)) {
+                case 0:
+                    code += "_";
+                    break;
+                case 1:
+                    code += "~";
+                    break;
+                case 2:
+                case 3:
+                case 4:
+                case 5:
+                    // 大寫字母還是小寫字母
+                    int temp = get(2) == 0 ? 0x41 : 0x61;
+                    code += (char) (get(0x1A) + temp);
+                    break;
+                default:
+                    code += String.valueOf(get(10));
+            }
+        }
+        return code;
+    }
 }

@@ -84,6 +84,11 @@ public class LoginServerRMI extends UnicastRemoteObject implements ILoginServerR
         worlds.get(worldInfo.getWorldId()).setConnection(rmi);
     }
 
+    @Override
+    public void addReLoginCookie(String username, String cookie) {
+        LoginCookieService.getInstance().addToken(username, cookie);
+    }
+
     public List<WorldInfo> getWorlds() {
         return this.worlds.values().stream().collect(Collectors.toList());
     }
