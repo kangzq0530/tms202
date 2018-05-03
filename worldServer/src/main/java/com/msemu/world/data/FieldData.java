@@ -118,6 +118,7 @@ public class FieldData implements IReloadable {
                 mob.setHide(lifeData.isHide());
                 mob.setPosition(new Position(mob.getX(), mob.getY()));
                 mob.setHomePosition(new Position(mob.getX(), mob.getY()));
+                field.addLife(mob);
             }
         });
         return field;

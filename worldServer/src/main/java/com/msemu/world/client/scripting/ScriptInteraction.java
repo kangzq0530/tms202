@@ -193,7 +193,7 @@ public class ScriptInteraction {
     public void warp(int fieldID, int portalID) {
         Field field = getChannel().getField(fieldID);
         Portal portal = field.getPortalByID(portalID);
-        warp(fieldID, portalID);
+        warp(field, portal);
     }
 
     public void warp(Field field, Portal portal) {

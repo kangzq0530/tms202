@@ -27,7 +27,7 @@ public class Mob extends Life {
 
     private boolean sealedInsteadDead, patrolMob, isLeft;
     private int option, effectItemID, patrolScopeX1, patrolScopeX2, detectX, senseX, phase, curZoneDataType;
-    private int refImgMobID, lifeReleaseOwnerAID, afterAttack, currentAction, scale, eliteGrade, eliteType, targetUserIdFromServer;
+    private int refImgMobID, lifeReleaseOwnerAID, afterAttack, currentAction = -1, scale = 100, eliteGrade, eliteType, targetUserIdFromServer;
     private long hp, maxHp;
     private long mp, maxMp;
     private byte calcDamageIndex = 1, moveAction, appearType, teamForMCarnival;
@@ -112,7 +112,6 @@ public class Mob extends Life {
     public Mob(int objectId, MobTemplate template) {
         super(objectId);
         this.template = template;
-        forcedMobStat = new ForcedMobStat();
         temporaryStat = new MobTemporaryStat(this);
         scale = 100;
         calcDamageIndex = 1;
@@ -1193,6 +1192,9 @@ public class Mob extends Life {
     }
 
     public void init() {
-
+        setMaxHp(getTemplate().getMaxHP());
+        setHp(getTemplate().getMaxHP());
+        setMaxMp(getTemplate().getMaxMP());
+        setMp(getTemplate().getMaxMP());
     }
 }

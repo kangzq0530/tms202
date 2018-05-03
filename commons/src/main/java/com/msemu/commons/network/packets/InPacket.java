@@ -124,8 +124,8 @@ public abstract class InPacket<TClient extends Client<TClient>> extends Packet<T
     }
 
     public String toString(boolean showNow) {
-        int start = showNow ? byteBuf.arrayOffset() : 0;
-        int size = showNow ? byteBuf.readableBytes() : getData().length;
+        int start = showNow ? getData().length - available() : 0;
+        int size = showNow ? available() : getData().length;
         return HexUtils.readableByteArray(Arrays.copyOfRange(getData(), start, size)); // Substring after copy of range xd
     }
 

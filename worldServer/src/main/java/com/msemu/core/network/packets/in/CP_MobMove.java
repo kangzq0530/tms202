@@ -3,6 +3,7 @@ package com.msemu.core.network.packets.in;
 import com.msemu.commons.network.packets.InPacket;
 import com.msemu.commons.utils.types.Position;
 import com.msemu.core.network.GameClient;
+import com.msemu.core.network.packets.out.mob.LP_MobCtrlAck;
 import com.msemu.core.network.packets.out.mob.LP_MobMove;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.field.Field;
@@ -106,7 +107,11 @@ public class CP_MobMove extends InPacket<GameClient> {
                 mob.setMoveAction(movement.getMoveAction());
                 mob.setFh(movement.getFh());
             }
+
+            if(movements.size() > 0) {
+                getClient().write(new LP_MobCtrlAck(mob, true, moveId, mobSkillID, (byte) mobSkillLevel, 0));
+                field.broadcastPacket(new LP_MobMove(mob, msai, movements), contoller);
+            }
         }
-        field.broadcastPacket(new LP_MobMove(mob, msai, movements), contoller);
     }
 }
