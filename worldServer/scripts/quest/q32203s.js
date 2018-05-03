@@ -41,6 +41,7 @@ function action(mode, type, selection) {
             cm.completeQuest();
             cm.giveExp(20);
             cm.dispose();
+            return;
         } else if (selection === 1) {
             cm.sendNextS(1, "好.那我馬上送你到楓葉村.");
         }
@@ -56,8 +57,10 @@ function action(mode, type, selection) {
         }
     } else if (status === 11) {
         if (sel === 1) {
+            cm.dispose();
             cm.warp(4000020, 0);
             cm.startQuest(32210);
+            return;
         }
         cm.dispose();
     }

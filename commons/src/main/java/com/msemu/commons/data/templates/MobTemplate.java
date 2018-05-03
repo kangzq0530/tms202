@@ -62,12 +62,12 @@ public class MobTemplate implements DatSerializable{
         dos.writeUTF(this.name);
         dos.writeUTF(this.banMsg);
         dos.writeUTF(this.banMapPortalName);
+        dos.writeLong(this.maxHP);
+        dos.writeLong(this.finalmaxHP);
         dos.writeShort(this.level);
         dos.writeShort(this.charismaEXP);
         dos.writeShort(this.wp);
         dos.writeInt(this.id);
-        dos.writeLong(this.maxHP);
-        dos.writeLong(this.finalmaxHP);
         dos.writeInt(this.maxMP);
         dos.writeInt(this.removeAfter);
         dos.writeInt(this.fixedDamage);
@@ -75,7 +75,7 @@ public class MobTemplate implements DatSerializable{
         dos.writeInt(this.PDDamage);
         dos.writeInt(this.MADamage);
         dos.writeInt(this.MDDamage);
-        dos.writeInt(this.MDRate);
+        dos.writeInt(this.PDRate);
         dos.writeInt(this.MDRate);
         dos.writeInt(this.partyBonusR);
         dos.writeInt(this.buff);
@@ -130,6 +130,72 @@ public class MobTemplate implements DatSerializable{
 
     @Override
     public DatSerializable load(DataInputStream dis) throws IOException {
+        setName(dis.readUTF());
+        setBanMsg(dis.readUTF());
+        setBanMapPortalName(dis.readUTF());
+        setMaxHP(dis.readLong());
+        setFinalmaxHP(dis.readLong());
+        setLevel(dis.readShort());
+        setCharismaEXP(dis.readShort());
+        setWp(dis.readShort());
+        setId(dis.readInt());
+        setMaxMP(dis.readInt());
+        setRemoveAfter(dis.readInt());
+        setFixedDamage(dis.readInt());
+        setPADamage(dis.readInt());
+        setPDDamage(dis.readInt());
+        setMADamage(dis.readInt());
+        setMDDamage(dis.readInt());
+        setPDRate(dis.readInt());
+        setMDRate(dis.readInt());
+        setPartyBonusR(dis.readInt());
+        setBuff(dis.readInt());
+        setGetCP(dis.readInt());
+        setPoint(dis.readInt());
+        setDropItemPeriod(dis.readInt());
+        setAcc(dis.readInt());
+        setEva(dis.readInt());
+        setSummonType(dis.readInt());
+        setCategory(dis.readInt());
+        setSpeed(dis.readInt());
+        setPushed(dis.readInt());
+        setSelfDestructionHP(dis.readInt());
+        setSelfDestructionAction(dis.readInt());
+        setSelfDestructionRemoveAfter(dis.readInt());
+        setHpTagColor(dis.readInt());
+        setHpTagBgcolor(dis.readInt());
+        setBanMapFieldId(dis.readInt());
+        setLink(dis.readInt());
+        setRareItemDropLevel(dis.readByte());
+        setFirstAttack(dis.readBoolean());
+        setIgnoreFieldOut(dis.readBoolean());
+        setRemoteRange(dis.readBoolean());
+        setIgnoreMoveImpact(dis.readBoolean());
+        setHideUserDamage(dis.readBoolean());
+        setIndividualReward(dis.readBoolean());
+        setNotConsideredFieldSet(dis.readBoolean());
+        setOnlyNormalAttack(dis.readBoolean());
+        setBoss(dis.readBoolean());
+        setExplosiveReward(dis.readBoolean());
+        setUndead(dis.readBoolean());
+        setEscort(dis.readBoolean());
+        setPartyBonusMob(dis.readBoolean());
+        setChangeableMob(dis.readBoolean());
+        setDamagedByMob(dis.readBoolean());
+        setNoDoom(dis.readBoolean());
+        setPublicReward(dis.readBoolean());
+        int size = dis.readInt();
+        for(int i = 0 ; i < size;i++) {
+            revive.add(dis.readInt());
+        }
+        size = dis.readInt();
+        for(int i = 0 ; i < size;i++) {
+            skills.add(new Tuple<>(dis.readInt(), dis.readInt()));
+        }
+        size = dis.readInt();
+        for(int i = 0 ; i < size;i++) {
+            basicElemAttrs.put(Element.getFromId(dis.readInt()), ElementalEffectiveness.getByNumber(dis.readInt()));
+        }
         return this;
     }
 }

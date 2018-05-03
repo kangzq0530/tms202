@@ -47,7 +47,7 @@ public class CP_UserMove extends InPacket<GameClient> {
             chr.setLeft(m.getMoveAction() % 2 == 1);
             chr.setFoothold(m.getFh());
         }
-        //chr.enableActions();
+        chr.enableActions();
         chr.getField().checkCharInAffectedAreas(chr);
         chr.getField().broadcastPacket(new LP_UserMove(chr, duration, mPos, oPos, (byte) 0, movements), chr);
     }

@@ -97,6 +97,15 @@ public class ScriptInteraction {
         return getClient().getChannelInstance();
     }
 
+    public int getFieldID() {
+        return getCharacter().getField().getId();
+    }
+
+    public void openNpc(int npc, String  scriptName) {
+        dispose();
+        getCharacter().getScriptManager().startScript(npc, scriptName, ScriptType.NPC);
+    }
+
     public void showGuildCreateWindow() {
         getCharacter().write(new LP_GuildResult(new InputGuildName()));
     }

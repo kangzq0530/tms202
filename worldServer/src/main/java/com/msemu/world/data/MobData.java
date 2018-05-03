@@ -64,6 +64,8 @@ public class MobData implements IReloadable{
 
     public Mob getMobFromTemplate(int templateId) {
         MobTemplate mt = getMobTemplates().get(templateId);
+        if(mt == null)
+            return null;
         Mob mob = new Mob(-1 , mt);
         mob.init();
         return mob;
