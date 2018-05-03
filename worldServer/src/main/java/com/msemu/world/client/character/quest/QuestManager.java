@@ -6,10 +6,11 @@ import com.msemu.commons.database.Schema;
 import com.msemu.commons.utils.types.FileTime;
 import com.msemu.core.network.packets.out.user.local.effect.LP_UserEffectLocal;
 import com.msemu.core.network.packets.out.user.remote.effect.LP_UserEffectRemote;
-import com.msemu.core.network.packets.out.wvscontext.messages.LP_QuestRecordMessage;
+import com.msemu.core.network.packets.out.wvscontext.LP_Message;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.effect.QuestCompleteUserEffect;
 import com.msemu.world.client.character.inventory.items.Item;
+import com.msemu.world.client.character.messages.QuestRecordMessage;
 import com.msemu.world.client.character.quest.act.IQuestAction;
 import com.msemu.world.client.character.quest.req.IQuestStartRequirements;
 import com.msemu.world.client.character.quest.req.QuestProgressItemRequirement;
@@ -108,7 +109,7 @@ public class QuestManager {
     public void addQuest(Quest quest) {
         if (!getQuestsList().containsKey(quest.getQRKey())) {
             getQuestsList().put(quest.getQRKey(), quest);
-            getCharacter().write(new LP_QuestRecordMessage(quest));
+            getCharacter().write(new LP_Message(new QuestRecordMessage(quest)));
             QuestInfo qi = QuestData.getInstance().getQuestInfoById(quest.getQRKey());
             if (quest.getStatus() == COMPLETE) {
                 getCharacter().chatMessage(YELLOW, String.format("[任務資訊] 已完成任務 : %s(%d) ", qi.getName(), quest.getQRKey()));
@@ -125,7 +126,7 @@ public class QuestManager {
      */
     public void replaceQuest(Quest quest) {
         getQuestsList().put(quest.getQRKey(), quest);
-        getCharacter().write(new LP_QuestRecordMessage(quest));
+        getCharacter().write(new LP_Message(new QuestRecordMessage(quest)));
     }
 
     /**
@@ -162,7 +163,7 @@ public class QuestManager {
         quest.setStatus(COMPLETE);
         quest.setCompletedTime(FileTime.getTime());
         getCharacter().chatMessage(YELLOW, String.format("[任務資訊] 已完成任務 : %s(%d) ", qi.getName(), quest.getQRKey()));
-        getCharacter().write(new LP_QuestRecordMessage(quest));
+        getCharacter().write(new LP_Message(new QuestRecordMessage(quest)));
         getCharacter().write(new LP_UserEffectLocal(new QuestCompleteUserEffect()));
         getCharacter().getField().broadcastPacket(new LP_UserEffectRemote(getCharacter(), new QuestCompleteUserEffect()));
         for (QuestProgressItemRequirement qpir : quest.getItemReqs()) {
@@ -178,7 +179,7 @@ public class QuestManager {
             Quest q = getQuestsList().get(questID);
             if (q != null && !q.isComplete()) {
                 q.handleMobKill(mob.getTemplateId());
-                character.write(new LP_QuestRecordMessage(q));
+                getCharacter().write(new LP_Message(new QuestRecordMessage(q)));
             }
         }
     }
@@ -187,7 +188,7 @@ public class QuestManager {
         for (Quest q : getQuestsInProgress()) {
             if (q.hasMoneyReq()) {
                 q.addMoney(money);
-                character.write(new LP_QuestRecordMessage(q));
+                getCharacter().write(new LP_Message(new QuestRecordMessage(q)));
             }
         }
     }
@@ -200,7 +201,7 @@ public class QuestManager {
             Quest q = getQuestsList().get(questID);
             if (q != null && !q.isComplete()) {
                 q.handleItemGain(item);
-                character.write(new LP_QuestRecordMessage(q));
+                getCharacter().write(new LP_Message(new QuestRecordMessage(q)));
             }
         }
     }
@@ -210,7 +211,7 @@ public class QuestManager {
         if (q != null) {
             q.setStatus(NOT_STARTED);
             getQuestsList().remove(questID);
-            character.write(new LP_QuestRecordMessage(q));
+            getCharacter().write(new LP_Message(new QuestRecordMessage(q)));
         }
     }
 }

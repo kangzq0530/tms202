@@ -207,7 +207,7 @@ public abstract class MovementBase implements IMovement {
         double skip = inPacket.decodeByte();
         skip = Math.ceil(skip / 2.0D);
         inPacket.skip((int) skip);
-        if(inPacket.available() != 0) {
+        if(res.size() != size) {
             log.error("MovementBase error");
         }
         return res;

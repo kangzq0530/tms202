@@ -79,7 +79,7 @@
             <appender-ref ref="Console"/>
             <appender-ref ref="ConsoleToFile" level="info"/>
             <appender-ref ref="ErrorToFile" level="error"/>
-            <!-- Uncomment this for debug messages -->
+            <!-- Uncomment this for debug IWvsMessage -->
             <appender-ref ref="DebugToFile" level="debug"/>
         </root>
     </loggers>

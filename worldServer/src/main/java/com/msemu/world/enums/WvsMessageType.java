@@ -3,7 +3,7 @@ package com.msemu.world.enums;
 /**
  * Created by Weber on 2018/4/13.
  */
-public enum MessageType {
+public enum WvsMessageType {
 
     DropPickUpMessage(0x0),
     QuestRecordMessage(0x1),
@@ -57,12 +57,12 @@ public enum MessageType {
 
     private final int value;
 
-    private MessageType(int value) {
+    private WvsMessageType(int value) {
         this.value = value;
     }
 
-    public static MessageType getType(int type) {
-        for (MessageType msT : values()) {
+    public static WvsMessageType getType(int type) {
+        for (WvsMessageType msT : values()) {
             if (msT.getValue() == type) {
                 return msT;
             }

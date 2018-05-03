@@ -13,17 +13,14 @@ import com.msemu.core.network.packets.out.user.LP_UserEnterField;
 import com.msemu.core.network.packets.out.user.local.LP_ChatMsg;
 import com.msemu.core.network.packets.out.user.remote.LP_UserAvatarModified;
 import com.msemu.core.network.packets.out.user.remote.effect.LP_UserEffectRemote;
-import com.msemu.core.network.packets.out.wvscontext.LP_ChangeSkillRecordResult;
-import com.msemu.core.network.packets.out.wvscontext.LP_GuildResult;
-import com.msemu.core.network.packets.out.wvscontext.LP_InventoryOperation;
-import com.msemu.core.network.packets.out.wvscontext.LP_StatChanged;
-import com.msemu.core.network.packets.out.wvscontext.messages.LP_IncExpMessage;
+import com.msemu.core.network.packets.out.wvscontext.*;
 import com.msemu.world.channel.Channel;
 import com.msemu.world.client.character.effect.LevelUpUserEffect;
 import com.msemu.world.client.character.inventory.items.Equip;
 import com.msemu.world.client.character.inventory.items.Item;
 import com.msemu.world.client.character.jobs.JobHandler;
 import com.msemu.world.client.character.jobs.JobManager;
+import com.msemu.world.client.character.messages.IncExpMessage;
 import com.msemu.world.client.character.party.Party;
 import com.msemu.world.client.character.quest.Quest;
 import com.msemu.world.client.character.quest.QuestManager;
@@ -535,7 +532,7 @@ public class Character {
         }
         cs.setExp(newExp);
         stats.put(Stat.EXP, newExp);
-        write(new LP_IncExpMessage(eii));
+        write(new LP_Message(new IncExpMessage(eii)));
         getClient().write(new LP_StatChanged(stats));
     }
 
