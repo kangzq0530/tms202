@@ -19,7 +19,7 @@ import java.util.*;
 @Setter
 public class ItemTemplate implements DatSerializable {
     protected long serialNumber;
-    protected String name = "", path = "", script = "", noFlip = "", path4Top = "";
+    protected String name = "", path = "", noFlip = "", path4Top = "";
     protected InvType invType;
     protected int itemId, price, slotMax, time, stateChangeItem;
     protected int rate, reqSkillLevel, masterLevel;
@@ -29,9 +29,11 @@ public class ItemTemplate implements DatSerializable {
     protected boolean cash, tradeBlock, notSale, monsterBook, notConsume, noCursed, quest, pvpChannelLimited;
     protected boolean accountSharable, expireOnLogout, timeLimited, soldInform, purchaseShop, removeBody, randstat, blackUpgrade;
     protected Map<ItemScrollStat, Integer> scrollStats = new HashMap<>();
-    protected Map<ItemSpecStat, Integer> specStats = new HashMap<>();
     protected Set<Integer> questIDs = new HashSet<>();
     protected List<Integer> skills = new ArrayList<>();
+
+    // spec
+    private ItemSpec itemSpec = new ItemSpec();
 
     public void putScrollStat(ItemScrollStat scrollStat, int val) {
         getScrollStats().put(scrollStat, val);
@@ -41,18 +43,15 @@ public class ItemTemplate implements DatSerializable {
         getQuestIDs().add(questID);
     }
 
-    public void putSpecStat(ItemSpecStat ss, int i) {
-        getSpecStats().put(ss, i);
-    }
+
 
     @Override
     public void write(DataOutputStream dos) throws IOException {
         dos.writeLong(serialNumber);
-        dos.writeUTF(this.name);
-        dos.writeUTF(this.path);
-        dos.writeUTF(this.script);
-        dos.writeUTF(this.noFlip);
-        dos.writeUTF(this.path4Top);
+        dos.writeUTF(name);
+        dos.writeUTF(path);
+        dos.writeUTF(noFlip);
+        dos.writeUTF(path4Top);
         dos.writeUTF(invType.name());
         dos.writeInt(itemId);
         dos.writeInt(price);
@@ -117,11 +116,6 @@ public class ItemTemplate implements DatSerializable {
             dos.writeUTF(entry.getKey().name());
             dos.writeInt(entry.getValue());
         }
-        dos.writeInt(specStats.size());
-        for (Map.Entry<ItemSpecStat, Integer> entry : specStats.entrySet()) {
-            dos.writeUTF(entry.getKey().name());
-            dos.writeInt(entry.getValue());
-        }
         dos.writeInt(questIDs.size());
         for (Integer val : questIDs) {
             dos.writeInt(val);
@@ -130,6 +124,7 @@ public class ItemTemplate implements DatSerializable {
         for (Integer val : skills) {
             dos.writeInt(val);
         }
+        itemSpec.write(dos);
     }
 
     @Override
@@ -137,7 +132,6 @@ public class ItemTemplate implements DatSerializable {
         setSerialNumber(dis.readLong());
         setName(dis.readUTF());
         setPath(dis.readUTF());
-        setScript(dis.readUTF());
         setNoFlip(dis.readUTF());
         setPath4Top(dis.readUTF());
         setInvType(InvType.valueOf(dis.readUTF()));
@@ -205,17 +199,13 @@ public class ItemTemplate implements DatSerializable {
         for (int i = 0; i < scrollStatSize; i++) {
             getScrollStats().put(ItemScrollStat.valueOf(dis.readUTF()), dis.readInt());
         }
-        int specStatSize = dis.readInt();
-        for (int i = 0; i < specStatSize; i++) {
-            getSpecStats().put(ItemSpecStat.valueOf(dis.readUTF()), dis.readInt());
-        }
-
         int questSize = dis.readInt();
         for (int i = 0; i < questSize; i++)
             getQuestIDs().add(dis.readInt());
         int skillSize = dis.readInt();
         for (int i = 0; i < skillSize; i++)
             getSkills().add(dis.readInt());
+        itemSpec.load(dis);
         return this;
     }
 }

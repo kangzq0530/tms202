@@ -41,7 +41,7 @@ public class CP_UserChangeSlotPositionRequest extends InPacket<GameClient> {
         } else if (destSlot == 0) {
             InventoryManipulator.drop(chr, invType, srcSlot, destSlot, quantity);
         } else {
-            InventoryManipulator.move(chr, invType, srcSlot, destSlot, quantity);
+            InventoryManipulator.move(chr, invType, srcSlot, destSlot);
         }
     }
 }

@@ -350,7 +350,7 @@ public class Character {
     @Transient
     @Getter
     @Setter
-    private List<FriendshipRingRecord> friendshipRingRecord;
+    private List<FriendshipRingRecord> friendshipRingRecord = new ArrayList<>();
     @Transient
     @Getter
     @Setter

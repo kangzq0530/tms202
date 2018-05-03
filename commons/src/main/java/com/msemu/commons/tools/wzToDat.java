@@ -19,13 +19,13 @@ public class wzToDat {
 //        new ForbiddenNameLoader().saveToDat(wzManager);
 //        new ItemOptionLoader().saveToDat(wzManager);
 //        new ItemOptionDatLoader().load(null);
-//        new ItemTemplateLoader().saveToDat(wzManager);
-//        new EquipTemplateLoader().saveToDat(wzManager);
+        new ItemTemplateLoader().saveToDat(wzManager);
+        new EquipTemplateLoader().saveToDat(wzManager);
 //        new FieldTemplateLoader().saveToDat(wzManager);
 //        new NpcTemplateLoader().saveToDat(wzManager);
 //
 //        new SkillInfoLoader().saveToDat(wzManager);
-        new QuestInfoLoader().saveToDat(wzManager);
+//        new QuestInfoLoader().saveToDat(wzManager);
 //        new MobTemplateLoader().saveToDat(wzManager);
 //        new FieldTemplateLoader().saveToDat(wzManager);
 

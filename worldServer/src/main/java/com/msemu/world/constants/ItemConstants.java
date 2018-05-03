@@ -1001,5 +1001,9 @@ public class ItemConstants {
         public static boolean isFamiliar(int itemID) {
             return itemID / 10000 == 287;
         }
+
+        public static int getEquippedSlotByItemID(int itemID) {
+            return 1;
+        }
     }
 }
