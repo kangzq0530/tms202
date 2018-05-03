@@ -220,7 +220,7 @@ public class ItemConstants {
                         bodyPartList.add(1507);
                     }
                 } else {
-                    log.debug("Unknown type? id = " + itemID);
+                    log.debug("AuthFail type? id = " + itemID);
                 }
                 break;
         }

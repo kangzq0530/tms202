@@ -284,8 +284,8 @@ public class OutPacket<TClient extends Client<TClient>> extends Packet<TClient> 
         if (fileTime == null) {
             encodeLong(0);
         } else {
-            encodeInt(fileTime.getHighDateTime());
             encodeInt(fileTime.getLowDateTime());
+            encodeInt(fileTime.getHighDateTime());
         }
     }
 

@@ -24,9 +24,8 @@ import com.msemu.world.data.SkillData;
 import com.msemu.commons.data.enums.MobStat;
 import com.msemu.world.enums.MoveAbility;
 import com.msemu.world.enums.Stat;
-import com.msemu.core.network.packets.out.wvscontext.StatChanged;
-import com.msemu.core.network.packets.out.wvscontext.TemporaryStatSet;
-import com.msemu.core.network.packets.out.wvscontext.TemporaryStateSet;
+import com.msemu.core.network.packets.out.wvscontext.LP_StatChanged;
+import com.msemu.core.network.packets.out.wvscontext.LP_TemporaryStatSet;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -295,7 +294,7 @@ public class Archer extends JobHandler {
         o.rOption = AGGRESSIVE_RESISTANCE;
         o.tOption = si.getValue(time, slv);
         tsm.putCharacterStatValue(PowerTransferGauge, o);
-        getClient().write(new TemporaryStatSet(tsm));
+        getClient().write(new LP_TemporaryStatSet(tsm));
     }
 
     private void handleMortalBlow() {
@@ -315,7 +314,7 @@ public class Archer extends JobHandler {
                 o = tsm.getOption(BowMasterMortalBlow);
             }
             o.nOption = (o.nOption + 1) % (si.getValue(x, slv) + 1);
-            getClient().write(new TemporaryStatSet(tsm));
+            getClient().write(new LP_TemporaryStatSet(tsm));
         } else if (getCharacter().hasSkill(MORTAL_BLOW_XBOW)) {
             skill = getCharacter().getSkill(MORTAL_BLOW_BOW);
             //si = SkillData.getInstance().getSkillInfoById(skill.getSkillId());
@@ -340,7 +339,7 @@ public class Archer extends JobHandler {
         o.nOption = Math.min(o.nOption + si.getValue(x, slv), 100);
         o.tOption = si.getValue(time, slv);
         tsm.putCharacterStatValue(AsrR, o);
-        getClient().write(new TemporaryStatSet(tsm));
+        getClient().write(new LP_TemporaryStatSet(tsm));
     }
 
     private void handleQuiverCartridge(TemporaryStatManager tsm, AttackInfo attackInfo, int slv) {
@@ -366,7 +365,7 @@ public class Archer extends JobHandler {
                         chr.setStat(Stat.HP, (short) newHP);
                         Map<Stat, Object> stats = new HashMap<>();
                         stats.put(Stat.HP, newHP);
-                        getClient().write(new StatChanged(stats));
+                        getClient().write(new LP_StatChanged(stats));
                     }
                     break;
                 case 2: // Poison
@@ -395,7 +394,7 @@ public class Archer extends JobHandler {
             }
         }
         tsm.putCharacterStatValue(QuiverCatridge, quiverCartridge.getOption());
-        getClient().write(new TemporaryStatSet(tsm));
+        getClient().write(new LP_TemporaryStatSet(tsm));
     }
 
     public enum QCType {
@@ -519,7 +518,7 @@ public class Archer extends JobHandler {
                 o.rOption = skill.getSkillId();
                 o.tOption = si.getValue(time, slv);
                 tsm.putCharacterStatValue(CriticalBuff, o);
-                getClient().write(new TemporaryStateSet(tsm));
+                getClient().write(new LP_TemporaryStatSet(tsm));
             }
         }
 

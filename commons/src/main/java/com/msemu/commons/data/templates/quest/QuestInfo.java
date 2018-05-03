@@ -23,7 +23,7 @@ public class QuestInfo implements DatSerializable {
     private String name = "";
     private String startScript = "", endScript = "";
     private int id;
-    private boolean autoStart = false, autoAccept = false, autoPreComplete = false, autoCancel = false,
+    private boolean autoStart = false, selfStart = false, autoAccept = false, autoComplete = false, autoPreComplete = false, autoCancel = false,
             autoCompleteAction = false, isTimeEvent = false, blocked = false;
     private int dailyPlayTime = 0, timeLimit2 = 0, viewMedalItem = 0, medalCategory, selectedSkillID = 0;
     private Set<QuestActData> startActsData = new HashSet<>();
@@ -55,6 +55,8 @@ public class QuestInfo implements DatSerializable {
         dos.writeUTF(this.endScript);
         dos.writeInt(this.id);
         dos.writeBoolean(this.autoStart);
+        dos.writeBoolean(this.selfStart);
+        dos.writeBoolean(this.autoComplete);
         dos.writeBoolean(this.autoAccept);
         dos.writeBoolean(this.autoPreComplete);
         dos.writeBoolean(this.autoCancel);
@@ -102,6 +104,8 @@ public class QuestInfo implements DatSerializable {
         this.setEndScript(dis.readUTF());
         this.setId(dis.readInt());
         this.setAutoStart(dis.readBoolean());
+        this.setSelfStart(dis.readBoolean());
+        this.setAutoComplete(dis.readBoolean());
         this.setAutoAccept(dis.readBoolean());
         this.setAutoPreComplete(dis.readBoolean());
         this.setAutoCancel(dis.readBoolean());

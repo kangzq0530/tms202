@@ -5,8 +5,8 @@ import com.msemu.commons.thread.EventManager;
 import com.msemu.commons.utils.types.Tuple;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.life.AffectedArea;
-import com.msemu.core.network.packets.out.wvscontext.TemporaryStatReset;
-import com.msemu.core.network.packets.out.wvscontext.TemporaryStateSet;
+import com.msemu.core.network.packets.out.wvscontext.LP_TemporaryStatReset;
+import com.msemu.core.network.packets.out.wvscontext.LP_TemporaryStatSet;
 import com.sun.istack.internal.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -127,7 +127,7 @@ public class TemporaryStatManager {
                 getCurrentStats().remove(cts);
             }
         }
-        getCharacter().getClient().write(new TemporaryStatReset(this, false));
+        getCharacter().getClient().write(new LP_TemporaryStatReset(this, false));
         Tuple<CharacterTemporaryStat, Option> tuple = new Tuple<>(cts, option);
         if (!fromSchedule && getIndieSchedules().containsKey(tuple)) {
             getIndieSchedules().get(tuple).cancel(false);
@@ -155,7 +155,7 @@ public class TemporaryStatManager {
         }
         getRemovedStats().put(cts, getCurrentStats().get(cts));
         getCurrentStats().remove(cts);
-        getCharacter().getClient().write(new TemporaryStatReset(this, false));
+        getCharacter().getClient().write(new LP_TemporaryStatReset(this, false));
         if (TSIndex.isTwoStat(cts)) {
             getTSBByTSIndex(TSIndex.getTSEFromCTS(cts)).reset();
         }
@@ -287,11 +287,11 @@ public class TemporaryStatManager {
     }
 
     public void sendSetStatPacket() {
-        getCharacter().getClient().write(new TemporaryStateSet(this));
+        getCharacter().getClient().write(new LP_TemporaryStatSet(this));
     }
 
     public void sendResetStatPacket() {
-        getCharacter().getClient().write(new TemporaryStatReset(this, false));
+        getCharacter().getClient().write(new LP_TemporaryStatReset(this, false));
     }
 
     public void setLarknessManager(LarknessManager larknessManager) {

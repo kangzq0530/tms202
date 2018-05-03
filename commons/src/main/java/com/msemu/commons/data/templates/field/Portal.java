@@ -21,7 +21,7 @@ public class Portal implements DatSerializable {
     protected String script = "";
     protected int delay;
     protected int id;
-    protected int targetMapId;
+    protected int targetMapId = -1;
     protected int x;
     protected int y;
     protected int horizontalImpact;
@@ -68,4 +68,5 @@ public class Portal implements DatSerializable {
         setHideTooltip(dis.readBoolean());
         return this;
     }
+
 }

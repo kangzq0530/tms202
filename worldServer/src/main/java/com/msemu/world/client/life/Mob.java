@@ -6,9 +6,9 @@ import com.msemu.commons.data.templates.field.Foothold;
 import com.msemu.commons.thread.EventManager;
 import com.msemu.commons.utils.types.Position;
 import com.msemu.commons.utils.types.Tuple;
-import com.msemu.core.network.packets.out.field.FieldEffect;
-import com.msemu.core.network.packets.out.mob.MobHpIndicator;
-import com.msemu.core.network.packets.out.mob.MobLeaveField;
+import com.msemu.core.network.packets.out.field.LP_FieldEffect;
+import com.msemu.core.network.packets.out.mob.LP_MobHpIndicator;
+import com.msemu.core.network.packets.out.mob.LP_MobLeaveField;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.ExpIncreaseInfo;
 import com.msemu.world.client.field.Field;
@@ -1090,17 +1090,17 @@ public class Mob extends Life {
         newHp = newHp > Integer.MAX_VALUE ? Integer.MAX_VALUE : newHp;
         if (newHp <= 0) {
             die();
-            getField().broadcastPacket(new FieldEffect(new MobHPTagFieldEffect(this)));
+            getField().broadcastPacket(new LP_FieldEffect(new MobHPTagFieldEffect(this)));
         } else if (isBoss()) {
-            getField().broadcastPacket(new FieldEffect(new MobHPTagFieldEffect(this)));
+            getField().broadcastPacket(new LP_FieldEffect(new MobHPTagFieldEffect(this)));
         } else {
-            getField().broadcastPacket(new MobHpIndicator(getObjectId(), (byte) (percDamage * 100)));
+            getField().broadcastPacket(new LP_MobHpIndicator(getObjectId(), (byte) (percDamage * 100)));
         }
     }
 
     private void die() {
         Field field = getField();
-        getField().broadcastPacket(new MobLeaveField(getObjectId(), DeathType.ANIMATION_DEATH.getValue()));
+        getField().broadcastPacket(new LP_MobLeaveField(getObjectId(), DeathType.ANIMATION_DEATH.getValue()));
         if (!isNotRespawnable()) { // double negative
             EventManager.getInstance().addEvent(() -> field.respawn(this), (long) (5000 * (1 / field.getMobRate())));
         } else {

@@ -85,8 +85,8 @@ public class LoginServerRMI extends UnicastRemoteObject implements ILoginServerR
     }
 
     @Override
-    public void addReLoginCookie(String username, String cookie) {
-        LoginCookieService.getInstance().addToken(username, cookie);
+    public void addReLoginCookie(String token, String username, int world, int channel) throws RemoteException {
+        LoginCookieService.getInstance().addToken(token, username, world, channel);
     }
 
     public List<WorldInfo> getWorlds() {

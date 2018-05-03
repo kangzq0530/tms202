@@ -1,7 +1,7 @@
 package com.msemu.world.client.character.inventory;
 
 import com.msemu.commons.data.enums.InvType;
-import com.msemu.core.network.packets.out.wvscontext.InventoryOperation;
+import com.msemu.core.network.packets.out.wvscontext.LP_InventoryOperation;
 import com.msemu.world.client.character.AvatarLook;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.inventory.items.Equip;
@@ -40,7 +40,7 @@ public class InventoryManipulator {
         }
         operates.add(new InventoryOperationInfo(InventoryOperationType.MOVE,
                 srcEquip, srcSlot));
-        chr.write(new InventoryOperation(true, false, operates));
+        chr.write(new LP_InventoryOperation(true, false, operates));
         chr.renewAvatarLook();
         chr.renewCharacterStats();
         chr.enableActions();

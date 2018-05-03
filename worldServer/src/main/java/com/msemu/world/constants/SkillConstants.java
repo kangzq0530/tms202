@@ -172,7 +172,6 @@ public class SkillConstants {
     }
 
 
-
     public static int get紫扇傳授UnknownValue(int skillId) {
         int result;
         if (skillId == 40020002 || skillId == 80000004) {
@@ -290,6 +289,31 @@ public class SkillConstants {
             return 4 + (level - 250) / 5;
         } else {
             return 4;
+        }
+    }
+
+    public static boolean is_stance_skill(int skillID) {
+        if (skillID > 22170072) {
+            if (skillID > 65111004) {
+                return skillID == 80001415 || skillID == 80001845;
+            } else {
+                return skillID == 65111004 || skillID == 23121054 || skillID == 32111014;
+            }
+        }
+        if (skillID == 22170072)
+            return true;
+        if (skillID <= 5321010) {
+            return skillID == 5321010 || skillID == 2121004 || skillID == 2221004 || skillID == 2321004;
+        }
+        return skillID >= 20040219 && (skillID <= 20040220 || skillID == 21121003);
+    }
+
+    public static boolean is_explosion_skill(int nSkillID) {
+        if ( nSkillID > 13121009 ) {
+            return nSkillID == 36110005 || nSkillID == 65101006;
+        }
+        else {
+            return nSkillID == 13121009 || nSkillID == 11121013 || nSkillID == 12100029;
         }
     }
 }

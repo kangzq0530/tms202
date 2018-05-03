@@ -68,7 +68,9 @@ public class FieldData implements IReloadable {
 
     public Field getFieldFromTemplate(int templateId) {
         FieldTemplate fieldTemplate = getFieldTemplates().get(templateId);
-        Field field = new Field(templateId, fieldTemplate);
+        if(fieldTemplate == null)
+            return null;
+        Field field = new Field(-1, fieldTemplate);
         field.getFieldData().getLife().forEach(lifeData -> {
             if (lifeData.getType().equalsIgnoreCase("n")) {
                 Npc npc = NpcData.getInstance().getNpcFromTemplate(lifeData.getId());

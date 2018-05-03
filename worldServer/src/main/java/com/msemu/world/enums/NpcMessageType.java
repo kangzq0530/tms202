@@ -20,7 +20,7 @@ public enum NpcMessageType {
     NM_ASK_QUIZ(8),
     NM_ASK_SPEED_QUIZ(9),
     NM_ASK_ICQ_QUIZ(10),
-    NM_ASK_AVATAREX(11),
+    NM_ASK_AVATAR_EX(11),
     NM_ASK_ANDROID(12),
     NM_ASK_PET(13),
     NM_ASK_PET_ALL(14),
@@ -97,5 +97,13 @@ public enum NpcMessageType {
         this.prev = prev;
         this.next = next;
         this.delay = 0;
+    }
+
+    public static NpcMessageType getByValue(int value) {
+        for(NpcMessageType type : values()) {
+            if(type.getValue() == value)
+                return type;
+        }
+        return null;
     }
 }

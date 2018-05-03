@@ -23,7 +23,7 @@ public class QuestStartJobRequirement implements IQuestStartRequirements {
 
     @Override
     public boolean hasRequirements(Character chr) {
-        return getJobReq().contains(chr.getJob());
+        return getJobReq().isEmpty() || getJobReq().contains(chr.getJob());
     }
 
     @Override

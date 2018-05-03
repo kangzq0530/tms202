@@ -170,6 +170,10 @@ public class CharacterStat {
     public void renewCharacterStats() {
     }
 
+    public void levelUp() {
+        //TODO levlup
+    }
+
     public void encode(OutPacket<GameClient> outPacket) {
         outPacket.encodeInt(getCharacterId());
         outPacket.encodeInt(getCharacterIdForLog());

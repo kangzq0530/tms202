@@ -8,6 +8,7 @@ import com.msemu.core.configs.NetworkConfig;
 import com.msemu.world.World;
 import com.msemu.world.channel.Channel;
 import com.msemu.core.network.GameClient;
+import com.msemu.world.client.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -133,7 +134,7 @@ public class WorldServerRMI extends UnicastRemoteObject implements IWorldServerR
         }
     }
 
-    public void requestRelogin(String username, String token) {
-        this.connection.addReLoginCookie(username, token);
+    public void requestReLoginToken(String token, String username, int world, int channel) throws RemoteException {
+        this.connection.addReLoginCookie(token, username, world, channel);
     }
 }

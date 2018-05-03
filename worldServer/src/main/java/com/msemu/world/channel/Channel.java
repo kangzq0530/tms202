@@ -10,10 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.Synchronized;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -55,12 +52,14 @@ public class Channel {
         this.transfers = new HashMap<>();
     }
 
-    public Field getField(int id) {
-        return getFields().stream().filter(field -> field.getId() == id).findFirst().orElse(createAndReturnNewField(id));
+    public Field getField(int fieldId) {
+        return getFields().stream().filter(f -> Integer.compare(f.getId(), fieldId) == 0).findFirst().orElse(createAndReturnNewField(fieldId));
     }
 
     private Field createAndReturnNewField(int templateId) {
         Field newField = FieldData.getInstance().getFieldFromTemplate(templateId);
+        if(newField == null)
+            return null;
         getFields().add(newField);
         return newField;
     }

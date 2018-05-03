@@ -1,24 +1,49 @@
 package com.msemu.world.client.scripting;
 
+import com.msemu.commons.data.enums.QuestRequirementDataType;
+import com.msemu.commons.data.templates.field.Foothold;
+import com.msemu.commons.data.templates.field.Portal;
+import com.msemu.commons.data.templates.quest.QuestInfo;
+import com.msemu.commons.data.templates.quest.reqs.QuestNpcReqData;
+import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.utils.types.Position;
 import com.msemu.core.network.GameClient;
-import com.msemu.core.network.packets.out.field.FieldEffect;
-import com.msemu.core.network.packets.out.script.ScriptMessage;
+import com.msemu.core.network.packets.out.field.LP_FieldEffect;
+import com.msemu.core.network.packets.out.field.LP_InGameCurNodeEventEnd;
+import com.msemu.core.network.packets.out.npc.LP_NpcChangeController;
+import com.msemu.core.network.packets.out.npc.LP_NpcLeaveField;
+import com.msemu.core.network.packets.out.npc.LP_NpcSpecialAction;
+import com.msemu.core.network.packets.out.npc.LP_NpcUpdateLimitedInfo;
+import com.msemu.core.network.packets.out.script.LP_ScriptMessage;
+import com.msemu.core.network.packets.out.script.LP_SelfTalkScriptMessage;
 import com.msemu.core.network.packets.out.user.local.*;
-import com.msemu.core.network.packets.out.wvscontext.FuncKeySetByScript;
-import com.msemu.core.network.packets.out.wvscontext.GuildResult;
+import com.msemu.core.network.packets.out.user.local.effect.LP_UserEffectLocal;
+import com.msemu.core.network.packets.out.wvscontext.LP_FuncKeySetByScript;
+import com.msemu.core.network.packets.out.wvscontext.LP_GuildResult;
+import com.msemu.world.channel.Channel;
 import com.msemu.world.client.character.Character;
+import com.msemu.world.client.character.effect.*;
 import com.msemu.world.client.character.party.Party;
 import com.msemu.world.client.character.party.PartyMember;
+import com.msemu.world.client.character.quest.Quest;
+import com.msemu.world.client.character.quest.QuestManager;
 import com.msemu.world.client.field.Field;
 import com.msemu.world.client.field.effect.MobHPTagFieldEffect;
+import com.msemu.world.client.field.effect.ObjectFieldEffect;
+import com.msemu.world.client.field.effect.ScreenDelayFieldEffect;
 import com.msemu.world.client.guild.operations.InputGuildName;
 import com.msemu.world.client.life.Mob;
+import com.msemu.world.client.life.Npc;
 import com.msemu.world.data.MobData;
+import com.msemu.world.data.NpcData;
+import com.msemu.world.data.QuestData;
 import com.msemu.world.enums.*;
 import lombok.Getter;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by Weber on 2018/4/28.
@@ -37,6 +62,8 @@ public class ScriptInteraction {
     private int speakerTemplateID = 2007;
     @Getter
     private NpcScriptInfo npcScriptInfo;
+    @Getter
+    public static final List<Npc> requestNpcs = new ArrayList<>();
 
     public ScriptInteraction(ScriptType scriptType, int parentID, String scriptName, Character character) {
         this.character = character;
@@ -46,6 +73,15 @@ public class ScriptInteraction {
         this.npcScriptInfo = new NpcScriptInfo();
         if (scriptType.equals(ScriptType.NPC)) {
             this.speakerTemplateID = parentID;
+        } else if (scriptType.equals(ScriptType.QUEST)) {
+            QuestInfo qi = QuestData.getInstance().getQuestInfoById(parentID);
+            Optional<QuestNpcReqData> rData = qi.getCompleteReqsData().stream()
+                    .filter(req -> req.getType().equals(QuestRequirementDataType.npc))
+                    .map(req -> (QuestNpcReqData) req)
+                    .findFirst();
+            if (rData.isPresent()) {
+                speakerTemplateID = rData.get().getNpcId();
+            }
         }
     }
 
@@ -57,8 +93,12 @@ public class ScriptInteraction {
         return getCharacter().getClient();
     }
 
+    public Channel getChannel() {
+        return getClient().getChannelInstance();
+    }
+
     public void showGuildCreateWindow() {
-        getCharacter().write(new GuildResult(new InputGuildName()));
+        getCharacter().write(new LP_GuildResult(new InputGuildName()));
     }
 
     public Party getParty() {
@@ -67,6 +107,18 @@ public class ScriptInteraction {
 
     public void setPartyField() {
         getCharacter().setFieldInstanceType(FieldInstanceType.PARTY);
+    }
+
+    public void giveItem(int itemID) {
+        giveItem(itemID, 1);
+    }
+
+    public void giveItem(int itemID, int quantity) {
+        getCharacter().giveItem(itemID, quantity);
+    }
+
+    public void giveExp(int deltaExp) {
+        getCharacter().addExp(deltaExp);
     }
 
     public boolean isPartyLeader() {
@@ -117,6 +169,31 @@ public class ScriptInteraction {
                 .allMatch(member -> member.getCharacterLevel() >= minLevel &&
                         member.getCharacterLevel() <= maxLevel);
     }
+
+    public void warp(int fieldID) {
+        warp(fieldID, 0);
+    }
+
+    public void warp(int fieldID, String portalName) {
+        Field field = getChannel().getField(fieldID);
+        Portal portal = field.getPortalByName(portalName);
+        warp(field, portal);
+
+    }
+
+    public void warp(int fieldID, int portalID) {
+        Field field = getChannel().getField(fieldID);
+        Portal portal = field.getPortalByID(portalID);
+        warp(fieldID, portalID);
+    }
+
+    public void warp(Field field, Portal portal) {
+        if (portal != null)
+            getCharacter().warp(field, portal);
+        else
+            getCharacter().warp(field);
+    }
+
 
     public void warpParty(int id) {
         warpParty(id, true);
@@ -179,42 +256,42 @@ public class ScriptInteraction {
         getCharacter().getField().getMobs().stream()
                 .filter(m -> m.getTemplateId() == templateID)
                 .findFirst()
-                .ifPresent(mob -> getCharacter().getField().broadcastPacket(new FieldEffect(new MobHPTagFieldEffect(mob))));
+                .ifPresent(mob -> getCharacter().getField().broadcastPacket(new LP_FieldEffect(new MobHPTagFieldEffect(mob))));
     }
 
     public void showHP() {
         getCharacter().getField().getMobs().stream()
                 .filter(m -> m.getHp() > 0)
                 .findFirst()
-                .ifPresent(mob -> getCharacter().getField().broadcastPacket(new FieldEffect(new MobHPTagFieldEffect(mob))));
+                .ifPresent(mob -> getCharacter().getField().broadcastPacket(new LP_FieldEffect(new MobHPTagFieldEffect(mob))));
     }
 
     public void setFuncKeyByScript(int skillID, int keyIdx) {
-        getClient().write(new FuncKeySetByScript(skillID, keyIdx));
+        getClient().write(new LP_FuncKeySetByScript(skillID, keyIdx));
     }
 
     public void setDirectionMode(boolean enable) {
-        getClient().write(new SetDirectionMode(enable));
+        getClient().write(new LP_SetDirectionMode(enable));
     }
 
     public void setInGameDirectionMode(boolean enable) {
-        getClient().write(new SetInGameDirectionMode(enable));
+        getClient().write(new LP_SetInGameDirectionMode(enable));
     }
 
     public void setStandAloneMode(boolean enable) {
-        getClient().write(new SetStandAloneMode(enable, enable));
+        getClient().write(new LP_SetStandAloneMode(enable, enable));
     }
 
     public void showHireTutor(boolean show) {
-        getClient().write(new HireTutor(show));
+        getClient().write(new LP_HireTutor(show));
     }
 
     public void showTutorMsg(boolean ui, int type, String message) {
-        getClient().write(new TutorMsg());
+        getClient().write(new LP_TutorMsg());
     }
 
     public void setEmotion(FaceEmotion emotion, int duration) {
-        getClient().write(new EmotionLocal(emotion, duration));
+        getClient().write(new LP_EmotionLocal(emotion, duration));
     }
 
     public void setEmotion(int emotion, int duration) {
@@ -228,13 +305,50 @@ public class ScriptInteraction {
         say(sMsg, false, false);
     }
 
+    public void sayNext(String sMsg) {
+        say(sMsg, false, true);
+    }
+
+    public void sayPrev(String sMsg) {
+        say(sMsg, true, false);
+    }
+
+    public void sayPrevNext(String sMsg) {
+        say(sMsg, true, true);
+    }
+
     public void say(String sMsg, boolean prev, boolean next) {
         say(0, sMsg, prev, next);
+    }
+
+    public void sayNext(int bParam, String sMsg) {
+        say(bParam, sMsg, false, true);
+    }
+
+    public void sayPrev(int bParam, String sMsg) {
+        say(bParam, sMsg, true, false);
+    }
+
+    public void sayPrevNext(int bParam, String sMsg) {
+        say(bParam, sMsg, true, true);
     }
 
     public void say(int bParam, String sMsg, boolean prev, boolean next) {
         say(getSpeakerTemplateID(), bParam, sMsg, prev, next);
     }
+
+    public void sayNext(int nSpeakerTemplateID, int bParam, String sMsg) {
+        say(nSpeakerTemplateID, -1, bParam, sMsg, false, true);
+    }
+
+    public void sayPrev(int nSpeakerTemplateID, int bParam, String sMsg) {
+        say(nSpeakerTemplateID, -1, bParam, sMsg, true, false);
+    }
+
+    public void sayPrevNext(int nSpeakerTemplateID, int bParam, String sMsg) {
+        say(nSpeakerTemplateID, -1, bParam, sMsg, true, true);
+    }
+
 
     public void say(int nSpeakerTemplateID, int bParam, String sMsg, boolean prev, boolean next) {
         say(nSpeakerTemplateID, -1, bParam, sMsg, prev, next);
@@ -244,8 +358,32 @@ public class ScriptInteraction {
         say(nSpeakerTemplateID, nAnotherSpeakerTemplateID, -1, bParam, sMsg, prev, next);
     }
 
+    public void sayPrev(int nSpeakerTemplateID, int nAnotherSpeakerTemplateID, int bParam, String sMsg) {
+        say(nSpeakerTemplateID, nAnotherSpeakerTemplateID, -1, bParam, sMsg, true, false);
+    }
+
+    public void sayNext(int nSpeakerTemplateID, int nAnotherSpeakerTemplateID, int bParam, String sMsg) {
+        say(nSpeakerTemplateID, nAnotherSpeakerTemplateID, -1, bParam, sMsg, false, true);
+    }
+
+    public void sayPrevNext(int nSpeakerTemplateID, int nAnotherSpeakerTemplateID, int bParam, String sMsg) {
+        say(nSpeakerTemplateID, nAnotherSpeakerTemplateID, -1, bParam, sMsg, true, true);
+    }
+
     public void say(int nSpeakerTemplateID, int nAnotherSpeakerTemplateID, int nOtherSpeakerTemplateID, int bParam, String sMsg, boolean prev, boolean next) {
         say(4, nSpeakerTemplateID, nAnotherSpeakerTemplateID, nOtherSpeakerTemplateID, bParam, 0, sMsg, prev, next, 0);
+    }
+
+    public void sayPrev(int nSpeakerTemplateID, int nAnotherSpeakerTemplateID, int nOtherSpeakerTemplateID, int bParam, String sMsg) {
+        say(4, nSpeakerTemplateID, nAnotherSpeakerTemplateID, nOtherSpeakerTemplateID, bParam, 0, sMsg, true, false, 0);
+    }
+
+    public void sayNext(int nSpeakerTemplateID, int nAnotherSpeakerTemplateID, int nOtherSpeakerTemplateID, int bParam, String sMsg) {
+        say(4, nSpeakerTemplateID, nAnotherSpeakerTemplateID, nOtherSpeakerTemplateID, bParam, 0, sMsg, false, true, 0);
+    }
+
+    public void sayPrevNext(int nSpeakerTemplateID, int nAnotherSpeakerTemplateID, int nOtherSpeakerTemplateID, int bParam, String sMsg) {
+        say(4, nSpeakerTemplateID, nAnotherSpeakerTemplateID, nOtherSpeakerTemplateID, bParam, 0, sMsg, true, true, 0);
     }
 
     public void say(int nSpeakerTypeID, int nSpeakerTemplateID, int nAnotherSpeakerTemplateID, int nOtherSpeakerTemplateID, int bParam, int eColor, String sMsg, boolean prev, boolean next, int tWait) {
@@ -254,7 +392,7 @@ public class ScriptInteraction {
             return;
         }
         getNpcScriptInfo().setLastMessageType(NpcMessageType.NM_SAY);
-        getClient().write(new ScriptMessage(this, NpcMessageType.NM_SAY, nSpeakerTypeID, nSpeakerTemplateID, nAnotherSpeakerTemplateID, nOtherSpeakerTemplateID, bParam, eColor, new String[]{sMsg}, new int[]{prev ? 1 : 0, next ? 1 : 0, tWait}, null, null));
+        getClient().write(new LP_ScriptMessage(NpcMessageType.NM_SAY, nSpeakerTypeID, nSpeakerTemplateID, nAnotherSpeakerTemplateID, nOtherSpeakerTemplateID, bParam, eColor, new String[]{sMsg}, new int[]{prev ? 1 : 0, next ? 1 : 0, tWait}, null, null));
     }
 
     public void askYesNo(String sMsg) {
@@ -283,7 +421,7 @@ public class ScriptInteraction {
             return;
         }
         getNpcScriptInfo().setLastMessageType(NpcMessageType.NM_ASK_YES_NO);
-        getClient().write(new ScriptMessage(this, NpcMessageType.NM_ASK_YES_NO, nSpeakerTypeID, nSpeakerTemplateID, nAnotherSpeakerTemplateID, nOtherSpeakerTemplateID, bParam, eColor, new String[]{sMsg}, null, null, null));
+        getClient().write(new LP_ScriptMessage(NpcMessageType.NM_ASK_YES_NO, nSpeakerTypeID, nSpeakerTemplateID, nAnotherSpeakerTemplateID, nOtherSpeakerTemplateID, bParam, eColor, new String[]{sMsg}, null, null, null));
     }
 
     public void askMenu(String sMsg) {
@@ -312,14 +450,18 @@ public class ScriptInteraction {
             return;
         }
         getNpcScriptInfo().setLastMessageType(NpcMessageType.NM_ASK_MENU);
-        getClient().write(new ScriptMessage(this, NpcMessageType.NM_ASK_MENU, nSpeakerTypeID, nSpeakerTemplateID, nAnotherSpeakerTemplateID, nOtherSpeakerTemplateID, bParam, eColor, new String[]{sMsg}, null, null, null));
+        getClient().write(new LP_ScriptMessage(NpcMessageType.NM_ASK_MENU, nSpeakerTypeID, nSpeakerTemplateID, nAnotherSpeakerTemplateID, nOtherSpeakerTemplateID, bParam, eColor, new String[]{sMsg}, null, null, null));
+    }
+
+    public void selfTalk(String text) {
+        getClient().write(new LP_SelfTalkScriptMessage(text));
     }
 
     /////////////////////////////////////////////////////////////////////////
 
     public void executeInGameDirectionEvent(int mod, String data, int[] values) {
         InGameDirectionEventOpcode type = InGameDirectionEventOpcode.getType(mod);
-        getClient().write(new InGameDirectionEvent(type, data, values));
+        getClient().write(new LP_InGameDirectionEvent(type, data, values));
         if (getNpcScriptInfo().getLastMessageType() != null || type == null) {
             return;
         }
@@ -336,6 +478,7 @@ public class ScriptInteraction {
                 break;
         }
     }
+
     public void forcedAction(int[] values) {
         executeInGameDirectionEvent(InGameDirectionEventOpcode.InGameDirectionEvent_ForcedAction.getValue(), null, values);
     }
@@ -415,15 +558,211 @@ public class ScriptInteraction {
     public void inputUI(int value) {
         executeInGameDirectionEvent(InGameDirectionEventOpcode.InGameDirectionEvent_InputUI.getValue(), null, new int[]{value});
     }
+
+    public void onNpcDirectionEffect(int npcID, String data, int value, Position pos) {
+        onNpcDirectionEffect(npcID, data, value, pos.getX(), pos.getY());
+    }
+
+    public void onNpcDirectionEffect(int npcID, String data, int value, int x, int y) {
+        final Npc npc = getRequestNpcs().stream()
+                .filter(e -> e.getTemplateId() == npcID).findFirst().orElse(null);
+        if (npc != null) {
+            executeInGameDirectionEvent(InGameDirectionEventOpcode.InGameDirectionEvent_EffectPlay.getValue(), data, new int[]{value, x, y, 1, 1, 0, npc.getObjectId(), 0});
+        }
+    }
     ///////////////////////////////////////////////////////////////////////////
 
     public void playMovie(String data) {
-        getClient().write(new PlayMovieClip(data, true));
+        getClient().write(new LP_PlayMovieClip(data, true));
         getNpcScriptInfo().setLastMessageType(NpcMessageType.NM_PLAY_MOVIE_CLIP);
     }
 
     public void playMovieURL(String url) {
-        getClient().write(new PlayMovieClipURL(url));
+        getClient().write(new LP_PlayMovieClipURL(url));
         getNpcScriptInfo().setLastMessageType(NpcMessageType.NM_PLAY_MOVIE_CLIP_URL);
     }
+
+    //////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////FIELD///////////////////////////////////////
+    public void setInGameCurNodeEventEnd(boolean enable) {
+        getClient().write(new LP_InGameCurNodeEventEnd(enable));
+    }
+
+
+    public void onScreenDelayedFieldEffect(boolean broadcast, String effect, int delay) {
+        write(broadcast, new LP_FieldEffect(new ScreenDelayFieldEffect(effect, delay)));
+    }
+
+    public void onScreenDelayedFieldEffect(String effect, int delay) {
+        onScreenDelayedFieldEffect(false, effect, delay);
+    }
+
+    public void onObjectFieldEffect(boolean broadcast, String effect) {
+        write(broadcast, new LP_FieldEffect(new ObjectFieldEffect(effect)));
+    }
+
+    public void onObjectFieldEffect(String effect) {
+        onObjectFieldEffect(false, effect);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////\
+
+
+    public void spawnNPCRequestController(int npcid, int x, int y) {
+        spawnNPCRequestController(npcid, x, y, 0);
+    }
+
+    public void spawnNPCRequestController(int npcID, int x, int y, int f) {
+        Npc npc = getRequestNpcs().stream()
+                .filter(e -> e.getTemplateId() == npcID).findFirst().orElse((createAndGetNpcRequestController(npcID)));
+        npc.setPosition(new Position(x, y));
+        npc.setCy(y);
+        npc.setRx0(x - 50);
+        npc.setRx1(x + 50);
+        npc.setF(f);
+        Foothold fh = getCharacter().getField().getFootholdTree().findBelow(new Position(x, y), false);
+        npc.setFh(fh == null ? 0 : fh.getId());
+        npc.setObjectId(getCharacter().getField().getNewObjectID());
+        getClient().write(new LP_NpcChangeController(npc, true));
+        getClient().write(new LP_NpcSpecialAction(npc, "summon", 0, false));
+    }
+
+    public Npc createAndGetNpcRequestController(int npcID) {
+        Npc npc = NpcData.getInstance().getNpcFromTemplate(npcID);
+        getRequestNpcs().add(npc);
+        return npc;
+    }
+
+    public void removeNPCRequestController(int npcID) {
+        final Npc oldNpc = getRequestNpcs().stream()
+                .filter(e -> e.getTemplateId() == npcID).findFirst().orElse(null);
+        if (oldNpc != null) {
+            getRequestNpcs().remove(oldNpc);
+            getClient().write(new LP_NpcChangeController(oldNpc, false));
+            getClient().write(new LP_NpcLeaveField(oldNpc));
+        }
+    }
+
+    public void updateNPCSpecialAction(int npcID, int value, int x, int y) {
+        final Npc oldNpc = getRequestNpcs().stream()
+                .filter(e -> e.getTemplateId() == npcID).findFirst().orElse(null);
+        if (oldNpc != null) {
+            getClient().write(new LP_NpcUpdateLimitedInfo(oldNpc, value, x, y));
+        }
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public void write(OutPacket<GameClient> packet) {
+        write(false, packet);
+    }
+
+    public void write(boolean broadcast, OutPacket<GameClient> packet) {
+        if (broadcast) {
+            getCharacter().getField().broadcastPacket(packet);
+        } else {
+            getCharacter().write(packet);
+        }
+    }
+
+    public void dispose() {
+        getCharacter().getScriptManager().stopScript();
+    }
+
+    ////////////////////////////QUEST////////////////////////////////////
+
+    public void startQuest() {
+        if (getScriptType().equals(ScriptType.QUEST)) {
+            final int questID = getParentID();
+            startQuest(questID);
+        }
+    }
+
+    public void startQuest(int questID) {
+        QuestManager qm = getCharacter().getQuestManager();
+        if (!qm.hasQuestInProgress(questID)) {
+            Quest quest = QuestData.getInstance().createQuestFromId(questID);
+            qm.addQuest(quest);
+        }
+    }
+
+    public boolean canStartQuest(int questID) {
+        return getCharacter().getQuestManager().canStartQuest(questID);
+    }
+
+    public boolean hasQuestInProgress(int questID) {
+        return getCharacter().getQuestManager().hasQuestInProgress(questID);
+    }
+
+    public boolean hasQuestCompleted(int questID) {
+        QuestManager qm = getCharacter().getQuestManager();
+
+        return qm.hasQuestCompleted(questID);
+    }
+
+    public void completeQuest() {
+        if (getScriptType().equals(ScriptType.QUEST)) {
+            final int questID = getParentID();
+            completeQuest(questID);
+        }
+    }
+
+    public void completeQuest(int questID) {
+        QuestManager qm = getCharacter().getQuestManager();
+        if (qm.hasQuestInProgress(questID)) {
+            qm.completeQuest(questID);
+        }
+    }
+
+    //////////////////////////////// user effect ///////////////////
+
+    public void showAvatarOrientedEffect(String effect) {
+        write(new LP_UserEffectLocal(new AvatarOrientedUserEffect(effect)));
+    }
+
+    public void showReservedEffect(String effect) {
+        showReservedEffect(false, 0, 0, effect);
+    }
+
+    public void showReservedEffect(boolean screenCoord, int rx, int ry, String effect) {
+        write(new LP_UserEffectLocal(new ReservedUserEffect(screenCoord, rx, ry, effect)));
+    }
+
+    public void showExpItemConsumedEffect() {
+        write(new LP_UserEffectLocal(new ExpItemConsumedUserEffect()));
+    }
+
+    public void playSoundWithMuteBGM(String name) {
+        write(new LP_UserEffectLocal(new PlaySoundWithMuteBgmUserEffect(name)));
+    }
+
+    public void playExclSoundWithDownBGM(String name) {
+        playExclSoundWithDownBGM(name, 0);
+    }
+
+    public void playExclSoundWithDownBGM(String name, int down) {
+        write(new LP_UserEffectLocal(new PlayExclSoundWithDownBGMUserEffect(name, down)));
+    }
+
+    public void showSoulStoneUse(int itemID) {
+        write(new LP_UserEffectLocal(new SoulStoneUseUserEffect(itemID)));
+    }
+
+    public void showPvpChampionEffect() {
+        showPvpChampionEffect(30000);
+    }
+
+    public void showPvpChampionEffect(int duration) {
+        write(new LP_UserEffectLocal(new PvPChampionUserEffect(duration)));
+    }
+
+    public void showFadeIntOutEffect(int timeFadeIn, int timeDelay, int timeFadeOut, int alpha) {
+        write(new LP_UserEffectLocal(new FadeInOutUserEffect(timeFadeIn,
+                timeDelay, timeFadeOut, alpha)));
+    }
+
+    public void showMobSkillHitEffect(int mobSkillID, int mobSkillSlv) {
+        write(new LP_UserEffectLocal(new MobSkillHitUserEffect(mobSkillID, mobSkillSlv)));
+    }
+
 }

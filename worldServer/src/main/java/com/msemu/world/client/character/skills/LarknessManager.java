@@ -3,7 +3,7 @@ package com.msemu.world.client.character.skills;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;
 import com.msemu.world.client.character.Character;
-import com.msemu.core.network.packets.out.user.local.IncLarknessResponse;
+import com.msemu.core.network.packets.out.user.local.LP_IncLarknessResponse;
 
 /**
  * Created by Weber on 2018/4/11.
@@ -160,6 +160,6 @@ public class LarknessManager {
      * Sends a packet to update the client's larkness state
      */
     public void updateInfo() {
-        chr.write(new IncLarknessResponse(this));
+        chr.write(new LP_IncLarknessResponse(this));
     }
 }

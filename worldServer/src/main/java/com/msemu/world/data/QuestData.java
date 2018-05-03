@@ -226,4 +226,8 @@ public class QuestData implements IReloadable {
     public Set<IQuestStartRequirements> getStartReqsById(int questID) {
         return getQuestsStartRequirements().get(questID);
     }
+
+    public Set<IQuestProgressRequirement> getProgressReqById(int questID) {
+        return getQuestsProgressRequirements().get(questID);
+    }
 }

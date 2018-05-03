@@ -4,6 +4,7 @@ import com.msemu.WorldServer;
 import com.msemu.commons.utils.Rand;
 import com.msemu.core.startup.StartupComponent;
 
+import java.rmi.RemoteException;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -28,9 +29,9 @@ public class LoginCookieService {
         return value;
     }
 
-    private String generateToken(String username) {
+    public String generateToken(String username, int world, int channel) throws RemoteException {
         String token = Rand.nextString();
-        WorldServer.getRmi().requestRelogin(username, token);
+        WorldServer.getRmi().requestReLoginToken(token, username, world, channel);
         return token;
     }
 

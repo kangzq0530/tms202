@@ -2,7 +2,6 @@ package com.msemu.world.client.guild.operations;
 
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;
-import com.msemu.core.network.packets.out.wvscontext.GuildResult;
 import com.msemu.world.enums.GuildResultType;
 
 /**

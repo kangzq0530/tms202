@@ -9,18 +9,18 @@ import com.msemu.commons.thread.EventManager;
 import com.msemu.commons.utils.types.Position;
 import com.msemu.commons.utils.types.Rect;
 import com.msemu.core.network.GameClient;
-import com.msemu.core.network.packets.out.drops.DropEnterField;
-import com.msemu.core.network.packets.out.drops.DropLeaveField;
-import com.msemu.core.network.packets.out.field.AffectedAreaCreated;
-import com.msemu.core.network.packets.out.field.AffectedAreaRemoved;
-import com.msemu.core.network.packets.out.mob.MobChangeController;
-import com.msemu.core.network.packets.out.mob.MobEnterField;
-import com.msemu.core.network.packets.out.npc.NpcChangeController;
-import com.msemu.core.network.packets.out.npc.NpcEnterField;
-import com.msemu.core.network.packets.out.summon.SummonEnterField;
-import com.msemu.core.network.packets.out.summon.SummonLeaveField;
-import com.msemu.core.network.packets.out.user.UserEnterField;
-import com.msemu.core.network.packets.out.user.UserLeaveField;
+import com.msemu.core.network.packets.out.drops.LP_DropEnterField;
+import com.msemu.core.network.packets.out.drops.LP_DropLeaveField;
+import com.msemu.core.network.packets.out.field.LP_AffectedAreaCreated;
+import com.msemu.core.network.packets.out.field.LP_AffectedAreaRemoved;
+import com.msemu.core.network.packets.out.mob.LP_MobChangeController;
+import com.msemu.core.network.packets.out.mob.LP_MobEnterField;
+import com.msemu.core.network.packets.out.npc.LP_NpcChangeController;
+import com.msemu.core.network.packets.out.npc.LP_NpcEnterField;
+import com.msemu.core.network.packets.out.summon.LP_SummonEnterField;
+import com.msemu.core.network.packets.out.summon.LP_SummonLeaveField;
+import com.msemu.core.network.packets.out.user.LP_UserEnterField;
+import com.msemu.core.network.packets.out.user.LP_UserLeaveField;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.inventory.items.Item;
 import com.msemu.world.client.character.skills.TemporaryStatManager;
@@ -213,12 +213,12 @@ public class Field {
                 mob.setCurFoodhold(fh.deepCopy());
                 if (onlyChar == null) {
                     for (Character chr : getCharacters()) {
-                        chr.write(new MobEnterField(mob, false));
-                        chr.write(new MobChangeController(mob, false, controller == chr));
+                        chr.write(new LP_MobEnterField(mob, false));
+                        chr.write(new LP_MobChangeController(mob, false, controller == chr));
                     }
                 } else {
-                    onlyChar.getClient().write(new MobEnterField(mob, false));
-                    onlyChar.getClient().write(new MobChangeController(mob, false, controller == onlyChar));
+                    onlyChar.getClient().write(new LP_MobEnterField(mob, false));
+                    onlyChar.getClient().write(new LP_MobChangeController(mob, false, controller == onlyChar));
                 }
             }
             if (life instanceof Summon) {
@@ -227,13 +227,13 @@ public class Field {
                     ScheduledFuture sf = EventManager.getInstance().addEvent(() -> removeLife(summon.getObjectId(), true), summon.getSummonTerm());
                     addLifeSchedule(summon, sf);
                 }
-                broadcastPacket(new SummonEnterField(summon.getCharID(), summon));
+                broadcastPacket(new LP_SummonEnterField(summon.getCharID(), summon));
             }
             if (life instanceof Npc) {
                 Npc npc = (Npc) life;
                 for (Character chr : getCharacters()) {
-                    chr.write(new NpcEnterField(npc));
-                    chr.write(new NpcChangeController(npc, false));
+                    chr.write(new LP_NpcEnterField(npc));
+                    chr.write(new LP_NpcChangeController(npc, true));
                 }
             }
         }
@@ -264,7 +264,7 @@ public class Field {
                 chr.getScriptManager().startScript(getId(), getOnFirstUserEnter(), ScriptType.FIELD);
             }
         }
-        broadcastPacket(new UserEnterField(chr), chr);
+        broadcastPacket(new LP_UserEnterField(chr), chr);
     }
 
     private boolean hasUserFirstEnterScript() {
@@ -280,7 +280,7 @@ public class Field {
     public void removeCharacter(Character chr) {
         if (getCharacters().contains(chr)) {
             getCharacters().remove(chr);
-            broadcastPacket(new UserLeaveField(chr), chr);
+            broadcastPacket(new LP_UserLeaveField(chr), chr);
         }
         getLifeToControllers().entrySet().stream().filter(entry -> entry.getValue() != null && entry.getValue().equals(chr)).forEach(entry -> {
             putLifeController(entry.getKey(), null);
@@ -289,6 +289,10 @@ public class Field {
 
     public void putLifeController(Life life, Character chr) {
         getLifeToControllers().put(life, chr);
+    }
+
+    public Character getLifeController(Life life) {
+        return getLifeToControllers().getOrDefault(life, null);
     }
 
     public Life getLifeByObjectID(int objectID) {
@@ -300,7 +304,7 @@ public class Field {
     public Npc getNpcByObjectID(int objectID) {
         return getLifes().stream()
                 .filter(life -> life instanceof Npc && life.getObjectId() == objectID)
-                .map(life -> (Npc)life)
+                .map(life -> (Npc) life)
                 .findFirst().orElse(null);
     }
 
@@ -336,7 +340,7 @@ public class Field {
             ScheduledFuture sf = EventManager.getInstance().addEvent(() -> removeLife(aa.getObjectId(), true), duration);
             addLifeSchedule(aa, sf);
         }
-        broadcastPacket(new AffectedAreaCreated(aa));
+        broadcastPacket(new LP_AffectedAreaCreated(aa));
         getCharacters().forEach(chr -> aa.getField().checkCharInAffectedAreas(chr));
         getMobs().forEach(mob -> aa.getField().checkMobInAffectedAreas(mob));
     }
@@ -372,10 +376,10 @@ public class Field {
         removeSchedule(life, fromSchedule);
         if (life instanceof Summon) {
             Summon summon = (Summon) life;
-            broadcastPacket(new SummonLeaveField(summon, LeaveType.ANIMATION));
+            broadcastPacket(new LP_SummonLeaveField(summon, LeaveType.ANIMATION));
         } else if (life instanceof AffectedArea) {
             AffectedArea aa = (AffectedArea) life;
-            broadcastPacket(new AffectedAreaRemoved(aa, false));
+            broadcastPacket(new LP_AffectedAreaRemoved(aa, false));
             for (Character chr : getCharacters()) {
                 TemporaryStatManager tsm = chr.getTemporaryStatManager();
                 if (tsm.hasAffectedArea(aa)) {
@@ -388,7 +392,7 @@ public class Field {
     public synchronized void removeDrop(Integer dropID, Integer pickupUserID, Boolean fromSchedule) {
         Life life = getLifeByObjectID(dropID);
         if (life instanceof Drop) {
-            broadcastPacket(new DropLeaveField(dropID, pickupUserID));
+            broadcastPacket(new LP_DropLeaveField(dropID, pickupUserID));
             removeLife(dropID, fromSchedule);
         }
     }
@@ -443,7 +447,7 @@ public class Field {
      */
     public void drop(Drop drop, Position posFrom, Position posTo) {
         addLife(drop);
-        broadcastPacket(new DropEnterField(drop, posFrom, posTo, 0));
+        broadcastPacket(new LP_DropEnterField(drop, posFrom, posTo, 0));
     }
 
     /**
@@ -469,7 +473,7 @@ public class Field {
             drop.setMoney(dropInfo.getMoney());
         }
         addLife(drop);
-        broadcastWithPredicate(new DropEnterField(drop, posFrom, posTo, ownerID),
+        broadcastWithPredicate(new LP_DropEnterField(drop, posFrom, posTo, ownerID),
                 (Character chr) -> dropInfo.getQuestReq() == 0 || chr.hasQuestInProgress(dropInfo.getQuestReq()));
     }
 
@@ -548,5 +552,10 @@ public class Field {
 
     public int getReturnMap() {
         return getFieldData().getReturnMap();
+    }
+
+    public Npc getNpcByTemplateID(int npcID) {
+        return getLifes().stream().filter(life -> life instanceof Npc && life.getTemplateId() == npcID)
+                .map(life -> (Npc) life).findFirst().orElse(null);
     }
 }

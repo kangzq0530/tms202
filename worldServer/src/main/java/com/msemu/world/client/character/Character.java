@@ -8,15 +8,18 @@ import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.utils.types.FileTime;
 import com.msemu.commons.utils.types.Position;
 import com.msemu.core.network.GameClient;
-import com.msemu.core.network.packets.out.stage.SetField;
-import com.msemu.core.network.packets.out.user.UserEnterField;
-import com.msemu.core.network.packets.out.user.local.ChatMsg;
-import com.msemu.core.network.packets.out.user.remote.UserAvatarModified;
-import com.msemu.core.network.packets.out.wvscontext.ChangeSkillRecordResult;
-import com.msemu.core.network.packets.out.wvscontext.GuildResult;
-import com.msemu.core.network.packets.out.wvscontext.InventoryOperation;
-import com.msemu.core.network.packets.out.wvscontext.StatChanged;
-import com.msemu.core.network.packets.out.wvscontext.messages.IncExpMessage;
+import com.msemu.core.network.packets.out.stage.LP_SetField;
+import com.msemu.core.network.packets.out.user.LP_UserEnterField;
+import com.msemu.core.network.packets.out.user.local.LP_ChatMsg;
+import com.msemu.core.network.packets.out.user.remote.LP_UserAvatarModified;
+import com.msemu.core.network.packets.out.user.remote.effect.LP_UserEffectRemote;
+import com.msemu.core.network.packets.out.wvscontext.LP_ChangeSkillRecordResult;
+import com.msemu.core.network.packets.out.wvscontext.LP_GuildResult;
+import com.msemu.core.network.packets.out.wvscontext.LP_InventoryOperation;
+import com.msemu.core.network.packets.out.wvscontext.LP_StatChanged;
+import com.msemu.core.network.packets.out.wvscontext.messages.LP_IncExpMessage;
+import com.msemu.world.channel.Channel;
+import com.msemu.world.client.character.effect.LevelUpUserEffect;
 import com.msemu.world.client.character.inventory.items.Equip;
 import com.msemu.world.client.character.inventory.items.Item;
 import com.msemu.world.client.character.jobs.JobHandler;
@@ -54,7 +57,6 @@ import java.util.function.Predicate;
 
 import static com.msemu.commons.data.enums.InvType.EQUIP;
 import static com.msemu.commons.data.enums.InvType.EQUIPPED;
-import static com.msemu.world.enums.ChatMsgType.YELLOW;
 import static com.msemu.world.enums.InventoryOperationType.*;
 
 /**
@@ -79,7 +81,6 @@ public class Character {
 
     @JoinColumn(name = "questManager")
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @Getter
     @Setter
     private QuestManager questManager;
 
@@ -502,6 +503,11 @@ public class Character {
         getAvatarData().getCharacterStat().setPosMap(fieldID);
     }
 
+    public QuestManager getQuestManager() {
+        if(questManager.getCharacter() == null)
+            questManager.setCharacter(this);
+        return questManager;
+    }
 
     public void addExp(long amount) {
         ExpIncreaseInfo eii = new ExpIncreaseInfo();
@@ -523,13 +529,14 @@ public class Character {
             newExp -= GameConstants.charExp[level];
             addStat(Stat.LEVEL, 1);
             stats.put(Stat.LEVEL, (byte) getStat(Stat.LEVEL));
-            getJobHandler().handleLevelUp();
+            //getJobHandler().handleLevelUp();
             level++;
+            levelUp();
         }
         cs.setExp(newExp);
         stats.put(Stat.EXP, newExp);
-        write(new IncExpMessage(eii));
-        getClient().write(new StatChanged(stats));
+        write(new LP_IncExpMessage(eii));
+        getClient().write(new LP_StatChanged(stats));
     }
 
     public void addStat(Stat charStat, int amount) {
@@ -612,7 +619,7 @@ public class Character {
         getAvatarData().getCharacterStat().setJob(job.getId());
         List<Skill> skills = SkillData.getInstance().getSkillsByJob((short) job.getId());
         skills.forEach(this::addSkill);
-        getClient().write(new ChangeSkillRecordResult(skills, true,
+        getClient().write(new LP_ChangeSkillRecordResult(skills, true,
                 false, false, false));
         notifyChanges();
     }
@@ -644,7 +651,7 @@ public class Character {
 
     public void renewAvatarLook() {
         byte mask = AvatarModifiedMask.AvatarLook.getVal();
-        getField().broadcastPacket(new UserAvatarModified(this, mask, false));
+        getField().broadcastPacket(new LP_UserAvatarModified(this, mask, false));
     }
 
     public Inventory getInventoryByType(InvType invType) {
@@ -677,11 +684,11 @@ public class Character {
         if (item.getQuantity() <= 1 && !ItemConstants.isThrowingItem(item.getItemId())) {
             item.setQuantity(0);
             inventory.removeItem(item);
-            write(new InventoryOperation(true, false,
+            write(new LP_InventoryOperation(true, false,
                     REMOVE, item, item.getBagIndex()));
         } else {
             item.setQuantity(item.getQuantity() - 1);
-            write(new InventoryOperation(true, false,
+            write(new LP_InventoryOperation(true, false,
                     UPDATE, item, item.getBagIndex()));
         }
         setBulletIDForAttack(calculateBulletIDForAttack());
@@ -723,7 +730,7 @@ public class Character {
             Map<Stat, Object> stats = new HashMap<>();
             cs.setMoney(newMoney);
             stats.put(Stat.MONEY, newMoney);
-            write(new StatChanged(stats));
+            write(new LP_StatChanged(stats));
         }
     }
 
@@ -761,7 +768,7 @@ public class Character {
             Item existingItem = inventory.getItemByItemID(item.getItemId());
             if (existingItem != null && existingItem.getInvType().isStackable()) {
                 existingItem.addQuantity(item.getQuantity());
-                write(new InventoryOperation(true, false,
+                write(new LP_InventoryOperation(true, false,
                         UPDATE, existingItem, (short) existingItem.getBagIndex()));
             } else {
                 item.setInventoryId(inventory.getId());
@@ -772,7 +779,7 @@ public class Character {
                 if (item.getId() == 0) {
                     DatabaseFactory.getInstance().saveToDB(item);
                 }
-                write(new InventoryOperation(true, false,
+                write(new LP_InventoryOperation(true, false,
                         ADD, item, item.getBagIndex()));
             }
             setBulletIDForAttack(calculateBulletIDForAttack());
@@ -789,7 +796,7 @@ public class Character {
      * @param msg The message to display.
      */
     public void chatMessage(String msg) {
-        chatMessage(YELLOW, msg);
+        chatMessage(ChatMsgType.YELLOW, msg);
     }
 
     /**
@@ -799,7 +806,7 @@ public class Character {
      * @param msg The message to display.
      */
     public void chatMessage(ChatMsgType clr, String msg) {
-        getClient().write(new ChatMsg(clr, msg));
+        getClient().write(new LP_ChatMsg(clr, msg));
     }
 
     /**
@@ -915,16 +922,16 @@ public class Character {
         }
         setField(toField);
         toField.addCharacter(this);
-        getClient().write(new SetField(this, toField, getClient().getChannel(), false, 0, characterData, hasBuffProtector(),
+        getClient().write(new LP_SetField(this, toField, getClient().getChannel(), false, 0, characterData, hasBuffProtector(),
                 (byte) portal.getId(), false, 100, null, true, -1));
         if (characterData) {
             if (getGuild() != null) {
-                write(new GuildResult(new GuildUpdate(getGuild())));
+                write(new LP_GuildResult(new GuildUpdate(getGuild())));
             }
         }
         toField.spawnAllLifeForChar(this);
         toField.getCharacters().stream().filter(c -> !c.equals(this)).forEach(c -> {
-            write(new UserEnterField(c));
+            write(new LP_UserEnterField(c));
         });
         notifyChanges();
         toField.execUserEnterScript(this);
@@ -1748,7 +1755,7 @@ public class Character {
             GuildMember gm = g.getMemberByID(getId());
             gm.setOnline(online);
             gm.setCharacter(online ? this : null);
-            getGuild().broadcast(new GuildResult(
+            getGuild().broadcast(new LP_GuildResult(
                     new GuildUpdateMemberLogin(g.getId(), getId(), online, !this.online && online)), this);
         }
         this.online = online;
@@ -1796,7 +1803,7 @@ public class Character {
     }
 
     public void enableActions() {
-        write(new StatChanged());
+        write(new LP_StatChanged());
     }
 
     public void dropMessage() {
@@ -1824,6 +1831,42 @@ public class Character {
                 break;
         }
         return res;
+    }
+
+    public void warpPortal(Portal portal) {
+        Channel channel = getClient().getChannelInstance();
+        if (!portal.getScript().isEmpty()) {
+            getScriptManager().startScript(portal.getId(), portal.getScript(), ScriptType.PORTAL);
+        } else if (portal.getTargetMapId() != 999999999) {
+            Field toField = channel.getField(portal.getTargetMapId());
+            if (toField == null)
+                enableActions();
+            else {
+                Portal toPortal = toField.getPortalByName(portal.getTargetPortalName());
+                if (toPortal == null)
+                    warp(toField);
+                else
+                    warp(toField, toPortal);
+            }
+        }
+    }
+
+    public void levelUp() {
+        // TODO levelup
+        getAvatarData().getCharacterStat().levelUp();
+        getField().broadcastPacket(new LP_UserEffectRemote(this, new LevelUpUserEffect()), this);
+    }
+
+    public void giveItem(int itemID, int quantity) {
+        double isEquip = Math.floor((itemID / 1000000));
+        if (isEquip == 1) {  //Equip
+            Equip equip = ItemData.getInstance().getEquipFromTemplate(itemID);
+            addItemToInventory(equip.getInvType(), equip, false);
+        } else {    //Item
+            Item item = ItemData.getInstance().getItemFromTemplate(itemID);
+            item.setQuantity(quantity);
+            addItemToInventory(item);
+        }
     }
 }
 

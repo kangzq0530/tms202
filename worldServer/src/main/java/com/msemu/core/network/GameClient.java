@@ -4,7 +4,7 @@ import com.msemu.commons.network.Connection;
 import com.msemu.commons.network.crypt.MapleCrypt;
 import com.msemu.commons.network.crypt.MapleExCrypt;
 import com.msemu.core.configs.CoreConfig;
-import com.msemu.core.network.packets.out.ConnectToClient;
+import com.msemu.core.network.packets.out.LP_ConnectToClient;
 import com.msemu.world.World;
 import com.msemu.world.client.Account;
 import com.msemu.world.client.character.Character;
@@ -36,7 +36,7 @@ public class GameClient extends Client<GameClient> {
     @Override
     public void onOpen() {
         super.onOpen();
-        write(new ConnectToClient(this));
+        write(new LP_ConnectToClient(this));
         //TODO Hello Packet
         MapleExCrypt exCrypt = new MapleExCrypt(CoreConfig.GAME_SERVICE_TYPE, (short) CoreConfig.GAME_VERSION);
         MapleCrypt crypt = new MapleCrypt(CoreConfig.GAME_SERVICE_TYPE, (short) CoreConfig.GAME_VERSION);

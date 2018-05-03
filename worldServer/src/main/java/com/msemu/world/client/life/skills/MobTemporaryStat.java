@@ -5,8 +5,8 @@ import com.msemu.commons.data.templates.skill.SkillInfo;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.thread.EventManager;
 import com.msemu.core.network.GameClient;
-import com.msemu.core.network.packets.out.mob.MobStatReset;
-import com.msemu.core.network.packets.out.mob.MobStatSet;
+import com.msemu.core.network.packets.out.mob.LP_MobStatReset;
+import com.msemu.core.network.packets.out.mob.LP_MobStatSet;
 import com.msemu.world.client.character.skills.Option;
 import com.msemu.world.client.character.skills.Skill;
 import com.msemu.world.client.life.Mob;
@@ -382,7 +382,7 @@ public class MobTemporaryStat {
     public void removeMobStat(MobStat mobStat, Boolean fromSchedule) {
         getRemovedStatVals().put(mobStat, getCurrentStatVals().get(mobStat));
         getCurrentStatVals().remove(mobStat);
-        getMob().getField().broadcastPacket(new MobStatReset(getMob(), (byte) 1, false));
+        getMob().getField().broadcastPacket(new LP_MobStatReset(getMob(), (byte) 1, false));
         getSchedules().remove(mobStat);
         if (!fromSchedule && getSchedules().containsKey(mobStat)) {
             getSchedules().get(mobStat).cancel(true);
@@ -401,7 +401,7 @@ public class MobTemporaryStat {
         if (getBurnedInfo().size() == 0) {
             getCurrentStatVals().remove(BurnedInfo);
         }
-        getMob().getField().broadcastPacket(new MobStatReset(getMob(), (byte) 1, false, biList));
+        getMob().getField().broadcastPacket(new LP_MobStatReset(getMob(), (byte) 1, false, biList));
         if (!fromSchedule) {
             getBurnCancelSchedules().get(charId).cancel(true);
             getBurnCancelSchedules().remove(charId);
@@ -422,7 +422,7 @@ public class MobTemporaryStat {
      */
     public void addStatOptionsAndBroadcast(MobStat mobStat, Option option) {
         addStatOptions(mobStat, option);
-        mob.getField().broadcastPacket(new MobStatSet(getMob(), (short) 0));
+        mob.getField().broadcastPacket(new LP_MobStatSet(getMob(), (short) 0));
     }
 
     /**

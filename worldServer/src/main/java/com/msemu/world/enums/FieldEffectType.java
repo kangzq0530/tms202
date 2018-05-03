@@ -4,11 +4,11 @@ package com.msemu.world.enums;
  * Created by Weber on 2018/4/13.
  */
 public enum FieldEffectType {
-    FromString(0),
+    FieldEffectSummon(0),
     Tremble(1),
-    ObjectStateByString(2),
-    DisableEffectObject(3),
-    Unk0(4),
+    Object(2),
+    ObjectDisable(3),
+    FieldEffectScreen(4),
     PlaySound(5),
     MobHPTag(6),
     ChangeBGM(7),
@@ -17,7 +17,7 @@ public enum FieldEffectType {
     RewardRoullet(10),
     Unk1(11),
     Unk2(12),
-    TopScreenEffect(13),
+    ScreenDelayed(13),
     ScreenEffect(14),
     ScreenFloatingEffect(15),
     CreateWindowMaybeidk(16),

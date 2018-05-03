@@ -42,19 +42,34 @@ public class ScriptManager {
     }
 
     public void startScript(int parentID, String scriptName, ScriptType scriptType) {
+        startScript(parentID, scriptName, scriptType, "start");
+    }
+
+    public void startScript(int parentID, String scriptName, ScriptType scriptType, String functionName) {
         getLock().lock();
         try {
             if (getScriptInfo() != null) {
+                getCharacter().chatMessage(String.format("執行腳本失敗 ID: %d 腳本名稱: %s 種類: %s ( 目前已經有腳本執行中 ID: %d 腳本名稱: %s 種類: %s )"
+                        , parentID, scriptName, scriptType.name()
+                        , getScriptInfo().getParentID(), getScriptInfo().getScriptName(), getScriptInfo().getScriptType().name()));
                 return;
             }
-            setScriptInfo(new ScriptInfo());
+            getCharacter().chatMessage(String.format("開始執行腳本 ID: %d 腳本名稱: %s 種類: %s", parentID, scriptName, scriptType.name()));
+            ScriptInfo scriptInfo = new ScriptInfo();
             scriptInfo.setParentID(parentID);
             scriptInfo.setScriptName(scriptName);
             scriptInfo.setScriptType(scriptType);
             scriptInfo.setInvocable(getInvocable(scriptName, scriptType));
             scriptInfo.setInteraction(new ScriptInteraction(scriptType, parentID, scriptName, getCharacter()));
             Invocable engine = scriptInfo.getInvocable();
+            if (engine == null)
+                return;
+            setScriptInfo(scriptInfo);
             ((ScriptEngine) engine).put("cm", scriptInfo.getInteraction());
+            ((ScriptEngine) engine).put("parentID", scriptInfo.getParentID());
+            engine.invokeFunction(functionName);
+        } catch (NoSuchMethodException | ScriptException e) {
+            e.printStackTrace();
         } finally {
             getLock().unlock();
         }
@@ -80,7 +95,7 @@ public class ScriptManager {
     }
 
     private Invocable getInvocable(String scriptName, ScriptType scriptType) {
-        String path = String.format("%s/%s/%s/%s", CoreConfig.SCRIPT_PATH,
+        String path = String.format("%s/%s/%s%s", CoreConfig.SCRIPT_PATH,
                 scriptType.name().toLowerCase(), scriptName, SCRIPT_ENGINE_EXTENSION);
         boolean exists = new File(path).exists();
         if (!exists) {
@@ -92,6 +107,7 @@ public class ScriptManager {
             ScriptEngine scriptEngine = getScriptEngine();
             String content = FileUtils.readFile(path, Charset.forName("UTF-8"));
             CompiledScript cs = ((Compilable) scriptEngine).compile(content);
+            cs.eval();
             return (Invocable) scriptEngine;
         } catch (IOException e) {
             log.error(String.format("Unable to read script file %s!", path), e);

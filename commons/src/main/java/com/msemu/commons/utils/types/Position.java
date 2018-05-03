@@ -13,7 +13,7 @@ public class Position {
         this.y = y;
     }
 
-    public Position(){
+    public Position() {
         x = 0;
         y = 0;
     }
@@ -47,5 +47,23 @@ public class Position {
         int x = getX();
         int y = getY();
         return new Rect(x + rect.getLeft(), y + rect.getTop(), x + rect.getRight(), y + rect.getBottom());
+    }
+
+    public double distance(Position point) {
+        return distance(point.getX(), point.getY());
+    }
+
+    public double distance(double x, double y) {
+        return Math.sqrt(distanceSq(x, y));
+    }
+
+    public double distanceSq(Position point) {
+        return distanceSq(point.getX(), point.getY());
+    }
+
+    public double distanceSq(double x, double y) {
+        x -= getX();
+        y -= getY();
+        return (x * x + y * y);
     }
 }

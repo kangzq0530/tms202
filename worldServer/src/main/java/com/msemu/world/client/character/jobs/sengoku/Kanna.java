@@ -20,8 +20,8 @@ import com.msemu.world.data.SkillData;
 import com.msemu.world.enums.ChatMsgType;
 import com.msemu.commons.data.enums.MobStat;
 import com.msemu.world.enums.MoveAbility;
-import com.msemu.core.network.packets.out.user.FoxManEnterField;
-import com.msemu.core.network.packets.out.wvscontext.TemporaryStatSet;
+import com.msemu.core.network.packets.out.user.LP_FoxManEnterField;
+import com.msemu.core.network.packets.out.wvscontext.LP_TemporaryStatSet;
 
 import static com.msemu.commons.data.enums.SkillStat.*;
 import static com.msemu.world.client.character.skills.CharacterTemporaryStat.*;
@@ -116,7 +116,7 @@ public class Kanna extends JobHandler {
 
     public void getHakuFollow() {
         //if(chr.hasSkill(HAKU)) {
-        getClient().write(new FoxManEnterField(getCharacter()));
+        getClient().write(new LP_FoxManEnterField(getCharacter()));
         //}
     }
 
@@ -183,7 +183,7 @@ public class Kanna extends JobHandler {
                 tsm.putCharacterStatValue(BlackHeartedCurse, o1);
                 break;
         }
-        getClient().write(new TemporaryStatSet(tsm));
+        getClient().write(new LP_TemporaryStatSet(tsm));
     }
 
 
@@ -220,7 +220,7 @@ public class Kanna extends JobHandler {
                     o1.tStart = (int) System.currentTimeMillis();
                     o1.tTerm = si.getValue(time, slv);
                     tsm.putCharacterStatValue(IndieDamR, o1); //Indie
-                    getClient().write(new TemporaryStatSet(tsm));
+                    getClient().write(new LP_TemporaryStatSet(tsm));
                     break;
             }
         }

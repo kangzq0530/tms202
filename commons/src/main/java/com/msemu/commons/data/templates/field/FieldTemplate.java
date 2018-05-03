@@ -38,7 +38,6 @@ public class FieldTemplate implements DatSerializable {
 
     @Override
     public void write(DataOutputStream dos) throws IOException {
-        System.out.println(id);
         dos.writeInt(rect.getLeft());
         dos.writeInt(rect.getTop());
         dos.writeInt(rect.getRight());
