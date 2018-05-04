@@ -4,6 +4,7 @@ package com.msemu.world.client.character.party;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;
 import com.msemu.world.client.character.Character;
+import com.msemu.world.client.character.party.operations.JoinPartyDoneResponse;
 import com.msemu.world.client.field.Field;
 import com.msemu.world.data.FieldData;
 import com.msemu.world.enums.FieldInstanceType;
@@ -57,7 +58,7 @@ public class Party {
             setPartyLeaderID(chr.getId());
         }
         PartyMember[] partyMembers = getPartyMembers();
-        PartyJoinResult pjr = new PartyJoinResult(this, chr.getName());
+        JoinPartyDoneResponse pjr = new JoinPartyDoneResponse(this, chr.getName());
         for (int i = 0; i < partyMembers.length; i++) {
             if (partyMembers[i] == null) {
                 partyMembers[i] = pm;
@@ -76,11 +77,15 @@ public class Party {
     }
 
     public void encode(OutPacket<GameClient> outPacket) {
+        encode(outPacket, false);
+    }
+
+    public void encode(OutPacket<GameClient> outPacket, boolean isLeaving) {
         for (PartyMember pm : partyMembers) {
             outPacket.encodeInt(pm != null ? pm.getCharacterID() : 0);
         }
         for (PartyMember pm : partyMembers) {
-            outPacket.encodeString(pm != null ? pm.getCharacterName() : "", 13);
+            outPacket.encodeString(pm != null ? pm.getCharacterName() : "", 15);
         }
         for (PartyMember pm : partyMembers) {
             outPacket.encodeInt(pm != null ? pm.getCharacterJob() : 0);
@@ -95,25 +100,44 @@ public class Party {
             outPacket.encodeInt(pm != null ? pm.getChannel() - 1 : 0);
         }
         for (PartyMember pm : partyMembers) {
-            outPacket.encodeInt(pm != null && pm.isOnline() ? 1 : 0);
+            outPacket.encodeInt(pm != null && pm.isOnline() ? pm.getChannel() - 1 : -2);
         }
-//        for(PartyMember pm : partyMembers) {
+        outPacket.encodeZeroBytes(6 * 4);
+        outPacket.encodeZeroBytes(6 * 4);
         outPacket.encodeInt(getPartyLeaderID());
-//        }
-        // end PARTYMEMBER struct
         for (PartyMember pm : partyMembers) {
             outPacket.encodeInt(pm != null ? pm.getFieldID() : 0);
         }
         for (PartyMember pm : partyMembers) {
             if (pm != null && pm.getTownPortal() != null) {
-                pm.getTownPortal().encode(outPacket);
+                pm.getTownPortal().encode(outPacket, isLeaving);
             } else {
-                new TownPortal().encode(outPacket);
+                new TownPortal().encode(outPacket, isLeaving);
             }
         }
         outPacket.encodeByte(isAppliable() && !isFull());
+        outPacket.encodeByte(false);
         outPacket.encodeString(getName());
-        outPacket.encodeArr(new byte[50]);
+        outPacket.encodeByte(false);
+        outPacket.encodeByte(false);
+        int unkSize = 0;
+        for(int i = 0 ; i < unkSize; i++) {
+            outPacket.encodeInt(0);
+            outPacket.encodeInt(0);
+            outPacket.encodeString("");
+            outPacket.encodeInt(0);
+        }
+        for(int i = 0 ; i < 3;i++ ) {
+            outPacket.encodeByte(0);
+            outPacket.encodeByte(0);
+            outPacket.encodeByte(0);
+            outPacket.encodeByte(0);
+            outPacket.encodeInt(0);
+            outPacket.encodeInt(0);
+            outPacket.encodeLong(0);
+            outPacket.encodeInt(0);
+            outPacket.encodeInt(0);
+        }
     }
 
     public Field getOrCreateFieldById(int fieldID) {
@@ -128,13 +152,13 @@ public class Party {
 
     public void clearFieldInstances() {
         Set<Character> chrs = new HashSet<>();
-        for(Field f : getFields().values()) {
+        for (Field f : getFields().values()) {
             chrs.addAll(f.getChars());
         }
-        for(Character chr : chrs) {
+        for (Character chr : chrs) {
             chr.setFieldInstanceType(FieldInstanceType.CHANNEL);
             int returnMap = chr.getField().getReturnMap();
-            if(returnMap != 999999999 && returnMap != chr.getField().getReturnMap()) {
+            if (returnMap != 999999999 && returnMap != chr.getField().getReturnMap()) {
                 Field field = chr.getClient().getChannelInstance().getField(returnMap);
                 chr.warp(field);
             }

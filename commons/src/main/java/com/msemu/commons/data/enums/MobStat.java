@@ -90,18 +90,19 @@ public enum MobStat {
     ElementDarkness(49),
     // 另一個咬擊
     AreaInstallByHit(50),
-    BMageDebuff(51),
-    JaguarProvoke(52),
-    JaguarBleeding(53),
-    DarkLightning(54),
-    PinkbeanFlowerPot(55),
-    BattlePvPHelenaMark(56),
-    PsychicLock(57),
-    PsychicLockCoolTime(58),
-    PsychicGroundMark(59),
-    PowerImmune(60),
-    PsychicForce(61),
-    MultiPMDR(62),
+    BMageDebuff(50),
+    JaguarProvoke(51),
+    JaguarBleeding(52),
+    DarkLightning(53),
+    PinkbeanFlowerPot(54),
+    BattlePvPHelenaMark(55),
+    PsychicLock(56),
+    PsychicLockCoolTime(57),
+    PsychicGroundMark(58),
+    PowerImmune(59),
+    PsychicForce(60),
+    MultiPMDR(61),
+    MBS62(62),
     ElementResetBySummon(63),
     BahamutLightElemAddDam(64),
     BossPropPlus(65),
@@ -140,7 +141,7 @@ public enum MobStat {
     static final long serialVersionUID = 0L;
     private final int i;
     private final int position;
-    private final boolean end;
+    private final boolean isDefault;
     private final int bitNumber;
 
     public static final int MAX_LENGTH = 3;
@@ -148,14 +149,14 @@ public enum MobStat {
     private MobStat(int i) {
         this.i = 1 << (31 - (i % 32)); // 如果要變舊的，就把減31去掉，詳細請參考頂端說明
         this.position = (int) Math.floor(i / 32);
-        this.end = false;
+        this.isDefault = false;
         this.bitNumber = i;
     }
 
     private MobStat(int i, boolean end) {
         this.i = 1 << (31 - (i % 32)); // 如果要變舊的，就把減31去掉，詳細請參考頂端說明
         this.position = (int) Math.floor(i / 32);
-        this.end = end;
+        this.isDefault = end;
         this.bitNumber = i;
     }
 
@@ -163,8 +164,8 @@ public enum MobStat {
         return position;
     }
 
-    public boolean isEmpty() {
-        return end;
+    public boolean isDefault() {
+        return isDefault;
     }
 
     public int getBitNumber() {
@@ -194,6 +195,6 @@ public enum MobStat {
 
     @Override
     public String toString() {
-        return this.name() + "(" + this.bitNumber + ", " + (this.end ? "true" : ":") + ")";
+        return this.name() + "(" + this.bitNumber + ", " + (this.isDefault ? "true" : ":") + ")";
     }
 }

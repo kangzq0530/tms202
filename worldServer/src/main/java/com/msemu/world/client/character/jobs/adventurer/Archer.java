@@ -277,7 +277,7 @@ public class Archer extends JobHandler {
             o.rOption = AGGRESSIVE_RESISTANCE;
         }
         o.nOption = (int) Math.min((int) totalDamage * (si.getValue(y, slv) / 100D) + o.nOption,
-                getCharacter().getStat(Stat.MAXHP) / (si.getValue(z, slv) / 100D));
+                getCharacter().getStat(Stat.MAX_HP) / (si.getValue(z, slv) / 100D));
         o.tOption = si.getValue(time, slv);
         tsm.putCharacterStatValue(DamAbsorbShield, o);
         tsm.sendSetStatPacket();
@@ -358,7 +358,7 @@ public class Archer extends JobHandler {
                 case 1: // Blood
                     if (Rand.getChance(si.getValue(w, slv))) {
                         quiverCartridge.decrementAmount();
-                        int maxHP = chr.getStat(Stat.MAXHP);
+                        int maxHP = chr.getStat(Stat.MAX_HP);
                         int addHP = (int) (maxHP * 0.03);
                         int curHP = chr.getStat(Stat.HP);
                         int newHP = curHP + addHP > maxHP ? maxHP : curHP + addHP;

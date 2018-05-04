@@ -553,11 +553,11 @@ public class Character {
                 return cs.getLuk();
             case HP:
                 return cs.getHp();
-            case MAXHP:
+            case MAX_HP:
                 return cs.getMaxHp();
             case MP:
                 return cs.getMp();
-            case MAXMP:
+            case MAX_MP:
                 return cs.getMaxMp();
             case AP:
                 return cs.getAp();
@@ -584,13 +584,13 @@ public class Character {
             case HP:
                 getAvatarData().getCharacterStat().setHp(amount);
                 break;
-            case MAXHP:
+            case MAX_HP:
                 getAvatarData().getCharacterStat().setMaxHp(amount);
                 break;
             case MP:
                 getAvatarData().getCharacterStat().setMp(amount);
                 break;
-            case MAXMP:
+            case MAX_MP:
                 getAvatarData().getCharacterStat().setMaxMp(amount);
                 break;
             case AP:
@@ -982,7 +982,7 @@ public class Character {
             }
         }
 
-        if (mask.isInMask(DBChar.Character)) {
+        if (mask.isInMask(DBChar.CHARACTER)) {
             getAvatarData().getCharacterStat().encode(outPacket);
             outPacket.encodeByte(getFriends().size());
             // 精靈的祝福
@@ -1018,7 +1018,7 @@ public class Character {
                 v7 += 36;
             } while (v7 < 74);
         }
-        if (mask.isInMask(DBChar.Money)) {
+        if (mask.isInMask(DBChar.MONEY)) {
             outPacket.encodeLong(getMoney());
             outPacket.encodeInt(getId());
             // TODO 楓葉點數、小鋼珠
@@ -1027,14 +1027,14 @@ public class Character {
             outPacket.encodeInt(maplepoints);
             outPacket.encodeInt(pachingoPoints);
         }
-        if (mask.isInMask(DBChar.ItemSlotConsume) || mask.isInMask(DBChar.ExpConsumeItem)) {
+        if (mask.isInMask(DBChar.ITEM_SLOT_CONSUME) || mask.isInMask(DBChar.ExpConsumeItem)) {
             outPacket.encodeInt(getExpConsumeItems().size());
             for (ExpConsumeItem eci : getExpConsumeItems()) {
                 eci.encode(outPacket);
             }
         }
 
-        if (mask.isInMask(DBChar.InventorySize)) {
+        if (mask.isInMask(DBChar.INVENTORY_SIZE)) {
             outPacket.encodeByte(getEquipInventory().getSlots());
             outPacket.encodeByte(getConsumeInventory().getSlots());
             outPacket.encodeByte(getEtcInventory().getSlots());
@@ -1046,7 +1046,7 @@ public class Character {
             // ???
             outPacket.encodeFT(FileTime.getFileTimeFromType(FileTime.Type.ZERO_TIME));
         }
-        if (mask.isInMask(DBChar.ItemSlotEquip)) {
+        if (mask.isInMask(DBChar.ITEM_SLOT_EQUIP)) {
             boolean v248 = false;
             outPacket.encodeByte(v248); // ?
             List<Item> equippedItems = getEquippedInventory().getItems();
@@ -1111,7 +1111,7 @@ public class Character {
             int v151 = 0;
             outPacket.encodeInt(v151);
         }
-        if (mask.isInMask(DBChar.ItemSlotInstall)) {
+        if (mask.isInMask(DBChar.ITEM_SLOT_INSTALL)) {
             // v202 sub_502EA0
             // 不知道是啥
             int[] unkItemBasePos = {20001, 20049};
@@ -1130,28 +1130,28 @@ public class Character {
             }
         }
 
-        if (mask.isInMask(DBChar.ItemSlotConsume)) {
+        if (mask.isInMask(DBChar.ITEM_SLOT_CONSUME)) {
             for (Item item : getConsumeInventory().getItems()) {
                 outPacket.encodeByte(item.getBagIndex());
                 item.encode(outPacket);
             }
             outPacket.encodeByte(0);
         }
-        if (mask.isInMask(DBChar.ItemSlotInstall)) {
+        if (mask.isInMask(DBChar.ITEM_SLOT_INSTALL)) {
             for (Item item : getInstallInventory().getItems()) {
                 outPacket.encodeByte(item.getBagIndex());
                 item.encode(outPacket);
             }
             outPacket.encodeByte(0);
         }
-        if (mask.isInMask(DBChar.ItemSlotEtc)) {
+        if (mask.isInMask(DBChar.ITEM_SLOT_ETC)) {
             for (Item item : getEtcInventory().getItems()) {
                 outPacket.encodeByte(item.getBagIndex());
                 item.encode(outPacket);
             }
             outPacket.encodeByte(0);
         }
-        if (mask.isInMask(DBChar.ItemSlotCash)) {
+        if (mask.isInMask(DBChar.ITEM_SLOT_CASH)) {
             for (Item item : getCashInventory().getItems()) {
                 outPacket.encodeByte(item.getBagIndex());
                 item.encode(outPacket);
@@ -1160,15 +1160,15 @@ public class Character {
         }
 
         // BagDatas // extenedSlots
-        if (mask.isInMask(DBChar.ItemSlotConsume)) {
+        if (mask.isInMask(DBChar.ITEM_SLOT_CONSUME)) {
             // TODO
             outPacket.encodeInt(0);
         }
-        if (mask.isInMask(DBChar.ItemSlotInstall)) {
+        if (mask.isInMask(DBChar.ITEM_SLOT_INSTALL)) {
             // TODO
             outPacket.encodeInt(0);
         }
-        if (mask.isInMask(DBChar.ItemSlotEtc)) {
+        if (mask.isInMask(DBChar.ITEM_SLOT_ETC)) {
             // TODO
             outPacket.encodeInt(0);
         }
@@ -1202,7 +1202,7 @@ public class Character {
             }
         }
 
-        if (mask.isInMask(DBChar.SkillRecord)) {
+        if (mask.isInMask(DBChar.SKILL_RECORD)) {
             boolean encodeSkills = true;
             outPacket.encodeByte(encodeSkills);
             if (encodeSkills) {
@@ -1292,7 +1292,7 @@ public class Character {
                 outPacket.encodeInt(0); // nSkillCooltime
             }
         }
-        if (mask.isInMask(DBChar.QuestRecord)) {
+        if (mask.isInMask(DBChar.QUEST_RECORD)) {
             // modified/deleted, not completed anyway
             boolean removeAllOldEntries = true;
             outPacket.encodeByte(removeAllOldEntries);
@@ -1318,7 +1318,7 @@ public class Character {
                 outPacket.encodeString("");
             }
         }
-        if (mask.isInMask(DBChar.QuestComplete)) {
+        if (mask.isInMask(DBChar.QUEST_COMPLETE)) {
             boolean removeAllOldEntries = true;
             outPacket.encodeByte(removeAllOldEntries);
             Set<Quest> completedQuests = getQuestManager().getCompletedQuests();
@@ -1335,14 +1335,14 @@ public class Character {
                 }
             }
         }
-        if (mask.isInMask(DBChar.MiniGameRecord)) {
+        if (mask.isInMask(DBChar.MINI_GAME_RECORD)) {
             int size = 0;
             outPacket.encodeShort(size);
             for (int i = 0; i < size; i++) {
                 new MiniGameRecord().encode(outPacket);
             }
         }
-        if (mask.isInMask(DBChar.CoupleRecord)) {
+        if (mask.isInMask(DBChar.COUPLE_RECORD)) {
             int coupleSize = 0;
             outPacket.encodeShort(coupleSize);
             for (int i = 0; i < coupleSize; i++) {
@@ -1360,7 +1360,7 @@ public class Character {
             }
         }
 
-        if (mask.isInMask(DBChar.MapTransfer)) {
+        if (mask.isInMask(DBChar.MAP_TRANSFER)) {
             for (int i = 0; i < 5; i++) {
                 outPacket.encodeInt(999999999);
             }

@@ -4,14 +4,14 @@ package com.msemu.world.enums;
  * Created by Weber on 2018/4/13.
  */
 public enum DropLeaveType {
-    IDK_0(0),
-    IDK_1(1),
-    CHAR_PICKUP_1(2),
-    CHAR_PICKUP_2(3),
-    DELAYED_PICKUP(4),
-    PET_PICKUP(5),
-    IDK_2(6),
-    IDK_3(7), // CAnimationDisplayer::RegisterAbsorbItemAnimationJP ?
+    ByTimeOut(0),
+    ByScreenScroll(1),
+    PickedUpByUser(2),
+    PickUpByMob(3),
+    Explode(4),
+    PickedUpByPet(5),
+    PassConvex(6),
+    SkillPet(7), // CAnimationDisplayer::RegisterAbsorbItemAnimationJP ?
     ;
 
     private byte value;

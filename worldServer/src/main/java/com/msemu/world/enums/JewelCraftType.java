@@ -6,12 +6,12 @@ import lombok.Getter;
  * Created by Weber on 2018/5/3.
  */
 public enum JewelCraftType {
-    InstallSuccess(0),
-    InstallFail(1),
-    SynthesizeSuccess(2),
-    SynthesizeKeep(3),
-    SynthesizeFail(4),
-    Error(5),
+    INSTALL_SUCCESS(0),
+    INSTALL_FAIL(1),
+    SYNTHESIZE_SUCCESS(2),
+    SYNTHESIZE_KEEP(3),
+    SYNTHESIZE_FAIL(4),
+    ERROR(5),
     ;
     @Getter
     private byte value;

@@ -20,7 +20,7 @@ public class Drop extends Life {
     private int money;
     private DropType dropType;
     private DropEnterType dropEnterType = DropEnterType.Create;
-    private DropMotionType dropMotionType =DropMotionType.DMT_NORMAL;
+    private DropMotionType dropMotionType =DropMotionType.Normal;
     private int ownerID;
     private boolean explosiveDrop;
     private FileTime expireTime;

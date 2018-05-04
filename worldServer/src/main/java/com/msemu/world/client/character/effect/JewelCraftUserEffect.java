@@ -31,7 +31,7 @@ public class JewelCraftUserEffect implements IUserEffect {
     @Override
     public void encode(OutPacket<GameClient> outPacket) {
         outPacket.encodeByte(type.getValue());
-        if(type == JewelCraftType.SynthesizeKeep || type == JewelCraftType.SynthesizeFail )
+        if(type == JewelCraftType.SYNTHESIZE_KEEP || type == JewelCraftType.SYNTHESIZE_FAIL)
             outPacket.encodeInt(itemID);
     }
 }

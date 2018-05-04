@@ -101,7 +101,7 @@ public class ScriptInteraction {
         return getCharacter().getField().getId();
     }
 
-    public void openNpc(int npc, String  scriptName) {
+    public void openNpc(int npc, String scriptName) {
         dispose();
         getCharacter().getScriptManager().startScript(npc, scriptName, ScriptType.NPC);
     }
@@ -695,19 +695,42 @@ public class ScriptInteraction {
         }
     }
 
+    public boolean canStartQuest() {
+        if (getScriptType().equals(ScriptType.QUEST)) {
+            final int questID = getParentID();
+            return canStartQuest(questID);
+        }
+        return false;
+    }
+
     public boolean canStartQuest(int questID) {
         return getCharacter().getQuestManager().canStartQuest(questID);
+    }
+
+    public boolean hasQuestInProgress() {
+        if (getScriptType().equals(ScriptType.QUEST)) {
+            final int questID = getParentID();
+            return hasQuestInProgress(questID);
+        }
+        return false;
     }
 
     public boolean hasQuestInProgress(int questID) {
         return getCharacter().getQuestManager().hasQuestInProgress(questID);
     }
 
+    public boolean hasQuestCompleted() {
+        if (getScriptType().equals(ScriptType.QUEST)) {
+            final int questID = getParentID();
+            return hasQuestCompleted(questID);
+        }
+        return false;
+    }
+
     public boolean hasQuestCompleted(int questID) {
         QuestManager qm = getCharacter().getQuestManager();
-
         return qm.hasQuestCompleted(questID);
-    }
+        }
 
     public void completeQuest() {
         if (getScriptType().equals(ScriptType.QUEST)) {

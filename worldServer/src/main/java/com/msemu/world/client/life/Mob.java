@@ -16,13 +16,17 @@ import com.msemu.world.client.field.effect.MobHPTagFieldEffect;
 import com.msemu.world.client.life.skills.MobSkill;
 import com.msemu.world.client.life.skills.MobTemporaryStat;
 import com.msemu.world.enums.DeathType;
+import com.msemu.world.enums.MobAppearType;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.*;
 
 /**
  * Created by Weber on 2018/4/11.
  */
+@Getter
+@Setter
 public class Mob extends Life {
 
     private boolean sealedInsteadDead, patrolMob, isLeft;
@@ -30,7 +34,10 @@ public class Mob extends Life {
     private int refImgMobID, lifeReleaseOwnerAID, afterAttack, currentAction = -1, scale = 100, eliteGrade, eliteType, targetUserIdFromServer;
     private long hp, maxHp;
     private long mp, maxMp;
-    private byte calcDamageIndex = 1, moveAction, appearType, teamForMCarnival;
+    private byte calcDamageIndex = 1, moveAction, teamForMCarnival;
+    @Getter
+    @Setter
+    private MobAppearType appearType = MobAppearType.Normal;
     private Position prevPos;
     private Foothold curFoodhold;
     private Foothold homeFoothold;
@@ -38,75 +45,10 @@ public class Mob extends Life {
     private ShootingMoveStat shootingMoveStat;
     private ForcedMobStat forcedMobStat;
     private MobTemporaryStat temporaryStat;
-    private int firstAttack;
-    private int summonType;
-    private int category;
-    private String mobType = "";
-    private int link;
-    private double fs;
-    private String elemAttr = "";
-    private int hpTagColor;
-    private int hpTagBgcolor;
-    private boolean HPgaugeHide;
-    private int rareItemDropLevel;
-    private boolean boss;
-    private int hpRecovery;
-    private int mpRecovery;
-    private boolean undead;
-    private int mbookID;
-    private boolean noRegen;
-    private int chaseSpeed;
-    private int explosiveReward;
-    private int flySpeed;
-    private boolean invincible;
-    private boolean hideName;
-    private boolean hideHP;
-    private String changeableMobType = "";
-    private boolean changeable;
-    private boolean noFlip;
-    private boolean tower;
-    private boolean partyBonusMob;
-    private int wp;
-    private boolean useReaction;
-    private boolean publicReward;
-    private boolean minion;
-    private boolean forward;
-    private boolean isRemoteRange;
-    private boolean ignoreFieldOut;
-    private boolean ignoreMoveImpact;
-    private int summonEffect;
-    private boolean skeleton;
-    private boolean hideUserDamage;
-    private int fixedDamage;
-    private boolean individualReward;
-    private int removeAfter;
-    private boolean notConsideredFieldSet;
-    private String fixedMoveDir = "";
-    private boolean noDoom;
-    private boolean useCreateScript;
-    private boolean knockback;
-    private boolean blockUserMove;
-    private int bodyDisease;
-    private int bodyDiseaseLevel;
-    private int point;
-    private int partyBonusR;
-    private boolean removeQuest;
-    private int passiveDisease;
-    private int coolDamageProb;
-    private int coolDamage;
-    private int damageRecordQuest;
-    private int sealedCooltime;
-    private int willEXP;
-    private boolean onFieldSetSummon;
-    private boolean userControll;
-    private boolean noDebuff;
-    private boolean targetFromSvr;
-    private int charismaEXP;
     private Map<Character, Long> damageDone = new HashMap<>();
     private Set<DropInfo> drops = new HashSet<>();
     private List<MobSkill> skills = new ArrayList<>();
     private Set<Integer> quests = new HashSet<>();
-    @Getter
     private final MobTemplate template;
 
     public Mob(int objectId, MobTemplate template) {
@@ -186,102 +128,19 @@ public class Mob extends Life {
         if (getTemporaryStat() != null) {
             copy.setTemporaryStat(getTemporaryStat().deepCopy());
         }
-        copy.setFirstAttack(getFirstAttack());
-        copy.setSummonType(getSummonType());
-        copy.setCategory(getCategory());
-        copy.setMobType(getMobType());
-        copy.setLink(getLink());
-        copy.setFs(getFs());
-        copy.setElemAttr(getElemAttr());
-        copy.setHpTagColor(getHpTagColor());
-        copy.setHpTagBgcolor(getHpTagBgcolor());
-        copy.setHPgaugeHide(isHPgaugeHide());
-        copy.setRareItemDropLevel(getRareItemDropLevel());
-        copy.setBoss(isBoss());
-        copy.setHpRecovery(getHpRecovery());
-        copy.setMpRecovery(getMpRecovery());
-        copy.setUndead(isUndead());
-        copy.setMbookID(getMbookID());
-        copy.setNoRegen(isNoRegen());
-        copy.setChaseSpeed(getChaseSpeed());
-        copy.setExplosiveReward(getExplosiveReward());
-        copy.setFlySpeed(getFlySpeed());
-        copy.setInvincible(isInvincible());
-        copy.setHideName(isHideName());
-        copy.setHideHP(isHideHP());
-        copy.setChangeableMobType(getChangeableMobType());
-        copy.setChangeable(isChangeable());
-        copy.setNoFlip(isNoFlip());
-        copy.setTower(isTower());
-        copy.setPartyBonusMob(isPartyBonusMob());
-        copy.setWp(getWp());
-        copy.setUseReaction(isUseReaction());
-        copy.setPublicReward(isPublicReward());
-        copy.setMinion(isMinion());
-        copy.setForward(isForward());
-        copy.setIsRemoteRange(isRemoteRange());
-        copy.setIgnoreFieldOut(isIgnoreFieldOut());
-        copy.setIgnoreMoveImpact(isIgnoreMoveImpact());
-        copy.setSummonEffect(getSummonEffect());
-        copy.setSkeleton(isSkeleton());
-        copy.setHideUserDamage(isHideUserDamage());
-        copy.setFixedDamage(getFixedDamage());
-        copy.setIndividualReward(isIndividualReward());
-        copy.setRemoveAfter(getRemoveAfter());
-        copy.setNotConsideredFieldSet(isNotConsideredFieldSet());
-        copy.setFixedMoveDir(getFixedMoveDir());
-        copy.setNoDoom(isNoDoom());
-        copy.setUseCreateScript(isUseCreateScript());
-        copy.setKnockback(isKnockback());
-        copy.setBlockUserMove(isBlockUserMove());
-        copy.setBodyDisease(getBodyDisease());
-        copy.setBodyDiseaseLevel(getBodyDiseaseLevel());
-        copy.setPoint(getPoint());
-        copy.setPartyBonusR(getPartyBonusR());
-        copy.setRemoveQuest(isRemoveQuest());
-        copy.setPassiveDisease(getPassiveDisease());
-        copy.setCoolDamageProb(getCoolDamageProb());
-        copy.setCoolDamage(getCoolDamage());
-        copy.setDamageRecordQuest(getDamageRecordQuest());
-        copy.setSealedCooltime(getSealedCooltime());
-        copy.setWillEXP(getWillEXP());
-        copy.setOnFieldSetSummon(isOnFieldSetSummon());
-        copy.setUserControll(isUserControll());
-        copy.setNoDebuff(isNoDebuff());
-        copy.setTargetFromSvr(isTargetFromSvr());
-        copy.setCharismaEXP(getCharismaEXP());
         copy.setMp(getMp());
         copy.setMaxMp(getMaxMp());
         copy.setDrops(getDrops()); // doesn't get mutated, so should be fine
-        for (MobSkill ms : getSkills()) {
-            copy.addSkill(ms);
-        }
-        for (int i : getQuests()) {
-            copy.addQuest(i);
-        }
+        getSkills().forEach(copy::addSkill);
+        getQuests().forEach(copy::addQuest);
         if (copy.getDrops().stream().noneMatch(di -> di.getMoney() > 0)) {
             copy.getDrops().add(new DropInfo(0, (int) copy.getForcedMobStat().getExp(), 1000, 0));
         }
         return copy;
     }
 
-    public Set<DropInfo> getDrops() {
-        if (drops == null) {
-            drops = new HashSet<>();
-        }
-        return drops;
-    }
-
-    public void setDrops(Set<DropInfo> drops) {
-        this.drops = drops;
-    }
-
-    public boolean isSealedInsteadDead() {
-        return sealedInsteadDead;
-    }
-
-    public void setSealedInsteadDead(boolean sealedInsteadDead) {
-        this.sealedInsteadDead = sealedInsteadDead;
+    public boolean isBoss() {
+        return getTemplate().isBoss();
     }
 
     public ForcedMobStat getForcedMobStat() {
@@ -468,14 +327,6 @@ public class Mob extends Life {
         this.moveAction = moveAction;
     }
 
-    public byte getAppearType() {
-        return appearType;
-    }
-
-    public void setAppearType(byte appearType) {
-        this.appearType = appearType;
-    }
-
     public byte getTeamForMCarnival() {
         return teamForMCarnival;
     }
@@ -562,522 +413,6 @@ public class Mob extends Life {
 
     public MobTemporaryStat getTemporaryStat() {
         return temporaryStat;
-    }
-
-    public void setFirstAttack(int firstAttack) {
-        this.firstAttack = firstAttack;
-    }
-
-    public int getFirstAttack() {
-        return firstAttack;
-    }
-
-    public void setSummonType(int summonType) {
-        this.summonType = summonType;
-    }
-
-    public int getSummonType() {
-        return summonType;
-    }
-
-    public void setCategory(int category) {
-        this.category = category;
-    }
-
-    public int getCategory() {
-        return category;
-    }
-
-    public void setMobType(String mobType) {
-        this.mobType = mobType;
-    }
-
-    public String getMobType() {
-        return mobType;
-    }
-
-    public void setLink(int link) {
-        this.link = link;
-    }
-
-    public int getLink() {
-        return link;
-    }
-
-    public void setFs(double fs) {
-        this.fs = fs;
-    }
-
-    public double getFs() {
-        return fs;
-    }
-
-    public void setElemAttr(String elemAttr) {
-        this.elemAttr = elemAttr;
-    }
-
-    public String getElemAttr() {
-        return elemAttr;
-    }
-
-    public void setHpTagColor(int hpTagColor) {
-        this.hpTagColor = hpTagColor;
-    }
-
-    public int getHpTagColor() {
-        return hpTagColor;
-    }
-
-    public void setHpTagBgcolor(int hpTagBgcolor) {
-        this.hpTagBgcolor = hpTagBgcolor;
-    }
-
-    public int getHpTagBgcolor() {
-        return hpTagBgcolor;
-    }
-
-    public void setHPgaugeHide(boolean HPgaugeHide) {
-        this.HPgaugeHide = HPgaugeHide;
-    }
-
-    public boolean isHPgaugeHide() {
-        return HPgaugeHide;
-    }
-
-    public void setRareItemDropLevel(int rareItemDropLevel) {
-        this.rareItemDropLevel = rareItemDropLevel;
-    }
-
-    public int getRareItemDropLevel() {
-        return rareItemDropLevel;
-    }
-
-    public void setBoss(boolean boss) {
-        this.boss = boss;
-    }
-
-    public boolean isBoss() {
-        return boss;
-    }
-
-    public void setHpRecovery(int hpRecovery) {
-        this.hpRecovery = hpRecovery;
-    }
-
-    public int getHpRecovery() {
-        return hpRecovery;
-    }
-
-    public void setMpRecovery(int mpRecovery) {
-        this.mpRecovery = mpRecovery;
-    }
-
-    public int getMpRecovery() {
-        return mpRecovery;
-    }
-
-    public void setUndead(boolean undead) {
-        this.undead = undead;
-    }
-
-    public boolean isUndead() {
-        return undead;
-    }
-
-    public void setMbookID(int mbookID) {
-        this.mbookID = mbookID;
-    }
-
-    public int getMbookID() {
-        return mbookID;
-    }
-
-    public void setNoRegen(boolean noRegen) {
-        this.noRegen = noRegen;
-    }
-
-    public boolean isNoRegen() {
-        return noRegen;
-    }
-
-    public void setChaseSpeed(int chaseSpeed) {
-        this.chaseSpeed = chaseSpeed;
-    }
-
-    public int getChaseSpeed() {
-        return chaseSpeed;
-    }
-
-    public void setExplosiveReward(int explosiveReward) {
-        this.explosiveReward = explosiveReward;
-    }
-
-    public int getExplosiveReward() {
-        return explosiveReward;
-    }
-
-    public void setFlySpeed(int flySpeed) {
-        this.flySpeed = flySpeed;
-    }
-
-    public int getFlySpeed() {
-        return flySpeed;
-    }
-
-    public void setInvincible(boolean invincible) {
-        this.invincible = invincible;
-    }
-
-    public boolean isInvincible() {
-        return invincible;
-    }
-
-    public void setHideName(boolean hideName) {
-        this.hideName = hideName;
-    }
-
-    public boolean isHideName() {
-        return hideName;
-    }
-
-    public void setHideHP(boolean hideHP) {
-        this.hideHP = hideHP;
-    }
-
-    public boolean isHideHP() {
-        return hideHP;
-    }
-
-    public void setChangeableMobType(String changeableMobType) {
-        this.changeableMobType = changeableMobType;
-    }
-
-    public String getChangeableMobType() {
-        return changeableMobType;
-    }
-
-    public void setChangeable(boolean changeable) {
-        this.changeable = changeable;
-    }
-
-    public boolean isChangeable() {
-        return changeable;
-    }
-
-    public void setNoFlip(boolean noFlip) {
-        this.noFlip = noFlip;
-    }
-
-    public boolean isNoFlip() {
-        return noFlip;
-    }
-
-    public void setTower(boolean tower) {
-        this.tower = tower;
-    }
-
-    public boolean isTower() {
-        return tower;
-    }
-
-    public void setPartyBonusMob(boolean partyBonusMob) {
-        this.partyBonusMob = partyBonusMob;
-    }
-
-    public boolean isPartyBonusMob() {
-        return partyBonusMob;
-    }
-
-    public void setWp(int wp) {
-        this.wp = wp;
-    }
-
-    public int getWp() {
-        return wp;
-    }
-
-    public void setUseReaction(boolean useReaction) {
-        this.useReaction = useReaction;
-    }
-
-    public boolean isUseReaction() {
-        return useReaction;
-    }
-
-    public void setPublicReward(boolean publicReward) {
-        this.publicReward = publicReward;
-    }
-
-    public boolean isPublicReward() {
-        return publicReward;
-    }
-
-    public void setMinion(boolean minion) {
-        this.minion = minion;
-    }
-
-    public boolean isMinion() {
-        return minion;
-    }
-
-    public void setForward(boolean forward) {
-        this.forward = forward;
-    }
-
-    public boolean isForward() {
-        return forward;
-    }
-
-    public void setIsRemoteRange(boolean isRemoteRange) {
-        this.isRemoteRange = isRemoteRange;
-    }
-
-    public boolean isRemoteRange() {
-        return isRemoteRange;
-    }
-
-    public void setRemoteRange(boolean isRemoteRange) {
-        this.isRemoteRange = isRemoteRange;
-    }
-
-    public void setIgnoreFieldOut(boolean ignoreFieldOut) {
-        this.ignoreFieldOut = ignoreFieldOut;
-    }
-
-    public boolean isIgnoreFieldOut() {
-        return ignoreFieldOut;
-    }
-
-    public void setIgnoreMoveImpact(boolean ignoreMoveImpact) {
-        this.ignoreMoveImpact = ignoreMoveImpact;
-    }
-
-    public boolean isIgnoreMoveImpact() {
-        return ignoreMoveImpact;
-    }
-
-    public void setSummonEffect(int summonEffect) {
-        this.summonEffect = summonEffect;
-    }
-
-    public int getSummonEffect() {
-        return summonEffect;
-    }
-
-    public void setSkeleton(boolean skeleton) {
-        this.skeleton = skeleton;
-    }
-
-    public boolean isSkeleton() {
-        return skeleton;
-    }
-
-    public void setHideUserDamage(boolean hideUserDamage) {
-        this.hideUserDamage = hideUserDamage;
-    }
-
-    public boolean isHideUserDamage() {
-        return hideUserDamage;
-    }
-
-    public void setFixedDamage(int fixedDamage) {
-        this.fixedDamage = fixedDamage;
-    }
-
-    public int getFixedDamage() {
-        return fixedDamage;
-    }
-
-    public void setIndividualReward(boolean individualReward) {
-        this.individualReward = individualReward;
-    }
-
-    public boolean isIndividualReward() {
-        return individualReward;
-    }
-
-    public void setRemoveAfter(int removeAfter) {
-        this.removeAfter = removeAfter;
-    }
-
-    public int getRemoveAfter() {
-        return removeAfter;
-    }
-
-    public void setNotConsideredFieldSet(boolean notConsideredFieldSet) {
-        this.notConsideredFieldSet = notConsideredFieldSet;
-    }
-
-    public boolean isNotConsideredFieldSet() {
-        return notConsideredFieldSet;
-    }
-
-    public void setFixedMoveDir(String fixedMoveDir) {
-        this.fixedMoveDir = fixedMoveDir;
-    }
-
-    public String getFixedMoveDir() {
-        return fixedMoveDir;
-    }
-
-    public void setNoDoom(boolean noDoom) {
-        this.noDoom = noDoom;
-    }
-
-    public boolean isNoDoom() {
-        return noDoom;
-    }
-
-    public void setUseCreateScript(boolean useCreateScript) {
-        this.useCreateScript = useCreateScript;
-    }
-
-    public boolean isUseCreateScript() {
-        return useCreateScript;
-    }
-
-    public void setKnockback(boolean knockback) {
-        this.knockback = knockback;
-    }
-
-    public boolean isKnockback() {
-        return knockback;
-    }
-
-    public void setBlockUserMove(boolean blockUserMove) {
-        this.blockUserMove = blockUserMove;
-    }
-
-    public boolean isBlockUserMove() {
-        return blockUserMove;
-    }
-
-    public void setBodyDisease(int bodyDisease) {
-        this.bodyDisease = bodyDisease;
-    }
-
-    public int getBodyDisease() {
-        return bodyDisease;
-    }
-
-    public void setBodyDiseaseLevel(int bodyDiseaseLevel) {
-        this.bodyDiseaseLevel = bodyDiseaseLevel;
-    }
-
-    public int getBodyDiseaseLevel() {
-        return bodyDiseaseLevel;
-    }
-
-    public void setPoint(int point) {
-        this.point = point;
-    }
-
-    public int getPoint() {
-        return point;
-    }
-
-    public void setPartyBonusR(int partyBonusR) {
-        this.partyBonusR = partyBonusR;
-    }
-
-    public int getPartyBonusR() {
-        return partyBonusR;
-    }
-
-    public void setRemoveQuest(boolean removeQuest) {
-        this.removeQuest = removeQuest;
-    }
-
-    public boolean isRemoveQuest() {
-        return removeQuest;
-    }
-
-    public void setPassiveDisease(int passiveDisease) {
-        this.passiveDisease = passiveDisease;
-    }
-
-    public int getPassiveDisease() {
-        return passiveDisease;
-    }
-
-    public void setCoolDamageProb(int coolDamageProb) {
-        this.coolDamageProb = coolDamageProb;
-    }
-
-    public int getCoolDamageProb() {
-        return coolDamageProb;
-    }
-
-    public void setCoolDamage(int coolDamage) {
-        this.coolDamage = coolDamage;
-    }
-
-    public int getCoolDamage() {
-        return coolDamage;
-    }
-
-    public void setDamageRecordQuest(int damageRecordQuest) {
-        this.damageRecordQuest = damageRecordQuest;
-    }
-
-    public int getDamageRecordQuest() {
-        return damageRecordQuest;
-    }
-
-    public void setSealedCooltime(int sealedCooltime) {
-        this.sealedCooltime = sealedCooltime;
-    }
-
-    public int getSealedCooltime() {
-        return sealedCooltime;
-    }
-
-    public void setWillEXP(int willEXP) {
-        this.willEXP = willEXP;
-    }
-
-    public int getWillEXP() {
-        return willEXP;
-    }
-
-    public void setOnFieldSetSummon(boolean onFieldSetSummon) {
-        this.onFieldSetSummon = onFieldSetSummon;
-    }
-
-    public boolean isOnFieldSetSummon() {
-        return onFieldSetSummon;
-    }
-
-    public void setUserControll(boolean userControll) {
-        this.userControll = userControll;
-    }
-
-    public boolean isUserControll() {
-        return userControll;
-    }
-
-    public void setNoDebuff(boolean noDebuff) {
-        this.noDebuff = noDebuff;
-    }
-
-    public boolean isNoDebuff() {
-        return noDebuff;
-    }
-
-    public void setTargetFromSvr(boolean targetFromSvr) {
-        this.targetFromSvr = targetFromSvr;
-    }
-
-    public boolean isTargetFromSvr() {
-        return targetFromSvr;
-    }
-
-    public void setCharismaEXP(int charismaEXP) {
-        this.charismaEXP = charismaEXP;
-    }
-
-    public int getCharismaEXP() {
-        return charismaEXP;
     }
 
     public void damage(Long totalDamage) {
@@ -1196,5 +531,13 @@ public class Mob extends Life {
         setHp(getTemplate().getMaxHP());
         setMaxMp(getTemplate().getMaxMP());
         setMp(getTemplate().getMaxMP());
+    }
+
+    public int getHpTagColor() {
+        return getTemplate().getHpTagColor();
+    }
+
+    public int getHpTagBgcolor() {
+        return getTemplate().getHpTagBgcolor();
     }
 }

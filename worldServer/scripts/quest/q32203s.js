@@ -37,11 +37,12 @@ function action(mode, type, selection) {
         sel = selection;
         if (selection === 0) {
             cm.sayNext(1, "選的很好!多聽別人的建議,以後你在楓之谷世界生活就沒問題了.");
-            cm.startQuest();
-            cm.completeQuest();
-            cm.giveExp(20);
-            cm.dispose();
-            return;
+            if(!cm.hasQuestCompleted()) {
+                cm.startQuest();
+            }
+            if(!cm.hasQuestInProgress()) {
+                cm.completeQuest();
+            }
         } else if (selection === 1) {
             cm.sendNextS(1, "好.那我馬上送你到楓葉村.");
         }

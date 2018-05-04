@@ -11,26 +11,26 @@ import java.util.List;
  * Created by Weber on 2018/4/11.
  */
 public class Option {
-    public int nOption;
-    public int rOption;
-    public int tOption;
-    public int xOption;
-    public int mOption;
-    public int wOption;
-    public int uOption;
-    public int zOption;
-    public int bOption;
-    public int sOption;
-    public int ssOption;
-    public int cOption;
-    public int yOption;
-    public int nReason;
-    public int nValue;
+    public int nOption = 0;
+    public int rOption = 0;
+    public int tOption = 0;
+    public int xOption = 0;
+    public int mOption = 0;
+    public int wOption = 0;
+    public int uOption = 0;
+    public int zOption = 0;
+    public int bOption = 0;
+    public int sOption = 0;
+    public int ssOption = 0;
+    public int cOption = 0;
+    public int yOption = 0;
+    public int nReason = 0;
+    public int nValue = 0;
     public int nKey = Integer.MAX_VALUE;
-    public int tStart;
-    public int tTerm;
-    public int pOption;
-    public int slv;
+    public int tStart = 0;
+    public int tTerm = 0;
+    public int pOption = 0;
+    public int slv = 0;
     public List<Option> extraOpts = new ArrayList<>();
 
     public Option(int skillID) {

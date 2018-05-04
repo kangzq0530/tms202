@@ -65,7 +65,7 @@ public abstract class JobHandler {
 //        int newHP = curHP - hitInfo.getHPDamage();
 //        if(newHP <= 0) {
 //            // TODO Dying
-//            curHP = character.getStat(Stat.MAXHP);
+//            curHP = character.getStat(Stat.MAX_HP);
 //        } else {
 //            curHP = newHP;
 //        }
@@ -90,8 +90,8 @@ public abstract class JobHandler {
     }
 
     public void handleLevelUp() {
-        getCharacter().addStat(Stat.MAXHP, 500);
-        getCharacter().addStat(Stat.MAXMP, 500);
+        getCharacter().addStat(Stat.MAX_HP, 500);
+        getCharacter().addStat(Stat.MAX_MP, 500);
         getCharacter().addStat(Stat.AP, 5);
     }
 

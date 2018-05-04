@@ -20,9 +20,9 @@ public enum Stat {
     INT(0x100), // short
     LUK(0x200), // short
     HP(0x400), // int
-    MAXHP(0x800), // int
+    MAX_HP(0x800), // int
     MP(0x1000), // int
-    MAXMP(0x2000), // int
+    MAX_MP(0x2000), // int
     AP(0x4000), // short
     SP(0x8000), // short (depends)
     EXP(0x10000), // long

@@ -9,29 +9,28 @@ import lombok.Setter;
 /**
  * Created by Weber on 2018/4/13.
  */
+@Getter
+@Setter
 public class TownPortal {
 
-    @Getter
-    @Setter
-    private int townID;
+    private int portalIndex;
 
-    @Getter
-    @Setter
-    private int fieldID;
+    private int townID = 0;
 
-    @Getter
-    @Setter
-    private int skillID;
+    private int fieldID = 0;
 
-    @Getter
-    @Setter
-    private Position position;
+    private int skillID = 0;
 
+    private Position position = new Position(0, 0);
 
-    public void encode(OutPacket<GameClient> outPacket) {
-        outPacket.encodeInt(getTownID());
-        outPacket.encodeInt(getFieldID());
-        outPacket.encodeInt(getSkillID());
-        outPacket.encodePosition(getPosition());
+    public TownPortal(int portalIndex) {
+        this.portalIndex = 0;
+    }
+
+    public void encode(OutPacket<GameClient> outPacket, boolean isLeaving) {
+        outPacket.encodeInt(isLeaving ?  999999999 : getTownID());
+        outPacket.encodeInt(isLeaving ? 999999999 : getFieldID());
+        outPacket.encodeInt(isLeaving ? 0 : getSkillID());
+        outPacket.encodePosition(isLeaving ? new Position(-1, -1) : getPosition());
     }
 }
