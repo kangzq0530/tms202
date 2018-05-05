@@ -13,7 +13,6 @@ public class JobManager {
     private static final Class<?>[] jobClasses = new Class<?>[]{
             Archer.class,
             Beginner.class,
-
     };
 
     public static JobHandler getJobHandler(short id, Character chr) {

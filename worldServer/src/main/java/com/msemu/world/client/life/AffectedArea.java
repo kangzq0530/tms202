@@ -163,7 +163,7 @@ public class AffectedArea extends Life {
 //                tsm.putCharacterStatValue(AsrR, o2);
 //                tsm.putCharacterStatValue(TerR, o2);
 //                break;
-//            case AranJobHandler.MAHAS_DOMAIN:
+//            case Aran.MAHAS_DOMAIN:
 //                // 20% HP/MP Recovery
 //                // Dispel
 //                break;

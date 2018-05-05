@@ -101,7 +101,7 @@ public class CP_MobMove extends InPacket<GameClient> {
         Field field = chr.getField();
         Character contoller = field.getLifeController(mob);
 
-        if (contoller.equals(chr)) {
+        if (contoller != null && contoller.equals(chr)) {
             for (IMovement movement : movements) {
                 mob.setPosition(movement.getPosition());
                 mob.setMoveAction(movement.getMoveAction());

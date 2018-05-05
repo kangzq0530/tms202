@@ -8,6 +8,7 @@ import com.msemu.world.client.character.quest.Quest;
 import com.msemu.world.client.character.quest.QuestManager;
 import com.msemu.world.client.scripting.ScriptManager;
 import com.msemu.world.data.QuestData;
+import com.msemu.world.enums.QuestStatus;
 import com.msemu.world.enums.ScriptType;
 
 /**
@@ -49,7 +50,9 @@ public class CP_UserQuestRequest extends InPacket<GameClient> {
                 if (getUnreadAmount() >= 4)
                     selection = decodeInt();
                 break;
-
+            case 3:
+                questID = decodeInt();
+                break;
             case 4:
                 questID = decodeInt();
                 npcTemplateID = decodeInt();
@@ -83,6 +86,10 @@ public class CP_UserQuestRequest extends InPacket<GameClient> {
                 }
                 break;
             case 3:
+                Quest quest = qm.getQuestsList().get(questID);
+                if(quest != null && quest.getStatus() == QuestStatus.STARTED) {
+                    qm.removeQuest(questID);
+                }
                 break;
             case 4:
                 String startScript = qi.getStartScript();

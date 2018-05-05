@@ -26,8 +26,8 @@ public class MobHPTagFieldEffect implements IFieldEffect {
         outPacket.encodeInt(mob.getTemplateId());
         int maxHP = (int) Math.min(Integer.MAX_VALUE, mob.getMaxHp());
         double ratio = mob.getMaxHp() / (double) Integer.MAX_VALUE;
-        outPacket.encodeInt(ratio > 1 ? (int) (mob.getHp() / ratio) : (int) mob.getHp());
-        outPacket.encodeInt(maxHP);
+        outPacket.encodeLong(mob.getHp());
+        outPacket.encodeLong(mob.getMaxHp());
         outPacket.encodeByte(mob.getHpTagColor());
         outPacket.encodeByte(mob.getHpTagBgcolor());
     }

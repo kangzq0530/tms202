@@ -246,7 +246,7 @@ public class Field {
     }
 
     public Foothold getFootholdById(int fh) {
-        return getFootholdTree().getFootholds().stream().filter(f -> f.getId() == fh).findFirst().orElse(null);
+        return getFootholdTree().getFootholdById(fh);
     }
 
     public List<Character> getCharacters() {

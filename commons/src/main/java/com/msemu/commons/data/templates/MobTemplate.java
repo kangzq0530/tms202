@@ -10,10 +10,7 @@ import lombok.Setter;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Weber on 2018/4/23.
@@ -23,7 +20,7 @@ import java.util.Map;
 public class MobTemplate implements DatSerializable{
     private String name = "", banMsg = "", banMapPortalName = "";
     private int id;
-    private long maxHP, finalmaxHP;
+    private long maxHP, finalmaxHP, exp;
     private int maxMP, removeAfter, fixedDamage = -1;
     private short level = 1, charismaEXP, wp;
     private int PADamage, PDDamage, MADamage, MDDamage, partyBonusR, buff = -1, getCP, point, dropItemPeriod, PDRate, MDRate, acc, eva;
@@ -39,6 +36,7 @@ public class MobTemplate implements DatSerializable{
     private boolean onlyNormalAttack, boss, explosiveReward, undead, escort, partyBonusMob, changeableMob;
     private boolean damagedByMob, noDoom, publicReward;
     private int link;
+    private Set<Integer> linkedQuests = new HashSet<>();
 
     public void addRevive(Integer templateId) {
         getRevive().add(templateId);
@@ -50,6 +48,10 @@ public class MobTemplate implements DatSerializable{
 
     private void addElementAttr(Element element, ElementalEffectiveness effect) {
         getBasicElemAttrs().put(element, effect);
+    }
+
+    public void addLinkedQuest(int questID) {
+        getLinkedQuests().add(questID);
     }
 
     @Override
@@ -64,6 +66,7 @@ public class MobTemplate implements DatSerializable{
         dos.writeUTF(this.banMapPortalName);
         dos.writeLong(this.maxHP);
         dos.writeLong(this.finalmaxHP);
+        dos.writeLong(this.exp);
         dos.writeShort(this.level);
         dos.writeShort(this.charismaEXP);
         dos.writeShort(this.wp);
@@ -135,6 +138,7 @@ public class MobTemplate implements DatSerializable{
         setBanMapPortalName(dis.readUTF());
         setMaxHP(dis.readLong());
         setFinalmaxHP(dis.readLong());
+        setExp(dis.readLong());
         setLevel(dis.readShort());
         setCharismaEXP(dis.readShort());
         setWp(dis.readShort());

@@ -158,7 +158,7 @@ public class Archer extends JobHandler {
             case ARROW_BOMB:
                 if (Rand.getChance(si.getValue(prop, slv))) {
                     for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
-                        Mob mob = (Mob) chr.getField().getLifeByObjectID(mai.mobId);
+                        Mob mob = (Mob) chr.getField().getLifeByObjectID(mai.getObjectID());
                         MobTemporaryStat mts = mob.getTemporaryStat();
                         o1.nOption = 1;
                         o1.rOption = skillID;
@@ -170,7 +170,7 @@ public class Archer extends JobHandler {
             case PHOENIX:
                 if (Rand.getChance(si.getValue(prop, slv))) {
                     for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
-                        Mob mob = (Mob) chr.getField().getLifeByObjectID(mai.mobId);
+                        Mob mob = (Mob) chr.getField().getLifeByObjectID(mai.getObjectID());
                         MobTemporaryStat mts = mob.getTemporaryStat();
                         o1.nOption = 1;
                         o1.rOption = skillID;
@@ -182,7 +182,7 @@ public class Archer extends JobHandler {
             case FLAME_SURGE:
                 for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
                     AffectedArea aa = AffectedArea.getAffectedArea(attackInfo);
-                    Mob mob = (Mob) chr.getField().getLifeByObjectID(mai.mobId);
+                    Mob mob = (Mob) chr.getField().getLifeByObjectID(mai.getObjectID());
                     aa.setMobOrigin((byte) 0);
                     aa.setCharID(chr.getId());
                     int x = mob.getX();
@@ -201,7 +201,7 @@ public class Archer extends JobHandler {
                 break;
             case BINDING_SHOT:
                 for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
-                    Mob mob = (Mob) chr.getField().getLifeByObjectID(mai.mobId);
+                    Mob mob = (Mob) chr.getField().getLifeByObjectID(mai.getObjectID());
                     MobTemporaryStat mts = mob.getTemporaryStat();
                     o2.nOption = -si.getValue(x, slv);
                     o2.rOption = skillID;
@@ -216,7 +216,7 @@ public class Archer extends JobHandler {
             case NET_TOSS:
                 for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
                     if (Rand.getChance(si.getValue(prop, slv))) {
-                        Mob mob = (Mob) chr.getField().getLifeByObjectID(mai.mobId);
+                        Mob mob = (Mob) chr.getField().getLifeByObjectID(mai.getObjectID());
                         MobTemporaryStat mts = mob.getTemporaryStat();
                         if (mob.isBoss()) {
                             o1.nOption = si.getValue(x, slv);
@@ -233,7 +233,7 @@ public class Archer extends JobHandler {
             case ARROW_ILLUSION:
                 for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
                     if (Rand.getChance(si.getValue(prop, slv))) {
-                        Mob mob = (Mob) chr.getField().getLifeByObjectID(mai.mobId);
+                        Mob mob = (Mob) chr.getField().getLifeByObjectID(mai.getObjectID());
                         MobTemporaryStat mts = mob.getTemporaryStat();
                         o1.nOption = 1;
                         o1.rOption = skillID;
@@ -244,7 +244,7 @@ public class Archer extends JobHandler {
                 break;
             case FREEZER:
                 for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
-                    Mob mob = (Mob) chr.getField().getLifeByObjectID(mai.mobId);
+                    Mob mob = (Mob) chr.getField().getLifeByObjectID(mai.getObjectID());
                     MobTemporaryStat mts = mob.getTemporaryStat();
                     o1.nOption = 1;
                     o1.rOption = skillID;
@@ -267,7 +267,7 @@ public class Archer extends JobHandler {
         Option o1 = new Option();
         long totalDamage = 0;
         for (MobAttackInfo mai : ai.mobAttackInfo) {
-            for (int dmg : mai.damages) {
+            for (long dmg : mai.getDamages()) {
                 totalDamage += dmg;
             }
         }
@@ -351,9 +351,9 @@ public class Archer extends JobHandler {
                 : chr.getSkill(QUIVER_CARTRIDGE);
         SkillInfo si = SkillData.getInstance().getSkillInfoById(skill.getSkillId());
         for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
-            Mob mob = (Mob) chr.getField().getLifeByObjectID(mai.mobId);
+            Mob mob = (Mob) chr.getField().getLifeByObjectID(mai.getObjectID());
             MobTemporaryStat mts = mob.getTemporaryStat();
-            int mobId = mai.mobId;
+            int mobId = mai.getObjectID();
             switch (quiverCartridge.getType()) {
                 case 1: // Blood
                     if (Rand.getChance(si.getValue(w, slv))) {

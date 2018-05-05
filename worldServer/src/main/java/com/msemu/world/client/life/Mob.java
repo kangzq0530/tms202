@@ -472,7 +472,7 @@ public class Mob extends Life {
     }
 
     public void distributeExp() {
-        long exp = getForcedMobStat().getExp();
+        long exp = getForcedMobStat() != null ? getForcedMobStat().getExp() : getExp();
         long totalDamage = getDamageDone().values().stream().mapToLong(l -> l).sum();
         for (Character chr : getDamageDone().keySet()) {
             double damagePerc = getDamageDone().get(chr) / (double) totalDamage;
@@ -515,7 +515,7 @@ public class Mob extends Life {
     }
 
     public Set<Integer> getQuests() {
-        return quests;
+        return getTemplate().getLinkedQuests();
     }
 
     public void setQuests(Set<Integer> quests) {
@@ -539,5 +539,9 @@ public class Mob extends Life {
 
     public int getHpTagBgcolor() {
         return getTemplate().getHpTagBgcolor();
+    }
+
+    public long getExp() {
+        return getTemplate().getExp();
     }
 }

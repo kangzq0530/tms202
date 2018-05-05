@@ -29,7 +29,7 @@ public class QuestRecordMessage implements IWvsMessage {
 
         outPacket.encodeInt(quest.getQRKey());
         QuestStatus status = quest.getStatus();
-
+        outPacket.encodeByte(status.getValue());
         switch (status) {
             case NOT_STARTED:
                 outPacket.encodeByte(0);

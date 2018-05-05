@@ -399,4 +399,20 @@ public class FootholdTree {
         return minDropX + 25;
     }
 
+    public Foothold getFootholdById(int fh) {
+        Foothold footHold = getFootholds().stream().filter(foothold -> foothold.getId() == fh).findFirst().orElse(null);
+        if(footHold == null) {
+            footHold = sw != null ? sw.getFootholdById(fh) : null;
+        }
+        if(footHold == null) {
+            footHold = se != null ? se.getFootholdById(fh) : null;
+        }
+        if(footHold == null) {
+            footHold = nw != null ? nw.getFootholdById(fh) : null;
+        }
+        if(footHold == null) {
+            footHold = ne != null ? ne.getFootholdById(fh) : null;
+        }
+        return footHold;
+    }
 }

@@ -80,7 +80,7 @@ public class SkillUseUserEffect implements IUserEffect {
                 return;
             }
         }
-        if (SkillConstants.is_super_nova_skill(skillID)) {
+        if (SkillConstants.isSuperNovaSkill(skillID)) {
             outPacket.encodeInt(0); // sMsg.x
             outPacket.encodeInt(0); // sMsg.y
             return;
@@ -92,17 +92,17 @@ public class SkillUseUserEffect implements IUserEffect {
             if (skillID == 142121008) {
                 return;
             }
-            if (SkillConstants.is_rw_multi_charge_skill(skillID)) {
+            if (SkillConstants.isRwMultiChargeSkill(skillID)) {
                 outPacket.encodeInt(0);
                 return;
             }
-            if (SkillConstants.is_unregisterd_skill(skillID)) {
+            if (SkillConstants.isUnregisterdSkill(skillID)) {
                 outPacket.encodeByte(0);
                 return;
             }
             if (skillID < 101100100 || skillID > 101100101) {
             } else {
-                if (SkillConstants.is_match_skill(false, skillID)) {
+                if (SkillConstants.isMatchSkill(false, skillID)) {
                     return;
                 }
             }

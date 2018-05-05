@@ -6,6 +6,7 @@ import com.msemu.commons.reload.IReloadable;
 import com.msemu.commons.reload.Reloadable;
 import com.msemu.commons.data.loader.wz.WzManager;
 import com.msemu.core.startup.StartupComponent;
+import com.msemu.world.client.character.quest.req.QuestProgressMobRequirement;
 import com.msemu.world.client.life.Mob;
 import lombok.Getter;
 import org.slf4j.Logger;
@@ -49,6 +50,7 @@ public class MobData implements IReloadable{
     public void load() {
         WzManager wzManager = WorldWzManager.getInstance();
         getMobTemplates().putAll(new MobTemplateDatLoader().load(null));
+        linkMobAndQuest();
         log.info("{} MobTemplates laoded", this.mobTemplates.size());
     }
 
@@ -69,5 +71,19 @@ public class MobData implements IReloadable{
         Mob mob = new Mob(-1 , mt);
         mob.init();
         return mob;
+    }
+
+    public void linkMobAndQuest() {
+        QuestData.getInstance().getQuestsProgressRequirements()
+                .forEach((questID, reqs) -> {
+                    reqs.stream().filter(req -> req instanceof  QuestProgressMobRequirement)
+                            .map(req -> (QuestProgressMobRequirement)req)
+                            .forEach(req -> {
+                                MobTemplate mt = getMobTemplates().get(req.getMobID());
+                                if(mt != null) {
+                                    mt.addLinkedQuest(questID);
+                                }
+                            });
+                });
     }
 }

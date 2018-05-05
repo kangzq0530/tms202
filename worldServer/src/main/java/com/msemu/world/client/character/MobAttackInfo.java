@@ -2,41 +2,45 @@ package com.msemu.world.client.character;
 
 import com.msemu.commons.utils.types.Position;
 import com.msemu.commons.utils.types.Rect;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Created by Weber on 2018/4/12.
  */
+@Getter
+@Setter
 public class MobAttackInfo {
-    public int mobId;
-    public byte idk1;
-    public byte idk2;
-    public byte idk3;
-    public byte idk4;
-    public byte idk5;
-    public byte calcDamageStatIndex;
-    public short rcDstX;
-    public short rectRight;
-    public short oldPosX;
-    public short oldPosY;
-    public short hpPerc;
-    public int[] damages;
-    public int mobUpDownYRange;
-    public byte type;
-    public String currentAnimationName;
-    public int animationDeltaL;
-    public String[] hitPartRunTimes;
-    public int templateID;
-    public short idk6;
-    public boolean isResWarriorLiftPress;
-    public Position pos1;
-    public Position pos2;
-    public Rect rect;
-    public int idkInt;
-    public byte byteIdk1;
-    public byte byteIdk2;
-    public byte byteIdk3;
-    public byte byteIdk4;
-    public byte byteIdk5;
-    public int psychicLockInfo;
-    public byte rocketRushInfo;
+    private int objectID;
+    private byte idk1;
+    private byte idk2;
+    private byte idk3;
+    private byte idk4;
+    private byte idk5;
+    private byte calcDamageStatIndex;
+    private short rcDstX;
+    private short rectRight;
+    private short oldPosX;
+    private short oldPosY;
+    private short hpPerc;
+    private long[] damages;
+    private int mobUpDownYRange;
+    private byte type;
+    private String currentAnimationName;
+    private int animationDeltaL;
+    private String[] hitPartRunTimes;
+    private int templateID;
+    private short idk6;
+    private boolean isResWarriorLiftPress;
+    private Position pos1;
+    private Position pos2;
+    private Rect rect;
+    private int idkInt;
+    private byte byteIdk1;
+    private byte byteIdk2;
+    private byte byteIdk3;
+    private byte byteIdk4;
+    private byte byteIdk5;
+    private int psychicLockInfo;
+    private byte rocketRushInfo;
 }

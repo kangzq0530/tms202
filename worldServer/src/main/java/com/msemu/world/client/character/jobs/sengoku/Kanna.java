@@ -93,7 +93,7 @@ public class Kanna extends JobHandler {
             case BINDING_TEMPEST:
             case VERITABLE_PANDEMONIUM:
                 for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
-                    Mob mob = (Mob) chr.getField().getLifeByObjectID(mai.mobId);
+                    Mob mob = (Mob) chr.getField().getLifeByObjectID(mai.getObjectID());
                     MobTemporaryStat mts = mob.getTemporaryStat();
                     o1.nOption = 1;
                     o1.rOption = skill.getSkillId();

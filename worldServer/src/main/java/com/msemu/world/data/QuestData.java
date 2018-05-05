@@ -215,6 +215,7 @@ public class QuestData implements IReloadable {
         QuestInfo qi = getQuestInfoById(questID);
         Quest quest = new Quest();
         quest.setQRKey(qi.getId());
+        getQuestsProgressRequirements().get(questID).forEach(req -> quest.addQuestProgressRequirement((QuestProgressRequirement) req));
         if (qi.isAutoCompleteAction()) {
             quest.completeQuest();
         } else {

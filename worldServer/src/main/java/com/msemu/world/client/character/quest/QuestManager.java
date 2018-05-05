@@ -185,12 +185,10 @@ public class QuestManager {
     }
 
     public void handleMoneyGain(int money) {
-        for (Quest q : getQuestsInProgress()) {
-            if (q.hasMoneyReq()) {
-                q.addMoney(money);
-                getCharacter().write(new LP_Message(new QuestRecordMessage(q)));
-            }
-        }
+        getQuestsInProgress().stream().filter(Quest::hasMoneyReq).forEach(q -> {
+            q.addMoney(money);
+            getCharacter().write(new LP_Message(new QuestRecordMessage(q)));
+        });
     }
 
     public void handleItemGain(Item item) {

@@ -4,20 +4,22 @@ package com.msemu.world.enums;
  * Created by Weber on 2018/4/13.
  */
 public enum ChatMsgType {
-
-    GENERAL_CHAT_WHITE(0),
-    WHISPER_GREEN(1),
-    PARTY_PURPLE(2),
-    BUDDY_ORANGE(3),
-    GUILD_PURPLE(4),
-    ALLIANCE_GREEN(5),
-    GREY(6),
-    NOTICE_YELLOW(7),
-    LESS_YELLOW(8),
-    GAME_NOTICE(9),
-    GM_CHAT(10),
-    GAME_MESSAGE_RED(11),
-    GM_BLUE_CHAT(12),
+    // 普聊 (白)
+    NORMAL(0),
+    // 密語 (綠)
+    WHISPER(1),
+    // 隊伍聊天 (粉紅)
+    GROUP_PARTY(2),
+    GROUP_FRIEND(3),
+    GROUP_GUILD(4),
+    GROUP_ALLIANCE(5),
+    GAME_DESC(6),
+    TIP(7),
+    NOTICE(8),
+    NOTICE_2(9),
+    ADMIN_CHAT(10),
+    SYSTEM(11),
+    SPEAKER_CHANNEL(12),
     SMEGA(13),
     SMEGA_2(14),
     ITEM_SMEGA(15),

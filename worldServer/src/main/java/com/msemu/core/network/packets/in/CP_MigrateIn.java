@@ -51,6 +51,7 @@ public class CP_MigrateIn extends InPacket<GameClient> {
 
         // TODO 這邊可能有雙登問題
         Character chr = channel.getTransferIdAndRemoveByCharacterId(characterId);
+
         if (chr == null) {
             getClient().close();
             return;
@@ -71,7 +72,8 @@ public class CP_MigrateIn extends InPacket<GameClient> {
             chr.renewBulletIDForAttack();
             Field field = channel.getField(chr.getFieldID() <= 0 ? 100000000 : chr.getFieldID());
             chr.warp(field, true);
-            // TODO  c.announce(CCashShop.onAuthenCodeChanged()); // Enable CashShop
+            chr.setJob(chr.getJob());
+             // TODO  c.announce(CCashShop.onAuthenCodeChanged()); // Enable CashShop
             getClient().write(new LP_SetQuestClear());
             getClient().write(new LP_HourChanged(DateUtils.getCurrentDayOfWeek()));
             getClient().write(new LP_SetTamingMobInfo(chr, false));

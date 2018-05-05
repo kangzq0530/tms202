@@ -112,7 +112,7 @@ public class Party {
             if (pm != null && pm.getTownPortal() != null) {
                 pm.getTownPortal().encode(outPacket, isLeaving);
             } else {
-                new TownPortal().encode(outPacket, isLeaving);
+                new TownPortal(0).encode(outPacket, isLeaving);
             }
         }
         outPacket.encodeByte(isAppliable() && !isFull());
