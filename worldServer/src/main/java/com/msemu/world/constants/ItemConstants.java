@@ -1,6 +1,7 @@
 package com.msemu.world.constants;
 
 
+import com.msemu.commons.data.enums.InvType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,6 +13,46 @@ import java.util.List;
  */
 public class ItemConstants {
     private static final Logger log = LoggerFactory.getLogger(ItemConstants.class);
+
+    public static int getItemDropChance(int itemId) {
+        if (null == ItemConstants.getInvTypeFromItemID(itemId)) {
+            switch (itemId / 10000) {
+                case 204:
+                case 207:
+                case 233:
+                case 229:
+                    return 500;
+                case 401:
+                case 402:
+                    return 5000;
+                case 403:
+                    return 5000; //lol
+            }
+            return 20000;
+        } else { //not much logic in here. most of the drops should already be there anyway.
+            switch (ItemConstants.getInvTypeFromItemID(itemId)) {
+                case EQUIP:
+                    return 5000; //with *10
+                case INSTALL:
+                case CASH:
+                    return 500;
+                default:
+                    switch (itemId / 10000) {
+                        case 204:
+                        case 207:
+                        case 233:
+                        case 229:
+                            return 500;
+                        case 401:
+                        case 402:
+                            return 5000;
+                        case 403:
+                            return 5000; //lol
+                    }
+                    return 20000;
+            }
+        }
+    }
 
     public static int getGenderFromId(int nItemID) {
         int result; // eax
@@ -289,6 +330,11 @@ public class ItemConstants {
 
     public static boolean isXBowArrow(int id) {
         return id / 1000 == 2061;
+    }
+
+    public static InvType getInvTypeFromItemID(int itemId) {
+        InvType invType = InvType.getInvTypeByValue(itemId / 1000000);
+        return invType;
     }
 
     public static class 類型 {

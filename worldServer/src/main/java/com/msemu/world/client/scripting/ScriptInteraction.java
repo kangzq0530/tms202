@@ -14,6 +14,7 @@ import com.msemu.core.network.packets.out.npc.LP_NpcChangeController;
 import com.msemu.core.network.packets.out.npc.LP_NpcLeaveField;
 import com.msemu.core.network.packets.out.npc.LP_NpcSpecialAction;
 import com.msemu.core.network.packets.out.npc.LP_NpcUpdateLimitedInfo;
+import com.msemu.core.network.packets.out.script.LP_SayScriptMessage;
 import com.msemu.core.network.packets.out.script.LP_ScriptMessage;
 import com.msemu.core.network.packets.out.script.LP_SelfTalkScriptMessage;
 import com.msemu.core.network.packets.out.user.local.*;
@@ -197,6 +198,7 @@ public class ScriptInteraction {
     }
 
     public void warp(Field field, Portal portal) {
+        dispose();
         if (portal != null)
             getCharacter().warp(field, portal);
         else
@@ -360,7 +362,7 @@ public class ScriptInteraction {
 
 
     public void say(int nSpeakerTemplateID, int bParam, String sMsg, boolean prev, boolean next) {
-        say(nSpeakerTemplateID, -1, bParam, sMsg, prev, next);
+        say(nSpeakerTemplateID, nSpeakerTemplateID, bParam, sMsg, prev, next);
     }
 
     public void say(int nSpeakerTemplateID, int nAnotherSpeakerTemplateID, int bParam, String sMsg, boolean prev, boolean next) {
@@ -400,8 +402,19 @@ public class ScriptInteraction {
             askMenu(nSpeakerTypeID, nSpeakerTemplateID, nAnotherSpeakerTemplateID, nOtherSpeakerTemplateID, bParam, eColor, sMsg);
             return;
         }
-        getNpcScriptInfo().setLastMessageType(NpcMessageType.NM_SAY);
-        getClient().write(new LP_ScriptMessage(NpcMessageType.NM_SAY, nSpeakerTypeID, nSpeakerTemplateID, nAnotherSpeakerTemplateID, nOtherSpeakerTemplateID, bParam, eColor, new String[]{sMsg}, new int[]{prev ? 1 : 0, next ? 1 : 0, tWait}, null, null));
+        NpcMessageType type;
+        if (prev && next) {
+            type = NpcMessageType.NM_SAY;
+        } else if (prev) {
+            type = NpcMessageType.NM_SAY_PREV;
+        } else if (next) {
+            type = NpcMessageType.NM_SAY_NEXT;
+        } else {
+            type = NpcMessageType.NM_SAY_OK;
+        }
+        getNpcScriptInfo().setLastMessageType(type);
+        write(new LP_SayScriptMessage(nSpeakerTemplateID, sMsg, bParam, prev, next));
+        //getClient().write(new LP_ScriptMessage(type, nSpeakerTypeID, nSpeakerTemplateID, nAnotherSpeakerTemplateID, nOtherSpeakerTemplateID, bParam, eColor, new String[]{sMsg}, new int[]{prev ? 1 : 0, next ? 1 : 0, tWait}, null, null));
     }
 
     public void askYesNo(String sMsg) {
@@ -413,7 +426,7 @@ public class ScriptInteraction {
     }
 
     public void askYesNo(int nSpeakerTemplateID, int bParam, String sMsg) {
-        askYesNo(nSpeakerTemplateID, -1, bParam, sMsg);
+        askYesNo(nSpeakerTemplateID, nSpeakerTemplateID, bParam, sMsg);
     }
 
     public void askYesNo(int nSpeakerTemplateID, int nAnotherSpeakerTemplateID, int bParam, String sMsg) {
@@ -660,6 +673,7 @@ public class ScriptInteraction {
         }
     }
 
+
     /////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public void write(OutPacket<GameClient> packet) {
@@ -690,8 +704,7 @@ public class ScriptInteraction {
     public void startQuest(int questID) {
         QuestManager qm = getCharacter().getQuestManager();
         if (!qm.hasQuestInProgress(questID)) {
-            Quest quest = QuestData.getInstance().createQuestFromId(questID);
-            qm.addQuest(quest);
+            qm.startQuest(questID);
         }
     }
 
@@ -730,7 +743,7 @@ public class ScriptInteraction {
     public boolean hasQuestCompleted(int questID) {
         QuestManager qm = getCharacter().getQuestManager();
         return qm.hasQuestCompleted(questID);
-        }
+    }
 
     public void completeQuest() {
         if (getScriptType().equals(ScriptType.QUEST)) {
@@ -746,7 +759,27 @@ public class ScriptInteraction {
         }
     }
 
+    public String getQuestRecordEx(int questID) {
+        QuestManager qm = getCharacter().getQuestManager();
+        Quest quest = qm.getQuestsList().get(questID);
+        return quest == null ? "" : quest.getQrValue();
+    }
+
+    public void setQuestRecord(int questID, String qRValue) {
+        QuestManager qm = getCharacter().getQuestManager();
+        qm.setQuestRecord(questID, qRValue);
+    }
+
+    public void setQuestRecordEx(int questID, String qRExValue) {
+        QuestManager qm = getCharacter().getQuestManager();
+        qm.setQuestRecordEx(questID, qRExValue);
+    }
+
     //////////////////////////////// user effect ///////////////////
+
+    public void playPortalEffect() {
+        write(new LP_UserEffectLocal(new PlayPortalSEUserEffect()));
+    }
 
     public void showAvatarOrientedEffect(String effect) {
         write(new LP_UserEffectLocal(new AvatarOrientedUserEffect(effect)));

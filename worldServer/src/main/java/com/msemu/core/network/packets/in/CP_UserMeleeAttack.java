@@ -1,14 +1,18 @@
 package com.msemu.core.network.packets.in;
 
+import com.msemu.commons.data.templates.skill.SkillInfo;
 import com.msemu.commons.network.packets.InPacket;
 import com.msemu.core.network.GameClient;
 import com.msemu.core.network.packets.out.user.remote.LP_UserMeleeAttack;
+import com.msemu.core.network.packets.out.wvscontext.LP_Message;
 import com.msemu.world.client.character.AttackInfo;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.MobAttackInfo;
+import com.msemu.world.client.character.messages.ComboKillMessage;
 import com.msemu.world.client.field.Field;
 import com.msemu.world.client.life.Mob;
 import com.msemu.world.constants.SkillConstants;
+import com.msemu.world.data.SkillData;
 import com.msemu.world.enums.ChatMsgType;
 
 import java.util.Arrays;
@@ -85,6 +89,7 @@ public class CP_UserMeleeAttack extends InPacket<GameClient> {
             short idk6 = decodeShort();
             short oldPosX = decodeShort(); // ?
             short oldPosY = decodeShort(); // ?
+            decodeInt();
             long[] damages = new long[ai.hits];
             for (int j = 0; j < ai.hits; j++) {
                 damages[j] = decodeLong();
@@ -113,7 +118,6 @@ public class CP_UserMeleeAttack extends InPacket<GameClient> {
                 currentAnimationName = decodeString();
                 animationDeltaL = decodeInt();
             }
-            skip(4);
             skip(4);
             skip(4);
             skip(1);
@@ -188,13 +192,21 @@ public class CP_UserMeleeAttack extends InPacket<GameClient> {
     public void runImpl() {
         Character chr = getClient().getCharacter();
         Field field = chr.getField();
-        chr.chatMessage(ChatMsgType.GAME_DESC, "近距離攻擊: " + ai.getSkillId());
         chr.getJobHandler().handleAttack(ai);
         field.broadcastPacket(new LP_UserMeleeAttack(chr, ai));
         ai.getMobAttackInfo().forEach(mai -> {
             Mob mob = (Mob) field.getLifeByObjectID(mai.getObjectID());
-            if(mob != null) {
+            if (mob != null) {
+                chr.write(new LP_Message(new ComboKillMessage(111, mob.getObjectId())));
                 long totalDamage = Arrays.stream(mai.getDamages()).sum();
+                SkillInfo si = null;
+                if (ai.getSkillId() > 0)
+                    si = SkillData.getInstance().getSkillInfoById(ai.getSkillId());
+
+                chr.chatMessage(ChatMsgType.GAME_DESC, String.format("近距離攻擊: 技能: %s(%d) 怪物: %s(%d)  HP: (%d/%d) MP: 總攻擊: %d 座標: %s",
+                        (si != null ? si.getName() : "普通攻擊"), ai.getSkillId(), mob.getTemplate().getName(),
+                        mob.getTemplateId(), mob.getHp(), mob.getMaxHp(), mob.getMp(), mob.getMaxHp(), totalDamage, ai.getPos().toString()));
+
                 mob.addDamage(chr, totalDamage);
                 mob.damage(totalDamage);
             }

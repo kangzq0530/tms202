@@ -5,7 +5,7 @@ import com.msemu.core.network.GameClient;
 import com.msemu.core.network.packets.out.wvscontext.LP_ResultInstanceTable;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.InstanceTableInfo;
-import com.msemu.world.client.character.skills.Skill;
+import com.msemu.world.client.character.skill.Skill;
 import com.msemu.world.constants.GameConstants;
 
 /**

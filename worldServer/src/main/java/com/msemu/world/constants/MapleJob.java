@@ -195,7 +195,7 @@ public enum MapleJob {
     VSkillBowman(40003),
     VSkillThief(40004),
     VSkillPirate(40005),
-    未知(999999),;
+    未知(999999), ;
     private final int jobid;
 
     private MapleJob(int id) {

@@ -6,8 +6,6 @@ import com.msemu.world.client.character.quest.Quest;
 import com.msemu.world.enums.QuestStatus;
 import com.msemu.world.enums.WvsMessageType;
 
-import java.lang.ref.WeakReference;
-
 /**
  * Created by Weber on 2018/5/4.
  */
@@ -35,7 +33,7 @@ public class QuestRecordMessage implements IWvsMessage {
                 outPacket.encodeByte(0);
                 break;
             case STARTED:
-                outPacket.encodeString(quest.getQRValue());
+                outPacket.encodeString(quest.getQrValue());
                 break;
             case COMPLETE:
                 outPacket.encodeFT(quest.getCompletedTime());

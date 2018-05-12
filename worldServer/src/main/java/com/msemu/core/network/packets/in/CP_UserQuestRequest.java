@@ -74,7 +74,7 @@ public class CP_UserQuestRequest extends InPacket<GameClient> {
 
             case 1: // 內建任務
                 if (qm.canStartQuest(questID) && !qi.hasStartScript()) {
-                    qm.addQuest(QuestData.getInstance().createQuestFromId(questID));
+                    qm.startQuest(questID);
                 }
                 break;
             case 2: // 內建任務
@@ -87,7 +87,7 @@ public class CP_UserQuestRequest extends InPacket<GameClient> {
                 break;
             case 3:
                 Quest quest = qm.getQuestsList().get(questID);
-                if(quest != null && quest.getStatus() == QuestStatus.STARTED) {
+                if (quest != null && quest.getStatus().equals(QuestStatus.STARTED)) {
                     qm.removeQuest(questID);
                 }
                 break;

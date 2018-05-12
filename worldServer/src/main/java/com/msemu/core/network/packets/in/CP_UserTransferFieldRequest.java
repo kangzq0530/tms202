@@ -3,6 +3,8 @@ package com.msemu.core.network.packets.in;
 import com.msemu.commons.data.templates.field.Portal;
 import com.msemu.commons.network.packets.InPacket;
 import com.msemu.core.network.GameClient;
+import com.msemu.core.network.packets.out.user.local.LP_SetDirectionMode;
+import com.msemu.core.network.packets.out.user.local.LP_SetInGameDirectionMode;
 import com.msemu.world.channel.Channel;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.field.Field;
@@ -43,6 +45,21 @@ public class CP_UserTransferFieldRequest extends InPacket<GameClient> {
 
 
         if (targetMapId != -1) {
+
+            int divi = field.getId() / 100;
+            boolean unlock = false;
+            boolean warp = false;
+            if ((divi / 10 == 1020) && (targetMapId == 1020000 || targetMapId == 4000026)) {
+                unlock = true;
+                warp = true;
+            }
+            if (unlock) {
+                getClient().write(new LP_SetDirectionMode(false));
+                getClient().write(new LP_SetInGameDirectionMode(false));
+            }
+            if (warp) {
+                chr.warp(channel.getField(targetMapId));
+            }
 
         } else {
             Portal portal = field.getPortalByName(targetPortalName);

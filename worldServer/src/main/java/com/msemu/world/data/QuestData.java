@@ -1,13 +1,12 @@
 package com.msemu.world.data;
 
 import com.msemu.commons.data.loader.dat.QuestInfoDatLoader;
-import com.msemu.commons.data.loader.wz.QuestInfoLoader;
+import com.msemu.commons.data.loader.wz.WzManager;
 import com.msemu.commons.data.templates.quest.QuestInfo;
 import com.msemu.commons.data.templates.quest.actions.QuestActData;
 import com.msemu.commons.data.templates.quest.reqs.QuestReqData;
 import com.msemu.commons.reload.IReloadable;
 import com.msemu.commons.reload.Reloadable;
-import com.msemu.commons.data.loader.wz.WzManager;
 import com.msemu.core.startup.StartupComponent;
 import com.msemu.world.client.character.quest.Quest;
 import com.msemu.world.client.character.quest.act.*;
@@ -18,7 +17,10 @@ import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -130,10 +132,10 @@ public class QuestData implements IReloadable {
     }
 
     private void transformProgressReqs(int questId, Set<QuestReqData> startReqsData, Map<Integer, Set<IQuestProgressRequirement>> reqs) {
-        reqs.put(questId , new HashSet<>());
+        reqs.put(questId, new HashSet<>());
         startReqsData.forEach(reqData -> {
             IQuestProgressRequirement questReq;
-            if(reqData == null)
+            if (reqData == null)
                 return;
             switch (reqData.getType()) {
                 case item:
@@ -161,10 +163,10 @@ public class QuestData implements IReloadable {
     }
 
     private void transformStartReqs(int questId, Set<QuestReqData> startReqsData, Map<Integer, Set<IQuestStartRequirements>> reqs) {
-        reqs.put(questId , new HashSet<>());
+        reqs.put(questId, new HashSet<>());
         startReqsData.forEach(reqData -> {
             IQuestStartRequirements questReq;
-            if(reqData == null)
+            if (reqData == null)
                 return;
             switch (reqData.getType()) {
                 case lvmin:
@@ -192,7 +194,7 @@ public class QuestData implements IReloadable {
                     break;
             }
 
-            if(questReq != null) {
+            if (questReq != null) {
                 questReq.load(reqData);
                 reqs.get(questId).add(questReq);
             }
@@ -214,12 +216,14 @@ public class QuestData implements IReloadable {
     public Quest createQuestFromId(int questID) {
         QuestInfo qi = getQuestInfoById(questID);
         Quest quest = new Quest();
-        quest.setQRKey(qi.getId());
-        getQuestsProgressRequirements().get(questID).forEach(req -> quest.addQuestProgressRequirement((QuestProgressRequirement) req));
-        if (qi.isAutoCompleteAction()) {
-            quest.completeQuest();
+        quest.setQRKey(questID);
+        quest.setStatus(QuestStatus.NOT_STARTED);
+        if (qi != null) {
+            getQuestsProgressRequirements().get(questID).forEach(req -> quest.addQuestProgressRequirement((QuestProgressRequirement) req));
+            if(qi.isAutoPreComplete())
+                quest.setStatus(QuestStatus.COMPLETE);
         } else {
-            quest.setStatus(QuestStatus.STARTED);
+            // 自定義任務
         }
         return quest;
     }

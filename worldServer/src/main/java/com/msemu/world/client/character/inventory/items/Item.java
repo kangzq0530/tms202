@@ -7,6 +7,7 @@ import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.utils.types.FileTime;
 import com.msemu.core.network.GameClient;
 import com.msemu.world.constants.ItemConstants;
+import com.msemu.world.data.ItemData;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -73,6 +74,10 @@ public class Item implements Serializable {
     @Getter
     @Setter
     private String owner = "";
+    @Transient
+    @Getter
+    @Setter
+    private ItemTemplate template;
 
     public Item() {
 
@@ -81,6 +86,7 @@ public class Item implements Serializable {
 
     public Item(ItemTemplate template) {
         this.setType(ITEM);
+        this.template = template;
         this.setInvType(template.getInvType());
         this.setQuantity(1);
         this.setItemId(template.getItemId());
@@ -130,6 +136,7 @@ public class Item implements Serializable {
 
     public Item(int itemId, int bagIndex, long cashItemSerialNumber, FileTime dateExpire, InvType invType,
                 boolean isCash, Type type) {
+        this.template = ItemData.getInstance().getItemInfo(itemId);
         this.itemId = itemId;
         this.bagIndex = bagIndex;
         this.cashItemSerialNumber = cashItemSerialNumber;

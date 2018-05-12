@@ -1,6 +1,7 @@
 package com.msemu.world.client.character;
 
 import com.msemu.commons.data.enums.InvType;
+import com.msemu.commons.data.templates.field.FieldTemplate;
 import com.msemu.commons.data.templates.field.Portal;
 import com.msemu.commons.database.DatabaseFactory;
 import com.msemu.commons.database.Schema;
@@ -16,16 +17,21 @@ import com.msemu.core.network.packets.out.user.remote.effect.LP_UserEffectRemote
 import com.msemu.core.network.packets.out.wvscontext.*;
 import com.msemu.world.channel.Channel;
 import com.msemu.world.client.character.effect.LevelUpUserEffect;
+import com.msemu.world.client.character.friends.FriendList;
 import com.msemu.world.client.character.inventory.items.Equip;
 import com.msemu.world.client.character.inventory.items.Item;
 import com.msemu.world.client.character.jobs.JobHandler;
 import com.msemu.world.client.character.jobs.JobManager;
 import com.msemu.world.client.character.messages.IncExpMessage;
+import com.msemu.world.client.character.messages.IncMoneyMessage;
+import com.msemu.world.client.character.messages.MoneyDropPickUpMessage;
 import com.msemu.world.client.character.party.Party;
 import com.msemu.world.client.character.quest.Quest;
 import com.msemu.world.client.character.quest.QuestManager;
-import com.msemu.world.client.character.skills.Skill;
-import com.msemu.world.client.character.skills.TemporaryStatManager;
+import com.msemu.world.client.character.skill.ForcedStatManager;
+import com.msemu.world.client.character.skill.Skill;
+import com.msemu.world.client.character.skill.TemporaryStatManager;
+import com.msemu.world.client.character.skill.vcore.VMatrixRecord;
 import com.msemu.world.client.field.Field;
 import com.msemu.world.client.guild.Guild;
 import com.msemu.world.client.guild.GuildMember;
@@ -133,6 +139,11 @@ public class Character {
     @Getter
     @Setter
     private List<Skill> skills;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "charId")
+    @Getter
+    @Setter
+    private List<VMatrixRecord> vMatrixRecords;
 
     @JoinColumn(name = "guild")
     @OneToOne(cascade = CascadeType.ALL)
@@ -178,7 +189,7 @@ public class Character {
     @Transient
     @Getter
     @Setter
-    private List<FriendRecord> friends;
+    private List<FriendRecord> friendRecords;
 
     @Transient
     @Getter
@@ -220,8 +231,11 @@ public class Character {
 
     @Transient
     @Getter
-    @Setter
     private TemporaryStatManager temporaryStatManager;
+
+    @Transient
+    @Getter
+    private ForcedStatManager forcedStatManager;
 
     @Transient
     @Getter
@@ -236,7 +250,7 @@ public class Character {
     @Transient
     @Getter
     @Setter
-    private MarriageRecord marriageRecord;
+    private MarriageRing marriageRecord;
 
     @Transient
     @Getter
@@ -423,8 +437,13 @@ public class Character {
     private Map<Integer, Field> fields = new HashMap<>();
     @Transient
     @Getter
-    @Setter
     private int bulletIDForAttack;
+    @Transient
+    @Getter
+    private CharacterLocalStat characterLocalStat;
+    @Transient
+    @Getter
+    private FriendList friendList = new FriendList();
 
     public Character() {
         avatarData = new AvatarData();
@@ -433,10 +452,12 @@ public class Character {
         chosenSkills = new ArrayList<>();
         questManager = new QuestManager(this);
         itemPots = new ArrayList<>();
-        friends = new ArrayList<>();
+        friendRecords = new ArrayList<>();
         expConsumeItems = new ArrayList<>();
         skills = new ArrayList<>();
         temporaryStatManager = new TemporaryStatManager(this);
+        forcedStatManager = new ForcedStatManager(this);
+        characterLocalStat = new CharacterLocalStat(this);
         pets = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             pets.add(new Pet(-1));
@@ -501,7 +522,7 @@ public class Character {
     }
 
     public QuestManager getQuestManager() {
-        if(questManager.getCharacter() == null)
+        if (questManager.getCharacter() == null)
             questManager.setCharacter(this);
         return questManager;
     }
@@ -517,18 +538,17 @@ public class Character {
         CharacterStat cs = getAvatarData().getCharacterStat();
         long curExp = cs.getExp();
         int level = getStat(Stat.LEVEL);
-        if (level >= GameConstants.charExp.length - 1) {
+        if (level >= GameConstants.CHAR_EXP_TABLE.length - 1) {
             return;
         }
         long newExp = curExp + amount;
         Map<Stat, Object> stats = new HashMap<>();
-        while (newExp > GameConstants.charExp[level]) {
-            newExp -= GameConstants.charExp[level];
+        while (newExp > GameConstants.CHAR_EXP_TABLE[level]) {
+            newExp -= GameConstants.CHAR_EXP_TABLE[level];
             addStat(Stat.LEVEL, 1);
-            stats.put(Stat.LEVEL, (byte) getStat(Stat.LEVEL));
-            //getJobHandler().handleLevelUp();
+            getJobHandler().handleLevelUp();
             level++;
-            levelUp();
+            getField().broadcastPacket(new LP_UserEffectRemote(this, new LevelUpUserEffect()), this);
         }
         cs.setExp(newExp);
         stats.put(Stat.EXP, newExp);
@@ -537,7 +557,15 @@ public class Character {
     }
 
     public void addStat(Stat charStat, int amount) {
-        setStat(charStat, getStat(charStat) + amount);
+        addStat(Collections.singletonMap(charStat, getStat(charStat) + amount));
+    }
+
+    public void addStat(Map<Stat, Integer> stats) {
+        Map<Stat, Integer> after = new EnumMap<>(Stat.class);
+        for(Map.Entry<Stat, Integer> entry : stats.entrySet()) {
+            after.put(entry.getKey(), getStat(entry.getKey()) + entry.getValue());
+        }
+        setStat(after);
     }
 
     public int getStat(Stat charStat) {
@@ -567,41 +595,59 @@ public class Character {
         return -1;
     }
 
-    public void setStat(Stat charStat, int amount) {
-        switch (charStat) {
-            case STR:
-                getAvatarData().getCharacterStat().setStr(amount);
-                break;
-            case DEX:
-                getAvatarData().getCharacterStat().setDex(amount);
-                break;
-            case INT:
-                getAvatarData().getCharacterStat().setInte(amount);
-                break;
-            case LUK:
-                getAvatarData().getCharacterStat().setLuk(amount);
-                break;
-            case HP:
-                getAvatarData().getCharacterStat().setHp(amount);
-                break;
-            case MAX_HP:
-                getAvatarData().getCharacterStat().setMaxHp(amount);
-                break;
-            case MP:
-                getAvatarData().getCharacterStat().setMp(amount);
-                break;
-            case MAX_MP:
-                getAvatarData().getCharacterStat().setMaxMp(amount);
-                break;
-            case AP:
-                getAvatarData().getCharacterStat().setAp(amount);
-                break;
-            case LEVEL:
-                getAvatarData().getCharacterStat().setLevel(amount);
-                notifyChanges();
-                break;
+    public void setStat(Stat stat, int amount) {
+        setStat(Collections.singletonMap(stat, amount));
+    }
 
-        }
+    public void setStat(Map<Stat, Integer> stats) {
+        Map<Stat, Object> changedStats = new EnumMap<>(Stat.class);
+        stats.forEach((charStat, amount) -> {
+            changedStats.put(charStat, amount);
+            switch (charStat) {
+                case STR:
+                    amount = Math.min(amount, GameConstants.MAX_BASIC_STAT);
+                    getAvatarData().getCharacterStat().setStr(amount);
+
+                    break;
+                case DEX:
+                    amount = Math.min(amount, GameConstants.MAX_BASIC_STAT);
+                    getAvatarData().getCharacterStat().setDex(amount);
+                    break;
+                case INT:
+                    amount = Math.min(amount, GameConstants.MAX_BASIC_STAT);
+                    getAvatarData().getCharacterStat().setInte(amount);
+                    break;
+                case LUK:
+                    amount = Math.min(amount, GameConstants.MAX_BASIC_STAT);
+                    getAvatarData().getCharacterStat().setLuk(amount);
+                    break;
+                case HP:
+                    amount = Math.min(amount, getCurrentMaxHp());
+                    getAvatarData().getCharacterStat().setHp(amount);
+                    break;
+                case MAX_HP:
+                    amount = Math.min(amount, GameConstants.MAX_HP);
+                    getAvatarData().getCharacterStat().setMaxHp(amount);
+                    break;
+                case MP:
+                    amount = Math.min(amount, getCurrentMaxMp());
+                    getAvatarData().getCharacterStat().setMp(amount);
+                    break;
+                case MAX_MP:
+                    amount = Math.min(amount, GameConstants.MAX_HP);
+                    getAvatarData().getCharacterStat().setMaxMp(amount);
+                    break;
+                case AP:
+                    getAvatarData().getCharacterStat().setAp(amount);
+                    break;
+                case LEVEL:
+                    amount = Math.min(amount, GameConstants.MAX_LEVEL);
+                    getAvatarData().getCharacterStat().setLevel(amount);
+                    break;
+            }
+        });
+        notifyChanges();
+        write(new LP_StatChanged(changedStats));
     }
 
     public void setJob(MapleJob job) {
@@ -615,7 +661,8 @@ public class Character {
         setJobHandler(JobManager.getJobHandler((short) job.getId(), this));
         getAvatarData().getCharacterStat().setJob(job.getId());
         List<Skill> skills = SkillData.getInstance().getSkillsByJob((short) job.getId());
-        skills.forEach(this::addSkill);
+        skills.stream().filter(jobSkill -> !hasSkill(jobSkill.getSkillId()))
+                .forEach(this::addSkill);
         getClient().write(new LP_ChangeSkillRecordResult(skills, true,
                 false, false, false));
         notifyChanges();
@@ -688,7 +735,7 @@ public class Character {
             write(new LP_InventoryOperation(true, false,
                     UPDATE, item, item.getBagIndex()));
         }
-        setBulletIDForAttack(calculateBulletIDForAttack());
+        this.renewBulletIDForAttack();
     }
 
     /**
@@ -718,7 +765,20 @@ public class Character {
         });
     }
 
+
+    public int getCurrentMaxHp() {
+        return getCharacterLocalStat().getMaxHp();
+    }
+
+    public int getCurrentMaxMp() {
+        return getCharacterLocalStat().getMaxMp();
+    }
+
     public void addMoney(long amount) {
+        addMoney(amount, true);
+    }
+
+    public void addMoney(long amount, boolean showInChat) {
         CharacterStat cs = getAvatarData().getCharacterStat();
         long money = cs.getMoney();
         long newMoney = money + amount;
@@ -729,10 +789,15 @@ public class Character {
             stats.put(Stat.MONEY, newMoney);
             write(new LP_StatChanged(stats));
         }
+        if(showInChat) {
+            write(new LP_Message(new IncMoneyMessage(amount)));
+        } else {
+            write(new LP_Message(new MoneyDropPickUpMessage(amount)));
+        }
     }
 
     public void renewBulletIDForAttack() {
-        setBulletIDForAttack(calculateBulletIDForAttack());
+        this.bulletIDForAttack = calculateBulletIDForAttack();
     }
 
     public int calculateBulletIDForAttack() {
@@ -779,7 +844,7 @@ public class Character {
                 write(new LP_InventoryOperation(true, false,
                         ADD, item, item.getBagIndex()));
             }
-            setBulletIDForAttack(calculateBulletIDForAttack());
+            this.renewBulletIDForAttack();
         }
     }
 
@@ -984,7 +1049,7 @@ public class Character {
 
         if (mask.isInMask(DBChar.CHARACTER)) {
             getAvatarData().getCharacterStat().encode(outPacket);
-            outPacket.encodeByte(getFriends().size());
+            outPacket.encodeByte(getFriendRecords().size());
             // 精靈的祝福
             boolean hasBlessingOfFairy = getBlessingOfFairy() != null;
             outPacket.encodeByte(hasBlessingOfFairy);
@@ -1300,7 +1365,7 @@ public class Character {
             outPacket.encodeShort(size);
             for (Quest quest : getQuestManager().getQuestsInProgress()) {
                 outPacket.encodeInt(quest.getQRKey());
-                outPacket.encodeString(quest.getQRValue());
+                outPacket.encodeString(quest.getQrValue());
             }
             if (!removeAllOldEntries) {
                 // blacklisted quests
@@ -1356,7 +1421,7 @@ public class Character {
             int marriageSize = 0;
             outPacket.encodeShort(marriageSize);
             for (int i = 0; i < marriageSize; i++) {
-                new MarriageRecord().encode(outPacket);
+                new MarriageRing().encode(outPacket);
             }
         }
 
@@ -1376,7 +1441,7 @@ public class Character {
             outPacket.encodeShort(getQuestManager().getQuests().size());
             for (Quest quest : getQuestManager().getQuests()) {
                 outPacket.encodeInt(quest.getQRKey());
-                outPacket.encodeString(quest.getQRValue());
+                outPacket.encodeString(quest.getQrValue());
             }
         }
         if (mask.isInMask(DBChar.Avatar)) {
@@ -1770,6 +1835,9 @@ public class Character {
 
     public void logout() {
         setOnline(false);
+        FieldTemplate ft = getField().getFieldData();
+        setFieldID((ft.getForcedReturn() > 0 && ft.getForcedReturn() != 999999999 ? ft.getForcedReturn() :
+                (ft.getReturnMap() > 0 && ft.getReturnMap() != 999999999 ? ft.getReturnMap() : getFieldID())));
         getField().removeCharacter(this);
         DatabaseFactory.getInstance().saveToDB(this);
         getClient().getChannelInstance().removeCharacter(this);
@@ -1796,7 +1864,7 @@ public class Character {
     }
 
     public void renewCharacterStats() {
-        getAvatarData().getCharacterStat().renewCharacterStats();
+        getCharacterLocalStat().recalculateLocalStat();
     }
 
     public void enableActions() {
@@ -1848,11 +1916,6 @@ public class Character {
         }
     }
 
-    public void levelUp() {
-        // TODO levelup
-        getAvatarData().getCharacterStat().levelUp();
-        getField().broadcastPacket(new LP_UserEffectRemote(this, new LevelUpUserEffect()), this);
-    }
 
     public void giveItem(int itemID, int quantity) {
         double isEquip = Math.floor((itemID / 1000000));

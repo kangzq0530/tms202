@@ -1,14 +1,14 @@
 package com.msemu.world.data;
 
 import com.msemu.commons.data.loader.dat.FieldTemplateDatLoader;
-import com.msemu.commons.data.loader.wz.FieldTemplateLoader;
+import com.msemu.commons.data.loader.wz.WzManager;
 import com.msemu.commons.data.templates.field.FieldTemplate;
 import com.msemu.commons.reload.IReloadable;
 import com.msemu.commons.reload.Reloadable;
 import com.msemu.commons.utils.types.Position;
-import com.msemu.commons.data.loader.wz.WzManager;
 import com.msemu.core.startup.StartupComponent;
 import com.msemu.world.client.field.Field;
+import com.msemu.world.client.field.FieldObject;
 import com.msemu.world.client.life.Mob;
 import com.msemu.world.client.life.Npc;
 import lombok.Getter;
@@ -27,7 +27,7 @@ public class FieldData implements IReloadable {
     private static final Logger log = LoggerFactory.getLogger(QuestData.class);
 
     @Getter
-    private static final HashMap<Integer, FieldTemplate> fieldTemplates = new HashMap<>();
+    private final HashMap<Integer, FieldTemplate> fieldTemplates = new HashMap<>();
 
     private static final AtomicReference<FieldData> instance = new AtomicReference<>();
 
@@ -68,7 +68,7 @@ public class FieldData implements IReloadable {
 
     public Field getFieldFromTemplate(int templateId) {
         FieldTemplate fieldTemplate = getFieldTemplates().get(templateId);
-        if(fieldTemplate == null)
+        if (fieldTemplate == null)
             return null;
         Field field = new Field(-1, fieldTemplate);
         field.getFieldData().getLife().forEach(lifeData -> {
@@ -120,6 +120,9 @@ public class FieldData implements IReloadable {
                 mob.setHomePosition(new Position(mob.getX(), mob.getY()));
                 field.addLife(mob);
             }
+        });
+        field.getFieldData().getObjects().forEach(fieldObjectInfo -> {
+            field.getObjects().add(new FieldObject(fieldObjectInfo));
         });
         return field;
     }

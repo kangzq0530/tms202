@@ -20,6 +20,7 @@ public class EquipTemplate extends ItemTemplate {
     private int prevBonusExpRate, attackSpeed, specialGrade, setItemID, fixedGrade;
     private short tuc, cuc, iStr, iDex, iInt, iLuk, iMaxHp, iMaxMp;
     private short iPad, iMad, iPDD, iMDD, iAcc, iEva, iCraft, iSpeed, iJump, iuc;
+    private short iMaxHpR, iMaxMpR;
     private short iPvpDamage, iReduceReq, specialAttribute, durabilityMax;
     private short iIncReq, bdr, imdr, damR, statR, cuttable, exGradeOption;
     private short itemState, chuc;
@@ -50,6 +51,8 @@ public class EquipTemplate extends ItemTemplate {
         dos.writeShort(iLuk);
         dos.writeShort(iMaxHp);
         dos.writeShort(iMaxMp);
+        dos.writeShort(iMaxHpR);
+        dos.writeShort(iMaxMpR);
         dos.writeShort(iPad);
         dos.writeShort(iMad);
         dos.writeShort(iPDD);
@@ -114,6 +117,8 @@ public class EquipTemplate extends ItemTemplate {
         setILuk(dis.readShort());
         setIMaxHp(dis.readShort());
         setIMaxMp(dis.readShort());
+        setIMaxHpR(dis.readShort());
+        setIMaxMpR(dis.readShort());
         setIPad(dis.readShort());
         setIMad(dis.readShort());
         setIPDD(dis.readShort());

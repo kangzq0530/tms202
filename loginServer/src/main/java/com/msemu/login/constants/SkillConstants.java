@@ -17,6 +17,17 @@ public class SkillConstants {
                 skillID == 131001107 || skillID == 4121015 || skillID == 51120057;
     }
 
+    public static boolean isBattlePvpSkill(int skillID) {
+        if (skillID > 80001679) {
+            if (skillID - 80001732 > 0xE) {
+                return false;
+            }
+        } else if (skillID < 80001675 && skillID != 80000330 && (skillID <= 80001646 || skillID > 80001670)) {
+            return false;
+        }
+        return true;
+    }
+
     public static boolean isSkillNeedMasterLevel(int skillId) {
         if (is4thNotNeedMasterLevel(skillId)
                 || skillId - 46000000 < 1000000 && (skillId % 10000) == 0
@@ -170,7 +181,6 @@ public class SkillConstants {
         }
         return false;
     }
-
 
 
     public static int get紫扇傳授UnknownValue(int skillId) {

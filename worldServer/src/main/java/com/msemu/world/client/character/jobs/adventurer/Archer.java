@@ -10,9 +10,9 @@ import com.msemu.world.client.character.AttackInfo;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.HitInfo;
 import com.msemu.world.client.character.MobAttackInfo;
-import com.msemu.world.client.character.skills.Option;
-import com.msemu.world.client.character.skills.Skill;
-import com.msemu.world.client.character.skills.TemporaryStatManager;
+import com.msemu.world.client.character.skill.Option;
+import com.msemu.world.client.character.skill.Skill;
+import com.msemu.world.client.character.skill.TemporaryStatManager;
 import com.msemu.world.client.field.Field;
 import com.msemu.world.client.character.jobs.JobHandler;
 import com.msemu.world.client.life.AffectedArea;
@@ -32,7 +32,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.msemu.commons.data.enums.SkillStat.*;
-import static com.msemu.world.client.character.skills.CharacterTemporaryStat.*;
+import static com.msemu.world.client.character.skill.CharacterTemporaryStat.*;
 
 /**
  * Created by Weber on 2018/4/14.
@@ -383,7 +383,7 @@ public class Archer extends JobHandler {
 //                        quiverCartridge.decrementAmount();
 //                        int inc = ForceAtomEnum.BM_ARROW.getInc();
 //                        int type = ForceAtomEnum.BM_ARROW.getForceAtomType();
-//                        ForceAtomInfo forceAtomInfo = new ForceAtomInfo(1, inc, 15, 15,
+//                        AbstractForceAtom forceAtomInfo = new AbstractForceAtom(1, inc, 15, 15,
 //                                num, 0, (int) System.currentTimeMillis(), 1, 0,
 //                                new Position());
 //                        chr.getField().broadcastPacket(field.createForceAtom(false, 0, chr.getItemId(), type,

@@ -1,11 +1,13 @@
 package com.msemu.world.client.field;
 
+import com.msemu.commons.data.templates.field.FieldObjectInfo;
 import com.msemu.commons.data.templates.field.FieldTemplate;
 import com.msemu.commons.data.templates.field.Foothold;
 import com.msemu.commons.data.templates.field.Portal;
 import com.msemu.commons.data.templates.skill.SkillInfo;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.thread.EventManager;
+import com.msemu.commons.utils.Rand;
 import com.msemu.commons.utils.types.Position;
 import com.msemu.commons.utils.types.Rect;
 import com.msemu.core.network.GameClient;
@@ -13,6 +15,8 @@ import com.msemu.core.network.packets.out.drops.LP_DropEnterField;
 import com.msemu.core.network.packets.out.drops.LP_DropLeaveField;
 import com.msemu.core.network.packets.out.field.LP_AffectedAreaCreated;
 import com.msemu.core.network.packets.out.field.LP_AffectedAreaRemoved;
+import com.msemu.core.network.packets.out.field.LP_FootHoldMove;
+import com.msemu.core.network.packets.out.field.LP_SetQuickMoveInfo;
 import com.msemu.core.network.packets.out.mob.LP_MobChangeController;
 import com.msemu.core.network.packets.out.mob.LP_MobEnterField;
 import com.msemu.core.network.packets.out.npc.LP_NpcChangeController;
@@ -23,13 +27,16 @@ import com.msemu.core.network.packets.out.user.LP_UserEnterField;
 import com.msemu.core.network.packets.out.user.LP_UserLeaveField;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.inventory.items.Item;
-import com.msemu.world.client.character.skills.TemporaryStatManager;
+import com.msemu.world.client.character.skill.TemporaryStatManager;
 import com.msemu.world.client.life.*;
 import com.msemu.world.client.life.skills.MobTemporaryStat;
+import com.msemu.world.constants.FieldConstants;
 import com.msemu.world.constants.GameConstants;
 import com.msemu.world.data.ItemData;
 import com.msemu.world.data.SkillData;
 import com.msemu.world.enums.LeaveType;
+import com.msemu.world.enums.QuickMoveInfo;
+import com.msemu.world.enums.QuickMoveNpcInfo;
 import com.msemu.world.enums.ScriptType;
 import lombok.Getter;
 import lombok.Setter;
@@ -54,6 +61,8 @@ public class Field {
     @Getter
     private final List<Character> chars;
     @Getter
+    private final List<FieldObject> objects;
+    @Getter
     private final Map<Life, Character> lifeToControllers;
     @Getter
     private final Map<Life, ScheduledFuture> lifeSchedules;
@@ -76,6 +85,7 @@ public class Field {
         this.lifes = new ArrayList<>();
         this.chars = new ArrayList<>();
         this.lifeToControllers = new HashMap<>();
+        this.objects = new ArrayList<>();
         this.lifeSchedules = new HashMap<>();
         Position lBound = new Position(fieldData.getRect().getLeft(), fieldData.getRect().getTop());
         Position rBound = new Position(fieldData.getRect().getRight(), fieldData.getRect().getBottom());
@@ -260,9 +270,63 @@ public class Field {
     public void addCharacter(Character chr) {
         if (!getCharacters().contains(chr)) {
             getCharacters().add(chr);
+
             if (!isUserFirstEnter() && hasUserFirstEnterScript()) {
                 chr.getScriptManager().startScript(getId(), getOnFirstUserEnter(), ScriptType.FIELD);
             }
+
+            if (chr.getParty() != null) {
+                chr.getParty().updateFull();
+            }
+
+            QuickMoveInfo quickMoveInfo = QuickMoveInfo.getByMap(getId());
+            if (quickMoveInfo != null) {
+                List<QuickMoveNpcInfo> quickMoveNpcInfos = new LinkedList<>();
+                if (QuickMoveInfo.GLOBAL_NPC != 0 && !FieldConstants.isBossMap(getId()) && !FieldConstants.isTutorialMap(getId()) && (getId() / 100 != 9100000 || getId() == 910000000)) {
+                    for (QuickMoveNpcInfo npc : QuickMoveNpcInfo.values()) {
+                        if (npc.check(QuickMoveInfo.GLOBAL_NPC) && npc.show(getId())) {
+                            quickMoveNpcInfos.add(npc);
+                        }
+                    }
+                }
+                if (!quickMoveNpcInfos.isEmpty()) {
+                    chr.write(new LP_SetQuickMoveInfo(quickMoveNpcInfos));
+                }
+            }
+
+            // TODO LP_IncJudgementStack
+
+            // TODO mapEffect (song , broadcast)
+
+            FieldTemplate ft = getFieldData();
+            EventManager em = EventManager.getInstance();
+            if(ft.getTimeLimit() > 0 && ft.getReturnMap() > 0) {
+                //TODO 計時回地圖
+            } else if (ft.getTimeLimit() > 0 && ft.getForcedReturn() > 0) {
+                //TODO 計時回地圖
+            }
+
+            // LP_BlowWeather
+
+            List<FieldObject> movingPlatforms = getObjects().stream()
+                    .filter(FieldObject::isMove).collect(Collectors.toList());
+            if(!movingPlatforms.isEmpty()) {
+                chr.write(new LP_FootHoldMove(movingPlatforms));
+            }
+
+
+
+            //TODO  處理事件腳本
+
+            chr.getForcedStatManager().onEnterField(getId());
+
+            //叫出花狐 龍
+
+            // 強化任意門剩餘次數
+
+
+
+
         }
         broadcastPacket(new LP_UserEnterField(chr), chr);
     }
@@ -467,10 +531,14 @@ public class Field {
             item = ItemData.getInstance().getEquipFromTemplate(itemID);
             if (item == null) {
                 item = ItemData.getInstance().getItemFromTemplate(itemID);
+                item.setQuantity(Rand.get(dropInfo.getMinQuantity(), dropInfo.getMaxQuantity()));
+                int slotMax = item.getTemplate().getSlotMax();
+                if (slotMax > 0)
+                    item.setQuantity(Math.min(slotMax, item.getQuantity()));
             }
             drop.setItem(item);
         } else {
-            drop.setMoney(dropInfo.getMoney());
+            drop.setMoney(Rand.get(dropInfo.getMinQuantity(), dropInfo.getMaxQuantity()));
         }
         addLife(drop);
         broadcastWithPredicate(new LP_DropEnterField(drop, posFrom, posTo, ownerID),
@@ -484,7 +552,7 @@ public class Field {
      * @param position  The Position the initial Drop comes from.
      * @param ownerID   The owner's character ID.
      */
-    public void drop(Set<DropInfo> dropInfos, Position position, int ownerID) {
+    public void drop(List<DropInfo> dropInfos, Position position, int ownerID) {
         drop(dropInfos, findFootHoldBelow(position), position, ownerID);
     }
 
@@ -510,7 +578,7 @@ public class Field {
      * @param position  The Position the Drops originate from.
      * @param ownerID   The ID of the owner of all drops.
      */
-    public void drop(Set<DropInfo> dropInfos, Foothold fh, Position position, int ownerID) {
+    public void drop(List<DropInfo> dropInfos, Foothold fh, Position position, int ownerID) {
         int x = position.getX();
         int minX = fh.getX1();
         int maxX = fh.getX2();
@@ -557,5 +625,10 @@ public class Field {
     public Npc getNpcByTemplateID(int npcID) {
         return getLifes().stream().filter(life -> life instanceof Npc && life.getTemplateId() == npcID)
                 .map(life -> (Npc) life).findFirst().orElse(null);
+    }
+
+    public void startTimeLimitTask(int time, Field toField) {
+
+
     }
 }

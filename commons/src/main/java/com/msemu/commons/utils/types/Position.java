@@ -18,11 +18,6 @@ public class Position {
         y = 0;
     }
 
-    @Override
-    public String toString() {
-        return String.format("x: %d, y: %d", getX(), getY());
-    }
-
     public Position deepCopy() {
         return new Position(getX(), getY());
     }
@@ -65,5 +60,10 @@ public class Position {
         x -= getX();
         y -= getY();
         return (x * x + y * y);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("X: %d Y: %d", getX(), getY());
     }
 }

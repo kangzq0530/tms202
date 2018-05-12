@@ -33,7 +33,7 @@ public enum OutHeader implements IHeader {
     LP_ShowMapleStory,
     LP_ChangeSPWResult,
     LP_CheckSPWResult,
-    LP_REMOVE_BG_LAYER,
+    LP_SetBackEffect,
     LP_CHANGE_BACKGROUND,
     LP_SetMapObjectVisible,
     LP_RESET_SCREEN,
@@ -250,7 +250,7 @@ public enum OutHeader implements IHeader {
     LP_FootHoldMove,
     LP_PvPStatusResult,
     LP_InGameCurNodeEventEnd,
-    LP_ForceAtomCreate,
+    LP_CreateForceAtom,
     LP_SetAchieveRate,
     LP_SetQuickMoveInfo,
     LP_ObtacleAtomCreate,
@@ -665,7 +665,7 @@ public enum OutHeader implements IHeader {
     LP_EQUIP_STOLEN_SKILL,
     LP_INNER_ABILITY_RESET_MSG,
     LP_CASSANDRAS_COLLECTION,
-    LP_SET_OBJECT_STATE,
+    LP_SetObjectState,
     LP_POPUP,
     LP_YOUR_INFORMATION,
     LP_CANDY_RANKING,
@@ -795,5 +795,16 @@ public enum OutHeader implements IHeader {
             }
         }
         return null;
+    }
+
+    public boolean ignoreDebug() {
+        switch (this.name()) {
+            case "LP_MobCtrlAck":
+            case "LP_StatChanged":
+            case "LP_UserMeleeAttack":
+                return true;
+            default:
+                return false;
+        }
     }
 }

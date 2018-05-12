@@ -309,6 +309,10 @@ public class Equip extends Item {
     @Setter
     @Transient
     private int socketState;
+    @Transient
+    @Getter
+    @Setter
+    private EquipTemplate template;
 
     public Equip() {
         super();
@@ -320,6 +324,7 @@ public class Equip extends Item {
 
     public Equip(EquipTemplate t) {
         super(t);
+        this.template = t;
         this.itemId = t.getItemId();
         this.title = t.getTitle();
         // TODO 時間暫時永久
@@ -408,6 +413,7 @@ public class Equip extends Item {
 
     public Equip deepCopy() {
         Equip ret = new Equip();
+        ret.template = template;
         ret.serialNumber = serialNumber;
         ret.title = title;
         ret.equippedDate = equippedDate.deepCopy();
@@ -996,6 +1002,14 @@ public class Equip extends Item {
 
     public void releaseOptions(boolean bonus) {
         // 重置潛能
+    }
+
+    public int getIMaxHpR() {
+        return getTemplate().getIMaxHpR();
+    }
+
+    public int getIMaxMpR() {
+        return getTemplate().getIMaxMpR();
     }
 }
 

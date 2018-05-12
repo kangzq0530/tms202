@@ -4,6 +4,8 @@ import com.msemu.commons.database.Schema;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;
 import com.msemu.world.constants.MapleJob;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -13,6 +15,8 @@ import javax.persistence.*;
 @Schema
 @Entity
 @Table(name = "avatarData")
+@Getter
+@Setter
 public class AvatarData {
 
     @Id
@@ -29,22 +33,6 @@ public class AvatarData {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private AvatarLook zeroAvatarLook;
 
-    public AvatarLook getAvatarLook() {
-        return avatarLook;
-    }
-
-    public CharacterStat getCharacterStat() {
-        return characterStat;
-    }
-
-    public AvatarLook getZeroAvatarLook() {
-        return zeroAvatarLook;
-    }
-
-    public void setZeroAvatarLook(AvatarLook zeroAvatarLook) {
-        this.zeroAvatarLook = zeroAvatarLook;
-    }
-
     public void encode(OutPacket<GameClient> outPacket) {
         characterStat.encode(outPacket);
         avatarLook.encode(outPacket);
@@ -53,23 +41,4 @@ public class AvatarData {
         }
     }
 
-    public void setCharacterStat(CharacterStat characterStat) {
-        this.characterStat = characterStat;
-    }
-
-    public void setAvatarLook(AvatarLook avatarLook) {
-        this.avatarLook = avatarLook;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public AvatarLook getAvatarLook(boolean zeroBetaState) {
-        return zeroBetaState ? getZeroAvatarLook() : getAvatarLook();
-    }
 }

@@ -120,6 +120,17 @@ public class ScriptManager {
     public void handleAction(NpcMessageType lastType, byte action, int selection) {
         getLock().lock();
         try {
+            if(getScriptInfo() == null)
+                return;
+            ScriptInteraction cm = getScriptInfo().getInteraction();
+            if(lastType.getValue() != cm.getNpcScriptInfo().getLastMessageType().getValue()) {
+                stopScriptWithoutLock();
+                return;
+            } else if (cm.getNpcScriptInfo().getLastMessageType() == NpcMessageType.NM_SAY_OK) {
+                stopScriptWithoutLock();
+                return;
+            }
+
             if (getScriptInfo() != null) {
                 getScriptInfo().getInvocable().invokeFunction("action", action, lastType.getValue(), selection);
             }

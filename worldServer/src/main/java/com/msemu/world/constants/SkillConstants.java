@@ -1,9 +1,116 @@
 package com.msemu.world.constants;
 
+import com.msemu.commons.data.templates.skill.SkillInfo;
+import com.msemu.world.data.SkillData;
+
 /**
  * Created by Weber on 2018/3/31.
  */
 public class SkillConstants {
+
+    public static boolean canBeLearnedBy(int skillID, int job) {
+        int skillForJob = skillID / 10000;
+        return MapleJob.getJobGrade(skillForJob) <= MapleJob.getJobGrade(job) && MapleJob.isSameJob(job, skillForJob);
+    }
+
+    public static boolean is4thJobSkill(int skillID) {
+        SkillInfo si = SkillData.getInstance().getSkillInfoById(skillID);
+        if (si.getHyper() > 0) {
+            return true;
+        }
+        switch (skillID) {
+            case 1120012:
+            case 1320011: // 靈魂復仇(10/30)27001100
+            case 3110014:
+            case 4320005:
+            case 4340010:
+            case 4340012:
+            case 5120011:
+            case 5120012:
+            case 5220012:
+            case 5220014:
+            case 5321006:
+            case 5720008:
+            case 21120011:
+            case 21120014:
+            case 22171004:
+            case 22181004:
+            case 23120011:
+            case 23120013:
+            case 23121008:
+            case 33120010:
+            case 33121005:
+            case 51120000: // 戰鬥大師(15/15)
+                return false;
+        }
+
+        switch (skillID / 10000) {
+            case 2312:
+            case 2412:
+            case 2217:
+            case 2218:
+            case 2512:
+            case 2712:
+            case 3122:
+            case 6112:
+            case 6512:
+                return true;
+            case 10100:
+                return skillID == 101000101;
+            case 10110:
+                return (skillID == 101100101) || (skillID == 101100201);
+            case 10111:
+                return (skillID == 101110102) || (skillID == 101110200) || (skillID == 101110203);
+            case 10112:
+                return (skillID == 101120104) || (skillID == 101120204);
+        }
+        if ((si.getMaxLevel() <= 15 && !si.isInvisible() && si.getMasterLevel() <= 0)) {
+            return false;
+        }
+        //龍魔技能
+        if (skillID / 10000 >= 2210 && skillID / 10000 <= 2218) {
+            return ((skillID / 10000) % 10) >= 7 || si.getMasterLevel() > 0;
+        }
+        //影武技能
+        if (skillID / 10000 >= 430 && skillID / 10000 <= 434) {
+            return ((skillID / 10000) % 10) == 4 || si.getMasterLevel() > 0;
+        }
+        if (skillID == 40020002) {
+            return true;
+        }
+        //冒險家
+        return ((skillID / 10000) % 10) == 2 && skillID < 90000000 && !MapleJob.isBeginner(skillID / 10000);
+    }
+
+    public static int getSkillBookBySkill(final int skillId) {
+        return getSkillBookByJob(skillId / 10000, skillId);
+    }
+
+    public static int getSkillBookByJob(int job) {
+        return getSkillBookByJob(job, 0);
+    }
+
+    public static int getSkillBookByJob(final int job, final int skillId) {
+        if (MapleJob.isBeginner(job)) {
+            return 0;
+        }
+
+        if (MapleJob.is神之子(job)) {
+            if (skillId > 0) {
+                int type = (skillId % 1000) / 100; //1 beta 2 alpha
+                return type == 1 ? 1 : 0;
+            } else {
+                return 0;
+            }
+        }
+
+        if (JobConstants.isSeparatedSp(job)) {
+            return MapleJob.getJobGrade(job) - 1;
+        }
+
+        return 0;
+    }
+
     public static int getJobBySkill(int skillId) {
         int result = skillId / 10000;
         if (skillId / 10000 == 8000) {

@@ -31,10 +31,10 @@ public class CP_UserPortalScriptRequest extends InPacket<GameClient> {
         Portal portal = chr.getField().getPortalByName(portalName);
         if(portal != null) {
             double distance = chr.getPosition().distance(portal.getX(), portal.getY());
-            if(distance < 1000) {
+            if(distance < 3000) {
                 chr.warpPortal(portal);
             } else {
-                chr.chatMessage("距離地圖太遠了");
+                chr.chatMessage(String.format("距離地圖太遠了 距離: %f", distance));
             }
         }
     }

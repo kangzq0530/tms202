@@ -57,7 +57,7 @@ public enum Stat {
         return val;
     }
 
-    public static Stat getByVal(int stat) {
+    public static Stat getByVal(long stat) {
         return Arrays.stream(values()).filter(s -> s.getValue() == stat).findFirst().orElse(null);
     }
 

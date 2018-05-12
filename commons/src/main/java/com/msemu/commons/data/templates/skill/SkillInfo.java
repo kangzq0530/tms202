@@ -38,15 +38,19 @@ public class SkillInfo implements DatSerializable {
     private Element elemAttr = Element.NEUTRAL;
     private List<Integer> psdSkills = new ArrayList<>();
     private List<Rect> rects = new ArrayList<>();
-    private Map<SkillStat, String> skillStatInfo = new HashMap<>();
+    private Map<Integer, Map<SkillStat, String>> skillStatInfo = new HashMap<>();
 
-    public void addSkillStatInfo(SkillStat sc, String value) {
-        getSkillStatInfo().put(sc, value);
+    public void addSkillStatInfo(int slv,  SkillStat sc, String value) {
+        if(!getSkillStatInfo().containsKey(slv))
+            getSkillStatInfo().put(slv, new HashMap<>());
+        getSkillStatInfo().get(slv).put(sc, value);
     }
 
     public int getValue(SkillStat skillStat, int slv) {
         int result = 0;
-        String value = getSkillStatInfo().get(skillStat);
+        if(!getSkillStatInfo().containsKey(slv))
+            return 0;
+        String value = getSkillStatInfo().get(slv).get(skillStat);
         if (value == null) {
             return 0;
         }
@@ -151,9 +155,13 @@ public class SkillInfo implements DatSerializable {
             dos.writeInt(rect.getBottom());
         }
         dos.writeInt(skillStatInfo.size());
-        for (Map.Entry<SkillStat, String> entry : skillStatInfo.entrySet()) {
-            dos.writeUTF(entry.getKey().name());
-            dos.writeUTF(entry.getValue());
+        for (Map.Entry<Integer, Map<SkillStat, String>> entry : skillStatInfo.entrySet()) {
+            dos.writeInt(entry.getKey());
+            dos.writeInt(entry.getValue().size());
+            for(Map.Entry<SkillStat, String> subEntry: entry.getValue().entrySet()) {
+                dos.writeUTF(subEntry.getKey().name());
+                dos.writeUTF(subEntry.getValue());
+            }
         }
     }
 
@@ -205,7 +213,11 @@ public class SkillInfo implements DatSerializable {
         }
         int skillStatSize = dis.readInt();
         for (int i = 0; i < skillStatSize; i++) {
-            getSkillStatInfo().put(SkillStat.valueOf(dis.readUTF()), dis.readUTF());
+            int slv = dis.readInt();
+            getSkillStatInfo().put(slv, new HashMap<>());
+            int size = dis.readInt();
+            for(int j = 0 ; j < size; j++)
+                getSkillStatInfo().get(slv).put(SkillStat.valueOf(dis.readUTF()), dis.readUTF());
         }
         return this;
     }

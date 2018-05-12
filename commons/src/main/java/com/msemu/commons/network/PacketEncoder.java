@@ -1,6 +1,6 @@
 package com.msemu.commons.network;
 
-import com.msemu.commons.network.Client;
+import com.msemu.commons.enums.OutHeader;
 import com.msemu.commons.network.crypt.ICipher;
 import com.msemu.commons.network.packets.Packet;
 import com.msemu.core.configs.CoreConfig;
@@ -22,7 +22,8 @@ public class PacketEncoder<TClient extends Client<TClient>> extends MessageToByt
         Client client = ctx.channel().attr(Client.CLIENT_KEY).get();
         ICipher cipher = client.getConnection().getSendCipher();
         if (cipher != null) {
-            if (CoreConfig.SHOW_PACKET ) {
+            OutHeader op = OutHeader.getOutHeaderByOp(packet.getHeader());
+            if (CoreConfig.SHOW_PACKET && (op == null || !op.ignoreDebug())) {
                 log.warn("[Out]\t|" + packet);
             }
             client.acquireEncoderState();

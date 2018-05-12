@@ -1,14 +1,13 @@
 package com.msemu.world.data;
 
 import com.msemu.commons.data.loader.dat.SkillInfoDatLoader;
-import com.msemu.commons.data.loader.wz.SkillInfoLoader;
 import com.msemu.commons.data.templates.skill.MobSkillInfo;
 import com.msemu.commons.data.templates.skill.SkillInfo;
 import com.msemu.commons.reload.IReloadable;
 import com.msemu.commons.reload.Reloadable;
 import com.msemu.commons.data.loader.wz.WzManager;
 import com.msemu.core.startup.StartupComponent;
-import com.msemu.world.client.character.skills.Skill;
+import com.msemu.world.client.character.skill.Skill;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -10,6 +10,7 @@ import com.msemu.core.network.packets.out.wvscontext.LP_Message;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.effect.QuestCompleteUserEffect;
 import com.msemu.world.client.character.inventory.items.Item;
+import com.msemu.world.client.character.messages.QuestRecordExMessage;
 import com.msemu.world.client.character.messages.QuestRecordMessage;
 import com.msemu.world.client.character.quest.act.IQuestAction;
 import com.msemu.world.client.character.quest.req.IQuestStartRequirements;
@@ -109,14 +110,23 @@ public class QuestManager {
     public void addQuest(Quest quest) {
         if (!getQuestsList().containsKey(quest.getQRKey())) {
             getQuestsList().put(quest.getQRKey(), quest);
-            getCharacter().write(new LP_Message(new QuestRecordMessage(quest)));
             QuestInfo qi = QuestData.getInstance().getQuestInfoById(quest.getQRKey());
-            if (quest.getStatus() == COMPLETE) {
-                getCharacter().chatMessage(YELLOW, String.format("[任務資訊] 已完成任務 : %s(%d) ", qi.getName(), quest.getQRKey()));
-            } else {
-                getCharacter().chatMessage(YELLOW, String.format("[任務資訊] 已接受任務 : %s(%d) ", qi.getName(), quest.getQRKey()));
-            }
+            getCharacter().chatMessage(YELLOW, String.format("[任務資訊] 增加任務 : %s(%d) ", qi != null ? qi.getName() : "自定義任務", quest.getQRKey()));
         }
+    }
+
+    public void startQuest(int questID) {
+        Quest quest = getQuestsList().get(questID);
+        QuestInfo qi = QuestData.getInstance().getQuestInfoById(questID);
+        if (quest == null) {
+            quest = QuestData.getInstance().createQuestFromId(questID);
+            addQuest(quest);
+        }
+        quest.setStatus(STARTED);
+        getCharacter().write(new LP_Message(new QuestRecordMessage(quest)));
+        getCharacter().chatMessage(YELLOW, String.format("[任務資訊] 已接受任務 : %s(%d) ", qi != null ? qi.getName() : "自定義任務", quest.getQRKey()));
+        if (qi != null && qi.isAutoComplete())
+            completeQuest(questID);
     }
 
     /**
@@ -172,6 +182,25 @@ public class QuestManager {
         for (IQuestAction reward : questData.getCompleteActionsById(questID)) {
             reward.action(character);
         }
+    }
+
+    public void setQuestRecord(int questID, String qRValue) {
+        if (!getQuestsList().containsKey(questID)) {
+            addQuest(QuestData.getInstance().createQuestFromId(questID));
+        }
+        Quest quest = getQuestsList().get(questID);
+        quest.setQrValue(qRValue);
+        getCharacter().write(new LP_Message(new QuestRecordMessage(quest)));
+    }
+
+    public void setQuestRecordEx(int questID, String qRExValue) {
+        if (!getQuestsList().containsKey(questID)) {
+            addQuest(QuestData.getInstance().createQuestFromId(questID));
+        }
+        Quest quest = getQuestsList().get(questID);
+        quest.setQrExValue(qRExValue);
+        getCharacter().write(new LP_Message(new QuestRecordExMessage(quest)));
+
     }
 
     public void handleMobKill(Mob mob) {

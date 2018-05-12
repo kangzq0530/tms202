@@ -31,6 +31,8 @@ public class CP_UserChat extends InPacket<GameClient> {
     public void runImpl() {
         Character chr = getClient().getCharacter();
         // TODO 指令系統
+
+
         OutPacket<GameClient> chatPacket = new LP_UserChat(chr.getId(), text, onlyBallon);
         chr.getField().broadcastPacket(chatPacket);
     }

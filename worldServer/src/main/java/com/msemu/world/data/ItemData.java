@@ -3,9 +3,11 @@ package com.msemu.world.data;
 import com.msemu.commons.data.loader.dat.EquipTemplateDatLoader;
 import com.msemu.commons.data.loader.dat.ItemOptionDatLoader;
 import com.msemu.commons.data.loader.dat.ItemTemplateDatLoader;
+import com.msemu.commons.data.loader.dat.SetItemInfoDatLoader;
 import com.msemu.commons.data.templates.EquipTemplate;
 import com.msemu.commons.data.templates.ItemOptionInfo;
 import com.msemu.commons.data.templates.ItemTemplate;
+import com.msemu.commons.data.templates.SetItemInfo;
 import com.msemu.commons.reload.IReloadable;
 import com.msemu.commons.reload.Reloadable;
 import com.msemu.core.startup.StartupComponent;
@@ -38,6 +40,9 @@ public class ItemData implements IReloadable {
     @Getter(value = AccessLevel.PRIVATE)
     private final Map<Integer, ItemTemplate> itemTemplates = new HashMap<>();
 
+    @Getter(value = AccessLevel.PRIVATE)
+    private final Map<Integer, SetItemInfo> setItemInfos = new HashMap<>();
+
     private static final AtomicReference<ItemData> instance = new AtomicReference<>();
 
 
@@ -67,11 +72,15 @@ public class ItemData implements IReloadable {
         log.info("{} ItemTemplate loaded.", itemTemplates.size());
         equipTemplates.putAll(new EquipTemplateDatLoader().load(null));
         log.info("{} EquipTemplate loaded.", equipTemplates.size());
-        System.gc();
+        setItemInfos.putAll(new SetItemInfoDatLoader().load(null));
+        log.info("{} SetItemInfo loaded.", equipTemplates.size());
     }
 
     private void clear() {
         itemOptions.clear();
+        itemTemplates.clear();
+        equipTemplates.clear();
+        setItemInfos.clear();
     }
 
     @Override
@@ -107,6 +116,14 @@ public class ItemData implements IReloadable {
 
     public ItemTemplate getItemInfo(int itemId) {
         return getItemTemplates().get(itemId);
+    }
+
+    public EquipTemplate getEquipInfo(int itemID) {
+        return getEquipTemplates().get(itemID);
+    }
+
+    public SetItemInfo getSetItemInfo(int setItemID) {
+        return getSetItemInfos().get(setItemID);
     }
 
 }

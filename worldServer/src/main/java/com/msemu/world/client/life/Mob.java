@@ -46,7 +46,7 @@ public class Mob extends Life {
     private ForcedMobStat forcedMobStat;
     private MobTemporaryStat temporaryStat;
     private Map<Character, Long> damageDone = new HashMap<>();
-    private Set<DropInfo> drops = new HashSet<>();
+    private List<DropInfo> dropsInfo = new ArrayList<>();
     private List<MobSkill> skills = new ArrayList<>();
     private Set<Integer> quests = new HashSet<>();
     private final MobTemplate template;
@@ -130,12 +130,9 @@ public class Mob extends Life {
         }
         copy.setMp(getMp());
         copy.setMaxMp(getMaxMp());
-        copy.setDrops(getDrops()); // doesn't get mutated, so should be fine
+        copy.setDropsInfo(getDropsInfo()); // doesn't get mutated, so should be fine
         getSkills().forEach(copy::addSkill);
         getQuests().forEach(copy::addQuest);
-        if (copy.getDrops().stream().noneMatch(di -> di.getMoney() > 0)) {
-            copy.getDrops().add(new DropInfo(0, (int) copy.getForcedMobStat().getExp(), 1000, 0));
-        }
         return copy;
     }
 
@@ -436,7 +433,7 @@ public class Mob extends Life {
         Field field = getField();
         getField().broadcastPacket(new LP_MobLeaveField(getObjectId(), DeathType.ANIMATION_DEATH.getValue()));
         if (!isNotRespawnable()) { // double negative
-            EventManager.getInstance().addEvent(() -> field.respawn(this), (long) (5000 * (1 / field.getMobRate())));
+            EventManager.getInstance().addEvent(() -> field.respawn(this), (long) (10000 * (1 / field.getMobRate())));
         } else {
             getField().removeLife(getObjectId());
         }
@@ -451,7 +448,7 @@ public class Mob extends Life {
     }
 
     private void dropDrops() {
-        getField().drop(getDrops(), getField().getFootholdById(getFh()), getPosition(), getMostDamageCharacter().getId());
+        getField().drop(getDropsInfo(), getField().getFootholdById(getFh()), getPosition(), getMostDamageCharacter().getId());
     }
 
     public Map<Character, Long> getDamageDone() {

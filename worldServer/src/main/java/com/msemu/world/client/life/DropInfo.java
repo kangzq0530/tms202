@@ -1,57 +1,54 @@
 package com.msemu.world.client.life;
 
+import com.msemu.commons.database.Schema;
 import com.msemu.commons.utils.Rand;
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.persistence.*;
 
 /**
  * Created by Weber on 2018/4/11.
  */
+@Schema
+@Entity
+@Table(name = "dropdata")
+@Getter
+@Setter
 public class DropInfo {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    @Getter
+    @Setter
+    private int id;
+    @Column(name = "mobID")
+    private int mobID;
+    @Column(name = "itemID")
     private int itemID;
-    private int chance; // out of a 1000
+    @Column(name = "chance")
+    private int chance;
+    @Column(name = "questReq")
     private int questReq;
-    private int money;
+    @Column(name = "maxQuantity")
+    private int maxQuantity;
+    @Column(name = "minQuantity")
+    private int minQuantity;
 
     public DropInfo() {
     }
 
-    public DropInfo(int itemID, int money, int chance, int questReq) {
+    public DropInfo(int itemID, int chance, int questReq) {
+        this(itemID, chance, questReq, 1, 1);
+    }
+
+    public DropInfo(int itemID, int chance, int questReq, int maxQuantity
+            , int minQuantity) {
         this.itemID = itemID;
-        this.money = money;
         this.chance = chance;
         this.questReq = questReq;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof DropInfo)) {
-            return false;
-        }
-        DropInfo other = (DropInfo) obj;
-        return other.getItemID() == getItemID() && other.getMoney() == getMoney();
-    }
-
-    public int getItemID() {
-        return itemID;
-    }
-
-    public void setItemID(int itemID) {
-        this.itemID = itemID;
-    }
-
-    public int getChance() {
-        return chance;
-    }
-
-    public void setChance(int chance) {
-        this.chance = chance;
-    }
-
-    public int getQuestReq() {
-        return questReq;
-    }
-
-    public void setQuestReq(int questReq) {
-        this.questReq = questReq;
+        this.maxQuantity = maxQuantity;
+        this.minQuantity = minQuantity;
     }
 
     /**
@@ -60,14 +57,7 @@ public class DropInfo {
      * @return Whether or not the drop is successful.
      */
     public boolean willDrop() {
-        return Rand.getChance(getChance(), 1000);
+        return Rand.getChance(getChance(), 1000000);
     }
 
-    public int getMoney() {
-        return money;
-    }
-
-    public void setMoney(int money) {
-        this.money = money;
-    }
 }

@@ -3,8 +3,10 @@ package com.msemu.world.client.character.party;
 
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;
+import com.msemu.core.network.packets.out.wvscontext.LP_PartyResult;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.party.operations.JoinPartyDoneResponse;
+import com.msemu.world.client.character.party.operations.LoadPartyDoneResponse;
 import com.msemu.world.client.field.Field;
 import com.msemu.world.data.FieldData;
 import com.msemu.world.enums.FieldInstanceType;
@@ -14,6 +16,7 @@ import lombok.Setter;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 /**
  * Created by Weber on 2018/4/13.
@@ -73,7 +76,16 @@ public class Party {
         return partyIdGenerator.getAndIncrement();
     }
 
+
+    public List<PartyMember> getOnlineMembers() {
+        return Arrays.stream(getPartyMembers()).filter(pm -> pm != null && pm.isOnline()).collect(Collectors.toList());
+    }
+
     public void updateFull() {
+        for(PartyMember pm : getOnlineMembers()) {
+            LoadPartyDoneResponse upr = new LoadPartyDoneResponse(this);
+            pm.getCharacter().write(new LP_PartyResult(upr));
+        }
     }
 
     public void encode(OutPacket<GameClient> outPacket) {

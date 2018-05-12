@@ -1,11 +1,13 @@
 package com.msemu.world.client.character.quest;
 
 import com.msemu.commons.database.Schema;
-import com.msemu.commons.utils.types.FileTime;
 import com.msemu.commons.utils.StringUtils;
+import com.msemu.commons.utils.types.FileTime;
 import com.msemu.world.client.character.inventory.items.Item;
 import com.msemu.world.client.character.quest.req.*;
 import com.msemu.world.enums.QuestStatus;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
@@ -26,11 +28,16 @@ public class Quest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Getter
+    @Setter
     @Column(name = "qrKey")
     private int QRKey;
-
     @Column(name = "qrValue")
     private String qrValue;
+    @Getter
+    @Setter
+    @Column(name = "qrExValue")
+    private String qrExValue;
 
     @Column(name = "status")
     private QuestStatus status;
@@ -54,15 +61,7 @@ public class Quest {
         this.status = status;
     }
 
-    public int getQRKey() {
-        return QRKey;
-    }
-
-    public void setQRKey(int QRKey) {
-        this.QRKey = QRKey;
-    }
-
-    public String getQRValue() {
+    public String getQrValue() {
         StringBuilder sb = new StringBuilder();
         getProgressRequirements().stream().filter(qpr -> qpr instanceof IQuestValueRequirement).forEach(qpr -> {
             sb.append(StringUtils.getLeftPaddedStr(((IQuestValueRequirement) qpr).getValue(), '0', 3));
@@ -141,7 +140,7 @@ public class Quest {
 
     @Override
     public String toString() {
-        return String.format("%d, %s", getQRKey(), getQRValue());
+        return String.format("%d, %s", getQRKey(), getQrValue());
     }
 
     public long getId() {
@@ -171,18 +170,6 @@ public class Quest {
                 .collect(Collectors.toSet());
         for (QuestProgressItemRequirement qpir : qpirs) {
             qpir.addItem(item.getQuantity());
-        }
-    }
-
-    public String getQrValue() {
-        if (qrValue != null && !qrValue.equalsIgnoreCase("")) {
-            return qrValue;
-        } else {
-            StringBuilder sb = new StringBuilder();
-            getProgressRequirements().stream().filter(qpr -> qpr instanceof IQuestValueRequirement).forEach(qpr -> {
-                sb.append(StringUtils.getLeftPaddedStr(((IQuestValueRequirement) qpr).getValue(), '0', 3));
-            });
-            return sb.toString();
         }
     }
 

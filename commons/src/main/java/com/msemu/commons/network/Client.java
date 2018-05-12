@@ -50,7 +50,7 @@ public abstract class Client<TClient extends Client<TClient>> {
     private int storedLength = -1;
     /**
      * ChannelInfo object associated with this specific client. Used for all
-     * I/O operations regarding a MapleStory game session.
+     * I/O response regarding a MapleStory game session.
      */
     @Getter
     protected final Connection<TClient> connection;

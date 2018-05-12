@@ -1,30 +1,31 @@
 package com.msemu.world.client.character.jobs.legend;
 
+import com.msemu.commons.data.enums.MobStat;
 import com.msemu.commons.data.templates.skill.SkillInfo;
 import com.msemu.commons.network.packets.InPacket;
 import com.msemu.commons.utils.Rand;
+import com.msemu.core.network.packets.out.wvscontext.LP_ModCombo;
+import com.msemu.core.network.packets.out.wvscontext.LP_TemporaryStatSet;
 import com.msemu.world.client.character.AttackInfo;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.HitInfo;
 import com.msemu.world.client.character.MobAttackInfo;
-import com.msemu.world.client.character.skills.Option;
-import com.msemu.world.client.character.skills.Skill;
-import com.msemu.world.client.character.skills.TemporaryStatManager;
-import com.msemu.world.client.field.Field;
 import com.msemu.world.client.character.jobs.JobHandler;
+import com.msemu.world.client.character.skill.Option;
+import com.msemu.world.client.character.skill.Skill;
+import com.msemu.world.client.character.skill.TemporaryStatManager;
+import com.msemu.world.client.field.Field;
 import com.msemu.world.client.life.AffectedArea;
 import com.msemu.world.client.life.Mob;
 import com.msemu.world.client.life.skills.MobTemporaryStat;
 import com.msemu.world.data.SkillData;
 import com.msemu.world.enums.ChatMsgType;
-import com.msemu.commons.data.enums.MobStat;
-import com.msemu.core.network.packets.out.wvscontext.LP_ModCombo;
-import com.msemu.core.network.packets.out.wvscontext.LP_TemporaryStatSet;
+import com.msemu.world.enums.Stat;
 
 import java.util.Arrays;
 
 import static com.msemu.commons.data.enums.SkillStat.*;
-import static com.msemu.world.client.character.skills.CharacterTemporaryStat.*;
+import static com.msemu.world.client.character.skill.CharacterTemporaryStat.*;
 
 /**
  * Created by Weber on 2018/4/13.
@@ -93,7 +94,7 @@ public class Aran extends JobHandler {
     public static final int 極速巔峰_目標鎖定 = 21120019;
 
 
-    private int[] buffs = new int[] {
+    private int[] buffs = new int[]{
             神速之矛,
             強化連擊,
             寒冰屬性,
@@ -103,14 +104,14 @@ public class Aran extends JobHandler {
             英雄誓言,
     };
 
-    private int[] addedSkills = new int[] {
+    private int[] addedSkills = new int[]{
             返回瑞恩,
             找回記憶,
             戰鬥衝刺,
     };
 
     public static int getOriginalSkillByID(int skillID) {
-        switch(skillID) {
+        switch (skillID) {
             case 猛擲之矛_COMBO:
                 return 猛擲之矛;
             case 終極之矛_COMBO:
@@ -127,11 +128,11 @@ public class Aran extends JobHandler {
 
     public Aran(Character character) {
         super(character);
-        if(isHandlerOfJob(character.getJob())) {
+        if (isHandlerOfJob(character.getJob())) {
             Arrays.stream(addedSkills).forEach(skillId -> {
-                if(!character.hasSkill(skillId)) {
+                if (!character.hasSkill(skillId)) {
                     Skill skill = SkillData.getInstance().getSkillById(skillId);
-                    if(skill == null)
+                    if (skill == null)
                         return;
                     skill.setCurrentLevel(skill.getMasterLevel());
                     character.addSkill(skill);
@@ -217,10 +218,10 @@ public class Aran extends JobHandler {
         Option o = new Option();
         SkillInfo comboInfo = SkillData.getInstance().getSkillInfoById(矛之鬥氣);
         int amount = 1;
-        if(!getCharacter().hasSkill(矛之鬥氣)) {
+        if (!getCharacter().hasSkill(矛之鬥氣)) {
             return;
         }
-        if(tsm.hasStat(ComboAbilityBuff)) {
+        if (tsm.hasStat(ComboAbilityBuff)) {
             amount = tsm.getOption(ComboAbilityBuff).nOption;
             if (amount < comboInfo.getValue(s2, getCharacter().getSkill(矛之鬥氣).getCurrentLevel())) {
                 amount = attackInfo.mobAttackInfo.size();
@@ -289,9 +290,9 @@ public class Aran extends JobHandler {
         }
         if (hasHitMobs) {
             handleComboAbility(tsm, attackInfo);
-            if(character.hasSkill(鬥氣爆發)) {
+            if (character.hasSkill(鬥氣爆發)) {
                 if (tsm.getOption(ComboAbilityBuff).nOption > 999) {
-                    if(character.hasSkill(鬥氣爆發)) {
+                    if (character.hasSkill(鬥氣爆發)) {
                         tsm.getOption(ComboAbilityBuff).nOption = 1000;
                         handleAdrenalinRush(skillID, tsm);
                         getClient().write(new LP_TemporaryStatSet(tsm));
@@ -314,7 +315,7 @@ public class Aran extends JobHandler {
                 getClient().write(new LP_TemporaryStatSet(tsm));
                 break;
             case 突刺之矛_COMBO: //TODO  Leaves an ice trail behind that freezes enemies
-                for(MobAttackInfo mai : attackInfo.mobAttackInfo) {
+                for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
                     int hcProp = 5; //hcProp is defined yet still gives NPEs
                     int hcTime = 10; //hcTime is defined yet still gives NPEs
                     if (Rand.getChance(hcProp)) {
@@ -328,7 +329,7 @@ public class Aran extends JobHandler {
                 }
                 break;
             case ROLLING_SPIN_COMBO:
-                for(MobAttackInfo mai : attackInfo.mobAttackInfo) {
+                for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
                     int prop = 30; //Prop value never given, so I decided upon 30%.
                     int time = 3; //Time value never given, so I decided upon 3 seconds.
                     if (Rand.getChance(prop)) {
@@ -342,7 +343,7 @@ public class Aran extends JobHandler {
                 }
                 break;
             case 終極之矛_COMBO:
-                for(MobAttackInfo mai : attackInfo.mobAttackInfo) {
+                for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
                     int prop = 30; //Prop value never given, so I decided upon 30%.
                     int time = 3; //Time value never given, so I decided upon 3 seconds.
                     if (Rand.getChance(prop)) {
@@ -356,7 +357,7 @@ public class Aran extends JobHandler {
                 }
                 break;
             case 終極之矛_粉碎震撼_COMBO:
-                for(MobAttackInfo mai : attackInfo.mobAttackInfo) {
+                for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
                     int prop = 30; //Prop value never given, so I decided upon 30%.
                     int time = 3; //Time value never given, so I decided upon 3 seconds.
                     if (Rand.getChance(prop)) {
@@ -370,10 +371,10 @@ public class Aran extends JobHandler {
                 }
                 break;
             case 鬥氣審判_COMBO_下:
-                for(MobAttackInfo mai : attackInfo.mobAttackInfo) {
+                for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
                     int hcProp = 5; //hcProp is defined yet still gives NPEs
                     int hcTime = 2; //hcTime is defined yet still gives NPE
-                    if(Rand.getChance(hcProp/*si.getValue(hcProp, slv)*/)) {
+                    if (Rand.getChance(hcProp/*si.getValue(hcProp, slv)*/)) {
                         Mob mob = (Mob) character.getField().getLifeByObjectID(mai.getObjectID());
                         MobTemporaryStat mts = mob.getTemporaryStat();
                         o1.nOption = 1;
@@ -388,10 +389,10 @@ public class Aran extends JobHandler {
                 }
                 break;
             case 鬥氣審判_COMBO_左:
-                for(MobAttackInfo mai : attackInfo.mobAttackInfo) {
+                for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
                     int hcProp = 5; //hcProp is defined yet still gives NPE
                     int hcTime = 2; //hcTime is defined yet still gives NPE
-                    if(Rand.getChance(hcProp/*si.getValue(hcProp, slv)*/)) {
+                    if (Rand.getChance(hcProp/*si.getValue(hcProp, slv)*/)) {
                         Mob mob = (Mob) character.getField().getLifeByObjectID(mai.getObjectID());
                         MobTemporaryStat mts = mob.getTemporaryStat();
                         o1.nOption = 1;
@@ -406,10 +407,10 @@ public class Aran extends JobHandler {
                 }
                 break;
             case 鬥氣審判_COMBO_右:
-                for(MobAttackInfo mai : attackInfo.mobAttackInfo) {
+                for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
                     int hcProp = 5; //hcProp is defined yet still gives NPEs
                     int hcTime = 2; //hcTime is defined yet still gives NPE
-                    if(Rand.getChance(hcProp/*si.getValue(hcProp, slv)*/)) {
+                    if (Rand.getChance(hcProp/*si.getValue(hcProp, slv)*/)) {
                         Mob mob = (Mob) character.getField().getLifeByObjectID(mai.getObjectID());
                         MobTemporaryStat mts = mob.getTemporaryStat();
                         o1.nOption = 1;
@@ -484,5 +485,14 @@ public class Aran extends JobHandler {
     @Override
     public void handleHitPacket(InPacket inPacket, HitInfo hitInfo) {
 
+    }
+
+    @Override
+    public void handleLevelUp() {
+        int addedMaxHp = Rand.get(50, 52);
+        int addedMaxMp = Rand.get(4, 6);
+        getCharacter().addStat(Stat.AP, 5);
+        getCharacter().addStat(Stat.MAX_HP, addedMaxHp);
+        getCharacter().addStat(Stat.MAX_MP, addedMaxMp);
     }
 }

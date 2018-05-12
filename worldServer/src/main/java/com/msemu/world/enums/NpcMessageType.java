@@ -8,7 +8,7 @@ import lombok.Getter;
 public enum NpcMessageType {
     NM_SAY_OK(0, false, false),
     NM_SAY_NEXT(0, false, true),
-    NM_SAT_PREV(0, true, false),
+    NM_SAY_PREV(0, true, false),
     NM_SAY(0, true, true),
     NM_UNK_1(1),
     NM_SAY_IMAGE(2),

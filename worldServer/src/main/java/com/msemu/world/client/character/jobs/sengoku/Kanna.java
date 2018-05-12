@@ -7,9 +7,9 @@ import com.msemu.world.client.character.AttackInfo;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.HitInfo;
 import com.msemu.world.client.character.MobAttackInfo;
-import com.msemu.world.client.character.skills.Option;
-import com.msemu.world.client.character.skills.Skill;
-import com.msemu.world.client.character.skills.TemporaryStatManager;
+import com.msemu.world.client.character.skill.Option;
+import com.msemu.world.client.character.skill.Skill;
+import com.msemu.world.client.character.skill.TemporaryStatManager;
 import com.msemu.world.client.field.Field;
 import com.msemu.world.client.character.jobs.JobHandler;
 import com.msemu.world.client.life.AffectedArea;
@@ -24,7 +24,7 @@ import com.msemu.core.network.packets.out.user.LP_FoxManEnterField;
 import com.msemu.core.network.packets.out.wvscontext.LP_TemporaryStatSet;
 
 import static com.msemu.commons.data.enums.SkillStat.*;
-import static com.msemu.world.client.character.skills.CharacterTemporaryStat.*;
+import static com.msemu.world.client.character.skill.CharacterTemporaryStat.*;
 
 /**
  * Created by Weber on 2018/4/14.

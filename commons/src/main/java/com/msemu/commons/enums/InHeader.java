@@ -10,7 +10,7 @@ import java.util.List;
  * Created by Weber on 2018/3/29.
  */
 public enum InHeader implements IHeader {
-    CP_DummyMode(ClientState.values()),
+    CP_DummyCode(ClientState.values()),
     CP_SocketBegin,
     CP_ClientStart(ClientState.CONNECTED),
     CP_CheckOTPForWebLaunchingRequest(ClientState.CONNECTED),
@@ -477,5 +477,18 @@ public enum InHeader implements IHeader {
         List<InHeader> spam = Arrays.asList(
         );
         return spam.contains(inHeaderByOp);
+    }
+
+    public boolean ignoreDebug() {
+        switch (this.name()) {
+            case "CP_MobMove":
+            case "CP_UserMove":
+            case "CP_UserMeleeAttack":
+            case "CP_DummyCode":
+            case "CP_UserChangeStatRequest":
+                return true;
+            default:
+                return false;
+        }
     }
 }
