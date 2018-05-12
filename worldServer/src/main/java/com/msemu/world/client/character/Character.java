@@ -562,7 +562,7 @@ public class Character {
 
     public void addStat(Map<Stat, Integer> stats) {
         Map<Stat, Integer> after = new EnumMap<>(Stat.class);
-        for(Map.Entry<Stat, Integer> entry : stats.entrySet()) {
+        for (Map.Entry<Stat, Integer> entry : stats.entrySet()) {
             after.put(entry.getKey(), getStat(entry.getKey()) + entry.getValue());
         }
         setStat(after);
@@ -789,7 +789,7 @@ public class Character {
             stats.put(Stat.MONEY, newMoney);
             write(new LP_StatChanged(stats));
         }
-        if(showInChat) {
+        if (showInChat) {
             write(new LP_Message(new IncMoneyMessage(amount)));
         } else {
             write(new LP_Message(new MoneyDropPickUpMessage(amount)));
@@ -885,6 +885,14 @@ public class Character {
             oldSkill.setCurrentLevel(skill.getCurrentLevel());
             oldSkill.setMasterLevel(skill.getMasterLevel());
         }
+        write(new LP_ChangeSkillRecordResult(getSkills(), true,
+                false, false, false));
+    }
+
+    public void teachSkill(Skill skill) {
+        addSkill(skill);
+        write(new LP_ChangeSkillRecordResult(getSkills(), true,
+                false, false, false));
     }
 
     /**

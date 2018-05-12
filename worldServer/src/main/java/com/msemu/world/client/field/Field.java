@@ -631,4 +631,12 @@ public class Field {
 
 
     }
+
+    public void reset() {
+        reset(true);
+    }
+
+    public void reset(boolean respawn) {
+        getMobs().forEach();
+    }
 }

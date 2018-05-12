@@ -62,11 +62,7 @@ public class Quest {
     }
 
     public String getQrValue() {
-        StringBuilder sb = new StringBuilder();
-        getProgressRequirements().stream().filter(qpr -> qpr instanceof IQuestValueRequirement).forEach(qpr -> {
-            sb.append(StringUtils.getLeftPaddedStr(((IQuestValueRequirement) qpr).getValue(), '0', 3));
-        });
-        return sb.toString();
+        return qrValue;
     }
 
     public QuestStatus getStatus() {

@@ -5,20 +5,25 @@ function start() {
 function action(mode, type, selection) {
     if (mode == 1) {
         status++;
-    } else {
+    } else if (mode == 0) {
         status--;
+    } else {
+        cm.dispose()
+        return;
     }
-
-    if(cm.hasQuestInProgress(21002)) {
+    if(!cm.hasQuestInProgress(21000)) {
         if (status == 0) {
             cm.sayNext("您醒了， 狂狼勇士。 受傷的傷口還好嗎？…什麼？你說現在的情況嗎？");
         } else if (status == 1) {
             cm.sayPrevNext("逃難的準備幾乎都做好了。可以搭載的人全部都坐上方舟了。 逃生船飛行期間會由神獸守護，沒什麼好擔心的。現在只要收拾好就會立刻出發前往維多利亞島。");
         } else if (status == 2) {
             cm.sayPrevNext("狂狼勇士的同伴嗎…？他們…去找黑魔法師了。在我們逃難的期間會阻止黑魔法師…什麼？連你也要去找黑魔法師？不行！你不是受了傷嗎？跟我們一起逃亡吧！");
-        } else {
-            cm.setQuestRecordEx(21002, "1");
+        } else if (status == 3) {
+            cm.setQuestRecord(21002, "1");
+            cm.startQuest(21002);
             cm.showReservedEffect("Effect/Direction1.img/aranTutorial/Trio");
+            cm.dispose();
+        } else {
             cm.dispose();
         }
     } else {

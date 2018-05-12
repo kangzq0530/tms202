@@ -32,7 +32,7 @@ public class CP_UserChat extends InPacket<GameClient> {
         Character chr = getClient().getCharacter();
         // TODO 指令系統
 
-
+        chr.getScriptManager().stopScript();
         OutPacket<GameClient> chatPacket = new LP_UserChat(chr.getId(), text, onlyBallon);
         chr.getField().broadcastPacket(chatPacket);
     }

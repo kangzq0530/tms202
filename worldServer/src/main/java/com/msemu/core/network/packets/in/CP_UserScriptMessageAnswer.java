@@ -14,7 +14,7 @@ public class CP_UserScriptMessageAnswer extends InPacket<GameClient> {
 
     private byte action = -1;
 
-    private int selection = 0;
+    private int selection = -1;
 
     private String text;
 

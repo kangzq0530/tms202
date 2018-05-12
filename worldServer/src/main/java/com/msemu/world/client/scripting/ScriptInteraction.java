@@ -28,6 +28,7 @@ import com.msemu.world.client.character.party.Party;
 import com.msemu.world.client.character.party.PartyMember;
 import com.msemu.world.client.character.quest.Quest;
 import com.msemu.world.client.character.quest.QuestManager;
+import com.msemu.world.client.character.skill.Skill;
 import com.msemu.world.client.field.Field;
 import com.msemu.world.client.field.effect.MobHPTagFieldEffect;
 import com.msemu.world.client.field.effect.ObjectFieldEffect;
@@ -38,6 +39,7 @@ import com.msemu.world.client.life.Npc;
 import com.msemu.world.data.MobData;
 import com.msemu.world.data.NpcData;
 import com.msemu.world.data.QuestData;
+import com.msemu.world.data.SkillData;
 import com.msemu.world.enums.*;
 import lombok.Getter;
 
@@ -76,12 +78,22 @@ public class ScriptInteraction {
             this.speakerTemplateID = parentID;
         } else if (scriptType.equals(ScriptType.QUEST)) {
             QuestInfo qi = QuestData.getInstance().getQuestInfoById(parentID);
-            Optional<QuestNpcReqData> rData = qi.getCompleteReqsData().stream()
-                    .filter(req -> req.getType().equals(QuestRequirementDataType.npc))
-                    .map(req -> (QuestNpcReqData) req)
-                    .findFirst();
-            if (rData.isPresent()) {
-                speakerTemplateID = rData.get().getNpcId();
+            if(scriptName.endsWith(ScriptManager.QUEST_COMPLETE_SCRIPT_END_TAG)) {
+                Optional<QuestNpcReqData> rData = qi.getCompleteReqsData().stream()
+                        .filter(req -> req.getType().equals(QuestRequirementDataType.npc))
+                        .map(req -> (QuestNpcReqData) req)
+                        .findFirst();
+                if (rData.isPresent()) {
+                    speakerTemplateID = rData.get().getNpcId();
+                }
+            } else if (scriptName.endsWith(ScriptManager.QUEST_START_SCRIPT_END_TAG)) {
+                Optional<QuestNpcReqData> rData = qi.getStartReqsData().stream()
+                        .filter(req -> req.getType().equals(QuestRequirementDataType.npc))
+                        .map(req -> (QuestNpcReqData) req)
+                        .findFirst();
+                if (rData.isPresent()) {
+                    speakerTemplateID = rData.get().getNpcId();
+                }
             }
         }
     }
@@ -129,6 +141,19 @@ public class ScriptInteraction {
 
     public void giveExp(int deltaExp) {
         getCharacter().addExp(deltaExp);
+    }
+
+    public void teachSkill(int skillID, int level) {
+        Skill skill = SkillData.getInstance().getSkillById(skillID);
+        skill.setCurrentLevel(level);
+        getCharacter().teachSkill(skill);
+    }
+
+    public void teachSkill(int skillID, int level, int masterLevel) {
+        Skill skill = SkillData.getInstance().getSkillById(skillID);
+        skill.setCurrentLevel(level);
+        skill.setMasterLevel(masterLevel);
+        getCharacter().teachSkill(skill);
     }
 
     public boolean isPartyLeader() {
@@ -205,6 +230,14 @@ public class ScriptInteraction {
             getCharacter().warp(field);
     }
 
+    public void resetField() {
+        resetField(getFieldID());
+    }
+
+    public void resetField(int fieldID) {
+        Field field = getChannel().getField(fieldID);
+        field.reset();
+    }
 
     public void warpParty(int id) {
         warpParty(id, true);
@@ -762,7 +795,7 @@ public class ScriptInteraction {
     public String getQuestRecordEx(int questID) {
         QuestManager qm = getCharacter().getQuestManager();
         Quest quest = qm.getQuestsList().get(questID);
-        return quest == null ? "" : quest.getQrValue();
+        return quest == null ? "" : quest.getQrExValue();
     }
 
     public void setQuestRecord(int questID, String qRValue) {
