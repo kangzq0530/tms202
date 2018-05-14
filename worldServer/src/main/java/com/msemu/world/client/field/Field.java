@@ -1,6 +1,5 @@
 package com.msemu.world.client.field;
 
-import com.msemu.commons.data.templates.field.FieldObjectInfo;
 import com.msemu.commons.data.templates.field.FieldTemplate;
 import com.msemu.commons.data.templates.field.Foothold;
 import com.msemu.commons.data.templates.field.Portal;
@@ -14,36 +13,34 @@ import com.msemu.core.network.GameClient;
 import com.msemu.core.network.packets.out.drops.LP_DropEnterField;
 import com.msemu.core.network.packets.out.drops.LP_DropLeaveField;
 import com.msemu.core.network.packets.out.field.LP_AffectedAreaCreated;
-import com.msemu.core.network.packets.out.field.LP_AffectedAreaRemoved;
 import com.msemu.core.network.packets.out.field.LP_FootHoldMove;
 import com.msemu.core.network.packets.out.field.LP_SetQuickMoveInfo;
-import com.msemu.core.network.packets.out.mob.LP_MobChangeController;
-import com.msemu.core.network.packets.out.mob.LP_MobEnterField;
-import com.msemu.core.network.packets.out.npc.LP_NpcChangeController;
-import com.msemu.core.network.packets.out.npc.LP_NpcEnterField;
-import com.msemu.core.network.packets.out.summon.LP_SummonEnterField;
-import com.msemu.core.network.packets.out.summon.LP_SummonLeaveField;
 import com.msemu.core.network.packets.out.user.LP_UserEnterField;
 import com.msemu.core.network.packets.out.user.LP_UserLeaveField;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.inventory.items.Item;
 import com.msemu.world.client.character.skill.TemporaryStatManager;
-import com.msemu.world.client.life.*;
-import com.msemu.world.client.life.skills.MobTemporaryStat;
+import com.msemu.world.client.field.lifes.*;
+import com.msemu.world.client.field.spawns.AbstractSpawnPoint;
+import com.msemu.world.client.field.spawns.NpcSpawnPoint;
 import com.msemu.world.constants.FieldConstants;
 import com.msemu.world.constants.GameConstants;
 import com.msemu.world.data.ItemData;
 import com.msemu.world.data.SkillData;
-import com.msemu.world.enums.LeaveType;
+import com.msemu.world.enums.FieldObjectType;
 import com.msemu.world.enums.QuickMoveInfo;
 import com.msemu.world.enums.QuickMoveNpcInfo;
 import com.msemu.world.enums.ScriptType;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -56,16 +53,17 @@ public class Field {
     @Getter
     @Setter
     private long uniqueId;
+
     @Getter
-    private final List<Life> lifes;
+    private final Map<FieldObjectType, LinkedHashMap<Integer, AbstractFieldObject>> fieldObjects;
     @Getter
-    private final List<Character> chars;
+    private final Map<FieldObjectType, ReentrantReadWriteLock> fieldObjectLocks;
+    @Getter
+    private final List<AbstractSpawnPoint> spawnPoints = new ArrayList<>();
     @Getter
     private final List<FieldObject> objects;
     @Getter
-    private final Map<Life, Character> lifeToControllers;
-    @Getter
-    private final Map<Life, ScheduledFuture> lifeSchedules;
+    private final Map<AbstractFieldObject, ScheduledFuture> objectSchedules;
     @Setter
     private AtomicInteger objectIDCounter = new AtomicInteger(1000000);
     @Getter
@@ -78,19 +76,29 @@ public class Field {
     private boolean isUserFirstEnter;
     @Getter
     private final FootholdTree footholdTree;
+    @Getter
+    @Setter
+    private LocalDateTime lastSpawnEliteMobTime = LocalDateTime.MIN, lastSpawnTime = LocalDateTime.MIN;
+    @Getter
+    private final AtomicInteger spawnedMobOnField = new AtomicInteger(0);
 
     public Field(long uniqueId, FieldTemplate template) {
         this.uniqueId = uniqueId;
         this.fieldData = template;
-        this.lifes = new ArrayList<>();
-        this.chars = new ArrayList<>();
-        this.lifeToControllers = new HashMap<>();
         this.objects = new ArrayList<>();
-        this.lifeSchedules = new HashMap<>();
+        this.objectSchedules = new HashMap<>();
         Position lBound = new Position(fieldData.getRect().getLeft(), fieldData.getRect().getTop());
         Position rBound = new Position(fieldData.getRect().getRight(), fieldData.getRect().getBottom());
         this.footholdTree = new FootholdTree(lBound, rBound);
         this.fieldData.getFootholds().forEach(this.footholdTree::insertFoothold);
+        EnumMap<FieldObjectType, LinkedHashMap<Integer, AbstractFieldObject>> objectsMap = new EnumMap<>(FieldObjectType.class);
+        EnumMap<FieldObjectType, ReentrantReadWriteLock> objectLockMap = new EnumMap<>(FieldObjectType.class);
+        Arrays.stream(FieldObjectType.values()).forEach(type -> {
+            objectsMap.put(type, new LinkedHashMap<>());
+            objectLockMap.put(type, new ReentrantReadWriteLock());
+        });
+        this.fieldObjects = Collections.unmodifiableMap(objectsMap);
+        this.fieldObjectLocks = Collections.unmodifiableMap(objectLockMap);
     }
 
     public int getWidth() {
@@ -155,130 +163,22 @@ public class Field {
         return getFootholdTree().findBelow(pos, false);
     }
 
-    /**
-     * Add a Life object to this map
-     *
-     * @param life the life object
-     * @see Npc
-     * @see Mob
-     * @see Summon
-     */
-    public void addLife(Life life) {
-        if (life.getObjectId() < 0) {
-            life.setObjectId(getNewObjectID());
-        }
-        if (!getLifes().contains(life)) {
-            getLifes().add(life);
-            life.setField(this);
-        }
-    }
-
-    public void removeLife(int id) {
-        Life life = getLifeByObjectID(id);
-        if (life == null) {
-            return;
-        }
-        getLifes().remove(life);
-    }
-
-    public void spawnSummon(Summon summon) {
-        Summon oldSummon = (Summon) getLifes().stream()
-                .filter(s -> s instanceof Summon &&
-                        ((Summon) s).getCharID() == summon.getCharID() &&
-                        ((Summon) s).getSkillID() == summon.getSkillID())
-                .findFirst().orElse(null);
-        if (oldSummon != null) {
-            removeLife(oldSummon.getObjectId(), false);
-        }
-        spawnLife(summon, null);
-    }
-
-    public void spawnAddSummon(Summon summon) { //Test
-        spawnLife(summon, null);
-    }
-
-    public void spawnLife(Life life, Character onlyChar) {
-        addLife(life);
-        if (getCharacters().size() > 0) {
-            Character controller = null;
-            if (getLifeToControllers().containsKey(life)) {
-                controller = getLifeToControllers().get(life);
-            }
-            if (controller == null) {
-                controller = getCharacters().get(0);
-                putLifeController(life, controller);
-            }
-            Mob mob = null;
-            if (life instanceof Mob) {
-                mob = (Mob) life;
-                mob.setTemporaryStat(new MobTemporaryStat(mob));
-            }
-            if (mob != null) {
-                Position pos = mob.getPosition();
-                Foothold fh = getFootholdById(mob.getFh());
-                if (fh == null) {
-                    fh = findFootHoldBelow(pos);
-                }
-                mob.setHomeFoothold(fh.deepCopy());
-                mob.setCurFoodhold(fh.deepCopy());
-                if (onlyChar == null) {
-                    for (Character chr : getCharacters()) {
-                        chr.write(new LP_MobEnterField(mob, false));
-                        chr.write(new LP_MobChangeController(mob, false, controller == chr));
-                    }
-                } else {
-                    onlyChar.getClient().write(new LP_MobEnterField(mob, false));
-                    onlyChar.getClient().write(new LP_MobChangeController(mob, false, controller == onlyChar));
-                }
-            }
-            if (life instanceof Summon) {
-                Summon summon = (Summon) life;
-                if (summon.getSummonTerm() > 0) {
-                    ScheduledFuture sf = EventManager.getInstance().addEvent(() -> removeLife(summon.getObjectId(), true), summon.getSummonTerm());
-                    addLifeSchedule(summon, sf);
-                }
-                broadcastPacket(new LP_SummonEnterField(summon.getCharID(), summon));
-            }
-            if (life instanceof Npc) {
-                Npc npc = (Npc) life;
-                for (Character chr : getCharacters()) {
-                    chr.write(new LP_NpcEnterField(npc));
-                    chr.write(new LP_NpcChangeController(npc, true));
-                }
-            }
-        }
-    }
-
-    private void removeLife(Life life) {
-        if (getLifes().contains(life)) {
-            getLifes().remove(life);
-        }
-    }
 
     public Foothold getFootholdById(int fh) {
         return getFootholdTree().getFootholdById(fh);
     }
 
-    public List<Character> getCharacters() {
-        return chars;
-    }
-
-    public Character getCharByID(int id) {
-        return getCharacters().stream().filter(c -> c.getId() == id).findFirst().orElse(null);
-    }
-
     public void addCharacter(Character chr) {
+        chr.setField(this);
+        updateCharacterPosition(chr);
         if (!getCharacters().contains(chr)) {
-            getCharacters().add(chr);
-
+            addFieldObject(chr);
             if (!isUserFirstEnter() && hasUserFirstEnterScript()) {
                 chr.getScriptManager().startScript(getId(), getOnFirstUserEnter(), ScriptType.FIELD);
             }
-
             if (chr.getParty() != null) {
                 chr.getParty().updateFull();
             }
-
             QuickMoveInfo quickMoveInfo = QuickMoveInfo.getByMap(getId());
             if (quickMoveInfo != null) {
                 List<QuickMoveNpcInfo> quickMoveNpcInfos = new LinkedList<>();
@@ -300,7 +200,7 @@ public class Field {
 
             FieldTemplate ft = getFieldData();
             EventManager em = EventManager.getInstance();
-            if(ft.getTimeLimit() > 0 && ft.getReturnMap() > 0) {
+            if (ft.getTimeLimit() > 0 && ft.getReturnMap() > 0) {
                 //TODO 計時回地圖
             } else if (ft.getTimeLimit() > 0 && ft.getForcedReturn() > 0) {
                 //TODO 計時回地圖
@@ -310,10 +210,9 @@ public class Field {
 
             List<FieldObject> movingPlatforms = getObjects().stream()
                     .filter(FieldObject::isMove).collect(Collectors.toList());
-            if(!movingPlatforms.isEmpty()) {
+            if (!movingPlatforms.isEmpty()) {
                 chr.write(new LP_FootHoldMove(movingPlatforms));
             }
-
 
 
             //TODO  處理事件腳本
@@ -323,8 +222,6 @@ public class Field {
             //叫出花狐 龍
 
             // 強化任意門剩餘次數
-
-
 
 
         }
@@ -341,53 +238,10 @@ public class Field {
         );
     }
 
-    public void removeCharacter(Character chr) {
-        if (getCharacters().contains(chr)) {
-            getCharacters().remove(chr);
-            broadcastPacket(new LP_UserLeaveField(chr), chr);
-        }
-        getLifeToControllers().entrySet().stream().filter(entry -> entry.getValue() != null && entry.getValue().equals(chr)).forEach(entry -> {
-            putLifeController(entry.getKey(), null);
-        });
-    }
-
-    public void putLifeController(Life life, Character chr) {
-        getLifeToControllers().put(life, chr);
-    }
-
-    public Character getLifeController(Life life) {
-        return getLifeToControllers().getOrDefault(life, null);
-    }
-
-    public Life getLifeByObjectID(int objectID) {
-        return getLifes().stream()
-                .filter(life -> life.getObjectId() == objectID)
-                .findFirst().orElse(null);
-    }
-
-    public Npc getNpcByObjectID(int objectID) {
-        return getLifes().stream()
-                .filter(life -> life instanceof Npc && life.getObjectId() == objectID)
-                .map(life -> (Npc) life)
-                .findFirst().orElse(null);
-    }
-
-    public void spawnAllLifeForChar(Character chr) {
-        for (Life life : getLifes()) {
-            spawnLife(life, chr);
-        }
-    }
 
     @Override
     public String toString() {
-        return "[field] ID = " + getId();
-    }
-
-    public void respawn(Mob mob) {
-        mob.setHp(mob.getMaxHp());
-        mob.setMp(mob.getMaxMp());
-        mob.setPosition(mob.getHomePosition().deepCopy());
-        spawnLife(mob, null);
+        return String.format("[地圖] %s(%d)s", fieldData.getName(), fieldData.getId());
     }
 
     public void broadcastPacket(OutPacket<GameClient> outPacket) {
@@ -396,88 +250,63 @@ public class Field {
         }
     }
 
-    public void spawnAffectedArea(AffectedArea aa) {
-        addLife(aa);
-        SkillInfo si = SkillData.getInstance().getSkillInfoById(aa.getSkillID());
+    public void spawnAffectedArea(AffectedArea affectedArea) {
+        addFieldObject(affectedArea);
+        SkillInfo si = SkillData.getInstance().getSkillInfoById(affectedArea.getSkillID());
         if (si != null) {
-            int duration = si.getValue(time, aa.getSlv()) * 1000;
-            ScheduledFuture sf = EventManager.getInstance().addEvent(() -> removeLife(aa.getObjectId(), true), duration);
-            addLifeSchedule(aa, sf);
+            int duration = si.getValue(time, affectedArea.getSlv()) * 1000;
+            ScheduledFuture sf = EventManager.getInstance().addEvent(() -> {
+                removeSchedule(affectedArea, true);
+                removeFieldObject(affectedArea);
+            }, duration);
+            addLifeSchedule(affectedArea, sf);
         }
-        broadcastPacket(new LP_AffectedAreaCreated(aa));
-        getCharacters().forEach(chr -> aa.getField().checkCharInAffectedAreas(chr));
-        getMobs().forEach(mob -> aa.getField().checkMobInAffectedAreas(mob));
+        broadcastPacket(new LP_AffectedAreaCreated(affectedArea));
+        getCharacters().forEach(chr -> affectedArea.getField().checkCharInAffectedAreas(chr));
+        getMobs().forEach(mob -> affectedArea.getField().checkMobInAffectedAreas(mob));
     }
 
-    public List<Mob> getMobs() {
-        return getLifes().stream().filter(life -> life instanceof Mob).map(l -> (Mob) l).collect(Collectors.toList());
+
+    public void spawnSummon(Summon summon) {
+        summon.setField(this);
+        addFieldObject(summon);
     }
+
+    public void spawnMob(Mob mob) {
+        if (getMobs().contains(mob))
+            return;
+        mob.setObjectId(getNewObjectID());
+        mob.setField(this);
+        addFieldObject(mob);
+    }
+
 
     public int getNewObjectID() {
         return objectIDCounter.getAndIncrement();
     }
 
-    public List<Life> getLifesInRect(Rect rect) {
-        List<Life> lifes = new ArrayList<>();
-        for (Life life : getLifes()) {
-            Position position = life.getPosition();
-            int x = position.getX();
-            int y = position.getY();
-            if (x >= rect.getLeft() && y >= rect.getTop()
-                    && x <= rect.getRight() && y <= rect.getBottom()) {
-                lifes.add(life);
-            }
-        }
-        return lifes;
-    }
-
-    public synchronized void removeLife(Integer id, Boolean fromSchedule) {
-        Life life = getLifeByObjectID(id);
-        if (life == null) {
-            return;
-        }
-        removeLife(id);
-        removeSchedule(life, fromSchedule);
-        if (life instanceof Summon) {
-            Summon summon = (Summon) life;
-            broadcastPacket(new LP_SummonLeaveField(summon, LeaveType.ANIMATION));
-        } else if (life instanceof AffectedArea) {
-            AffectedArea aa = (AffectedArea) life;
-            broadcastPacket(new LP_AffectedAreaRemoved(aa, false));
-            for (Character chr : getCharacters()) {
-                TemporaryStatManager tsm = chr.getTemporaryStatManager();
-                if (tsm.hasAffectedArea(aa)) {
-                    tsm.removeStatsBySkill(aa.getSkillID());
-                }
-            }
-        }
-    }
 
     public synchronized void removeDrop(Integer dropID, Integer pickupUserID, Boolean fromSchedule) {
-        Life life = getLifeByObjectID(dropID);
-        if (life instanceof Drop) {
-            broadcastPacket(new LP_DropLeaveField(dropID, pickupUserID));
-            removeLife(dropID, fromSchedule);
-        }
+        AbstractFieldObject object = getFieldObjectsByKey(FieldObjectType.DROP, dropID);
+        broadcastPacket(new LP_DropLeaveField(dropID, pickupUserID));
+        removeSchedule(object, fromSchedule);
+        removeFieldObject(object);
     }
 
-    public void addLifeSchedule(Life life, ScheduledFuture scheduledFuture) {
-        getLifeSchedules().put(life, scheduledFuture);
+    public void addLifeSchedule(AbstractFieldObject object, ScheduledFuture scheduledFuture) {
+        getObjectSchedules().put(object, scheduledFuture);
     }
 
-    public void removeSchedule(Life life, boolean fromSchedule) {
-        if (!getLifeSchedules().containsKey(life)) {
+    public void removeSchedule(AbstractFieldObject life, boolean fromSchedule) {
+        if (!getObjectSchedules().containsKey(life)) {
             return;
         }
         if (!fromSchedule) {
-            getLifeSchedules().get(life).cancel(false);
+            getObjectSchedules().get(life).cancel(false);
         }
-        getLifeSchedules().remove(life);
+        getObjectSchedules().remove(life);
     }
 
-    public List<AffectedArea> getAffectedAreas() {
-        return getLifes().stream().filter(life -> life instanceof AffectedArea).map(l -> (AffectedArea) l).collect(Collectors.toList());
-    }
 
     public void checkMobInAffectedAreas(Mob mob) {
         getAffectedAreas().stream().filter(aa -> aa.getRect().hasPositionInside(mob.getPosition())).forEach(aa -> {
@@ -510,7 +339,7 @@ public class Field {
      * @param posTo   The Position where the drop lands.
      */
     public void drop(Drop drop, Position posFrom, Position posTo) {
-        addLife(drop);
+        addFieldObject(drop);
         broadcastPacket(new LP_DropEnterField(drop, posFrom, posTo, 0));
     }
 
@@ -540,7 +369,7 @@ public class Field {
         } else {
             drop.setMoney(Rand.get(dropInfo.getMinQuantity(), dropInfo.getMaxQuantity()));
         }
-        addLife(drop);
+        addFieldObject(drop);
         broadcastWithPredicate(new LP_DropEnterField(drop, posFrom, posTo, ownerID),
                 (Character chr) -> dropInfo.getQuestReq() == 0 || chr.hasQuestInProgress(dropInfo.getQuestReq()));
     }
@@ -596,8 +425,8 @@ public class Field {
     public List<Portal> getPortalsInRange(Rect rect) {
         List<Portal> portals = new ArrayList<>();
         for (Portal portals2 : getPortals()) {
-            int x = portals2.getX();
-            int y = portals2.getY();
+            int x = portals2.getPosition().getX();
+            int y = portals2.getPosition().getY();
             if (x >= rect.getLeft() && y >= rect.getTop()
                     && x <= rect.getRight() && y <= rect.getBottom()) {
                 portals.add(portals2);
@@ -622,11 +451,6 @@ public class Field {
         return getFieldData().getReturnMap();
     }
 
-    public Npc getNpcByTemplateID(int npcID) {
-        return getLifes().stream().filter(life -> life instanceof Npc && life.getTemplateId() == npcID)
-                .map(life -> (Npc) life).findFirst().orElse(null);
-    }
-
     public void startTimeLimitTask(int time, Field toField) {
 
 
@@ -637,6 +461,300 @@ public class Field {
     }
 
     public void reset(boolean respawn) {
-        getMobs().forEach();
+
+    }
+
+    public int getPartyBonusRate() {
+        return getFieldData().getPartyBonusR();
+    }
+
+    public int getFixedMob() {
+        return getFieldData().getFixedMobCapacity();
+    }
+
+    public void respawn(boolean force) {
+        respawn(LocalDateTime.now(), force);
+    }
+
+    public void respawn(LocalDateTime now, boolean force) {
+        getSpawnPoints().stream()
+                .filter(spawnPoint -> spawnPoint instanceof NpcSpawnPoint)
+                .forEach(spawnPoint -> {
+                    if (spawnPoint.shouldSpawn(now)) {
+                        spawnPoint.spawn(this);
+                    }
+                });
+        int mobSpawnCount = (int) getSpawnPoints()
+                .stream()
+                .filter(spawnPoint -> !(spawnPoint instanceof NpcSpawnPoint)).count();
+        int maxSpawned = (mobSpawnCount >= 20 || getPartyBonusRate() > 0) ? Math.round(mobSpawnCount / getMobRate())
+                : (int) Math.ceil(mobSpawnCount * getMobRate());
+
+        if (getFixedMob() > 0)
+            maxSpawned = getFixedMob();
+
+        maxSpawned = Math.max(2, maxSpawned);
+        maxSpawned = Math.min(10, maxSpawned);
+
+        maxSpawned -= spawnedMobOnField.get();
+
+        List<AbstractSpawnPoint> randomMobSpawn = getSpawnPoints()
+                .stream()
+                .filter(spawnPoint -> !(spawnPoint instanceof NpcSpawnPoint) && spawnPoint.shouldSpawn(now))
+                .collect(Collectors.toList());
+        Collections.shuffle(randomMobSpawn);
+
+        int hasMobSpawned = 0;
+
+        for (AbstractSpawnPoint spawnPoint : randomMobSpawn) {
+            spawnPoint.spawn(this);
+            hasMobSpawned++;
+            if (hasMobSpawned >= maxSpawned)
+                break;
+        }
+
+    }
+
+    public void updateMobController(Mob mob) {
+        if (!mob.isAlive() || mob.isEscort()) {
+            return;
+        }
+        if (mob.getController() != null) {
+            mob.getController().stopControllingMob(mob);
+        }
+        int mincontrolled = -1;
+        Character newController = null;
+        getFieldObjectWriteLock(FieldObjectType.CHARACTER).lock();
+        try {
+            List<Character> characters = getCharacters();
+            final Iterator<Character> ltr = characters.iterator();
+            Character chr;
+            while (ltr.hasNext()) {
+                chr = ltr.next();
+                if ((chr.getControlledMobs().size() < mincontrolled || mincontrolled == -1) && chr.getPosition().distanceSq(mob.getPosition()) <= GameConstants.maxViewRangeSq()) {
+                    mincontrolled = chr.getControlledMobs().size();
+                    newController = chr;
+                }
+            }
+        } finally {
+            getFieldObjectWriteLock(FieldObjectType.CHARACTER).unlock();
+        }
+        if (newController != null) {
+            if (mob.isFirstAttack()) {
+                newController.controlMob(mob, 2);
+            } else {
+                newController.controlMob(mob, 1);
+            }
+        } else {
+        }
+
+    }
+
+    public Lock getFieldObjectReadLock(FieldObjectType type) {
+        return getFieldObjectLocks().get(type).readLock();
+    }
+
+    public Lock getFieldObjectWriteLock(FieldObjectType type) {
+        return getFieldObjectLocks().get(type).writeLock();
+    }
+
+    public AbstractFieldObject getFieldObjectsByKey(FieldObjectType type, Integer key) {
+        getFieldObjectReadLock(type).lock();
+        try {
+            return getFieldObjects().get(type).getOrDefault(key, null);
+        } finally {
+            getFieldObjectReadLock(type).unlock();
+        }
+    }
+
+    public Map<Integer, AbstractFieldObject> getFieldObjectsMapByType(FieldObjectType type) {
+        getFieldObjectReadLock(type).lock();
+        try {
+            return getFieldObjects().get(type);
+        } finally {
+            getFieldObjectReadLock(type).unlock();
+        }
+    }
+
+    public List<Npc> getNpcs() {
+        getFieldObjectReadLock(FieldObjectType.NPC).lock();
+        try {
+            return getFieldObjects().get(FieldObjectType.NPC).values().stream().map(o -> (Npc) o).collect(Collectors.toList());
+        } finally {
+            getFieldObjectReadLock(FieldObjectType.NPC).unlock();
+        }
+    }
+
+    public List<Mob> getMobs() {
+        getFieldObjectReadLock(FieldObjectType.MOB).lock();
+        try {
+            return getFieldObjects().get(FieldObjectType.MOB).values().stream().map(o -> (Mob) o).collect(Collectors.toList());
+        } finally {
+            getFieldObjectReadLock(FieldObjectType.MOB).unlock();
+        }
+    }
+
+
+    public List<Character> getCharacters() {
+        getFieldObjectReadLock(FieldObjectType.CHARACTER).lock();
+        try {
+            return getFieldObjects().get(FieldObjectType.CHARACTER).values().stream().map(o -> (Character) o).collect(Collectors.toList());
+        } finally {
+            getFieldObjectReadLock(FieldObjectType.CHARACTER).unlock();
+        }
+    }
+
+    public List<Drop> getDrops() {
+        getFieldObjectReadLock(FieldObjectType.DROP).lock();
+        try {
+            return getFieldObjects().get(FieldObjectType.DROP).values().stream().map(o -> (Drop) o).collect(Collectors.toList());
+        } finally {
+            getFieldObjectReadLock(FieldObjectType.DROP).unlock();
+        }
+    }
+
+    public List<AffectedArea> getAffectedAreas() {
+        getFieldObjectReadLock(FieldObjectType.AFFECTED_AREA).lock();
+        try {
+            return getFieldObjects().get(FieldObjectType.AFFECTED_AREA).values().stream().map(o -> (AffectedArea) o).collect(Collectors.toList());
+        } finally {
+            getFieldObjectReadLock(FieldObjectType.AFFECTED_AREA).unlock();
+        }
+    }
+
+
+    public Character getCharByID(int id) {
+        return getCharacters().stream()
+                .filter(chr -> chr.getId() == id)
+                .findFirst().orElse(null);
+    }
+
+    public Npc getNpcByObjectID(int objectId) {
+        return (Npc) getFieldObjectsByKey(FieldObjectType.NPC, objectId);
+    }
+
+    public Npc getNpcByTemplateId(int templateId) {
+        return getNpcs().stream()
+                .filter(npc -> npc.getTemplateId() == templateId)
+                .findFirst().orElse(null);
+    }
+
+    public Mob getMobByObjectId(int objectId) {
+        return (Mob) getFieldObjectsByKey(FieldObjectType.MOB, objectId);
+    }
+
+    public void removeCharacter(Character chr) {
+        getFieldObjectWriteLock(FieldObjectType.CHARACTER).lock();
+        try {
+            getFieldObjects().get(FieldObjectType.CHARACTER).remove(chr.getId());
+        } finally {
+            getFieldObjectWriteLock(FieldObjectType.CHARACTER).unlock();
+        }
+        broadcastPacket(new LP_UserLeaveField(chr), chr);
+        chr.getControlledMobs().forEach(mob -> {
+            if (mob.getController().equals(chr)) {
+                mob.setController(null);
+                mob.setControllerLevel(1);
+                updateMobController(mob);
+            }
+        });
+        //remove follow
+        //remove Extractor
+        //remove summon
+    }
+
+    public void addFieldObject(AbstractFieldObject object) {
+        getFieldObjectWriteLock(object.getFieldObjectType()).lock();
+        try {
+            getFieldObjects().get(object.getFieldObjectType()).put(object.getObjectId(), object);
+        } finally {
+            getFieldObjectWriteLock(object.getFieldObjectType()).unlock();
+        }
+    }
+
+    public void removeFieldObject(AbstractFieldObject object) {
+        getFieldObjectWriteLock(object.getFieldObjectType()).lock();
+        try {
+            getFieldObjects().get(object.getFieldObjectType()).remove(object.getObjectId());
+        } finally {
+            getFieldObjectWriteLock(object.getFieldObjectType()).unlock();
+        }
+    }
+
+    public void updateFieldObjectVisibility(Character character, AbstractFieldObject object) {
+        if (!character.isVisibleFieldObject(object)) {
+            if (character.getPosition().distanceSq(object.getPosition()) <= GameConstants.maxViewRangeSq()) {
+                character.addVisibleFieldObject(object);
+                object.enterScreen(character.getClient());
+            }
+        } else {
+            if (character.getPosition().distanceSq(object.getPosition()) > GameConstants.maxViewRangeSq()) {
+                character.removeVisibleFieldObject(object);
+                object.outScreen(character.getClient());
+            }
+        }
+    }
+
+    public List<AbstractFieldObject> getFieldObjectsInRange(Position position, double rangeSq) {
+        List<AbstractFieldObject> ret = new ArrayList<>();
+        Arrays.stream(FieldObjectType.values()).forEach(type -> {
+            getFieldObjectReadLock(type).lock();
+            try {
+                getFieldObjects().get(type).values().forEach(eachObject -> {
+                    if (position.distanceSq(eachObject.getPosition()) <= rangeSq) {
+                        ret.add(eachObject);
+                    }
+                });
+            } finally {
+                getFieldObjectReadLock(type).unlock();
+            }
+        });
+        return ret;
+    }
+
+    public void updateCharacterPosition(Character chr) {
+        getFieldObjectsInRange(chr.getPosition(), GameConstants.maxViewRangeSq()).forEach(object -> {
+            updateFieldObjectVisibility(chr, object);
+        });
+    }
+
+    public void addSpawnPoint(AbstractSpawnPoint spawnPoint) {
+        getSpawnPoints().add(spawnPoint);
+    }
+
+    public void update(LocalDateTime now) {
+        getDrops().forEach(drop -> {
+            if (drop.isExpired()) {
+                // expire
+            }
+        });
+        int charSize = getCharacters().size();
+
+        if (charSize > 0) {
+            if (getLastSpawnTime().plus(10 * 1000, ChronoUnit.MILLIS).isBefore(now)) {
+                respawn(now, false);
+                setLastSpawnTime(now.plus(10 * 1000, ChronoUnit.MILLIS));
+            }
+        }
+
+        getMobs().forEach(mob -> {
+            if (!mob.isAlive()) {
+                mob.die();
+            }
+        });
+    }
+
+    public void removeMob(Mob mob) {
+        removeFieldObject(mob);
+        getCharacters().forEach(chr -> {
+            chr.removeVisibleFieldObject(mob);
+        });
+    }
+
+    public void spawnNpc(Npc npc) {
+        if (getNpcs().contains(npc))
+            return;
+        npc.setObjectId(getNewObjectID());
+        addFieldObject(npc);
     }
 }

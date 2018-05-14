@@ -30,7 +30,7 @@ public class CP_UserPortalScriptRequest extends InPacket<GameClient> {
         Channel channel = getClient().getChannelInstance();
         Portal portal = chr.getField().getPortalByName(portalName);
         if(portal != null) {
-            double distance = chr.getPosition().distance(portal.getX(), portal.getY());
+            double distance = chr.getPosition().distance(portal.getPosition());
             if(distance < 3000) {
                 chr.warpPortal(portal);
             } else {

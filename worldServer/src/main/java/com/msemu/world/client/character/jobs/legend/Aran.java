@@ -1,6 +1,6 @@
 package com.msemu.world.client.character.jobs.legend;
 
-import com.msemu.commons.data.enums.MobStat;
+import com.msemu.commons.data.enums.MobBuffStat;
 import com.msemu.commons.data.templates.skill.SkillInfo;
 import com.msemu.commons.network.packets.InPacket;
 import com.msemu.commons.utils.Rand;
@@ -14,10 +14,10 @@ import com.msemu.world.client.character.jobs.JobHandler;
 import com.msemu.world.client.character.skill.Option;
 import com.msemu.world.client.character.skill.Skill;
 import com.msemu.world.client.character.skill.TemporaryStatManager;
+import com.msemu.world.client.field.AffectedArea;
 import com.msemu.world.client.field.Field;
-import com.msemu.world.client.life.AffectedArea;
-import com.msemu.world.client.life.Mob;
-import com.msemu.world.client.life.skills.MobTemporaryStat;
+import com.msemu.world.client.field.lifes.Mob;
+import com.msemu.world.client.field.lifes.skills.MobTemporaryStat;
 import com.msemu.world.data.SkillData;
 import com.msemu.world.enums.ChatMsgType;
 import com.msemu.world.enums.Stat;
@@ -319,12 +319,12 @@ public class Aran extends JobHandler {
                     int hcProp = 5; //hcProp is defined yet still gives NPEs
                     int hcTime = 10; //hcTime is defined yet still gives NPEs
                     if (Rand.getChance(hcProp)) {
-                        Mob mob = (Mob) character.getField().getLifeByObjectID(mai.getObjectID());
+                        Mob mob = character.getField().getMobByObjectId(mai.getObjectID());
                         MobTemporaryStat mts = mob.getTemporaryStat();
                         o1.nOption = 1;
                         o1.rOption = getOriginalSkillByID(skillID);
                         o1.tOption = hcTime;
-                        mts.addStatOptionsAndBroadcast(MobStat.Stun, o1);
+                        mts.addStatOptionsAndBroadcast(MobBuffStat.Stun, o1);
                     }
                 }
                 break;
@@ -333,12 +333,12 @@ public class Aran extends JobHandler {
                     int prop = 30; //Prop value never given, so I decided upon 30%.
                     int time = 3; //Time value never given, so I decided upon 3 seconds.
                     if (Rand.getChance(prop)) {
-                        Mob mob = (Mob) character.getField().getLifeByObjectID(mai.getObjectID());
+                        Mob mob = character.getField().getMobByObjectId(mai.getObjectID());
                         MobTemporaryStat mts = mob.getTemporaryStat();
                         o1.nOption = 1;
                         o1.rOption = getOriginalSkillByID(skillID);
                         o1.tOption = time;
-                        mts.addStatOptionsAndBroadcast(MobStat.Stun, o1);
+                        mts.addStatOptionsAndBroadcast(MobBuffStat.Stun, o1);
                     }
                 }
                 break;
@@ -347,12 +347,12 @@ public class Aran extends JobHandler {
                     int prop = 30; //Prop value never given, so I decided upon 30%.
                     int time = 3; //Time value never given, so I decided upon 3 seconds.
                     if (Rand.getChance(prop)) {
-                        Mob mob = (Mob) character.getField().getLifeByObjectID(mai.getObjectID());
+                        Mob mob = character.getField().getMobByObjectId(mai.getObjectID());
                         MobTemporaryStat mts = mob.getTemporaryStat();
                         o1.nOption = 1;
                         o1.rOption = getOriginalSkillByID(skillID);
                         o1.tOption = time;
-                        mts.addStatOptionsAndBroadcast(MobStat.Stun, o1);
+                        mts.addStatOptionsAndBroadcast(MobBuffStat.Stun, o1);
                     }
                 }
                 break;
@@ -361,12 +361,12 @@ public class Aran extends JobHandler {
                     int prop = 30; //Prop value never given, so I decided upon 30%.
                     int time = 3; //Time value never given, so I decided upon 3 seconds.
                     if (Rand.getChance(prop)) {
-                        Mob mob = (Mob) character.getField().getLifeByObjectID(mai.getObjectID());
+                        Mob mob = character.getField().getMobByObjectId(mai.getObjectID());
                         MobTemporaryStat mts = mob.getTemporaryStat();
                         o1.nOption = 1;
                         o1.rOption = getOriginalSkillByID(skillID);
                         o1.tOption = time;
-                        mts.addStatOptionsAndBroadcast(MobStat.Stun, o1);
+                        mts.addStatOptionsAndBroadcast(MobBuffStat.Stun, o1);
                     }
                 }
                 break;
@@ -375,14 +375,14 @@ public class Aran extends JobHandler {
                     int hcProp = 5; //hcProp is defined yet still gives NPEs
                     int hcTime = 2; //hcTime is defined yet still gives NPE
                     if (Rand.getChance(hcProp/*si.getValue(hcProp, slv)*/)) {
-                        Mob mob = (Mob) character.getField().getLifeByObjectID(mai.getObjectID());
+                        Mob mob = (Mob) character.getField().getMobByObjectId(mai.getObjectID());
                         MobTemporaryStat mts = mob.getTemporaryStat();
                         o1.nOption = 1;
                         o1.rOption = getOriginalSkillByID(skillID);
                         o1.tOption = hcTime;    //si.getValue(time, slv);
-                        mts.addStatOptionsAndBroadcast(MobStat.Freeze, o1);
+                        mts.addStatOptionsAndBroadcast(MobBuffStat.Freeze, o1);
                     } else {
-                        Mob mob = (Mob) character.getField().getLifeByObjectID(mai.getObjectID());
+                        Mob mob = (Mob) character.getField().getMobByObjectId(mai.getObjectID());
                         MobTemporaryStat mts = mob.getTemporaryStat();
                         mts.createAndAddBurnedInfo(character.getId(), skill, 1);
                     }
@@ -393,14 +393,14 @@ public class Aran extends JobHandler {
                     int hcProp = 5; //hcProp is defined yet still gives NPE
                     int hcTime = 2; //hcTime is defined yet still gives NPE
                     if (Rand.getChance(hcProp/*si.getValue(hcProp, slv)*/)) {
-                        Mob mob = (Mob) character.getField().getLifeByObjectID(mai.getObjectID());
+                        Mob mob = (Mob) character.getField().getMobByObjectId(mai.getObjectID());
                         MobTemporaryStat mts = mob.getTemporaryStat();
                         o1.nOption = 1;
                         o1.rOption = getOriginalSkillByID(skillID);
                         o1.tOption = hcTime;    //si.getValue(time, slv);
-                        mts.addStatOptionsAndBroadcast(MobStat.Freeze, o1);
+                        mts.addStatOptionsAndBroadcast(MobBuffStat.Freeze, o1);
                     } else {
-                        Mob mob = (Mob) character.getField().getLifeByObjectID(mai.getObjectID());
+                        Mob mob = (Mob) character.getField().getMobByObjectId(mai.getObjectID());
                         MobTemporaryStat mts = mob.getTemporaryStat();
                         mts.createAndAddBurnedInfo(character.getId(), skill, 1);
                     }
@@ -411,14 +411,14 @@ public class Aran extends JobHandler {
                     int hcProp = 5; //hcProp is defined yet still gives NPEs
                     int hcTime = 2; //hcTime is defined yet still gives NPE
                     if (Rand.getChance(hcProp/*si.getValue(hcProp, slv)*/)) {
-                        Mob mob = (Mob) character.getField().getLifeByObjectID(mai.getObjectID());
+                        Mob mob = (Mob) character.getField().getMobByObjectId(mai.getObjectID());
                         MobTemporaryStat mts = mob.getTemporaryStat();
                         o1.nOption = 1;
                         o1.rOption = getOriginalSkillByID(skillID);
                         o1.tOption = hcTime;    //si.getValue(time, slv);
-                        mts.addStatOptionsAndBroadcast(MobStat.Freeze, o1);
+                        mts.addStatOptionsAndBroadcast(MobBuffStat.Freeze, o1);
                     } else {
-                        Mob mob = (Mob) character.getField().getLifeByObjectID(mai.getObjectID());
+                        Mob mob = (Mob) character.getField().getMobByObjectId(mai.getObjectID());
                         MobTemporaryStat mts = mob.getTemporaryStat();
                         mts.createAndAddBurnedInfo(character.getId(), skill, 1);
                     }

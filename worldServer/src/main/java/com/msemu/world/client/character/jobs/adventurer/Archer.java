@@ -15,13 +15,13 @@ import com.msemu.world.client.character.skill.Skill;
 import com.msemu.world.client.character.skill.TemporaryStatManager;
 import com.msemu.world.client.field.Field;
 import com.msemu.world.client.character.jobs.JobHandler;
-import com.msemu.world.client.life.AffectedArea;
-import com.msemu.world.client.life.Mob;
-import com.msemu.world.client.life.Summon;
-import com.msemu.world.client.life.skills.MobTemporaryStat;
+import com.msemu.world.client.field.AffectedArea;
+import com.msemu.world.client.field.lifes.Mob;
+import com.msemu.world.client.field.lifes.Summon;
+import com.msemu.world.client.field.lifes.skills.MobTemporaryStat;
 import com.msemu.world.constants.MapleJob;
 import com.msemu.world.data.SkillData;
-import com.msemu.commons.data.enums.MobStat;
+import com.msemu.commons.data.enums.MobBuffStat;
 import com.msemu.world.enums.MoveAbility;
 import com.msemu.world.enums.Stat;
 import com.msemu.core.network.packets.out.wvscontext.LP_StatChanged;
@@ -148,8 +148,6 @@ public class Archer extends JobHandler {
             handleFocusedFury();
             handleMortalBlow();
             handleAggresiveResistance(attackInfo);
-
-
         }
         Option o1 = new Option();
         Option o2 = new Option();
@@ -158,36 +156,35 @@ public class Archer extends JobHandler {
             case ARROW_BOMB:
                 if (Rand.getChance(si.getValue(prop, slv))) {
                     for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
-                        Mob mob = (Mob) chr.getField().getLifeByObjectID(mai.getObjectID());
+                        Mob mob = chr.getField().getMobByObjectId(mai.getObjectID());
                         MobTemporaryStat mts = mob.getTemporaryStat();
                         o1.nOption = 1;
                         o1.rOption = skillID;
                         o1.tOption = si.getValue(time, slv);
-                        mts.addStatOptionsAndBroadcast(MobStat.Stun, o1);
+                        mts.addStatOptionsAndBroadcast(MobBuffStat.Stun, o1);
                     }
                 }
                 break;
             case PHOENIX:
                 if (Rand.getChance(si.getValue(prop, slv))) {
                     for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
-                        Mob mob = (Mob) chr.getField().getLifeByObjectID(mai.getObjectID());
+                        Mob mob = chr.getField().getMobByObjectId(mai.getObjectID());
                         MobTemporaryStat mts = mob.getTemporaryStat();
                         o1.nOption = 1;
                         o1.rOption = skillID;
                         o1.tOption = 3;
-                        mts.addStatOptionsAndBroadcast(MobStat.Stun, o1);
+                        mts.addStatOptionsAndBroadcast(MobBuffStat.Stun, o1);
                     }
                 }
                 break;
             case FLAME_SURGE:
                 for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
                     AffectedArea aa = AffectedArea.getAffectedArea(attackInfo);
-                    Mob mob = (Mob) chr.getField().getLifeByObjectID(mai.getObjectID());
+                    Mob mob = chr.getField().getMobByObjectId(mai.getObjectID());
                     aa.setMobOrigin((byte) 0);
                     aa.setCharID(chr.getId());
-                    int x = mob.getX();
-                    int y = mob.getY();
-                    Foothold fh = mob.getCurFoodhold();
+                    int x = mob.getPosition().getX();
+                    int y = mob.getPosition().getY();
                     aa.setPosition(new Position(x, y));
                     Rect rect = si.getRects().get(0);
 //                    if(rect.getLeft() > fh.getX1()) {
@@ -201,22 +198,22 @@ public class Archer extends JobHandler {
                 break;
             case BINDING_SHOT:
                 for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
-                    Mob mob = (Mob) chr.getField().getLifeByObjectID(mai.getObjectID());
+                    Mob mob = chr.getField().getMobByObjectId(mai.getObjectID());
                     MobTemporaryStat mts = mob.getTemporaryStat();
                     o2.nOption = -si.getValue(x, slv);
                     o2.rOption = skillID;
                     o2.tOption = si.getValue(time, slv);
-//                    mts.addStatOptions(MobStat.Re) // TODO hp recovery?
+//                    mts.addStatOptions(MobBuffStat.Re) // TODO hp recovery?
                     o1.nOption = si.getValue(s, slv);
                     o1.rOption = skillID;
                     o1.tOption = si.getValue(time, slv);
-                    mts.addStatOptionsAndBroadcast(MobStat.Speed, o1);
+                    mts.addStatOptionsAndBroadcast(MobBuffStat.Speed, o1);
                 }
                 break;
             case NET_TOSS:
                 for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
                     if (Rand.getChance(si.getValue(prop, slv))) {
-                        Mob mob = (Mob) chr.getField().getLifeByObjectID(mai.getObjectID());
+                        Mob mob = chr.getField().getMobByObjectId(mai.getObjectID());
                         MobTemporaryStat mts = mob.getTemporaryStat();
                         if (mob.isBoss()) {
                             o1.nOption = si.getValue(x, slv);
@@ -226,30 +223,30 @@ public class Archer extends JobHandler {
                             o1.tOption = si.getValue(time, slv);
                         }
                         o1.rOption = skillID;
-                        mts.addStatOptionsAndBroadcast(MobStat.Speed, o1);
+                        mts.addStatOptionsAndBroadcast(MobBuffStat.Speed, o1);
                     }
                 }
                 break;
             case ARROW_ILLUSION:
                 for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
                     if (Rand.getChance(si.getValue(prop, slv))) {
-                        Mob mob = (Mob) chr.getField().getLifeByObjectID(mai.getObjectID());
+                        Mob mob = chr.getField().getMobByObjectId(mai.getObjectID());
                         MobTemporaryStat mts = mob.getTemporaryStat();
                         o1.nOption = 1;
                         o1.rOption = skillID;
                         o1.tOption = si.getValue(subTime, slv);
-                        mts.addStatOptionsAndBroadcast(MobStat.Stun, o1);
+                        mts.addStatOptionsAndBroadcast(MobBuffStat.Stun, o1);
                     }
                 }
                 break;
             case FREEZER:
                 for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
-                    Mob mob = (Mob) chr.getField().getLifeByObjectID(mai.getObjectID());
+                    Mob mob = chr.getField().getMobByObjectId(mai.getObjectID());
                     MobTemporaryStat mts = mob.getTemporaryStat();
                     o1.nOption = 1;
                     o1.rOption = skillID;
                     o1.tOption = si.getValue(x, slv);
-                    mts.addStatOptionsAndBroadcast(MobStat.Freeze, o1);
+                    mts.addStatOptionsAndBroadcast(MobBuffStat.Freeze, o1);
                 }
                 break;
         }
@@ -351,7 +348,7 @@ public class Archer extends JobHandler {
                 : chr.getSkill(QUIVER_CARTRIDGE);
         SkillInfo si = SkillData.getInstance().getSkillInfoById(skill.getSkillId());
         for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
-            Mob mob = (Mob) chr.getField().getLifeByObjectID(mai.getObjectID());
+            Mob mob = chr.getField().getMobByObjectId(mai.getObjectID());
             MobTemporaryStat mts = mob.getTemporaryStat();
             int mobId = mai.getObjectID();
             switch (quiverCartridge.getType()) {

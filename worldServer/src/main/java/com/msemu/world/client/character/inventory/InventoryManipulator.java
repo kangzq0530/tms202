@@ -6,7 +6,7 @@ import com.msemu.world.client.character.AvatarLook;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.inventory.items.Equip;
 import com.msemu.world.client.character.inventory.items.Item;
-import com.msemu.world.client.life.Drop;
+import com.msemu.world.client.field.lifes.Drop;
 import com.msemu.world.constants.ItemConstants;
 import com.msemu.world.data.ItemData;
 import com.msemu.world.enums.InventoryOperationType;

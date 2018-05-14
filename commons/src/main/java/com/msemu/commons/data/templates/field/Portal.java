@@ -2,6 +2,7 @@ package com.msemu.commons.data.templates.field;
 
 import com.msemu.commons.data.enums.PortalType;
 import com.msemu.commons.data.loader.dat.DatSerializable;
+import com.msemu.commons.utils.types.Position;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,8 +23,7 @@ public class Portal implements DatSerializable {
     protected int delay;
     protected int id;
     protected int targetMapId = -1;
-    protected int x;
-    protected int y;
+    protected Position position = new Position();
     protected int horizontalImpact;
     protected int verticalImpact;
     protected boolean onlyOnce;
@@ -43,8 +43,8 @@ public class Portal implements DatSerializable {
         dos.writeInt(id);
         dos.writeInt(targetMapId);
         dos.writeInt(delay);
-        dos.writeInt(x);
-        dos.writeInt(y);
+        dos.writeInt(position.getX());
+        dos.writeInt(position.getY());
         dos.writeInt(horizontalImpact);
         dos.writeInt(verticalImpact);
         dos.writeBoolean(onlyOnce);
@@ -60,8 +60,8 @@ public class Portal implements DatSerializable {
         setId(dis.readInt());
         setTargetMapId(dis.readInt());
         setDelay(dis.readInt());
-        setX(dis.readInt());
-        setY(dis.readInt());
+        getPosition().setX(dis.readInt());
+        getPosition().setY(dis.readInt());
         setHorizontalImpact(dis.readInt());
         setVerticalImpact(dis.readInt());
         setOnlyOnce(dis.readBoolean());

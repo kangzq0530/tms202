@@ -1,5 +1,6 @@
 package com.msemu.world.client.character.jobs.sengoku;
 
+import com.msemu.commons.data.enums.MobBuffStat;
 import com.msemu.commons.data.templates.skill.SkillInfo;
 import com.msemu.commons.network.packets.InPacket;
 import com.msemu.commons.utils.types.Position;
@@ -12,13 +13,12 @@ import com.msemu.world.client.character.skill.Skill;
 import com.msemu.world.client.character.skill.TemporaryStatManager;
 import com.msemu.world.client.field.Field;
 import com.msemu.world.client.character.jobs.JobHandler;
-import com.msemu.world.client.life.AffectedArea;
-import com.msemu.world.client.life.Mob;
-import com.msemu.world.client.life.Summon;
-import com.msemu.world.client.life.skills.MobTemporaryStat;
+import com.msemu.world.client.field.AffectedArea;
+import com.msemu.world.client.field.lifes.Mob;
+import com.msemu.world.client.field.lifes.Summon;
+import com.msemu.world.client.field.lifes.skills.MobTemporaryStat;
 import com.msemu.world.data.SkillData;
 import com.msemu.world.enums.ChatMsgType;
-import com.msemu.commons.data.enums.MobStat;
 import com.msemu.world.enums.MoveAbility;
 import com.msemu.core.network.packets.out.user.LP_FoxManEnterField;
 import com.msemu.core.network.packets.out.wvscontext.LP_TemporaryStatSet;
@@ -93,12 +93,12 @@ public class Kanna extends JobHandler {
             case BINDING_TEMPEST:
             case VERITABLE_PANDEMONIUM:
                 for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
-                    Mob mob = (Mob) chr.getField().getLifeByObjectID(mai.getObjectID());
+                    Mob mob = chr.getField().getMobByObjectId(mai.getObjectID());
                     MobTemporaryStat mts = mob.getTemporaryStat();
                     o1.nOption = 1;
                     o1.rOption = skill.getSkillId();
                     o1.tOption = si.getValue(time, slv);
-                    mts.addStatOptionsAndBroadcast(MobStat.Stun, o1);
+                    mts.addStatOptionsAndBroadcast(MobBuffStat.Stun, o1);
                 }
 
                 break;
@@ -155,7 +155,7 @@ public class Kanna extends JobHandler {
                 int x2 = chr.getPosition().deepCopy().getX() + 500;
                 summon.setKishinPositions(new Position[]{new Position(x1, chr.getPosition().getY()), new Position(x2, chr.getPosition().getY())});
                 summon.setMoveAbility(MoveAbility.STATIC.getVal());
-                field.spawnAddSummon(summon);
+                field.spawnSummon(summon);
                 break;
             case AKATUSKI_HERO_KANNA:
                 o1.nReason = skillID;

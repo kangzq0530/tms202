@@ -40,26 +40,27 @@ public class CP_MigrateIn extends InPacket<GameClient> {
 
         World world = World.getInstance();
         Channel channel = world.getChannels()
-                .stream()
-                .filter(ch -> ch.hasTransferByCharacterId(characterId))
-                .findFirst().orElse(null);
+                    .stream()
+                    .filter(ch -> ch.hasTransferByCharacterId(characterId))
+                    .findFirst().orElse(null);
 
-        if (worldId != world.getWorldId() || channel == null) {
-            getClient().close();
-            return;
-        }
+            if (worldId != world.getWorldId() || channel == null) {
+                getClient().close();
+                return;
+            }
 
-        // TODO 這邊可能有雙登問題
-        Character chr = channel.getTransferIdAndRemoveByCharacterId(characterId);
+            // TODO 這邊可能有雙登問題
+            Character chr = channel.getTransferIdAndRemoveByCharacterId(characterId);
 
-        if (chr == null) {
-            getClient().close();
-            return;
+            if (chr == null) {
+                getClient().close();
+                return;
         }
 
         //TODO 確認登入伺服器跟現在的IP一樣
 
         if (getClient().compareAndSetState(ClientState.CONNECTED, ClientState.ENTERED)) {
+            channel.addCharacter(chr);
             chr.setClient(getClient());
             Account account = Account.findById(chr.getAccId());
             getClient().setAccount(account);

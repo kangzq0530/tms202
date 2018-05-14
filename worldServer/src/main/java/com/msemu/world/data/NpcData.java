@@ -1,13 +1,12 @@
 package com.msemu.world.data;
 
 import com.msemu.commons.data.loader.dat.NpcTemplateDatLoader;
-import com.msemu.commons.data.loader.wz.NpcTemplateLoader;
 import com.msemu.commons.data.templates.NpcTemplate;
 import com.msemu.commons.reload.IReloadable;
 import com.msemu.commons.reload.Reloadable;
 import com.msemu.commons.data.loader.wz.WzManager;
 import com.msemu.core.startup.StartupComponent;
-import com.msemu.world.client.life.Npc;
+import com.msemu.world.client.field.lifes.Npc;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

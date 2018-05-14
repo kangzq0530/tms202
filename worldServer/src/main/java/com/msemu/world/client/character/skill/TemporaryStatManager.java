@@ -4,7 +4,7 @@ import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.thread.EventManager;
 import com.msemu.commons.utils.types.Tuple;
 import com.msemu.world.client.character.Character;
-import com.msemu.world.client.life.AffectedArea;
+import com.msemu.world.client.field.AffectedArea;
 import com.msemu.core.network.packets.out.wvscontext.LP_TemporaryStatReset;
 import com.msemu.core.network.packets.out.wvscontext.LP_TemporaryStatSet;
 import com.sun.istack.internal.NotNull;

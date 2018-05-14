@@ -32,7 +32,7 @@ public class CP_SelectWorld extends InPacket<LoginClient> {
         mode = decodeByte();
         if (mode == 0) {
             worldID = decodeByte();
-            channelID = decodeByte() + 1;
+            channelID = decodeByte();
         } else {
             skip(1);
             token = decodeString();

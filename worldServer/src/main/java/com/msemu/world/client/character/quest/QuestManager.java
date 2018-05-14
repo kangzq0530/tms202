@@ -16,7 +16,7 @@ import com.msemu.world.client.character.quest.act.IQuestAction;
 import com.msemu.world.client.character.quest.req.IQuestStartRequirements;
 import com.msemu.world.client.character.quest.req.QuestProgressItemRequirement;
 import com.msemu.world.client.character.quest.req.QuestStartCompletionRequirement;
-import com.msemu.world.client.life.Mob;
+import com.msemu.world.client.field.lifes.Mob;
 import com.msemu.world.data.ItemData;
 import com.msemu.world.data.QuestData;
 import lombok.Getter;

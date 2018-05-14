@@ -5,7 +5,7 @@ import com.msemu.core.network.GameClient;
 import com.msemu.core.network.packets.out.npc.LP_NpcMove;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.field.Field;
-import com.msemu.world.client.life.Npc;
+import com.msemu.world.client.field.lifes.Npc;
 
 /**
  * Created by Weber on 2018/5/3.

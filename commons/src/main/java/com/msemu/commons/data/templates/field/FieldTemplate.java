@@ -8,10 +8,7 @@ import lombok.Setter;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -30,6 +27,7 @@ public class FieldTemplate implements DatSerializable {
     private Set<Foothold> footholds = new HashSet<>();
     private Set<Portal> portals = new HashSet<>();
     private Set<LifeData> life = new HashSet<>();
+    private HashMap<Integer, LifeData> categoryLife = new HashMap<>();
     private Set<RadderRope> radderRopes = new HashSet<>();
     private List<FieldArea> areas = new ArrayList<>();
     private Set<FieldDirectionInfo> directionInfos = new HashSet<>();
@@ -63,6 +61,10 @@ public class FieldTemplate implements DatSerializable {
 
     public void addLifeData(LifeData lifeData) {
         life.add(lifeData);
+    }
+
+    public void addLifeData(Integer category, LifeData lifeData) {
+        categoryLife.put(category, lifeData);
     }
 
     public List<FieldObjectInfo> getMovingPlatforms() {
@@ -182,25 +184,25 @@ public class FieldTemplate implements DatSerializable {
             getLife().add(life);
         }
         int rSize = dis.readInt();
-        for(int i = 0 ; i < rSize; i++)  {
+        for (int i = 0; i < rSize; i++) {
             RadderRope radderRope = new RadderRope();
             radderRope.load(dis);
             addRadderRope(radderRope);
         }
         int aSize = dis.readInt();
-        for(int i = 0; i < aSize;i++) {
+        for (int i = 0; i < aSize; i++) {
             FieldArea area = new FieldArea();
             area.load(dis);
             addArea(area);
         }
         int dSize = dis.readInt();
-        for(int i = 0 ; i < dSize; i++) {
+        for (int i = 0; i < dSize; i++) {
             FieldDirectionInfo directionInfo = new FieldDirectionInfo();
             directionInfo.load(dis);
             addDirectionInfo(directionInfo);
         }
         boolean hasCarnival = dis.readBoolean();
-        if(hasCarnival) {
+        if (hasCarnival) {
             MonsterCarnivalInfo carnivalInfo = new MonsterCarnivalInfo();
             carnivalInfo.load(dis);
             setMonsterCarnivalInfo(carnivalInfo);
@@ -208,7 +210,7 @@ public class FieldTemplate implements DatSerializable {
         fieldNodeInfo.load(dis);
 
         int obSize = dis.readInt();
-        for(int i = 0 ; i < obSize; i++) {
+        for (int i = 0; i < obSize; i++) {
             FieldObjectInfo object = new FieldObjectInfo();
             object.load(dis);
             addObject(object);

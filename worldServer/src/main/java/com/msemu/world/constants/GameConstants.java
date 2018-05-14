@@ -17,6 +17,16 @@ public class GameConstants {
         initCharExp();
     }
 
+    public static int maxViewRangeSq() {
+//        return 1366 * 768 * 2;//1000000; // 1024 * 768
+        return Integer.MAX_VALUE;
+    }
+
+    public static int maxViewRangeSq_Half() {
+//        return 1366 * 768;//500000; // 800 * 800
+        return Integer.MAX_VALUE;
+    }
+
     private static void initCharExp() {
         // NEXTLEVEL::NEXTLEVEL
         CHAR_EXP_TABLE[1] = 15;

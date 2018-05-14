@@ -7,10 +7,10 @@ import com.msemu.core.network.packets.out.mob.LP_MobCtrlAck;
 import com.msemu.core.network.packets.out.mob.LP_MobMove;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.field.Field;
-import com.msemu.world.client.life.Mob;
-import com.msemu.world.client.life.MobSkillAttackInfo;
-import com.msemu.world.client.life.movement.IMovement;
-import com.msemu.world.client.life.movement.MovementBase;
+import com.msemu.world.client.field.lifes.Mob;
+import com.msemu.world.client.field.lifes.skills.MobSkillAttackInfo;
+import com.msemu.world.client.field.lifes.movement.IMovement;
+import com.msemu.world.client.field.lifes.movement.MovementBase;
 
 import java.util.List;
 
@@ -45,7 +45,9 @@ public class CP_MobMove extends InPacket<GameClient> {
     @Override
     public void read() {
         mobObjectID = decodeInt();
-        mob = (Mob) getClient().getCharacter().getField().getLifeByObjectID(mobObjectID);
+        mob = getClient().getCharacter().getField().getMobByObjectId(mobObjectID);
+        if(mob == null)
+            return;
         moveId = decodeShort();
         useSkill = decodeByte() > 0;
         moveAction = decodeByte();
@@ -97,11 +99,13 @@ public class CP_MobMove extends InPacket<GameClient> {
 
     @Override
     public void runImpl() {
+        if(mob == null)
+            return;
         Character chr = getClient().getCharacter();
         Field field = chr.getField();
-        Character contoller = field.getLifeController(mob);
+        Character controller = mob.getController();
 
-        if (contoller != null && contoller.equals(chr)) {
+        if (controller != null && controller.equals(chr)) {
             for (IMovement movement : movements) {
                 mob.setPosition(movement.getPosition());
                 mob.setMoveAction(movement.getMoveAction());
@@ -110,7 +114,7 @@ public class CP_MobMove extends InPacket<GameClient> {
 
             if(movements.size() > 0) {
                 getClient().write(new LP_MobCtrlAck(mob, true, moveId, mobSkillID, (byte) mobSkillLevel, 0));
-                field.broadcastPacket(new LP_MobMove(mob, msai, movements), contoller);
+                field.broadcastPacket(new LP_MobMove(mob, msai, movements), controller);
             }
         }
     }

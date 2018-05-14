@@ -34,8 +34,8 @@ import com.msemu.world.client.field.effect.MobHPTagFieldEffect;
 import com.msemu.world.client.field.effect.ObjectFieldEffect;
 import com.msemu.world.client.field.effect.ScreenDelayFieldEffect;
 import com.msemu.world.client.guild.operations.InputGuildName;
-import com.msemu.world.client.life.Mob;
-import com.msemu.world.client.life.Npc;
+import com.msemu.world.client.field.lifes.Mob;
+import com.msemu.world.client.field.lifes.Npc;
 import com.msemu.world.data.MobData;
 import com.msemu.world.data.NpcData;
 import com.msemu.world.data.QuestData;
@@ -286,14 +286,13 @@ public class ScriptInteraction {
         Mob mob = MobData.getInstance().getMobFromTemplate(id);
         Position pos = new Position(x, y);
         mob.setPosition(pos.deepCopy());
-        mob.setPrevPos(pos.deepCopy());
+        mob.setOldPosition(pos.deepCopy());
         mob.setPosition(pos.deepCopy());
-        mob.setNotRespawnable(!isRespawn);
         Field field = getCharacter().getField();
         if (mob.getField() == null) {
             mob.setField(field);
         }
-        field.spawnLife(mob, null);
+        field.spawnMob(mob);
     }
 
     public void showMobHP(int templateID) {

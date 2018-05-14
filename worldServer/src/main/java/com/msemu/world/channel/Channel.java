@@ -1,6 +1,7 @@
 package com.msemu.world.channel;
 
 import com.msemu.commons.rmi.model.ChannelInfo;
+import com.msemu.commons.thread.EventManager;
 import com.msemu.core.configs.NetworkConfig;
 import com.msemu.core.configs.WorldConfig;
 import com.msemu.world.client.character.Character;
@@ -9,8 +10,13 @@ import com.msemu.world.data.FieldData;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.Synchronized;
+import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -35,9 +41,9 @@ public class Channel {
     @Setter
     private boolean adultChannel;
     @Getter
-    private List<Field> fields;
-    private Map<Integer, Character> transfers; // key -> accountId
-    private Map<Integer, Character> characters; // key -> accountId
+    private final List<Field> fields;
+    private final Map<Integer, Character> transfers; // key -> accountId
+    private final Map<Integer, Character> characters; // key -> accountId
 
     public Channel(String worldName, int worldId, int channelId) {
         this.name = worldName + "-" + channelId;
@@ -50,17 +56,34 @@ public class Channel {
         this.fields = new ArrayList<>();
         this.characters = new HashMap<>();
         this.transfers = new HashMap<>();
+        EventManager.getInstance().addFixedDelayEvent(this::updateField, 0, 1000);
+    }
+
+    private void updateField() {
+        try {
+            ArrayList<Field> newFieldsAry = new ArrayList<>(this.getFields());
+            newFieldsAry.forEach(field -> {
+                field.update(LocalDateTime.now());
+            });
+        } catch (Exception ex) {
+            LoggerFactory.getLogger(Channel.class).error("update error", ex);
+        }
     }
 
     public Field getField(int fieldId) {
-        return getFields().stream().filter(f -> Integer.compare(f.getId(), fieldId) == 0).findFirst().orElse(createAndReturnNewField(fieldId));
+        for (Field field : getFields()) {
+            if (field.getId() == fieldId) {
+                return field;
+            }
+        }
+        return createAndReturnNewField(fieldId);
     }
 
     private Field createAndReturnNewField(int templateId) {
         Field newField = FieldData.getInstance().getFieldFromTemplate(templateId);
-        if(newField == null)
+        if (newField == null)
             return null;
-        getFields().add(newField);
+        fields.add(newField);
         return newField;
     }
 
@@ -121,7 +144,7 @@ public class Channel {
     @Synchronized
     public void addTransfer(int accountId, int characterId) {
         Character chr = Character.findById(characterId);
-        if(chr == null)
+        if (chr == null)
             return;
         getTransfers().put(accountId, chr);
     }

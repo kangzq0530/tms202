@@ -2,7 +2,7 @@ package com.msemu.world.client.field.effect;
 
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;
-import com.msemu.world.client.life.Mob;
+import com.msemu.world.client.field.lifes.Mob;
 import com.msemu.world.enums.FieldEffectType;
 
 /**

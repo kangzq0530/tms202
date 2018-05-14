@@ -4,7 +4,7 @@ import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.utils.types.Position;
 import com.msemu.commons.utils.types.Rect;
 import com.msemu.core.network.GameClient;
-import com.msemu.world.client.life.Summon;
+import com.msemu.world.client.field.lifes.Summon;
 import com.msemu.world.constants.SkillConstants;
 import lombok.Getter;
 import lombok.Setter;

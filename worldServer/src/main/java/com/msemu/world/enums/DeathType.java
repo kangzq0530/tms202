@@ -26,4 +26,13 @@ public enum DeathType {
     public byte getValue() {
         return value;
     }
+
+    public  static DeathType getByValue(int value) {
+        for(DeathType type : values()) {
+            if(type.getValue() == value) {
+                return type;
+            }
+        }
+        return ANIMATION_DEATH;
+    }
 }

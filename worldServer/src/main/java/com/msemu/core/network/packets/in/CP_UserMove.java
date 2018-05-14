@@ -5,8 +5,8 @@ import com.msemu.commons.utils.types.Position;
 import com.msemu.core.network.GameClient;
 import com.msemu.core.network.packets.out.user.remote.LP_UserMove;
 import com.msemu.world.client.character.Character;
-import com.msemu.world.client.life.movement.IMovement;
-import com.msemu.world.client.life.movement.MovementBase;
+import com.msemu.world.client.field.lifes.movement.IMovement;
+import com.msemu.world.client.field.lifes.movement.MovementBase;
 
 import java.util.List;
 
@@ -43,12 +43,11 @@ public class CP_UserMove extends InPacket<GameClient> {
             Position pos = m.getPosition();
             chr.setOldPosition(chr.getPosition());
             chr.setPosition(pos);
-            chr.setMoveAction(m.getMoveAction());
-            chr.setLeft(m.getMoveAction() % 2 == 1);
             chr.setFoothold(m.getFh());
+            chr.setAction(m.getMoveAction());
+            chr.getField().updateCharacterPosition(chr);
+            chr.getField().checkCharInAffectedAreas(chr);
         }
-        chr.enableActions();
-        chr.getField().checkCharInAffectedAreas(chr);
         chr.getField().broadcastPacket(new LP_UserMove(chr, duration, mPos, oPos, (byte) 0, movements), chr);
     }
 }

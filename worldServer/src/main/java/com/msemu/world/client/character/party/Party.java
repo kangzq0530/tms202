@@ -165,7 +165,7 @@ public class Party {
     public void clearFieldInstances() {
         Set<Character> chrs = new HashSet<>();
         for (Field f : getFields().values()) {
-            chrs.addAll(f.getChars());
+            chrs.addAll(f.getCharacters());
         }
         for (Character chr : chrs) {
             chr.setFieldInstanceType(FieldInstanceType.CHANNEL);

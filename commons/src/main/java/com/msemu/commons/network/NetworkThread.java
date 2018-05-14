@@ -12,6 +12,7 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import lombok.Getter;
 import org.apache.commons.lang3.SystemUtils;
@@ -24,6 +25,7 @@ import java.net.InetSocketAddress;
 import java.net.SocketOption;
 import java.nio.channels.AsynchronousChannelGroup;
 import java.nio.channels.AsynchronousServerSocketChannel;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Weber on 2018/4/18.
@@ -65,7 +67,7 @@ public abstract class NetworkThread<TClient extends Client<TClient>>{
                     protected void initChannel(SocketChannel channel) throws Exception {
                         channel.config().setPerformancePreferences(0, 2, 1);
                         ChannelPipeline pipeline = channel.pipeline();
-                        pipeline.addLast("readTimeoutHandler", new ReadTimeoutHandler(240));
+                        pipeline.addLast("readTimeoutHandler",new IdleStateHandler(10, 0, 0, TimeUnit.MINUTES));
                         pipeline.addLast("packetDecoder", new PacketDecoder());
                         pipeline.addLast("packetEncoder", new PacketEncoder());
                         pipeline.addLast(new Connection<>(NetworkThread.this));

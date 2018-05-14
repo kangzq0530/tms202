@@ -73,7 +73,7 @@ public class World implements IReloadable {
     private void initWorld() {
         loadSettings();
         int channelCount = WorldConfig.CHANNEL_COUNT;
-        for (int i = 1; i < channelCount; i++) {
+        for (int i = 0; i < channelCount; i++) {
             Channel channel = new Channel(getName() + "-" + i, getWorldId(), i);
             channels.put(i, channel);
         }

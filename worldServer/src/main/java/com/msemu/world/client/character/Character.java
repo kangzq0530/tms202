@@ -9,8 +9,10 @@ import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.utils.types.FileTime;
 import com.msemu.commons.utils.types.Position;
 import com.msemu.core.network.GameClient;
+import com.msemu.core.network.packets.out.mob.LP_MobChangeController;
 import com.msemu.core.network.packets.out.stage.LP_SetField;
 import com.msemu.core.network.packets.out.user.LP_UserEnterField;
+import com.msemu.core.network.packets.out.user.LP_UserLeaveField;
 import com.msemu.core.network.packets.out.user.local.LP_ChatMsg;
 import com.msemu.core.network.packets.out.user.remote.LP_UserAvatarModified;
 import com.msemu.core.network.packets.out.user.remote.effect.LP_UserEffectRemote;
@@ -32,12 +34,15 @@ import com.msemu.world.client.character.skill.ForcedStatManager;
 import com.msemu.world.client.character.skill.Skill;
 import com.msemu.world.client.character.skill.TemporaryStatManager;
 import com.msemu.world.client.character.skill.vcore.VMatrixRecord;
+import com.msemu.world.client.field.AbstractFieldObject;
 import com.msemu.world.client.field.Field;
+import com.msemu.world.client.field.lifes.AbstractAnimatedFieldLife;
 import com.msemu.world.client.guild.Guild;
 import com.msemu.world.client.guild.GuildMember;
 import com.msemu.world.client.guild.operations.GuildUpdate;
 import com.msemu.world.client.guild.operations.GuildUpdateMemberLogin;
-import com.msemu.world.client.life.Pet;
+import com.msemu.world.client.field.lifes.Mob;
+import com.msemu.world.client.field.lifes.Pet;
 import com.msemu.world.client.scripting.ScriptManager;
 import com.msemu.world.constants.GameConstants;
 import com.msemu.world.constants.ItemConstants;
@@ -47,6 +52,7 @@ import com.msemu.world.data.FieldData;
 import com.msemu.world.data.ItemData;
 import com.msemu.world.data.SkillData;
 import com.msemu.world.enums.*;
+import jdk.nashorn.internal.scripts.JO;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.Session;
@@ -56,6 +62,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.*;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Predicate;
 
 import static com.msemu.commons.data.enums.InvType.EQUIP;
@@ -68,7 +75,7 @@ import static com.msemu.world.enums.InventoryOperationType.*;
 @Schema
 @Entity
 @Table(name = "characters")
-public class Character {
+public class Character  extends AbstractAnimatedFieldLife {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -212,22 +219,7 @@ public class Character {
     private MonsterBattleRankInfo monsterBattleRankInfo;
 
     @Transient
-    @Getter
-    @Setter
-    private Position position;
-
-    @Transient
-    @Getter
-    @Setter
-    private Position oldPosition;
-
-    @Transient
     private Field field;
-
-    @Transient
-    @Getter
-    @Setter
-    private byte moveAction;
 
     @Transient
     @Getter
@@ -241,11 +233,6 @@ public class Character {
     @Getter
     @Setter
     private JobHandler jobHandler;
-
-    @Transient
-    @Getter
-    @Setter
-    private boolean left;
 
     @Transient
     @Getter
@@ -444,6 +431,17 @@ public class Character {
     @Transient
     @Getter
     private FriendList friendList = new FriendList();
+    @Transient
+    private transient final Set<Mob> controlledMobs = new HashSet<>();
+    @Getter
+    @Transient
+    private transient ReentrantReadWriteLock controlledLock = new ReentrantReadWriteLock();
+    @Getter
+    @Transient
+    private transient Set<AbstractFieldObject> visibleFieldObjects = new HashSet<>();
+    @Getter
+    @Transient
+    private transient ReentrantReadWriteLock visibleMapObjectsLock = new ReentrantReadWriteLock();
 
     public Character() {
         avatarData = new AvatarData();
@@ -463,6 +461,7 @@ public class Character {
             pets.add(new Pet(-1));
         }
         setFieldInstanceType(FieldInstanceType.CHANNEL);
+        setObjectId(id);
     }
 
 
@@ -630,7 +629,7 @@ public class Character {
                     getAvatarData().getCharacterStat().setMaxHp(amount);
                     break;
                 case MP:
-                    amount = Math.min(amount, getCurrentMaxMp());
+                    //amount = Math.min(amount, getCurrentMaxMp());
                     getAvatarData().getCharacterStat().setMp(amount);
                     break;
                 case MAX_MP:
@@ -658,8 +657,16 @@ public class Character {
         MapleJob job = MapleJob.getById(jobId);
         if (job == null)
             return;
+        if (MapleJob.is影武者(jobId)) {
+            getAvatarData().getCharacterStat().setSubJob(1);
+        } else if (MapleJob.is重砲指揮官(jobId)) {
+            getAvatarData().getCharacterStat().setSubJob(2);
+        } else if (MapleJob.盜賊.getId() != jobId) {
+            getAvatarData().getCharacterStat().setSubJob(0);
+        }
+
         setJobHandler(JobManager.getJobHandler((short) job.getId(), this));
-        getAvatarData().getCharacterStat().setJob(job.getId());
+
         List<Skill> skills = SkillData.getInstance().getSkillsByJob((short) job.getId());
         skills.stream().filter(jobSkill -> !hasSkill(jobSkill.getSkillId()))
                 .forEach(this::addSkill);
@@ -990,16 +997,18 @@ public class Character {
         if (getField() != null) {
             getField().removeCharacter(this);
         }
-        setField(toField);
-        toField.addCharacter(this);
-        getClient().write(new LP_SetField(this, toField, getClient().getChannel(), false, 0, characterData, hasBuffProtector(),
+        removeAllVisibleObjects();
+        removeControlledMobs();
+        getClient().write(new LP_SetField(this, toField, getClient().getChannel(), false, portal.getId(), characterData, hasBuffProtector(),
                 (byte) portal.getId(), false, 100, null, true, -1));
+        setPosition(portal.getPosition());
+        toField.addCharacter(this);
+
         if (characterData) {
             if (getGuild() != null) {
                 write(new LP_GuildResult(new GuildUpdate(getGuild())));
             }
         }
-        toField.spawnAllLifeForChar(this);
         toField.getCharacters().stream().filter(c -> !c.equals(this)).forEach(c -> {
             write(new LP_UserEnterField(c));
         });
@@ -1936,6 +1945,106 @@ public class Character {
             addItemToInventory(item);
         }
     }
+
+    @Override
+    public FieldObjectType getFieldObjectType() {
+        return FieldObjectType.CHARACTER;
+    }
+
+    @Override
+    public void enterScreen(GameClient client) {
+        write(new LP_UserEnterField(this));
+        // EffectSwitch
+        // dragon
+        // haku
+        // android
+        // familiar
+        // summons
+        // LP_FllowCharacter
+    }
+
+    @Override
+    public void outScreen(GameClient client) {
+        write(new LP_UserLeaveField(this));
+    }
+
+    public Collection<Mob> getControlledMobs() {
+        getControlledLock().readLock().lock();
+        try {
+            return Collections.unmodifiableCollection(controlledMobs);
+        } finally {
+            getControlledLock().readLock().unlock();
+        }
+    }
+
+    public void stopControllingMob(Mob mob) {
+        getControlledLock().writeLock().lock();
+        try {
+            if(controlledMobs.contains(mob)) {
+                controlledMobs.remove(mob);
+            }
+        } finally {
+            getControlledLock().writeLock().unlock();
+        }
+    }
+
+    public void removeControlledMobs() {
+        getControlledLock().writeLock().lock();
+        try {
+            controlledMobs.clear();
+        } finally {
+            getControlledLock().writeLock().unlock();
+        }
+    }
+
+    public void controlMob(Mob mob, int controllerLevel) {
+        mob.setControllerLevel(controllerLevel);
+        mob.setController(this);
+        getControlledLock().writeLock().lock();
+        try {
+            controlledMobs.add(mob);
+        } finally {
+            getControlledLock().writeLock().unlock();
+        }
+        client.write(new LP_MobChangeController(mob, false, true));
+    }
+
+    public boolean isVisibleFieldObject(AbstractFieldObject object) {
+        getVisibleMapObjectsLock().readLock().lock();
+        try {
+            return getVisibleFieldObjects().contains(object);
+        } finally {
+            getVisibleMapObjectsLock().readLock().unlock();
+        }
+    }
+
+    public void addVisibleFieldObject(AbstractFieldObject object) {
+        getVisibleMapObjectsLock().writeLock().lock();
+        try {
+            getVisibleFieldObjects().add(object);
+        } finally {
+            getVisibleMapObjectsLock().writeLock().unlock();
+        }
+    }
+
+    public void removeVisibleFieldObject(AbstractFieldObject object) {
+        getVisibleMapObjectsLock().writeLock().lock();
+        try {
+            getVisibleFieldObjects().remove(object);
+        } finally {
+            getVisibleMapObjectsLock().writeLock().unlock();
+        }
+    }
+
+    public void removeAllVisibleObjects() {
+        getVisibleMapObjectsLock().writeLock().lock();
+        try {
+            getVisibleFieldObjects().clear();
+        } finally {
+            getVisibleMapObjectsLock().writeLock().unlock();
+        }
+    }
+
 }
 
 

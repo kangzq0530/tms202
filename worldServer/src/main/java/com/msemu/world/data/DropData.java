@@ -6,7 +6,7 @@ import com.msemu.commons.database.DatabaseFactory;
 import com.msemu.commons.reload.IReloadable;
 import com.msemu.commons.reload.Reloadable;
 import com.msemu.core.startup.StartupComponent;
-import com.msemu.world.client.life.DropInfo;
+import com.msemu.world.client.field.lifes.DropInfo;
 import com.msemu.world.constants.ItemConstants;
 import lombok.Getter;
 import org.hibernate.Session;

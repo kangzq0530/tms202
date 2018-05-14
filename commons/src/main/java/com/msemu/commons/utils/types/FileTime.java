@@ -128,5 +128,17 @@ public class FileTime implements Serializable {
     public void setId(int id) {
         this.id = id;
     }
+
+    public boolean before(FileTime time) {
+        return this.getLongValue() < time.getLongValue();
+    }
+
+    public boolean after(FileTime time) {
+        return this.getLongValue() > time.getLongValue();
+    }
+
+    public boolean equal(FileTime time) {
+        return this.getLongValue() > time.getLongValue();
+    }
 }
 

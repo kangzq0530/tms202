@@ -3,8 +3,7 @@ package com.msemu.core.network.packets.in;
 import com.msemu.commons.network.packets.InPacket;
 import com.msemu.core.network.GameClient;
 import com.msemu.world.client.character.Character;
-import com.msemu.world.client.life.Npc;
-import com.msemu.world.enums.ChatMsgType;
+import com.msemu.world.client.field.lifes.Npc;
 import com.msemu.world.enums.ScriptType;
 
 /**

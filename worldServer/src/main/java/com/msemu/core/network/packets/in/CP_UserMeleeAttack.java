@@ -10,7 +10,7 @@ import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.MobAttackInfo;
 import com.msemu.world.client.character.messages.ComboKillMessage;
 import com.msemu.world.client.field.Field;
-import com.msemu.world.client.life.Mob;
+import com.msemu.world.client.field.lifes.Mob;
 import com.msemu.world.constants.SkillConstants;
 import com.msemu.world.data.SkillData;
 import com.msemu.world.enums.ChatMsgType;
@@ -195,14 +195,13 @@ public class CP_UserMeleeAttack extends InPacket<GameClient> {
         chr.getJobHandler().handleAttack(ai);
         field.broadcastPacket(new LP_UserMeleeAttack(chr, ai));
         ai.getMobAttackInfo().forEach(mai -> {
-            Mob mob = (Mob) field.getLifeByObjectID(mai.getObjectID());
+            Mob mob = field.getMobByObjectId(mai.getObjectID());
             if (mob != null) {
                 chr.write(new LP_Message(new ComboKillMessage(111, mob.getObjectId())));
                 long totalDamage = Arrays.stream(mai.getDamages()).sum();
                 SkillInfo si = null;
                 if (ai.getSkillId() > 0)
                     si = SkillData.getInstance().getSkillInfoById(ai.getSkillId());
-
                 chr.chatMessage(ChatMsgType.GAME_DESC, String.format("近距離攻擊: 技能: %s(%d) 怪物: %s(%d)  HP: (%d/%d) MP: 總攻擊: %d 座標: %s",
                         (si != null ? si.getName() : "普通攻擊"), ai.getSkillId(), mob.getTemplate().getName(),
                         mob.getTemplateId(), mob.getHp(), mob.getMaxHp(), mob.getMp(), mob.getMaxHp(), totalDamage, ai.getPos().toString()));

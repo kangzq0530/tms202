@@ -47,7 +47,7 @@ public class CP_UserChangeStatRequest extends InPacket<GameClient> {
         }
         if (healMP != 0 && !MapleJob.is惡魔殺手(chr.getJob())) { // TODO check nodelay hack
             // TODO check real heal number
-            chr.addStat(Stat.HP, healMP);
+            chr.addStat(Stat.MP, healMP);
         }
 
     }

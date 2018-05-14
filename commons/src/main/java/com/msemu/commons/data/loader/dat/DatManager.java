@@ -18,7 +18,7 @@ import java.util.Map;
  * Created by Weber on 2018/4/27.
  */
 public class DatManager {
-    public static final String MonsterBook = "monsterBook.data";
+    public static final String MonsterBook = "monsterBook.dat";
     public static final String VCoreInfo = "vcore.dat";
     public static final String Equip = "equip.dat";
     public static final String SetItem = "setItem.dat";
