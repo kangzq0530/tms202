@@ -1,7 +1,6 @@
 package com.msemu.commons.network;
 
 import com.msemu.commons.enums.InHeader;
-import com.msemu.commons.enums.OutHeader;
 import com.msemu.commons.network.crypt.ICipher;
 import com.msemu.commons.network.packets.InPacket;
 import com.msemu.commons.network.packets.OutPacket;
@@ -20,6 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -96,7 +96,7 @@ public class Connection<TClient extends Client<TClient>> extends ChannelInboundH
                     inPacket.setByteBuf(buff);
                     InHeader header = InHeader.getInHeaderByOp(opcode);
                     if (CoreConfig.SHOW_PACKET && (header == null || !header.ignoreDebug())) {
-                        log.warn(String.format("[In]\t| %s, %d/0x%s\n\t[All]\t%s\n\t[ASCII]\t%s", InHeader.getInHeaderByOp(opcode), opcode, Integer.toHexString(opcode).toUpperCase(), inPacket, HexUtils.toAscii(inPacket.getData())));
+                        log.warn(String.format("[In]\t| %s, %d/0x%s\t| Length: %d\n\t[All]\t%s\n\t[ASCII]\t%s", InHeader.getInHeaderByOp(opcode), opcode, Integer.toHexString(opcode).toUpperCase(), inPacket.getLength(), inPacket, HexUtils.toAscii(inPacket.getData())));
                     }
                     try {
                         inPacket.read();
@@ -106,9 +106,10 @@ public class Connection<TClient extends Client<TClient>> extends ChannelInboundH
                         this.close();
                     }
                 } else {
+
                     InHeader header = InHeader.getInHeaderByOp(opcode);
-                    if(header!= null &&  !header.ignoreDebug())
-                        log.error(String.format("[In][Unknown][state=%s]\t| %s, %d/0x%s\n\t[All]\t%s\n\t[ASCII]\t%s", client.getState(), InHeader.getInHeaderByOp(opcode), opcode, Integer.toHexString(opcode).toUpperCase(), HexUtils.byteArraytoHex(buff.array()), HexUtils.toAscii(buff.array())));
+                    if (header != null && !header.ignoreDebug())
+                        log.error(String.format("[In][Unknown][state=%s]\t| %s, %d/0x%s\t| Length: %d\n\t[All]\t%s\n\t[ASCII]\t%s", client.getState(), InHeader.getInHeaderByOp(opcode), opcode, Integer.toHexString(opcode).toUpperCase(), buff.array().length, HexUtils.readableByteArray(Arrays.copyOfRange(buff.array(), 2, buff.array().length)), HexUtils.toAscii(buff.array())));
                 }
 
             } catch (Exception e) {

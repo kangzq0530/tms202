@@ -31,7 +31,7 @@ public class InventoryManipulator {
 
         chr.getEquippedInventory().removeItem(srcEquip);
         chr.getEquipInventory().addItem(srcEquip);
-        srcEquip.setBagIndex(srcSlot);
+        srcEquip.setBagIndex(destSlot);
         List<Integer> hairEquips = al.getHairEquips();
         if (ItemConstants.類型.武器(srcEquip.getItemId())) {
             chr.getAvatarData().getAvatarLook().setWeaponId(0);

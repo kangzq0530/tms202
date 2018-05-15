@@ -1,5 +1,6 @@
 package com.msemu.login.client.character.items;
 
+import com.msemu.commons.data.templates.ItemTemplate;
 import com.msemu.commons.database.Schema;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.utils.types.FileTime;
@@ -108,7 +109,6 @@ public class Item implements Serializable {
             setQuantity(Math.max(0, getQuantity() - amount));
         }
     }
-
 
     public void encode(OutPacket<LoginClient> outPacket) {
         outPacket.encodeByte(getType().getValue());

@@ -44,6 +44,8 @@ public class CP_UserPortableChairSitRequest extends InPacket<GameClient> {
         if(item != null) {
             // use chair recalulate heal
             chr.getField().broadcastPacket(new LP_UserSetActivePortableChair(chr, item, text));
+            chr.enableActions();
+
         }
     }
 }

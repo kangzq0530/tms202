@@ -9,6 +9,7 @@ import com.msemu.commons.utils.Rand;
 import com.msemu.commons.utils.types.FileTime;
 import com.msemu.core.network.GameClient;
 import com.msemu.world.constants.ItemConstants;
+import com.msemu.world.data.ItemData;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -310,7 +311,6 @@ public class Equip extends Item {
     @Transient
     private int socketState;
     @Transient
-    @Getter
     @Setter
     private EquipTemplate template;
 
@@ -1002,6 +1002,13 @@ public class Equip extends Item {
 
     public void releaseOptions(boolean bonus) {
         // 重置潛能
+    }
+
+    public EquipTemplate getTemplate() {
+        if(this.template == null) {
+            this.template = ItemData.getInstance().getEquipInfo(getItemId());
+        }
+        return template;
     }
 
     public int getIMaxHpR() {

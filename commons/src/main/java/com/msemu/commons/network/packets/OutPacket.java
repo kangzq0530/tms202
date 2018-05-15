@@ -268,7 +268,7 @@ public class OutPacket<TClient extends Client<TClient>> extends Packet<TClient> 
 
     @Override
     public String toString() {
-        return String.format("%s, 0x%s\t\n\t[ALL]\t%s\n\t[ASCII]\t%s", OutHeader.getOutHeaderByOp(opcode), Integer.toHexString(opcode).toUpperCase()
+        return String.format("%s, 0x%s\t| Length: %d\n\t[ALL]\t%s\n\t[ASCII]\t%s", OutHeader.getOutHeaderByOp(opcode), Integer.toHexString(opcode).toUpperCase(), getLength() - 2
                 , HexUtils.readableByteArray(Arrays.copyOfRange(getData(), 2, getData().length)), HexUtils.toAscii(getData()));
     }
 

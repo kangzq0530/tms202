@@ -2045,6 +2045,9 @@ public class Character  extends AbstractAnimatedFieldLife {
         }
     }
 
+    public boolean isAlive() {
+        return getStat(Stat.HP) > 0;
+    }
 }
 
 
