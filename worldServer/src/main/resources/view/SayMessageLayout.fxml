@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="367.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.msemu.core.tools.scriptmessage.controller.SayMessageController">
+   <children>
+      <CheckBox fx:id="overrideTemplateIDCheck" mnemonicParsing="false" text="OverrideTemplateID" />
+      <TextField fx:id="overrideTemplateIDText" text="-1" />
+      <Label text="Text" />
+      <TextArea fx:id="text" prefHeight="200.0" prefWidth="200.0" text="HelloWorld" />
+      <CheckBox fx:id="prevCheck" mnemonicParsing="false" text="Prev" />
+      <CheckBox fx:id="nextCheck" mnemonicParsing="false" text="Next" />
+      <Label text="Delay" />
+      <TextField fx:id="delayText" text="0" />
+   </children>
+</VBox>

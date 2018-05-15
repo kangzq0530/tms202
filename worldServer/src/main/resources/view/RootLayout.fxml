@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane maxHeight="800.0" maxWidth="600.0" minHeight="580.0" minWidth="600.0" prefHeight="800.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.msemu.core.tools.scriptmessage.controller.RootLayoutController">
+   <children>
+      <VBox layoutX="14.0" layoutY="14.0" prefHeight="733.0" prefWidth="576.0">
+         <children>
+            <Label text="Client" />
+            <ComboBox fx:id="clientsList" prefHeight="30.0" prefWidth="233.0" />
+            <Label text="SpeakTypeID" />
+            <TextField id="speakerTypeIDText" fx:id="speakerTypeIDText" prefHeight="30.0" prefWidth="90.0" promptText="4" text="4" />
+            <Label text="SpeakerTemplate" />
+            <TextField id="speakerTemplateIDText" fx:id="speakerTemplateText" prefHeight="30.0" prefWidth="90.0" promptText="4" text="2007" />
+            <CheckBox fx:id="anotherSpeakerTemplateCheck" mnemonicParsing="false" prefHeight="51.0" prefWidth="209.0" text="AnotherSpeakerTemplate">
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+            </CheckBox>
+            <TextField id="anotherSpeakerTemplateIDText" fx:id="anotherSpeakerTemplateText" prefHeight="30.0" prefWidth="90.0" promptText="4" text="2007" />
+            <Label text="MessageType" />
+            <ComboBox id="messageTypeList" fx:id="messageTypeList" onInputMethodTextChanged="#onChangeNpcMessageType" prefHeight="30.0" prefWidth="232.0" />
+            <Label text="bParam" />
+            <TextField id="bParamText" fx:id="bParamText" prefHeight="30.0" prefWidth="90.0" promptText="4" text="0" />
+            <Label text="eColor" />
+            <ComboBox id="eColorList" fx:id="eColorList" prefHeight="30.0" prefWidth="232.0" />
+            <VBox id="otherFieldsView" fx:id="otherFieldsView" prefHeight="400.0" prefWidth="576.0" />
+         </children>
+      </VBox>
+      <Button layoutX="14.0" layoutY="756.0" mnemonicParsing="false" onAction="#sendBtn" onMouseClicked="#onSendBtnClicked" prefHeight="30.0" prefWidth="576.0" text="Send" />
+   </children>
+</AnchorPane>

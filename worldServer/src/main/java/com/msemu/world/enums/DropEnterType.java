@@ -7,7 +7,8 @@ public enum DropEnterType {
     JustShowing(0),
     Create(1),
     OnTheFoothold(2), // ?
-    FadingOut(3),;
+    FadingOut(3),
+    UNK4(4);
 
     private byte val;
 

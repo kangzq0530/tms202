@@ -27,10 +27,7 @@ import com.msemu.world.constants.FieldConstants;
 import com.msemu.world.constants.GameConstants;
 import com.msemu.world.data.ItemData;
 import com.msemu.world.data.SkillData;
-import com.msemu.world.enums.FieldObjectType;
-import com.msemu.world.enums.QuickMoveInfo;
-import com.msemu.world.enums.QuickMoveNpcInfo;
-import com.msemu.world.enums.ScriptType;
+import com.msemu.world.enums.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -286,10 +283,10 @@ public class Field {
     }
 
 
-    public synchronized void removeDrop(Integer dropID, Integer pickupUserID, Boolean fromSchedule) {
-        AbstractFieldObject object = getFieldObjectsByKey(FieldObjectType.DROP, dropID);
-        broadcastPacket(new LP_DropLeaveField(dropID, pickupUserID));
-        removeSchedule(object, fromSchedule);
+    public void removeDropFromUser(Drop drop) {
+        AbstractFieldObject object = getFieldObjectsByKey(FieldObjectType.DROP, drop.getObjectId());
+        broadcastPacket(new LP_DropLeaveField(DropLeaveType.PickedUpByUser, drop.getObjectId(), drop.getPickupId(), (short) 0, 0, 0));
+        removeSchedule(object, true);
         removeFieldObject(object);
     }
 
@@ -297,11 +294,11 @@ public class Field {
         getObjectSchedules().put(object, scheduledFuture);
     }
 
-    public void removeSchedule(AbstractFieldObject life, boolean fromSchedule) {
+    public void removeSchedule(AbstractFieldObject life, boolean cancel) {
         if (!getObjectSchedules().containsKey(life)) {
             return;
         }
-        if (!fromSchedule) {
+        if (!cancel) {
             getObjectSchedules().get(life).cancel(false);
         }
         getObjectSchedules().remove(life);
@@ -355,6 +352,7 @@ public class Field {
         int itemID = dropInfo.getItemID();
         Item item;
         Drop drop = new Drop(-1);
+        drop.setPosition(posTo);
         drop.setOwnerID(ownerID);
         if (itemID != 0) {
             item = ItemData.getInstance().getEquipFromTemplate(itemID);
@@ -369,7 +367,7 @@ public class Field {
         } else {
             drop.setMoney(Rand.get(dropInfo.getMinQuantity(), dropInfo.getMaxQuantity()));
         }
-        addFieldObject(drop);
+        spawnDrop(drop);
         broadcastWithPredicate(new LP_DropEnterField(drop, posFrom, posTo, ownerID),
                 (Character chr) -> dropInfo.getQuestReq() == 0 || chr.hasQuestInProgress(dropInfo.getQuestReq()));
     }
@@ -522,7 +520,7 @@ public class Field {
         if (mob.getController() != null) {
             mob.getController().stopControllingMob(mob);
         }
-        int mincontrolled = -1;
+        int minControlledMobCount = -1;
         Character newController = null;
         getFieldObjectWriteLock(FieldObjectType.CHARACTER).lock();
         try {
@@ -531,8 +529,8 @@ public class Field {
             Character chr;
             while (ltr.hasNext()) {
                 chr = ltr.next();
-                if ((chr.getControlledMobs().size() < mincontrolled || mincontrolled == -1) && chr.getPosition().distanceSq(mob.getPosition()) <= GameConstants.maxViewRangeSq()) {
-                    mincontrolled = chr.getControlledMobs().size();
+                if ((chr.getControlledMobs().size() < minControlledMobCount || minControlledMobCount == -1) && chr.getPosition().distanceSq(mob.getPosition()) <= GameConstants.maxViewRangeSq()) {
+                    minControlledMobCount = chr.getControlledMobs().size();
                     newController = chr;
                 }
             }
@@ -641,6 +639,10 @@ public class Field {
 
     public Mob getMobByObjectId(int objectId) {
         return (Mob) getFieldObjectsByKey(FieldObjectType.MOB, objectId);
+    }
+
+    public Drop getDropByObjectId(int objectId) {
+        return (Drop) getFieldObjectsByKey(FieldObjectType.DROP, objectId);
     }
 
     public void removeCharacter(Character chr) {
@@ -756,5 +758,13 @@ public class Field {
             return;
         npc.setObjectId(getNewObjectID());
         addFieldObject(npc);
+    }
+
+    public void spawnDrop(Drop drop) {
+        if (getDrops().contains(drop)) {
+            return;
+        }
+        drop.setObjectId(getNewObjectID());
+        addFieldObject(drop);
     }
 }

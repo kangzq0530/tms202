@@ -10,6 +10,10 @@ import com.msemu.world.client.field.AbstractFieldObject;
 import com.msemu.world.enums.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.Synchronized;
+
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Created by Weber on 2018/4/11.
@@ -27,6 +31,9 @@ public class Drop extends AbstractFieldObject {
     private FileTime expireTime;
     private boolean byPet;
     private int ownType;
+    private boolean picked;
+    private int pickupId;
+    private Lock lock = new ReentrantLock();
 
 
     public Drop(int objectId) {
@@ -76,7 +83,7 @@ public class Drop extends AbstractFieldObject {
 
     @Override
     public void enterScreen(GameClient client) {
-        client.write(new LP_DropEnterField(DropEnterType.JustShowing,this, 100, 100, getPosition(), 0, getPosition(), 0, true, (short)0, false, false));
+        client.write(new LP_DropEnterField(DropEnterType.OnTheFoothold, this, 100, 100, getPosition(), 0, getPosition(), 0, true, (short) 0, false, false));
     }
 
     @Override
@@ -85,6 +92,7 @@ public class Drop extends AbstractFieldObject {
     }
 
     public boolean isExpired() {
-        return getExpireTime().after(FileTime.getTime());
+        return getExpireTime() != null && getExpireTime().after(FileTime.getTime());
     }
+
 }

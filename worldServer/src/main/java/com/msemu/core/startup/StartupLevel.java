@@ -3,7 +3,8 @@ package com.msemu.core.startup;
 import com.msemu.commons.utils.ServerInfoUtils;
 import com.msemu.commons.utils.versioning.Version;
 import com.msemu.core.network.WorldNetworkThread;
-import com.msemu.world.World;
+import com.msemu.core.tools.scriptmessage.ScriptMessageTester;
+import javafx.application.Application;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,6 +42,7 @@ public enum StartupLevel implements IStartupLevel {
                 StartupLevel.log.error("Error while starting network thread", e);
             }
             StartupLevel.log.info("Server loaded in {} millisecond(s).", ServerInfoUtils.formatNumber(ManagementFactory.getRuntimeMXBean().getUptime()));
+            Application.launch(ScriptMessageTester.class);
         }
     };
 

@@ -23,6 +23,6 @@ public class IncMoneyMessage implements IWvsMessage {
     @Override
     public void encode(OutPacket<GameClient> outPacket) {
         outPacket.encodeLong(money);
-        outPacket.encodeInt(-1);
+        outPacket.encodeInt(0);
     }
 }

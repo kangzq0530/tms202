@@ -1051,5 +1051,9 @@ public class ItemConstants {
         public static int getEquippedSlotByItemID(int itemID) {
             return 1;
         }
+
+        public static boolean 椅子(int itemId) {
+            return itemId / 10000 == 301;
+        }
     }
 }
