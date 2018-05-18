@@ -1,6 +1,8 @@
 package com.msemu.world.client.character;
 
 import com.msemu.commons.database.Schema;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -10,6 +12,8 @@ import javax.persistence.*;
 @Schema
 @Entity
 @Table(name = "systemtimes")
+@Getter
+@Setter
 public class SystemTime {
 
     @Id
@@ -28,29 +32,4 @@ public class SystemTime {
         this.year = year;
         this.month = month;
     }
-
-    public int getYear() {
-        return year;
-    }
-
-    public void setYear(int year) {
-        this.year = year;
-    }
-
-    public int getMonth() {
-        return month;
-    }
-
-    public void setMonth(int month) {
-        this.month = month;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
 }

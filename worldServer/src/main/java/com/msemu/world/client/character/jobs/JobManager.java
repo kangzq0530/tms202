@@ -3,6 +3,8 @@ package com.msemu.world.client.character.jobs;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.jobs.adventurer.Archer;
 import com.msemu.world.client.character.jobs.adventurer.Beginner;
+import com.msemu.world.client.character.jobs.adventurer.Magician;
+import com.msemu.world.client.character.jobs.adventurer.Warrior;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,6 +20,8 @@ public class JobManager {
     private static final Class<?>[] jobClasses = new Class<?>[]{
             Archer.class,
             Beginner.class,
+            Warrior.class,
+            Magician.class
     };
 
     public static JobHandler getJobHandler(short id, Character chr) {

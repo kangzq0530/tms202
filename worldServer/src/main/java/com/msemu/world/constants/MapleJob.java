@@ -668,11 +668,11 @@ public enum MapleJob {
         }
     }
 
-    public static int getJobGrade(int jobz) {
-        if (is龍魔導士(jobz)) {
-            return get龍魔轉數(jobz);
+    public static int getJobGrade(int jobId) {
+        if (is龍魔導士(jobId)) {
+            return get龍魔轉數(jobId);
         }
-        int job = (jobz % 1000);
+        int job = (jobId % 1000);
         if (job / 10 == 0) {
             return 0; //beginner
         } else if (job / 10 % 10 == 0) {

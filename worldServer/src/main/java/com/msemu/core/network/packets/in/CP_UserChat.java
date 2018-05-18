@@ -35,6 +35,8 @@ public class CP_UserChat extends InPacket<GameClient> {
     public void runImpl() {
         Character chr = getClient().getCharacter();
 
+        chr.getAvatarData().getCharacterStat().getExtendSP().setSpToJobLevel(1, 10);
+
         if (text.charAt(0) == '!') {
             List<String> args = Arrays.stream(text.split(" ")).collect(Collectors.toList());
             if(CommandProcessor.getCommands().containsKey(args.get(0).substring(1))) {

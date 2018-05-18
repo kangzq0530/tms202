@@ -8,6 +8,8 @@ import com.msemu.core.network.packets.out.wvscontext.LP_TemporaryStatSet;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.field.AffectedArea;
 import com.sun.istack.internal.NotNull;
+import lombok.Getter;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,24 +23,47 @@ import static com.msemu.world.client.character.skill.CharacterTemporaryStat.Thre
 /**
  * Created by Weber on 2018/4/11.
  */
+
 public class TemporaryStatManager {
     private static final Logger log = LoggerFactory.getLogger(TemporaryStatManager.class);
-
+    @Getter
     private Map<CharacterTemporaryStat, List<Option>> currentStats = new HashMap<>();
+    @Getter
     private Map<CharacterTemporaryStat, List<Option>> newStats = new HashMap<>();
+    @Getter
     private Map<CharacterTemporaryStat, List<Option>> removedStats = new HashMap<>();
+    @Getter
     private Map<CharacterTemporaryStat, ScheduledFuture> schedules = new HashMap<>();
+    @Getter
     private HashMap<Tuple<CharacterTemporaryStat, Option>, ScheduledFuture> indieSchedules = new HashMap<>();
+    @Getter
+    @Setter
     private int pvpDamage;
+    @Getter
+    @Setter
     private byte defenseState;
+    @Getter
+    @Setter
     private byte defenseAtt;
+    @Getter
     private int[] diceInfo = new int[22];
+    @Getter
+    @Setter
     private List<Integer> mobZoneStates;
+    @Getter
+    @Setter
     private int viperEnergyCharge;
+    @Getter
+    @Setter
     private StopForceAtom stopForceAtom;
+    @Getter
+    @Setter
     private LarknessManager larknessManager;
+    @Getter
     private Character character;
+    @Getter
     private List<TemporaryStatBase> twoStates = new ArrayList<>();
+    @Getter
     private Set<AffectedArea> affectedAreas = new HashSet<>();
 
     public TemporaryStatManager(Character character) {
@@ -63,10 +88,6 @@ public class TemporaryStatManager {
                     break;
             }
         }
-    }
-
-    public List<TemporaryStatBase> getTwoStates() {
-        return twoStates;
     }
 
     public TemporaryStatBase getTSBByTSIndex(@NotNull TSIndex tsi) {
@@ -201,93 +222,6 @@ public class TemporaryStatManager {
         return getRemovedStats().keySet().stream().anyMatch(CharacterTemporaryStat::isMovingEffectingStat);
     }
 
-    public Map<CharacterTemporaryStat, List<Option>> getCurrentStats() {
-        return currentStats;
-    }
-
-    public Map<CharacterTemporaryStat, List<Option>> getNewStats() {
-        return newStats;
-    }
-
-    public Map<CharacterTemporaryStat, List<Option>> getRemovedStats() {
-        return removedStats;
-    }
-
-    public int getPvpDamage() {
-        return pvpDamage;
-    }
-
-    public void setPvpDamage(int pvpDamage) {
-        this.pvpDamage = pvpDamage;
-    }
-
-    public byte getDefenseState() {
-        return defenseState;
-    }
-
-    public void setDefenseState(byte defenseState) {
-        this.defenseState = defenseState;
-    }
-
-    public byte getDefenseAtt() {
-        return defenseAtt;
-    }
-
-    public void setDefenseAtt(byte defenseAtt) {
-        this.defenseAtt = defenseAtt;
-    }
-
-    public int[] getDiceInfo() {
-        return diceInfo;
-    }
-
-    public void setDiceInfo(int[] diceInfo) {
-        this.diceInfo = diceInfo;
-    }
-
-    public List<Integer> getMobZoneStates() {
-        return mobZoneStates;
-    }
-
-    public void setMobZoneStates(List<Integer> mobZoneStates) {
-        this.mobZoneStates = mobZoneStates;
-    }
-
-    public int getViperEnergyCharge() {
-        return viperEnergyCharge;
-    }
-
-    public void setViperEnergyCharge(int viperEnergyCharge) {
-        this.viperEnergyCharge = viperEnergyCharge;
-    }
-
-    public StopForceAtom getStopForceAtom() {
-        return stopForceAtom;
-    }
-
-    public void setStopForceAtom(StopForceAtom stopForceAtom) {
-        this.stopForceAtom = stopForceAtom;
-    }
-
-    public LarknessManager getLarknessManager() {
-        return larknessManager;
-    }
-
-    public void setLarknessManager(LarknessManager larknessManager) {
-        this.larknessManager = larknessManager;
-    }
-
-    public Character getCharacter() {
-        return character;
-    }
-
-    public Map<CharacterTemporaryStat, ScheduledFuture> getSchedules() {
-        return schedules;
-    }
-
-    public Map<Tuple<CharacterTemporaryStat, Option>, ScheduledFuture> getIndieSchedules() {
-        return indieSchedules;
-    }
 
     public void sendSetStatPacket() {
         getCharacter().getClient().write(new LP_TemporaryStatSet(this));
@@ -297,9 +231,6 @@ public class TemporaryStatManager {
         getCharacter().getClient().write(new LP_TemporaryStatReset(this, false));
     }
 
-    public Set<AffectedArea> getAffectedAreas() {
-        return affectedAreas;
-    }
 
     public void addAffectedArea(AffectedArea aa) {
         getAffectedAreas().add(aa);

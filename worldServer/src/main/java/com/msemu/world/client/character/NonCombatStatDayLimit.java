@@ -4,6 +4,8 @@ import com.msemu.commons.database.Schema;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.utils.types.FileTime;
 import com.msemu.core.network.GameClient;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -13,7 +15,8 @@ import javax.persistence.*;
 @Schema
 @Entity
 @Table(name = "noncombatstatdaylimit")
-
+@Getter
+@Setter
 public class NonCombatStatDayLimit {
 
     @Id
@@ -53,62 +56,6 @@ public class NonCombatStatDayLimit {
         this((short) 0, (short) 0, (byte) 0, (short) 0, (short) 0, (short) 0, (short) 0, FileTime.getFileTimeFromType(FileTime.Type.ZERO_TIME));
     }
 
-    public short getCharm() {
-        return charm;
-    }
-
-    public void setCharm(short charm) {
-        this.charm = charm;
-    }
-
-    public byte getCharmByCashPR() {
-        return charmByCashPR;
-    }
-
-    public void setCharmByCashPR(byte charmByCashPR) {
-        this.charmByCashPR = charmByCashPR;
-    }
-
-    public short getInsight() {
-        return insight;
-    }
-
-    public void setInsight(short insight) {
-        this.insight = insight;
-    }
-
-    public short getWill() {
-        return will;
-    }
-
-    public void setWill(short will) {
-        this.will = will;
-    }
-
-    public short getCraft() {
-        return craft;
-    }
-
-    public void setCraft(short craft) {
-        this.craft = craft;
-    }
-
-    public short getSense() {
-        return sense;
-    }
-
-    public void setSense(short sense) {
-        this.sense = sense;
-    }
-
-    public FileTime getFtLastUpdateCharmByCashPR() {
-        return ftLastUpdateCharmByCashPR;
-    }
-
-    public void setFtLastUpdateCharmByCashPR(FileTime ftLastUpdateCharmByCashPR) {
-        this.ftLastUpdateCharmByCashPR = ftLastUpdateCharmByCashPR;
-    }
-
     public void encode(OutPacket<GameClient> outPacket) {
         outPacket.encodeShort(getCharisma());
         outPacket.encodeShort(getInsight());
@@ -118,22 +65,5 @@ public class NonCombatStatDayLimit {
         outPacket.encodeShort(getCharm());
         outPacket.encodeByte(getCharmByCashPR());
         getFtLastUpdateCharmByCashPR().encode(outPacket);
-    }
-
-    public short getCharisma() {
-        return charisma;
-    }
-
-    public void setCharisma(short charisma) {
-        this.charisma = charisma;
-    }
-
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 }

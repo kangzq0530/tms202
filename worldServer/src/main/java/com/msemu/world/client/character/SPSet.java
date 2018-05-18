@@ -1,6 +1,8 @@
 package com.msemu.world.client.character;
 
 import com.msemu.commons.database.Schema;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -10,6 +12,8 @@ import javax.persistence.*;
 @Schema
 @Entity
 @Table(name = "spset")
+@Getter
+@Setter
 public class SPSet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,30 +30,6 @@ public class SPSet {
     public SPSet(byte jobLevel, int sp) {
         this.jobLevel = jobLevel;
         this.sp = sp;
-    }
-
-    public byte getJobLevel() {
-        return jobLevel;
-    }
-
-    public void setJobLevel(byte jobLevel) {
-        this.jobLevel = jobLevel;
-    }
-
-    public int getSp() {
-        return sp;
-    }
-
-    public void setSp(int sp) {
-        this.sp = sp;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 }
 

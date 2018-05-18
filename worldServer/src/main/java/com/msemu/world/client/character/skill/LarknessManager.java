@@ -4,72 +4,41 @@ import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;
 import com.msemu.core.network.packets.out.user.local.LP_IncLarknessResponse;
 import com.msemu.world.client.character.Character;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Created by Weber on 2018/4/11.
  */
 public class LarknessManager {
-    private Character chr;
+    @Getter
+    private final Character chr;
+    @Getter
     private LarknessInfo darkInfo = new LarknessInfo(20040217, 0, true);
+    @Getter
     private LarknessInfo lightInfo = new LarknessInfo(20040216, 0, false);
+    @Getter
+    @Setter
     private int darkGauge;
+    @Getter
+    @Setter
     private int lightGauge;
+    @Getter
+    @Setter
     private int darkFeathers;
+    @Getter
+    @Setter
     private int lightFeathers;
+    @Getter
+    @Setter
     private int unk;
+    @Getter
+    @Setter
     private boolean dark;
 
     public LarknessManager(Character chr) {
         this.chr = chr;
 
-    }
-
-    public LarknessInfo getDarkInfo() {
-        return darkInfo;
-    }
-
-    public LarknessInfo getLightInfo() {
-        return lightInfo;
-    }
-
-    public int getDarkGauge() {
-        return darkGauge;
-    }
-
-    public void setDarkGauge(int darkGauge) {
-        this.darkGauge = darkGauge;
-    }
-
-    public int getLightGauge() {
-        return lightGauge;
-    }
-
-    public void setLightGauge(int lightGauge) {
-        this.lightGauge = lightGauge;
-    }
-
-    public int getDarkFeathers() {
-        return darkFeathers;
-    }
-
-    public void setDarkFeathers(int darkFeathers) {
-        this.darkFeathers = darkFeathers;
-    }
-
-    public int getLightFeathers() {
-        return lightFeathers;
-    }
-
-    public void setLightFeathers(int lightFeathers) {
-        this.lightFeathers = lightFeathers;
-    }
-
-    public int getUnk() {
-        return unk;
-    }
-
-    public void setUnk(int unk) {
-        this.unk = unk;
     }
 
     public void encode(OutPacket<GameClient> outPacket) {

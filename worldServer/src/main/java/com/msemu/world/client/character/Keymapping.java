@@ -1,6 +1,8 @@
 package com.msemu.world.client.character;
 
 import com.msemu.commons.database.Schema;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -10,7 +12,9 @@ import javax.persistence.*;
 @Schema
 @Entity
 @Table(name = "keymaps")
-public class Keymapping {
+@Getter
+@Setter
+public class KeyMapping {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -21,43 +25,11 @@ public class Keymapping {
     @Column(name = "val")
     private int val;
 
-    public Keymapping() {
+    public KeyMapping() {
     }
 
-    public Keymapping(byte type, int val) {
+    public KeyMapping(byte type, int val) {
         this.type = type;
         this.val = val;
-    }
-
-    public byte getType() {
-        return type;
-    }
-
-    public void setType(byte type) {
-        this.type = type;
-    }
-
-    public int getVal() {
-        return val;
-    }
-
-    public void setVal(int val) {
-        this.val = val;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getIndex() {
-        return index;
-    }
-
-    public void setIndex(int index) {
-        this.index = index;
     }
 }

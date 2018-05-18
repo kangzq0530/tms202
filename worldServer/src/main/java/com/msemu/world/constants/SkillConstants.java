@@ -86,7 +86,7 @@ public class SkillConstants {
         return getSkillBookByJob(skillId / 10000, skillId);
     }
 
-    public static int getSkillBookByJob(int job) {
+    public static int getSkillJobLevel(int job) {
         return getSkillBookByJob(job, 0);
     }
 

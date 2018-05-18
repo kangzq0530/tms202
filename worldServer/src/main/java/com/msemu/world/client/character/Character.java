@@ -34,6 +34,7 @@ import com.msemu.world.client.character.skill.Skill;
 import com.msemu.world.client.character.skill.TemporaryStatManager;
 import com.msemu.world.client.character.skill.vcore.VMatrixRecord;
 import com.msemu.world.client.field.AbstractFieldObject;
+import com.msemu.world.client.field.AffectedArea;
 import com.msemu.world.client.field.Field;
 import com.msemu.world.client.field.lifes.AbstractAnimatedFieldLife;
 import com.msemu.world.client.field.lifes.Mob;
@@ -43,10 +44,7 @@ import com.msemu.world.client.guild.GuildMember;
 import com.msemu.world.client.guild.operations.GuildUpdate;
 import com.msemu.world.client.guild.operations.GuildUpdateMemberLogin;
 import com.msemu.world.client.scripting.ScriptManager;
-import com.msemu.world.constants.GameConstants;
-import com.msemu.world.constants.ItemConstants;
-import com.msemu.world.constants.MapleJob;
-import com.msemu.world.constants.SkillConstants;
+import com.msemu.world.constants.*;
 import com.msemu.world.data.FieldData;
 import com.msemu.world.data.ItemData;
 import com.msemu.world.data.SkillData;
@@ -956,9 +954,9 @@ public class Character extends AbstractAnimatedFieldLife {
      */
     public void warp(Field toField, Portal portal, boolean characterData) {
         TemporaryStatManager tsm = getTemporaryStatManager();
-//        for (AffectedArea aa : tsm.getAffectedAreas()) {
-//            tsm.removeStatsBySkill(aa.getSkillID());
-//        }
+        for (AffectedArea aa : tsm.getAffectedAreas()) {
+            tsm.removeStatsBySkill(aa.getSkillID());
+        }
         if (getField() != null) {
             getField().removeCharacter(this);
         }
@@ -2000,6 +1998,19 @@ public class Character extends AbstractAnimatedFieldLife {
 
     public boolean isAlive() {
         return getStat(Stat.HP) > 0;
+    }
+
+    public void addSp(int jobLevel, int amount) {
+        final CharacterStat stats = getAvatarData().getCharacterStat();
+        if(JobConstants.isSeparatedSp(getJob())) {
+            int sp = stats.getExtendSP().getSpByJobLevel((byte) jobLevel) + amount;
+            Math.min(GameConstants.MAX_BASIC_STAT, sp);
+            stats.getExtendSP().setSpToJobLevel(jobLevel, sp);
+        } else {
+            int sp = stats.getSp() + amount;
+            Math.min(GameConstants.MAX_BASIC_STAT, sp);
+            stats.setSp(sp);
+        }
     }
 }
 

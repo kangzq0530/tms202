@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by Weber on 2018/5/12.
  */
-public class FieldObject {
+public class FieldObj {
     @Getter
     public FieldObjectInfo data;
 
@@ -17,7 +17,7 @@ public class FieldObject {
     @Setter
     private int currentX, currentY;
 
-    public FieldObject(FieldObjectInfo data) {
+    public FieldObj(FieldObjectInfo data) {
         this.data = data;
         this.currentX = data.getX1();
         this.currentY = data.getY1();

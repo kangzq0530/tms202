@@ -125,7 +125,8 @@ public class ScriptManager {
             if (lastType.getValue() != cm.getNpcScriptInfo().getLastMessageType().getValue()) {
                 stopScriptWithoutLock();
                 return;
-            } else if (cm.getNpcScriptInfo().getLastMessageType() == NpcMessageType.NM_SAY_OK) {
+            } else if (cm.getNpcScriptInfo().getLastMessageType() == NpcMessageType.NM_SAY && !cm.getNpcScriptInfo().isPrev()
+                    && !cm.getNpcScriptInfo().isNext()) {
                 stopScriptWithoutLock();
                 return;
             }

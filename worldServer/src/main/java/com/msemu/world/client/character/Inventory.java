@@ -4,6 +4,8 @@ import com.msemu.commons.data.enums.InvType;
 import com.msemu.commons.database.Schema;
 import com.msemu.world.client.character.inventory.items.Item;
 import com.msemu.world.enums.BodyPart;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
@@ -18,6 +20,8 @@ import java.util.stream.Collectors;
 @Schema
 @Entity
 @Table(name = "inventories")
+@Getter
+@Setter
 public class Inventory {
 
     @Id
@@ -41,22 +45,6 @@ public class Inventory {
         this.type = t;
         items = new ArrayList<>();
         this.slots = (byte) slots;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public byte getSlots() {
-        return slots;
-    }
-
-    public void setSlots(byte slots) {
-        this.slots = slots;
     }
 
     public void addItem(Item item) {
@@ -92,25 +80,11 @@ public class Inventory {
         return getItems().stream().filter(item -> item.getBagIndex() == bodyPart.getValue()).collect(Collectors.toList());
     }
 
-    public List<Item> getItems() {
-        return items;
-    }
-
-    public void setItems(List<Item> items) {
-        this.items = items;
-    }
 
     public void sortItemsByIndex() {
         getItems().sort(Comparator.comparingInt(Item::getBagIndex));
     }
 
-    public InvType getType() {
-        return type;
-    }
-
-    public void setType(InvType type) {
-        this.type = type;
-    }
 
     public Item getItemBySlot(int bagIndex) {
         return getItems().stream().filter(item -> item.getBagIndex() == bagIndex).findAny().orElse(null);

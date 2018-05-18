@@ -2,13 +2,21 @@ package com.msemu.world.client.character.skill;
 
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Created by Weber on 2018/4/11.
  */
 public class LarknessInfo {
+    @Getter
+    @Setter
     private int rLarkness;
+    @Getter
+    @Setter
     private int tLarkness;
+    @Getter
+    @Setter
     private boolean dark;
 
     public LarknessInfo(boolean dark) {
@@ -22,32 +30,8 @@ public class LarknessInfo {
     }
 
     public void encode(OutPacket<GameClient> outPacket) {
-        outPacket.encodeInt(getrLarkness());
-        outPacket.encodeInt(gettLarkness());
-    }
-
-    public boolean isDark() {
-        return dark;
-    }
-
-    public void setDark(boolean dark) {
-        this.dark = dark;
-    }
-
-    public int getrLarkness() {
-        return rLarkness;
-    }
-
-    public void setrLarkness(int rLarkness) {
-        this.rLarkness = rLarkness;
-    }
-
-    public int gettLarkness() {
-        return tLarkness;
-    }
-
-    public void settLarkness(int tLarkness) {
-        this.tLarkness = tLarkness;
+        outPacket.encodeInt(getRLarkness());
+        outPacket.encodeInt(getTLarkness());
     }
 }
 

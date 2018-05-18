@@ -54,7 +54,7 @@ public class Field {
     @Getter
     private final List<AbstractSpawnPoint> spawnPoints = new ArrayList<>();
     @Getter
-    private final List<FieldObject> objects;
+    private final List<FieldObj> objects;
     @Getter
     private final Map<AbstractFieldObject, ScheduledFuture> objectSchedules;
     @Getter
@@ -204,8 +204,8 @@ public class Field {
 
             // LP_BlowWeather
 
-            List<FieldObject> movingPlatforms = getObjects().stream()
-                    .filter(FieldObject::isMove).collect(Collectors.toList());
+            List<FieldObj> movingPlatforms = getObjects().stream()
+                    .filter(FieldObj::isMove).collect(Collectors.toList());
             if (!movingPlatforms.isEmpty()) {
                 chr.write(new LP_FootHoldMove(movingPlatforms));
             }

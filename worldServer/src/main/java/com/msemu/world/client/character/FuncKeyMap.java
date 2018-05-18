@@ -3,6 +3,8 @@ package com.msemu.world.client.character;
 import com.msemu.commons.database.Schema;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -16,13 +18,17 @@ import java.util.List;
 @Table(name = "funckeymap")
 public class FuncKeyMap {
     @Transient
-    private static final int MAX_KEYBINDS = 89;
+    private static final int MAX_KEY_BINDINGS = 89;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter
+    @Setter
     private int id;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "fkMapId")
-    private List<Keymapping> keymap = new ArrayList<>();
+    @Getter
+    @Setter
+    private List<KeyMapping> keymap = new ArrayList<>();
 
 
     public FuncKeyMap() {
@@ -41,16 +47,9 @@ public class FuncKeyMap {
         return fkm;
     }
 
-    public List<Keymapping> getKeymap() {
-        return keymap;
-    }
 
-    public void setKeymap(List<Keymapping> keymap) {
-        this.keymap = keymap;
-    }
-
-    public Keymapping getMappingAt(int index) {
-        for (Keymapping km : getKeymap()) {
+    public KeyMapping getMappingAt(int index) {
+        for (KeyMapping km : getKeymap()) {
             if (km.getIndex() == index) {
                 return km;
             }
@@ -63,8 +62,8 @@ public class FuncKeyMap {
             outPacket.encodeByte(true);
         } else {
             outPacket.encodeByte(false);
-            for (int i = 0; i < MAX_KEYBINDS; i++) {
-                Keymapping tuple = getMappingAt(i);
+            for (int i = 0; i < MAX_KEY_BINDINGS; i++) {
+                KeyMapping tuple = getMappingAt(i);
                 if (tuple == null) {
                     outPacket.encodeByte(0);
                     outPacket.encodeInt(0);
@@ -77,9 +76,9 @@ public class FuncKeyMap {
     }
 
     public void putKeyBinding(int index, byte type, int value) {
-        Keymapping km = getMappingAt(index);
+        KeyMapping km = getMappingAt(index);
         if (km == null) {
-            km = new Keymapping();
+            km = new KeyMapping();
             km.setIndex(index);
             km.setType(type);
             km.setVal(value);
@@ -90,11 +89,4 @@ public class FuncKeyMap {
         }
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 }

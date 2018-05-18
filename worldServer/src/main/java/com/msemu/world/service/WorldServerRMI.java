@@ -6,8 +6,9 @@ import com.msemu.commons.rmi.model.WorldRegisterResult;
 import com.msemu.commons.thread.EventManager;
 import com.msemu.core.configs.NetworkConfig;
 import com.msemu.core.network.GameClient;
-import com.msemu.world.World;
 import com.msemu.world.Channel;
+import com.msemu.world.World;
+import com.msemu.world.client.character.Character;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -90,8 +91,11 @@ public class WorldServerRMI extends UnicastRemoteObject implements IWorldServerR
         if (isAccountOnServer(accountId)) {
             World.getInstance().getChannels()
                     .stream()
-                    .forEach(ch -> ch.getCharactersList().stream()
-                            .forEach(chr -> chr.logout()));
+                    .forEach(ch -> {
+                        Character chr = ch.getCharacterByAccId(accountId);
+                        if (chr != null)
+                            chr.logout();
+                    });
             return true;
         }
         return false;

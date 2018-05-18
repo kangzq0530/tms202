@@ -435,15 +435,7 @@ public class ScriptInteraction {
             return;
         }
         NpcMessageType type;
-        if (prev && next) {
-            type = NpcMessageType.NM_SAY;
-        } else if (prev) {
-            type = NpcMessageType.NM_SAY_PREV;
-        } else if (next) {
-            type = NpcMessageType.NM_SAY_NEXT;
-        } else {
-            type = NpcMessageType.NM_SAY_OK;
-        }
+        type = NpcMessageType.NM_SAY;
         getNpcScriptInfo().setLastMessageType(type);
         write(new LP_SayScriptMessage(nSpeakerTemplateID, sMsg, bParam, prev, next));
         //getClient().write(new LP_ScriptMessage(type, nSpeakerTypeID, nSpeakerTemplateID, nAnotherSpeakerTemplateID, nOtherSpeakerTemplateID, bParam, eColor, new String[]{sMsg}, new int[]{prev ? 1 : 0, next ? 1 : 0, tWait}, null, null));

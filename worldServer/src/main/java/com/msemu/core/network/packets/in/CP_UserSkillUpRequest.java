@@ -46,7 +46,7 @@ public class CP_UserSkillUpRequest extends InPacket<GameClient> {
         AvatarData ad = chr.getAvatarData();
         CharacterStat stat = ad.getCharacterStat();
         Skill skill = chr.getSkill(skillID, true);
-        byte jobLevel = (byte) SkillConstants.getSkillBookByJob(skill.getRootId());
+        byte jobLevel = (byte) ((byte) SkillConstants.getSkillJobLevel(skill.getRootId()) + 1);
         Map<Stat, Object> stats = null;
         if (JobConstants.isSeparatedSp(chr.getJob())) {
             ExtendSP esp = chr.getAvatarData().getCharacterStat().getExtendSP();

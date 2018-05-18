@@ -7,7 +7,7 @@ import com.msemu.commons.reload.IReloadable;
 import com.msemu.commons.reload.Reloadable;
 import com.msemu.core.startup.StartupComponent;
 import com.msemu.world.client.field.Field;
-import com.msemu.world.client.field.FieldObject;
+import com.msemu.world.client.field.FieldObj;
 import com.msemu.world.client.field.spawns.MobSpawnPoint;
 import com.msemu.world.client.field.spawns.NpcSpawnPoint;
 import lombok.Getter;
@@ -76,7 +76,7 @@ public class FieldData implements IReloadable {
             }
         });
         field.getFieldData().getObjects().forEach(fieldObjectInfo -> {
-            field.getObjects().add(new FieldObject(fieldObjectInfo));
+            field.getObjects().add(new FieldObj(fieldObjectInfo));
         });
         return field;
     }

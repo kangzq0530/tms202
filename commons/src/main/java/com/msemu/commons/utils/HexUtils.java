@@ -126,9 +126,10 @@ public class HexUtils {
     }
 
     public static byte[] hex2Byte(String str) {
-        byte[] bytes = new byte[str.trim().replace(" ", "").length() / 2];
+        String trimed = str.trim().replace(" ", "");
+        byte[] bytes = new byte[trimed.length() / 2];
         for (int i = 0; i < bytes.length; ++i) {
-            bytes[i] = (byte) Integer.parseInt(str.substring(2 * i, 2 * i + 2), 16);
+            bytes[i] = (byte) Integer.parseInt(trimed.substring(2 * i, 2 * i + 2), 16);
         }
         return bytes;
     }

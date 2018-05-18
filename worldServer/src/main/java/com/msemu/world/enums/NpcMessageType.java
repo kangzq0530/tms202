@@ -6,10 +6,7 @@ import lombok.Getter;
  * Created by Weber on 2018/4/28.
  */
 public enum NpcMessageType {
-    NM_SAY_OK(0, false, false),
-    NM_SAY_NEXT(0, false, true),
-    NM_SAY_PREV(0, true, false),
-    NM_SAY(0, true, true),
+    NM_SAY(0),
     NM_UNK_1(1),
     NM_SAY_IMAGE(2),
     NM_ASK_YES_NO(3),
@@ -83,21 +80,11 @@ public enum NpcMessageType {
 
     @Getter
     private byte value;
-    @Getter
-    private boolean prev, next;
-    @Getter
-    private int delay;
 
     NpcMessageType(int value) {
-        this(value, false, false);
+        this.value = (byte) value;
     }
 
-    NpcMessageType(int value, boolean prev, boolean next) {
-        this.value = (byte) value;
-        this.prev = prev;
-        this.next = next;
-        this.delay = 0;
-    }
 
     public static NpcMessageType getByValue(int value) {
         for (NpcMessageType type : values()) {
