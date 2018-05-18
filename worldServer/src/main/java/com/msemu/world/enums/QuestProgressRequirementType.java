@@ -1,9 +1,10 @@
 package com.msemu.world.enums;
 
-import com.msemu.world.client.character.quest.req.*;
+import com.msemu.world.client.character.quest.req.QuestProgressItemRequirement;
+import com.msemu.world.client.character.quest.req.QuestProgressLevelRequirement;
+import com.msemu.world.client.character.quest.req.QuestProgressMobRequirement;
+import com.msemu.world.client.character.quest.req.QuestProgressMoneyRequirement;
 
-import java.io.DataInputStream;
-import java.io.IOException;
 import java.util.Arrays;
 
 /**
@@ -13,17 +14,12 @@ public enum QuestProgressRequirementType {
     ITEM(0),
     LEVEL(1),
     MOB(2),
-    MONEY(3)
-    ;
+    MONEY(3);
 
     private byte val;
 
     QuestProgressRequirementType(int val) {
         this.val = (byte) val;
-    }
-
-    public byte getVal() {
-        return val;
     }
 
     public static QuestProgressRequirementType getQPRTByObj(Object o) {
@@ -36,6 +32,10 @@ public enum QuestProgressRequirementType {
     public static QuestProgressRequirementType getQPRTByVal(byte val) {
         return Arrays.stream(QuestProgressRequirementType.values())
                 .filter(qprt -> qprt.getVal() == val).findFirst().orElse(null);
+    }
+
+    public byte getVal() {
+        return val;
     }
 
 }

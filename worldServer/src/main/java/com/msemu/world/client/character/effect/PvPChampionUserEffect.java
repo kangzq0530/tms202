@@ -7,7 +7,7 @@ import com.msemu.world.enums.UserEffectType;
 /**
  * Created by Weber on 2018/5/3.
  */
-public class PvPChampionUserEffect implements IUserEffect  {
+public class PvPChampionUserEffect implements IUserEffect {
 
     private int duration;
 

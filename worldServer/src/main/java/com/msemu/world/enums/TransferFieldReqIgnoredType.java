@@ -5,7 +5,7 @@ import lombok.Getter;
 /**
  * Created by Weber on 2018/5/12.
  */
-public enum  TransferFieldReqIgnoredType {
+public enum TransferFieldReqIgnoredType {
     ENTRANCE_CLOSED(1), // 現在關閉入口
     CANT_MOVE_TO_THAT_AREA(2), //  無法移動到該區。
     CANT_ENTER_BECAUSE_OF_THE_POWER_OF_GROUND(3), // 因受到大地力量的阻擾，無法繼續前進。
@@ -21,6 +21,7 @@ public enum  TransferFieldReqIgnoredType {
     ;
     @Getter
     private int value;
+
     TransferFieldReqIgnoredType(int value) {
         this.value = value;
     }

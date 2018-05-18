@@ -1,11 +1,11 @@
 package com.msemu.world.data;
 
 import com.msemu.commons.data.loader.dat.SkillInfoDatLoader;
+import com.msemu.commons.data.loader.wz.WzManager;
 import com.msemu.commons.data.templates.skill.MobSkillInfo;
 import com.msemu.commons.data.templates.skill.SkillInfo;
 import com.msemu.commons.reload.IReloadable;
 import com.msemu.commons.reload.Reloadable;
-import com.msemu.commons.data.loader.wz.WzManager;
 import com.msemu.core.startup.StartupComponent;
 import com.msemu.world.client.character.skill.Skill;
 import lombok.Getter;
@@ -27,15 +27,16 @@ import java.util.concurrent.atomic.AtomicReference;
 public class SkillData implements IReloadable {
 
     private static final Logger log = LoggerFactory.getLogger(QuestData.class);
-
+    private static final AtomicReference<SkillData> instance = new AtomicReference<>();
     @Getter
     private final Map<Integer, SkillInfo> skillsInfo = new HashMap<>();
-
     @Getter
     private final Map<Integer, MobSkillInfo> mobSkillsInfo = new HashMap<>();
 
-    private static final AtomicReference<SkillData> instance = new AtomicReference<>();
 
+    public SkillData() {
+        load();
+    }
 
     public static SkillData getInstance() {
         SkillData value = instance.get();
@@ -49,10 +50,6 @@ public class SkillData implements IReloadable {
             }
         }
         return value;
-    }
-
-    public SkillData() {
-        load();
     }
 
     public void load() {

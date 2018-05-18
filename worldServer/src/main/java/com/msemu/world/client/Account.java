@@ -2,7 +2,6 @@ package com.msemu.world.client;
 
 import com.msemu.commons.database.DatabaseFactory;
 import com.msemu.commons.database.Schema;
-
 import com.msemu.world.client.character.Character;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,7 +21,7 @@ import java.util.List;
 @Schema
 @Entity
 @Table(name = "accounts")
-public class  Account {
+public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -106,27 +105,6 @@ public class  Account {
 
     }
 
-    public final String getSecureUserName() {
-        StringBuilder sb = new StringBuilder(username);
-        if (sb.length() >= 4) {
-            sb.replace(1, 3, "**");
-        } else if (sb.length() >= 3) {
-            sb.replace(1, 2, "*");
-        }
-        if (sb.length() > 4) {
-            sb.replace(sb.length() - 1, sb.length(), "*");
-        }
-        return sb.toString();
-    }
-
-    public List<Character> getCharacters() {
-        return characters;
-    }
-
-    public void addCharacter(Character character) {
-        getCharacters().add(character);
-    }
-
     public static Account findById(int id) {
         Session session = DatabaseFactory.getInstance().getSession();
         CriteriaBuilder builder = session.getCriteriaBuilder();
@@ -147,6 +125,27 @@ public class  Account {
         query.where(builder.equal(root.get("username"), username));
         List<Account> result = session.createQuery(query).getResultList();
         session.clear();
-        return result.size() > 0 ? result.get(0) : null;
+        return !result.isEmpty() ? result.get(0) : null;
+    }
+
+    public final String getSecureUserName() {
+        StringBuilder sb = new StringBuilder(username);
+        if (sb.length() >= 4) {
+            sb.replace(1, 3, "**");
+        } else if (sb.length() >= 3) {
+            sb.replace(1, 2, "*");
+        }
+        if (sb.length() > 4) {
+            sb.replace(sb.length() - 1, sb.length(), "*");
+        }
+        return sb.toString();
+    }
+
+    public List<Character> getCharacters() {
+        return characters;
+    }
+
+    public void addCharacter(Character character) {
+        getCharacters().add(character);
     }
 }

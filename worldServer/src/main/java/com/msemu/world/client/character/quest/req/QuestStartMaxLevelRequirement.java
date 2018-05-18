@@ -22,8 +22,8 @@ public class QuestStartMaxLevelRequirement implements IQuestStartRequirements {
 
     @Override
     public void load(QuestReqData reqData) {
-        if(reqData instanceof QuestLevelMaxReqData) {
-            setLevel((short) ((QuestLevelMaxReqData)reqData).getMaxLevel());
+        if (reqData instanceof QuestLevelMaxReqData) {
+            setLevel((short) ((QuestLevelMaxReqData) reqData).getMaxLevel());
         }
     }
 }

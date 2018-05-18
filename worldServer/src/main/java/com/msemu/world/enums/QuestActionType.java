@@ -1,9 +1,10 @@
 package com.msemu.world.enums;
 
-import com.msemu.world.client.character.quest.act.*;
+import com.msemu.world.client.character.quest.act.QuestExpAction;
+import com.msemu.world.client.character.quest.act.QuestItemAction;
+import com.msemu.world.client.character.quest.act.QuestMoneyAction;
+import com.msemu.world.client.character.quest.act.QuestPopAction;
 
-import java.io.DataInputStream;
-import java.io.IOException;
 import java.util.Arrays;
 
 /**
@@ -13,17 +14,12 @@ public enum QuestActionType {
     EXP(0),
     ITEM(1),
     MONEY(2),
-    POP(3)
-    ;
+    POP(3);
 
     private byte val;
 
     QuestActionType(int val) {
         this.val = (byte) val;
-    }
-
-    public byte getVal() {
-        return val;
     }
 
     public static QuestActionType getQPRTByObj(Object o) {
@@ -36,5 +32,9 @@ public enum QuestActionType {
     public static QuestActionType getQPRTByVal(byte val) {
         return Arrays.stream(QuestActionType.values())
                 .filter(qprt -> qprt.getVal() == val).findFirst().orElse(null);
+    }
+
+    public byte getVal() {
+        return val;
     }
 }

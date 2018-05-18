@@ -16,30 +16,24 @@ import java.util.concurrent.atomic.AtomicInteger;
 public abstract class AbstractSpawnPoint {
 
     @Getter
+    private final String lifeType;
+    @Getter
+    private final AtomicInteger spawnedCount = new AtomicInteger(0);
+    @Getter
     @Setter
     private int templateId;
-
     @Getter
     @Setter
     private int fh, f, cy, rx0, rx1;
-
     @Getter
     @Setter
     private boolean hide, useDay, useNight;
-
     @Getter
     @Setter
     private Position position;
-
     @Getter
     @Setter
     private String limitedName;
-
-    @Getter
-    private final String lifeType;
-
-    @Getter
-    private final AtomicInteger spawnedCount = new AtomicInteger(0);
 
     public AbstractSpawnPoint(LifeData lifeData) {
         this.templateId = lifeData.getId();

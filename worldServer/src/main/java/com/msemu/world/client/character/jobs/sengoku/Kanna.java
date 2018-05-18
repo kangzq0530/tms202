@@ -4,24 +4,24 @@ import com.msemu.commons.data.enums.MobBuffStat;
 import com.msemu.commons.data.templates.skill.SkillInfo;
 import com.msemu.commons.network.packets.InPacket;
 import com.msemu.commons.utils.types.Position;
+import com.msemu.core.network.packets.out.user.LP_FoxManEnterField;
+import com.msemu.core.network.packets.out.wvscontext.LP_TemporaryStatSet;
 import com.msemu.world.client.character.AttackInfo;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.HitInfo;
 import com.msemu.world.client.character.MobAttackInfo;
+import com.msemu.world.client.character.jobs.JobHandler;
 import com.msemu.world.client.character.skill.Option;
 import com.msemu.world.client.character.skill.Skill;
 import com.msemu.world.client.character.skill.TemporaryStatManager;
-import com.msemu.world.client.field.Field;
-import com.msemu.world.client.character.jobs.JobHandler;
 import com.msemu.world.client.field.AffectedArea;
+import com.msemu.world.client.field.Field;
 import com.msemu.world.client.field.lifes.Mob;
 import com.msemu.world.client.field.lifes.Summon;
 import com.msemu.world.client.field.lifes.skills.MobTemporaryStat;
 import com.msemu.world.data.SkillData;
 import com.msemu.world.enums.ChatMsgType;
 import com.msemu.world.enums.MoveAbility;
-import com.msemu.core.network.packets.out.user.LP_FoxManEnterField;
-import com.msemu.core.network.packets.out.wvscontext.LP_TemporaryStatSet;
 
 import static com.msemu.commons.data.enums.SkillStat.*;
 import static com.msemu.world.client.character.skill.CharacterTemporaryStat.*;
@@ -31,25 +31,25 @@ import static com.msemu.world.client.character.skill.CharacterTemporaryStat.*;
  */
 public class Kanna extends JobHandler {
 
-    public static final int HAKU = 40020109;
+    public static final int 花狐 = 40020109;
 
-    public static final int RADIANT_PEACOCK = 42101003;
-    public static final int NIMBUS_CURSE = 42101005;
-    public static final int HAKU_REBORN = 42101002;
+    public static final int 扇_孔雀 = 42101003;
+    public static final int 妖雲召喚 = 42101005;
+    public static final int 影朋_花狐 = 42101002;
 
-    public static final int KISHIN_SHOUKAN = 42111003; //summon
-    public static final int BLOSSOM_BARRIER = 42111004; //AoE
-    public static final int SOUL_SHEAR = 42111002; //Reactive Skill
+    public static final int 鬼神召喚 = 42111003; //summon
+    public static final int 結界_櫻 = 42111004; //AoE
+    public static final int 紅玉咒印 = 42111002; //Reactive Skill
 
-    public static final int MONKEY_SPIRITS = 42120003; //Passive activation summon
-    public static final int BELLFLOWER_BARRIER = 42121005; //AoE
-    public static final int AKATUSKI_HERO_KANNA = 42121006;
-    public static final int NINE_TAILED_FURY = 42121024; //Attacking Skill + Buff
-    public static final int BINDING_TEMPEST = 42121004;
+    public static final int 猩猩火酒 = 42120003; //Passive activation summon
+    public static final int 結界_桔梗 = 42121005; //AoE
+    public static final int 曉月勇者 = 42121006;
+    public static final int 紫扇白狐 = 42121024; //Attacking Skill + Buff
+    public static final int 退魔流星符 = 42121004;
 
-    public static final int VERITABLE_PANDEMONIUM = 42121052; //Immobility Debuff
-    public static final int PRINCESS_VOW_KANNA = 42121053;
-    public static final int BLACKHEARTED_CURSE = 42121054;
+    public static final int 百鬼夜行 = 42121052; //Immobility Debuff
+    public static final int 公主的加護 = 42121053;
+    public static final int 結界_破魔 = 42121054;
 
     //Haku Buffs
     public static final int HAKUS_GIFT = 42121020;
@@ -58,13 +58,13 @@ public class Kanna extends JobHandler {
     public static final int BREATH_UNSEEN = 42121023;
 
     private int[] buffs = new int[]{
-            HAKU_REBORN,
-            RADIANT_PEACOCK,
-            KISHIN_SHOUKAN,
-            AKATUSKI_HERO_KANNA,
-            NINE_TAILED_FURY,
-            PRINCESS_VOW_KANNA,
-            BLACKHEARTED_CURSE,
+            影朋_花狐,
+            扇_孔雀,
+            鬼神召喚,
+            曉月勇者,
+            紫扇白狐,
+            公主的加護,
+            結界_破魔,
     };
 
 
@@ -90,8 +90,8 @@ public class Kanna extends JobHandler {
         Option o2 = new Option();
         Option o3 = new Option();
         switch (attackInfo.skillId) {
-            case BINDING_TEMPEST:
-            case VERITABLE_PANDEMONIUM:
+            case 退魔流星符:
+            case 百鬼夜行:
                 for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
                     Mob mob = chr.getField().getMobByObjectId(mai.getObjectID());
                     MobTemporaryStat mts = mob.getTemporaryStat();
@@ -102,7 +102,7 @@ public class Kanna extends JobHandler {
                 }
 
                 break;
-            case NIMBUS_CURSE:
+            case 妖雲召喚:
                 AffectedArea aa = AffectedArea.getPassiveAA(skillID, (byte) slv);
                 aa.setMobOrigin((byte) 0);
                 aa.setCharID(chr.getId());
@@ -115,7 +115,7 @@ public class Kanna extends JobHandler {
     }
 
     public void getHakuFollow() {
-        //if(chr.hasSkill(HAKU)) {
+        //if(chr.hasSkill(花狐)) {
         getClient().write(new LP_FoxManEnterField(getCharacter()));
         //}
     }
@@ -133,20 +133,20 @@ public class Kanna extends JobHandler {
         Option o4 = new Option();
         Option o5 = new Option();
         switch (skillID) {
-            case HAKU_REBORN:
+            case 影朋_花狐:
                 o1.nOption = 0;
                 o1.rOption = skillID;
                 o1.tOption = 30;
                 tsm.putCharacterStatValue(ChangeFoxMan, o1);
                 break;
-            case RADIANT_PEACOCK:
+            case 扇_孔雀:
                 o1.nOption = si.getValue(x, slv);
                 o1.rOption = skillID;
                 o1.tOption = si.getValue(time, slv);
                 tsm.putCharacterStatValue(Booster, o1);
                 getHakuFollow();
                 break;
-            case KISHIN_SHOUKAN:
+            case 鬼神召喚:
                 summon = Summon.getSummonBy(getCharacter(), skillID, slv);
                 field = getCharacter().getField();
                 summon.setFlyMob(true);
@@ -157,14 +157,14 @@ public class Kanna extends JobHandler {
                 summon.setMoveAbility(MoveAbility.STATIC.getVal());
                 field.spawnSummon(summon);
                 break;
-            case AKATUSKI_HERO_KANNA:
+            case 曉月勇者:
                 o1.nReason = skillID;
                 o1.nValue = si.getValue(x, slv);
                 o1.tStart = (int) System.currentTimeMillis();
                 o1.tTerm = si.getValue(time, slv);
                 tsm.putCharacterStatValue(IndieStatR, o1); //Indie
                 break;
-            case PRINCESS_VOW_KANNA:
+            case 公主的加護:
                 o1.nReason = skillID;
                 o1.nValue = si.getValue(indieDamR, slv);
                 o1.tStart = (int) System.currentTimeMillis();
@@ -176,7 +176,7 @@ public class Kanna extends JobHandler {
                 o2.tTerm = si.getValue(time, slv);
                 tsm.putCharacterStatValue(IndieMaxDamageOver, o2);
                 break;
-            case BLACKHEARTED_CURSE:
+            case 結界_破魔:
                 o1.nOption = 1;
                 o1.rOption = skillID;
                 o1.tOption = si.getValue(time, slv);
@@ -204,8 +204,8 @@ public class Kanna extends JobHandler {
             Option o2 = new Option();
             Option o3 = new Option();
             switch (skillID) {
-                case BLOSSOM_BARRIER:
-                case BELLFLOWER_BARRIER:
+                case 結界_櫻:
+                case 結界_桔梗:
                     AffectedArea aa = AffectedArea.getPassiveAA(skillID, slv);
                     aa.setMobOrigin((byte) 0);
                     aa.setCharID(chr.getId());
@@ -214,7 +214,7 @@ public class Kanna extends JobHandler {
                     aa.setDelay((short) 3);
                     chr.getField().spawnAffectedArea(aa);
                     break;
-                case NINE_TAILED_FURY:
+                case 紫扇白狐:
                     o1.nReason = skillID;
                     o1.nValue = si.getValue(indieDamR, slv);
                     o1.tStart = (int) System.currentTimeMillis();

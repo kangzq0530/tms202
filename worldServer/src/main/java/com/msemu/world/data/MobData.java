@@ -23,11 +23,14 @@ import java.util.concurrent.atomic.AtomicReference;
 @StartupComponent("Data")
 public class MobData implements IReloadable {
     private static final Logger log = LoggerFactory.getLogger(MobData.class);
+    private static final AtomicReference<MobData> instance = new AtomicReference<>();
     @Getter
     private final Map<Integer, MobTemplate> mobTemplates = new HashMap<>();
 
-    private static final AtomicReference<MobData> instance = new AtomicReference<>();
 
+    public MobData() {
+        load();
+    }
 
     public static MobData getInstance() {
         MobData value = instance.get();
@@ -41,10 +44,6 @@ public class MobData implements IReloadable {
             }
         }
         return value;
-    }
-
-    public MobData() {
-        load();
     }
 
     public void load() {

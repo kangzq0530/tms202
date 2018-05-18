@@ -1,11 +1,8 @@
 package com.msemu.world.client.character.friends;
 
-import com.msemu.commons.database.Schema;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Filter;
 
-import javax.persistence.*;
 import java.util.List;
 
 /**
@@ -15,12 +12,10 @@ import java.util.List;
 @Setter
 public class FriendList {
 
-    private int id;
-
-//    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    //    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
 //    @JoinColumn(name = "friendListId")
     List<FriendEntry> friendEntries;
-
+    private int id;
     private int maxCount;
 
     public void addMaxCount(int amount) {

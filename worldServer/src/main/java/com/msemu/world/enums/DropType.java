@@ -6,8 +6,7 @@ package com.msemu.world.enums;
 public enum DropType {
 
     MONEY(0),
-    ITEM(1),
-    ;
+    ITEM(1),;
 
     private byte val;
 

@@ -2,15 +2,19 @@ package com.msemu.world.client.character;
 
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Created by Weber on 2018/4/13.
  */
+@Getter
+@Setter
 public class MarriageRing {
     private int marriageNo;
     private int groomId;
     private int brideId;
-    private short status;
+    private int status;
     private int groomItemId;
     private int brideItemId;
     private String groomName;
@@ -27,69 +31,6 @@ public class MarriageRing {
         outPacket.encodeString(getBridgeName(), 15);
     }
 
-    public int getMarriageNo() {
-        return marriageNo;
-    }
-
-    public void setMarriageNo(int marriageNo) {
-        this.marriageNo = marriageNo;
-    }
-
-    public int getGroomId() {
-        return groomId;
-    }
-
-    public void setGroomId(int groomId) {
-        this.groomId = groomId;
-    }
-
-    public int getBrideId() {
-        return brideId;
-    }
-
-    public void setBrideId(int brideId) {
-        this.brideId = brideId;
-    }
-
-    public short getStatus() {
-        return status;
-    }
-
-    public void setStatus(short status) {
-        this.status = status;
-    }
-
-    public int getGroomItemId() {
-        return groomItemId;
-    }
-
-    public void setGroomItemId(int groomItemId) {
-        this.groomItemId = groomItemId;
-    }
-
-    public int getBrideItemId() {
-        return brideItemId;
-    }
-
-    public void setBrideItemId(int brideItemId) {
-        this.brideItemId = brideItemId;
-    }
-
-    public String getGroomName() {
-        return groomName;
-    }
-
-    public void setGroomName(String groomName) {
-        this.groomName = groomName;
-    }
-
-    public String getBridgeName() {
-        return bridgeName;
-    }
-
-    public void setBridgeName(String bridgeName) {
-        this.bridgeName = bridgeName;
-    }
 
     public void encodeForRemote(OutPacket outPacket) {
         // TODO make it so this works for a single player (groom/bride should be turned around 50% of the time)

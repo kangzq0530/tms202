@@ -9,5 +9,6 @@ import com.msemu.world.enums.WvsMessageType;
  */
 public interface IWvsMessage {
     WvsMessageType getType();
+
     void encode(OutPacket<GameClient> outPacket);
 }

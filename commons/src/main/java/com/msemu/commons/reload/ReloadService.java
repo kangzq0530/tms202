@@ -58,10 +58,7 @@ public class ReloadService {
         int count = 0;
         Collection<Class<? extends IReloadable>> classes = this.classTree.values().stream().filter((item) -> item.containsKey(name)).flatMap((item) -> item.values().stream()).collect(Collectors.toList());
         if (!classes.isEmpty()) {
-            for (Iterator<Class<? extends IReloadable>> var4 = classes.iterator(); var4.hasNext(); ++count) {
-                Class<? extends IReloadable> clazz = var4.next();
-                this.callReload(clazz);
-            }
+            classes.forEach(this::callReload);
         }
         return count;
     }
@@ -70,10 +67,7 @@ public class ReloadService {
         int count = 0;
         if (this.classTree.containsKey(group)) {
             Collection<Class<? extends IReloadable>> classes = this.classTree.get(group).values();
-            for (Iterator<Class<? extends IReloadable>> it = classes.iterator(); it.hasNext(); ++count) {
-                Class<? extends IReloadable> clazz = it.next();
-                this.callReload(clazz);
-            }
+            classes.forEach(this::callReload);
         }
         return count;
     }

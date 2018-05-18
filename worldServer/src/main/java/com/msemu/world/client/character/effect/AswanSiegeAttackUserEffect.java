@@ -8,7 +8,7 @@ import com.msemu.world.enums.UserEffectType;
 /**
  * Created by Weber on 2018/5/3.
  */
-public class AswanSiegeAttackUserEffect  implements IUserEffect {
+public class AswanSiegeAttackUserEffect implements IUserEffect {
 
     private AswanSiegeAttackUserEffectType type;
 

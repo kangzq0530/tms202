@@ -12,7 +12,7 @@ public class InstanceTableInfo {
 
     private String resultKey;
 
-    private  boolean rightResult;
+    private boolean rightResult;
 
     private int Value;
 }

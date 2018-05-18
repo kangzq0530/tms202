@@ -161,7 +161,6 @@ public class ConfigLoader implements IReloadable {
             log.error("Error while buildConfig()", var11);
             return;
         }
-
         StringBuilder out = new StringBuilder();
         Field[] fields = clazz.getDeclaredFields();
         for (Field field : fields) {
@@ -170,11 +169,12 @@ public class ConfigLoader implements IReloadable {
                 out.append("\n").append(configFields);
             }
         }
-
         try {
             Files.write(path, out.toString().getBytes(), StandardOpenOption.CREATE);
         } catch (IOException var10) {
-            log.error("Error while writing configs file: " + path, var10);
+            if (log.isErrorEnabled()) {
+                log.error("Error while writing configs file: " + path, var10);
+            }
         }
 
     }

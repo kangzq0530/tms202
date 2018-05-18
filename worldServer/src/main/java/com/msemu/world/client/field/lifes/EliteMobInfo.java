@@ -13,9 +13,9 @@ import java.util.Map;
 public class EliteMobInfo {
 
     @Getter
-    private int grade;
-    @Getter
     private final Map<EliteMobAttribute, Integer> eliteAttrs = new HashMap<>();
+    @Getter
+    private int grade;
 
     public EliteMobInfo() {
         this.grade = Rand.get(3);

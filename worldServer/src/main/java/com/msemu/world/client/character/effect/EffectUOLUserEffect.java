@@ -34,7 +34,7 @@ public class EffectUOLUserEffect implements IUserEffect {
         outPacket.encodeByte(flip);
         outPacket.encodeInt(delay);
         outPacket.encodeInt(type);
-        if( type == 2) {
+        if (type == 2) {
             outPacket.encodeInt(itemID);
         }
     }

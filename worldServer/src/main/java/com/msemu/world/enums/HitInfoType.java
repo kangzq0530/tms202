@@ -12,10 +12,10 @@ public enum HitInfoType {
     BY_HEKATON_FIELD_SKILL(-7),
     BY_OBTACLE_ATOM(-5),
 
-    BY_MOB(-1),
-    ;
+    BY_MOB(-1),;
     @Getter
     private byte type;
+
     HitInfoType(int type) {
         this.type = (byte) type;
     }

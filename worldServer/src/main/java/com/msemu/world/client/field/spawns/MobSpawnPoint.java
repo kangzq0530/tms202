@@ -1,7 +1,6 @@
 package com.msemu.world.client.field.spawns;
 
 import com.msemu.commons.data.templates.field.LifeData;
-import com.msemu.commons.utils.DateTimeUtils;
 import com.msemu.world.client.field.Field;
 import com.msemu.world.client.field.lifes.ForcedMobStat;
 import com.msemu.world.client.field.lifes.Mob;

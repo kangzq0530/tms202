@@ -35,8 +35,8 @@ public class QuestPopAction implements IQuestAction {
 
     @Override
     public void load(QuestActData actData) {
-        if(actData instanceof QuestPopActionData) {
-            setPop(((QuestPopActionData)actData).getPop());
+        if (actData instanceof QuestPopActionData) {
+            setPop(((QuestPopActionData) actData).getPop());
         }
     }
 

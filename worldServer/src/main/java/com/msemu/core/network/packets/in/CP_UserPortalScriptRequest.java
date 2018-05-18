@@ -3,9 +3,8 @@ package com.msemu.core.network.packets.in;
 import com.msemu.commons.data.templates.field.Portal;
 import com.msemu.commons.network.packets.InPacket;
 import com.msemu.core.network.GameClient;
-import com.msemu.world.channel.Channel;
+import com.msemu.world.Channel;
 import com.msemu.world.client.character.Character;
-import com.msemu.world.client.field.Field;
 
 /**
  * Created by Weber on 2018/5/2.

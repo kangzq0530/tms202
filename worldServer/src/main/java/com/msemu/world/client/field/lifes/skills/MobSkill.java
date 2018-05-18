@@ -11,7 +11,8 @@ import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.msemu.commons.data.enums.MobSkillStat.*;
+import static com.msemu.commons.data.enums.MobSkillStat.time;
+import static com.msemu.commons.data.enums.MobSkillStat.x;
 
 /**
  * Created by Weber on 2018/4/13.
@@ -56,7 +57,7 @@ public class MobSkill {
         Option o = new Option(skill);
         o.slv = level;
         o.tOption = msi.getSkillStatIntValue(time);
-        switch(msID) {
+        switch (msID) {
             case PowerUp:
             case PowerUp2:
             case PowerUp3:

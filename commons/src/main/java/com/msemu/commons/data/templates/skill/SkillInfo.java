@@ -66,9 +66,10 @@ public class SkillInfo implements DatSerializable {
         int result = 0;
         ScriptEngine engine = new ScriptEngineManager().getEngineByName("JavaScript");
         try {
-            expression = expression.replace("u", "Math.ceil");
-            expression = expression.replace("d", "Math.floor");
-            Object res = engine.eval(expression.replace("x", slv + ""));
+            String newExpression = expression.replace("u", "Math.ceil")
+                    .replace("d", "Math.floor")
+                    .replace("x", String.valueOf(slv));
+            Object res = engine.eval(newExpression);
             if (res instanceof Integer) {
                 result = (Integer) res;
             } else if (res instanceof Double) {

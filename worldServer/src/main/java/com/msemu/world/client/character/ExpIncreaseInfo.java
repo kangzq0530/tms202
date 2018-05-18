@@ -47,79 +47,79 @@ public class ExpIncreaseInfo {
 
     public long getMask() {
         long mask = 0;
-        if(getSelectedMobBonusExp() > 0) {
+        if (getSelectedMobBonusExp() > 0) {
             mask |= SelectedMobBonusExp.getValue();
         }
-        if(getPartyBonusPercentage() > 0) {
+        if (getPartyBonusPercentage() > 0) {
             mask |= PartyBonusPercentage.getValue();
         }
-        if(getWeddingBonusExp() > 0) {
+        if (getWeddingBonusExp() > 0) {
             mask |= WeddingBonusExp.getValue();
         }
-        if(getPartyBonusExp() > 0) {
+        if (getPartyBonusExp() > 0) {
             mask |= PartyBonusExp.getValue();
         }
-        if(getItemBonusExp() > 0) {
+        if (getItemBonusExp() > 0) {
             mask |= ItemBonusExp.getValue();
         }
-        if(getPremiumIPBonusExp() > 0) {
+        if (getPremiumIPBonusExp() > 0) {
             mask |= PremiumIPBonusExp.getValue();
         }
-        if(getRainbowWeekEventBonusExp() > 0) {
+        if (getRainbowWeekEventBonusExp() > 0) {
             mask |= RainbowWeekEventBonusExp.getValue();
         }
-        if(getBoomupEventBonusExp() > 0) {
+        if (getBoomupEventBonusExp() > 0) {
             mask |= BoomUpEventBonusExp.getValue();
         }
-        if(getPlusExpBuffBonusExp() > 0) {
+        if (getPlusExpBuffBonusExp() > 0) {
             mask |= PlusExpBuffBonusExp.getValue();
         }
-        if(getPsdBonusExpRate() > 0) {
+        if (getPsdBonusExpRate() > 0) {
             mask |= PsdBonusExpRate.getValue();
         }
-        if(getIndieBonusExp() > 0) {
+        if (getIndieBonusExp() > 0) {
             mask |= IndieBonusExp.getValue();
         }
-        if(getRelaxBonusExp() > 0) {
+        if (getRelaxBonusExp() > 0) {
             mask |= RelaxBonusExp.getValue();
         }
-        if(getInstallItemBonusExp() > 0) {
+        if (getInstallItemBonusExp() > 0) {
             mask |= InstallItemBonusExp.getValue();
         }
-        if(getAswanWinnerBonusExp() > 0) {
+        if (getAswanWinnerBonusExp() > 0) {
             mask |= AswanWinnerBonusExp.getValue();
         }
-        if(getExpByIncExpR() > 0) {
+        if (getExpByIncExpR() > 0) {
             mask |= ExpByIncExpR.getValue();
         }
-        if(getValuePackBonusExp() > 0) {
+        if (getValuePackBonusExp() > 0) {
             mask |= ValuePackBonusExp.getValue();
         }
-        if(getExpByIncPQExpR() > 0) {
+        if (getExpByIncPQExpR() > 0) {
             mask |= ExpByIncPQExpR.getValue();
         }
-        if(getBaseAddExp() > 0) {
+        if (getBaseAddExp() > 0) {
             mask |= BaseAddExp.getValue();
         }
-        if(getBloodAllianceBonusExp() > 0) {
+        if (getBloodAllianceBonusExp() > 0) {
             mask |= BloodAllianceBonusExp.getValue();
         }
-        if(getFreezeHotEventBonusExp() > 0) {
+        if (getFreezeHotEventBonusExp() > 0) {
             mask |= FreezeHotEventBonusExp.getValue();
         }
-        if(getRestFieldBonusExp() > 0 || getRestFieldExpRate() > 0) {
+        if (getRestFieldBonusExp() > 0 || getRestFieldExpRate() > 0) {
             mask |= RestField.getValue();
         }
-        if(getUserHPRateBonusExp() > 0) {
+        if (getUserHPRateBonusExp() > 0) {
             mask |= UserHPRateBonusExp.getValue();
         }
-        if(getFieldValueBonusExp() > 0) {
+        if (getFieldValueBonusExp() > 0) {
             mask |= FieldValueBonusExp.getValue();
         }
-        if(getMobKillBonusExp() > 0) {
+        if (getMobKillBonusExp() > 0) {
             mask |= MobKillBonusExp.getValue();
         }
-        if(getLiveEventBonusExp() > 0) {
+        if (getLiveEventBonusExp() > 0) {
             mask |= LiveEventBonusExp.getValue();
         }
 
@@ -131,86 +131,86 @@ public class ExpIncreaseInfo {
         outPacket.encodeLong(getIncEXP());
         outPacket.encodeByte(isOnQuest());
         outPacket.encodeLong(getMask());
-        if(getSelectedMobBonusExp() > 0) {
+        if (getSelectedMobBonusExp() > 0) {
             outPacket.encodeInt(getSelectedMobBonusExp());
         }
-        if(getPartyBonusPercentage() > 0) {
+        if (getPartyBonusPercentage() > 0) {
             outPacket.encodeInt(getPartyBonusPercentage());
         }
-        if(isOnQuest()) {
+        if (isOnQuest()) {
             outPacket.encodeByte(getQuestBonusRate());
         }
-        if(getQuestBonusRate() > 0) {
+        if (getQuestBonusRate() > 0) {
             outPacket.encodeByte(getQuestBonusRemainCount());
         }
-        if(getWeddingBonusExp() > 0) {
+        if (getWeddingBonusExp() > 0) {
             outPacket.encodeByte(getWeddingBonusExp());
         }
-        if(getPartyBonusExp() > 0) {
+        if (getPartyBonusExp() > 0) {
             outPacket.encodeByte(getPartyBonusExp());
         }
-        if(getItemBonusExp() > 0) {
+        if (getItemBonusExp() > 0) {
             outPacket.encodeByte(getItemBonusExp());
         }
-        if(getPremiumIPBonusExp() > 0) {
+        if (getPremiumIPBonusExp() > 0) {
             outPacket.encodeByte(getPremiumIPBonusExp());
         }
-        if(getRainbowWeekEventBonusExp() > 0) {
+        if (getRainbowWeekEventBonusExp() > 0) {
             outPacket.encodeByte(getRainbowWeekEventBonusExp());
         }
-        if(getBoomupEventBonusExp() > 0) {
+        if (getBoomupEventBonusExp() > 0) {
             outPacket.encodeByte(getBoomupEventBonusExp());
         }
-        if(getPlusExpBuffBonusExp() > 0) {
+        if (getPlusExpBuffBonusExp() > 0) {
             outPacket.encodeByte(getPlusExpBuffBonusExp());
         }
-        if(getPsdBonusExpRate() > 0) {
+        if (getPsdBonusExpRate() > 0) {
             outPacket.encodeByte(getPsdBonusExpRate());
         }
-        if(getIndieBonusExp() > 0) {
+        if (getIndieBonusExp() > 0) {
             outPacket.encodeByte(getIndieBonusExp());
         }
-        if(getRelaxBonusExp() > 0) {
+        if (getRelaxBonusExp() > 0) {
             outPacket.encodeByte(getRelaxBonusExp());
         }
-        if(getInstallItemBonusExp() > 0) {
+        if (getInstallItemBonusExp() > 0) {
             outPacket.encodeByte(getInstallItemBonusExp());
         }
 //        if(getAswanWinnerBonusExp() > 0) {
 //            outPacket.encodeByte(getAswanWinnerBonusExp());
 //        }
-        if(getExpByIncExpR() > 0) {
+        if (getExpByIncExpR() > 0) {
             outPacket.encodeByte(getExpByIncExpR());
         }
-        if(getValuePackBonusExp() > 0) {
+        if (getValuePackBonusExp() > 0) {
             outPacket.encodeByte(getValuePackBonusExp());
         }
-        if(getExpByIncPQExpR() > 0) {
+        if (getExpByIncPQExpR() > 0) {
             outPacket.encodeByte(getExpByIncPQExpR());
         }
-        if(getBaseAddExp() > 0) {
+        if (getBaseAddExp() > 0) {
             outPacket.encodeByte(getBaseAddExp());
         }
-        if(getBloodAllianceBonusExp() > 0) {
+        if (getBloodAllianceBonusExp() > 0) {
             outPacket.encodeByte(getBloodAllianceBonusExp());
         }
-        if(getFreezeHotEventBonusExp() > 0) {
+        if (getFreezeHotEventBonusExp() > 0) {
             outPacket.encodeByte(getFreezeHotEventBonusExp());
         }
-        if(getRestFieldBonusExp() > 0 || getRestFieldExpRate() > 0) {
+        if (getRestFieldBonusExp() > 0 || getRestFieldExpRate() > 0) {
             outPacket.encodeByte(getRestFieldBonusExp());
             outPacket.encodeByte(getRestFieldExpRate());
         }
-        if(getUserHPRateBonusExp() > 0) {
+        if (getUserHPRateBonusExp() > 0) {
             outPacket.encodeByte(getUserHPRateBonusExp());
         }
-        if(getFieldValueBonusExp() > 0) {
+        if (getFieldValueBonusExp() > 0) {
             outPacket.encodeByte(getFieldValueBonusExp());
         }
-        if(getMobKillBonusExp() > 0) {
+        if (getMobKillBonusExp() > 0) {
             outPacket.encodeByte(getMobKillBonusExp());
         }
-        if(getLiveEventBonusExp() > 0) {
+        if (getLiveEventBonusExp() > 0) {
             outPacket.encodeByte(getLiveEventBonusExp());
         }
         // TODO 有幾個沒處理

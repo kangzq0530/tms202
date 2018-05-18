@@ -10,6 +10,7 @@ import com.msemu.world.enums.UserEffectType;
 public interface IUserEffect {
 
     UserEffectType getType();
+
     void encode(OutPacket<GameClient> outPacket);
 
 }

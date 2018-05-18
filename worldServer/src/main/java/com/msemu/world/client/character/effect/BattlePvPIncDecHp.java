@@ -7,7 +7,7 @@ import com.msemu.world.enums.UserEffectType;
 /**
  * Created by Weber on 2018/5/3.
  */
-public class BattlePvPIncDecHp  implements IUserEffect {
+public class BattlePvPIncDecHp implements IUserEffect {
 
     private int colorType;
     private String unk;

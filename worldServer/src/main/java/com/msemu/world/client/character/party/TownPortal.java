@@ -28,7 +28,7 @@ public class TownPortal {
     }
 
     public void encode(OutPacket<GameClient> outPacket, boolean isLeaving) {
-        outPacket.encodeInt(isLeaving ?  999999999 : getTownID());
+        outPacket.encodeInt(isLeaving ? 999999999 : getTownID());
         outPacket.encodeInt(isLeaving ? 999999999 : getFieldID());
         outPacket.encodeInt(isLeaving ? 0 : getSkillID());
         outPacket.encodePosition(isLeaving ? new Position(-1, -1) : getPosition());

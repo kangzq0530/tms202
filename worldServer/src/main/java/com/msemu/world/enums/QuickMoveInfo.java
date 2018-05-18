@@ -29,6 +29,10 @@ public enum QuickMoveInfo {
     埃德爾斯坦(310000000, QuickMoveNpcInfo.大陸移動碼頭.getValue()),
     萬神殿(400000000, 0);
     @Getter
+    public final static long GLOBAL_NPC
+            = QuickMoveNpcInfo.次元傳送門.getValue()
+            | QuickMoveNpcInfo.聚合功能.getValue();
+    @Getter
     private final int map;
     @Getter
     private final long npc;
@@ -44,10 +48,6 @@ public enum QuickMoveInfo {
             | QuickMoveNpcInfo.琳.getValue()
             //            | QuickMoveNpcInfo.楓之谷拍賣場.getValue()
             | QuickMoveNpcInfo.初音未來.getValue();
-    @Getter
-    public final static long GLOBAL_NPC
-            = QuickMoveNpcInfo.次元傳送門.getValue()
-            | QuickMoveNpcInfo.聚合功能.getValue();
 
     QuickMoveInfo(int map, long npc) {
         this.map = map;

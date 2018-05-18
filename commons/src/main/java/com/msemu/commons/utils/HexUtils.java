@@ -1,6 +1,5 @@
 package com.msemu.commons.utils;
 
-import com.msemu.commons.enums.GameServiceType;
 import com.msemu.core.configs.CoreConfig;
 
 import java.nio.ByteBuffer;
@@ -127,8 +126,7 @@ public class HexUtils {
     }
 
     public static byte[] hex2Byte(String str) {
-        str = str.trim().replace(" ", "");
-        byte[] bytes = new byte[str.length() / 2];
+        byte[] bytes = new byte[str.trim().replace(" ", "").length() / 2];
         for (int i = 0; i < bytes.length; ++i) {
             bytes[i] = (byte) Integer.parseInt(str.substring(2 * i, 2 * i + 2), 16);
         }

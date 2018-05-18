@@ -38,8 +38,7 @@ public enum MobSkillID {
     Seal(157),
     Tornado(173),
     Teleport(184),
-    Summon(200),
-    ;
+    Summon(200),;
 
     private int value;
 
@@ -47,11 +46,11 @@ public enum MobSkillID {
         this.value = value;
     }
 
-    public int getValue() {
-        return value;
-    }
-
     public static MobSkillID getMobSkillIDByValue(int value) {
         return Arrays.stream(values()).filter(m -> m.getValue() == value).findFirst().orElse(Unk);
+    }
+
+    public int getValue() {
+        return value;
     }
 }

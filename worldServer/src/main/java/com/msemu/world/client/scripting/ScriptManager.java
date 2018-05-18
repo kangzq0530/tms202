@@ -20,11 +20,12 @@ import java.util.concurrent.locks.ReentrantLock;
  * Created by Weber on 2018/4/13.
  */
 public class ScriptManager {
-    private static final String SCRIPT_ENGINE_NAME = "nashorn";
     public static final String SCRIPT_ENGINE_EXTENSION = ".js";
-    private static final String DEFAULT_SCRIPT = "undefined";
     public static final String QUEST_START_SCRIPT_END_TAG = "s";
     public static final String QUEST_COMPLETE_SCRIPT_END_TAG = "e";
+    public static final Logger log = LoggerFactory.getLogger(ScriptManager.class);
+    private static final String SCRIPT_ENGINE_NAME = "nashorn";
+    private static final String DEFAULT_SCRIPT = "undefined";
     @Getter
     private static final ScriptEngineManager engineManager = new ScriptEngineManager();
     @Getter
@@ -34,8 +35,6 @@ public class ScriptManager {
     private ScriptInfo scriptInfo;
     @Getter
     private ReentrantLock lock = new ReentrantLock();
-
-    public static final Logger log = LoggerFactory.getLogger(ScriptManager.class);
 
     public ScriptManager(Character character) {
         this.character = character;
@@ -120,10 +119,10 @@ public class ScriptManager {
     public void handleAction(NpcMessageType lastType, byte action, int selection) {
         getLock().lock();
         try {
-            if(getScriptInfo() == null)
+            if (getScriptInfo() == null)
                 return;
             ScriptInteraction cm = getScriptInfo().getInteraction();
-            if(lastType.getValue() != cm.getNpcScriptInfo().getLastMessageType().getValue()) {
+            if (lastType.getValue() != cm.getNpcScriptInfo().getLastMessageType().getValue()) {
                 stopScriptWithoutLock();
                 return;
             } else if (cm.getNpcScriptInfo().getLastMessageType() == NpcMessageType.NM_SAY_OK) {

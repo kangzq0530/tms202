@@ -40,9 +40,9 @@ public class QuestStartCompletionRequirement implements IQuestStartRequirements 
 
     @Override
     public void load(QuestReqData reqData) {
-        if(reqData instanceof QuestQuestReqData) {
-            setQuestID(((QuestQuestReqData)reqData).getQuestId());
-            setQuestStatus(((QuestQuestReqData)reqData).getState());
+        if (reqData instanceof QuestQuestReqData) {
+            setQuestID(((QuestQuestReqData) reqData).getQuestId());
+            setQuestStatus(((QuestQuestReqData) reqData).getState());
         }
     }
 }

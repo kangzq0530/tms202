@@ -17,9 +17,9 @@ public class InventoryOperationInfo {
     @Getter
     private final int oldBagIndex;
     @Getter
-    private final short oldQuantity;
+    private final int oldQuantity;
 
-    public InventoryOperationInfo(InventoryOperationType type, Item item, int oldBagIndex, short oldQuantity) {
+    public InventoryOperationInfo(InventoryOperationType type, Item item, int oldBagIndex, int oldQuantity) {
         this.type = type;
         this.item = new WeakReference<>(item);
         this.oldBagIndex = oldBagIndex;
@@ -27,7 +27,7 @@ public class InventoryOperationInfo {
     }
 
     public InventoryOperationInfo(InventoryOperationType type, Item item, int oldBagIndex) {
-        this(type, item, oldBagIndex, (short)item.getQuantity());
+        this(type, item, oldBagIndex, item.getQuantity());
     }
 
     public Item getItem() {

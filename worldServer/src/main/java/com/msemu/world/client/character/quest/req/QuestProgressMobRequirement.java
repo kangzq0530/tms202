@@ -31,9 +31,10 @@ public class QuestProgressMobRequirement extends QuestProgressRequirement implem
     public QuestProgressMobRequirement() {
         this.currentCount = 0;
     }
+
     public void incCurrentCount(int amount) {
         currentCount += amount;
-        if(currentCount < 0) {
+        if (currentCount < 0) {
             currentCount = 0;
         }
     }
@@ -51,9 +52,9 @@ public class QuestProgressMobRequirement extends QuestProgressRequirement implem
 
     @Override
     public void load(QuestReqData reqData) {
-        if(reqData instanceof QuestMobReqData) {
-            setRequiredCount(((QuestMobReqData)reqData).getCount());
-            setMobID(((QuestMobReqData)reqData).getMobId());
+        if (reqData instanceof QuestMobReqData) {
+            setRequiredCount(((QuestMobReqData) reqData).getCount());
+            setMobID(((QuestMobReqData) reqData).getMobId());
         }
     }
 }

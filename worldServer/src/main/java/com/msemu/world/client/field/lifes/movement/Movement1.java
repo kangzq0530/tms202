@@ -28,10 +28,9 @@ public class Movement1 extends MovementBase {
         }
 
 
-
-        short xoffset = inPacket.decodeShort();
-        short yoffset = inPacket.decodeShort();
-        offset = new Position(xoffset, yoffset);
+        int xOffset = inPacket.decodeShort();
+        int yOffset = inPacket.decodeShort();
+        offset = new Position(xOffset, yOffset);
 
         moveAction = inPacket.decodeByte();
         elapse = inPacket.decodeShort();

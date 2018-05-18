@@ -38,8 +38,8 @@ public class QuestProgressMoneyRequirement extends QuestProgressRequirement {
 
     @Override
     public void load(QuestReqData reqData) {
-        if(reqData instanceof QuestEndMesoReqData) {
-            setMoney(((QuestEndMesoReqData)reqData).getMeso());
+        if (reqData instanceof QuestEndMesoReqData) {
+            setMoney(((QuestEndMesoReqData) reqData).getMeso());
         }
     }
 }

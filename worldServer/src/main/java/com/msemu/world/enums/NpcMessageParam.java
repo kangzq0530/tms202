@@ -13,8 +13,7 @@ public enum NpcMessageParam {
     NPC_ON_LEFT_SIDE_OVERRIDE(4),
     NPC_ON_LEFT_SIDE_TURN_RIGHT(8),
     CHAR_ON_RIGHT_SIDE_TURN_RIGHT(16),
-    BOTTOM_DIALOG_WITH_DELAY(32),
-    ;
+    BOTTOM_DIALOG_WITH_DELAY(32),;
     @Getter
     private int value;
 

@@ -150,7 +150,7 @@ public class QuestManager {
         Set<IQuestStartRequirements> questReqs = qd.getStartReqsById(questID).stream()
                 .filter(qsr -> qsr instanceof QuestStartCompletionRequirement)
                 .collect(Collectors.toSet());
-        boolean hasQuest = questReqs.size() == 0 ||
+        boolean hasQuest = questReqs.isEmpty() ||
                 questReqs.stream().anyMatch(q -> q.hasRequirements(character));
         return hasQuest && qd.getStartReqsById(questID).stream()
                 .allMatch(qsr -> qsr.hasRequirements(character));

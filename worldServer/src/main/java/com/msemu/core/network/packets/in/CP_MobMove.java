@@ -112,7 +112,7 @@ public class CP_MobMove extends InPacket<GameClient> {
                 mob.setFh(movement.getFh());
             }
 
-            if(movements.size() > 0) {
+            if(!movements.isEmpty()) {
                 getClient().write(new LP_MobCtrlAck(mob, true, moveId, mobSkillID, (byte) mobSkillLevel, 0));
                 field.broadcastPacket(new LP_MobMove(mob, msai, movements), controller);
             }

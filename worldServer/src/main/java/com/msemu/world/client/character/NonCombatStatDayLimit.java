@@ -1,8 +1,8 @@
 package com.msemu.world.client.character;
 
 import com.msemu.commons.database.Schema;
-import com.msemu.commons.utils.types.FileTime;
 import com.msemu.commons.network.packets.OutPacket;
+import com.msemu.commons.utils.types.FileTime;
 import com.msemu.core.network.GameClient;
 
 import javax.persistence.*;

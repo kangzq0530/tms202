@@ -10,7 +10,6 @@ import com.msemu.world.client.field.AbstractFieldObject;
 import com.msemu.world.enums.*;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.Synchronized;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -59,13 +58,13 @@ public class Drop extends AbstractFieldObject {
         setDropType(DropType.ITEM);
     }
 
+    public boolean isMoney() {
+        return getDropType() == DropType.MONEY;
+    }
+
     public void setMoney(int money) {
         this.money = money;
         setDropType(DropType.MONEY);
-    }
-
-    public boolean isMoney() {
-        return getDropType() == DropType.MONEY;
     }
 
     public byte getItemGrade() {

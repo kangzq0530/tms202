@@ -8,7 +8,7 @@ import com.msemu.core.network.packets.out.field.LP_SetQuestClear;
 import com.msemu.core.network.packets.out.funckey.LP_FuncKeyMappedInit;
 import com.msemu.core.network.packets.out.wvscontext.*;
 import com.msemu.world.World;
-import com.msemu.world.channel.Channel;
+import com.msemu.world.Channel;
 import com.msemu.world.client.Account;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.field.Field;

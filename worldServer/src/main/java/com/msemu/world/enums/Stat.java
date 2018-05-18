@@ -44,17 +44,13 @@ public enum Stat {
     VIRTUE(0x80000000), // int
     GACHAPON_EXP(0x100000000L), // long
     GENDER(0x200000000L); // int
-            ;
+    ;
 
 
     private long val;
 
     Stat(long val) {
         this.val = val;
-    }
-
-    public long getValue() {
-        return val;
     }
 
     public static Stat getByVal(long stat) {
@@ -67,5 +63,9 @@ public enum Stat {
         Collections.sort(allStats);
         stats.addAll(allStats.stream().filter(stat -> (stat.getValue() & mask) != 0).collect(Collectors.toList()));
         return stats;
+    }
+
+    public long getValue() {
+        return val;
     }
 }

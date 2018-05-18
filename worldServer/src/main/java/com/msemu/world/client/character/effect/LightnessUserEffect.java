@@ -31,7 +31,7 @@ public class LightnessUserEffect implements IUserEffect {
     @Override
     public void encode(OutPacket<GameClient> outPacket) {
         outPacket.encodeByte(unk);
-        if(unk)
+        if (unk)
             outPacket.encodeInt(value);
     }
 }

@@ -85,7 +85,7 @@ public class Inventory {
 
     public Item getFirstItemByBodyPart(BodyPart bodyPart) {
         List<Item> items = getItemsByBodyPart(bodyPart);
-        return items != null && items.size() > 0 ? items.get(0) : null;
+        return items != null && !items.isEmpty() ? items.get(0) : null;
     }
 
     public List<Item> getItemsByBodyPart(BodyPart bodyPart) {
@@ -96,12 +96,12 @@ public class Inventory {
         return items;
     }
 
-    public void sortItemsByIndex() {
-        getItems().sort(Comparator.comparingInt(Item::getBagIndex));
-    }
-
     public void setItems(List<Item> items) {
         this.items = items;
+    }
+
+    public void sortItemsByIndex() {
+        getItems().sort(Comparator.comparingInt(Item::getBagIndex));
     }
 
     public InvType getType() {
@@ -112,11 +112,7 @@ public class Inventory {
         this.type = type;
     }
 
-    public Item getItemBySlot(short bagIndex) {
-        return getItemBySlot(bagIndex < 0 ? -bagIndex : bagIndex);
-    }
-
-    private Item getItemBySlot(int bagIndex) {
+    public Item getItemBySlot(int bagIndex) {
         return getItems().stream().filter(item -> item.getBagIndex() == bagIndex).findAny().orElse(null);
     }
 

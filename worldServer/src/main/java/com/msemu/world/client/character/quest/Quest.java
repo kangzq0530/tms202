@@ -1,10 +1,12 @@
 package com.msemu.world.client.character.quest;
 
 import com.msemu.commons.database.Schema;
-import com.msemu.commons.utils.StringUtils;
 import com.msemu.commons.utils.types.FileTime;
 import com.msemu.world.client.character.inventory.items.Item;
-import com.msemu.world.client.character.quest.req.*;
+import com.msemu.world.client.character.quest.req.QuestProgressItemRequirement;
+import com.msemu.world.client.character.quest.req.QuestProgressMobRequirement;
+import com.msemu.world.client.character.quest.req.QuestProgressMoneyRequirement;
+import com.msemu.world.client.character.quest.req.QuestProgressRequirement;
 import com.msemu.world.enums.QuestStatus;
 import lombok.Getter;
 import lombok.Setter;
@@ -65,6 +67,10 @@ public class Quest {
         return qrValue;
     }
 
+    public void setQrValue(String qrValue) {
+        this.qrValue = qrValue;
+    }
+
     public QuestStatus getStatus() {
         return status;
     }
@@ -111,13 +117,13 @@ public class Quest {
         return completedTime;
     }
 
+    public void setCompletedTime(FileTime completedTime) {
+        this.completedTime = completedTime;
+    }
+
     public void completeQuest() {
         setStatus(QuestStatus.COMPLETE);
         setCompletedTime(FileTime.getCurrentTimeForQuest());
-    }
-
-    public void setCompletedTime(FileTime completedTime) {
-        this.completedTime = completedTime;
     }
 
     public boolean isComplete() {
@@ -167,10 +173,6 @@ public class Quest {
         for (QuestProgressItemRequirement qpir : qpirs) {
             qpir.addItem(item.getQuantity());
         }
-    }
-
-    public void setQrValue(String qrValue) {
-        this.qrValue = qrValue;
     }
 }
 

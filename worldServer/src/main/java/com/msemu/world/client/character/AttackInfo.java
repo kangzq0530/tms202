@@ -23,7 +23,6 @@ public class AttackInfo {
     public boolean isMagicAttack = false;
     public boolean isBodyAttack = false;
     public boolean isDotAttack = false;
-
     public byte fieldKey;
     public byte hits;
     public int mobCount;
@@ -32,7 +31,7 @@ public class AttackInfo {
     public int keyDown;
     public byte idk;
     public boolean left;
-    public short attackAction;
+    public int attackAction;
     public byte attackActionType;
     public byte idk0;
     public byte attackSpeed;
@@ -42,17 +41,17 @@ public class AttackInfo {
     public List<MobAttackInfo> mobAttackInfo = new ArrayList<>();
     public int y;
     public int x;
-    public short forcedY;
-    public short forcedX;
-    public short rcDstRight;
-    public short rectRight;
+    public int forcedY;
+    public int forcedX;
+    public int rcDstRight;
+    public int rectRight;
     public int option;
     public int[] mists;
-    public short forcedYSh;
-    public short forcedXSh;
+    public int forcedYSh;
+    public int forcedXSh;
     public byte force;
-    public short delay;
-    public short[] shortArr;
+    public int delay;
+    public int[] shortArr;
     public byte addAttackProc;
     public int crc;
     public int grenadeId;
@@ -68,7 +67,7 @@ public class AttackInfo {
     public Position pos = new Position();
     public byte fh;
     public Position teleportPt = new Position();
-    public short Vx;
+    public int Vx;
     public Position grenadePos;
     public Rect rect;
     public int elemAttr;
@@ -80,7 +79,7 @@ public class AttackInfo {
     public Summon summon;
     public int updateTime;
     public int bulletID;
-    public short mobMove;
+    public int mobMove;
     public boolean isJablin;
     public int bulletCount;
     public Position bodyRelMove;

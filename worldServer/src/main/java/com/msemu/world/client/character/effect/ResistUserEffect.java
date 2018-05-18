@@ -7,7 +7,7 @@ import com.msemu.world.enums.UserEffectType;
 /**
  * Created by Weber on 2018/5/3.
  */
-public class ResistUserEffect  implements  IUserEffect {
+public class ResistUserEffect implements IUserEffect {
     @Override
     public UserEffectType getType() {
         return UserEffectType.Resist;

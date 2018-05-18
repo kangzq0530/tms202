@@ -19,6 +19,6 @@ public class FoundPossiblePartyResponse implements IPartyResult {
         // s Name
         // 4 4 4
         // 4 - partyID
-        throw  new NotImplementedException();
+        throw new NotImplementedException();
     }
 }

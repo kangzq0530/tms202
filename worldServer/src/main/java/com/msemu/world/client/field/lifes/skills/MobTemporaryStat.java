@@ -100,8 +100,8 @@ public class MobTemporaryStat {
     public void encode(OutPacket<GameClient> outPacket) {
         // DecodeBuffer(12) + MobBuffStat::DecodeTemporary
         int[] mask = getNewMask();
-        for (int i = 0; i < mask.length; i++) {
-            outPacket.encodeInt(mask[i]);
+        for (int aMask : mask) {
+            outPacket.encodeInt(aMask);
         }
         for (Map.Entry<MobBuffStat, Option> entry : getNewStatVals().entrySet()) {
             MobBuffStat mobStat = entry.getKey();
@@ -288,8 +288,8 @@ public class MobTemporaryStat {
 
         if (hasNewMobStat(ExtraBuffStat)) {
             List<Option> values = getNewOptionsByMobStat(ExtraBuffStat).extraOpts;
-            outPacket.encodeByte(values.size() > 0);
-            if (values.size() > 0) {
+            outPacket.encodeByte(!values.isEmpty());
+            if (!values.isEmpty()) {
                 outPacket.encodeInt(getNewOptionsByMobStat(ExtraBuffStat).extraOpts.get(0).nOption); // nPAD
                 outPacket.encodeInt(getNewOptionsByMobStat(ExtraBuffStat).extraOpts.get(0).mOption); // nMAD
                 outPacket.encodeInt(getNewOptionsByMobStat(ExtraBuffStat).extraOpts.get(0).xOption); // nPDR

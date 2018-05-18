@@ -7,6 +7,7 @@ public interface IQuestValueRequirement {
 
     /**
      * Returns the String corresponding to a quest progress' string value.
+     *
      * @return The String corresponding to a quest progress' string value.
      */
     String getValue();

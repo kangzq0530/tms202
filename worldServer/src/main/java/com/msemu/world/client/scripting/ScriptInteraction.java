@@ -21,7 +21,7 @@ import com.msemu.core.network.packets.out.user.local.*;
 import com.msemu.core.network.packets.out.user.local.effect.LP_UserEffectLocal;
 import com.msemu.core.network.packets.out.wvscontext.LP_FuncKeySetByScript;
 import com.msemu.core.network.packets.out.wvscontext.LP_GuildResult;
-import com.msemu.world.channel.Channel;
+import com.msemu.world.Channel;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.effect.*;
 import com.msemu.world.client.character.party.Party;
@@ -33,9 +33,9 @@ import com.msemu.world.client.field.Field;
 import com.msemu.world.client.field.effect.MobHPTagFieldEffect;
 import com.msemu.world.client.field.effect.ObjectFieldEffect;
 import com.msemu.world.client.field.effect.ScreenDelayFieldEffect;
-import com.msemu.world.client.guild.operations.InputGuildName;
 import com.msemu.world.client.field.lifes.Mob;
 import com.msemu.world.client.field.lifes.Npc;
+import com.msemu.world.client.guild.operations.InputGuildName;
 import com.msemu.world.data.MobData;
 import com.msemu.world.data.NpcData;
 import com.msemu.world.data.QuestData;
@@ -54,19 +54,19 @@ import java.util.Optional;
 public class ScriptInteraction {
 
     @Getter
+    public static final List<Npc> requestNpcs = new ArrayList<>();
+    @Getter
+    protected Character character;
+    @Getter
     private ScriptType scriptType;
     @Getter
     private String scriptName;
     @Getter
     private int parentID;
     @Getter
-    protected Character character;
-    @Getter
     private int speakerTemplateID = 2007;
     @Getter
     private NpcScriptInfo npcScriptInfo;
-    @Getter
-    public static final List<Npc> requestNpcs = new ArrayList<>();
 
     public ScriptInteraction(ScriptType scriptType, int parentID, String scriptName, Character character) {
         this.character = character;
@@ -78,7 +78,7 @@ public class ScriptInteraction {
             this.speakerTemplateID = parentID;
         } else if (scriptType.equals(ScriptType.QUEST)) {
             QuestInfo qi = QuestData.getInstance().getQuestInfoById(parentID);
-            if(scriptName.endsWith(ScriptManager.QUEST_COMPLETE_SCRIPT_END_TAG)) {
+            if (scriptName.endsWith(ScriptManager.QUEST_COMPLETE_SCRIPT_END_TAG)) {
                 Optional<QuestNpcReqData> rData = qi.getCompleteReqsData().stream()
                         .filter(req -> req.getType().equals(QuestRequirementDataType.npc))
                         .map(req -> (QuestNpcReqData) req)

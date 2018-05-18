@@ -96,16 +96,16 @@ public enum FriendResultType {
         this.value = code;
     }
 
-    public int getValue() {
-        return value;
-    }
-
     public static FriendResultType getByValue(int value) {
-        for(FriendResultType type : values()) {
-            if(type.getValue() == value)
+        for (FriendResultType type : values()) {
+            if (type.getValue() == value)
                 return type;
         }
         return null;
+    }
+
+    public int getValue() {
+        return value;
     }
 }
 

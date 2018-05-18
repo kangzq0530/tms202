@@ -103,7 +103,7 @@ public class SocketUtils {
         }
     }
 
-    public static <TNetworkChannel extends NetworkChannel> TNetworkChannel applySocketOptions(TNetworkChannel networkChannel, Pair<SocketOption, Object>[] options) throws IOException {
+    public static <TNetworkChannel extends NetworkChannel> TNetworkChannel applySocketOptions(TNetworkChannel networkChannel, Pair<SocketOption, Object>... options) throws IOException {
         Set<SocketOption<?>> supportedOptions = networkChannel.supportedOptions();
         for (Pair<SocketOption, Object> soPair : options) {
             SocketOption option = soPair.getKey();
@@ -114,7 +114,6 @@ public class SocketUtils {
                 networkChannel = (TNetworkChannel) networkChannel.setOption(option, value);
             }
         }
-
         return networkChannel;
     }
 

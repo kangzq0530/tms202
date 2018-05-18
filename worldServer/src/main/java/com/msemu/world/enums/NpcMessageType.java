@@ -93,15 +93,15 @@ public enum NpcMessageType {
     }
 
     NpcMessageType(int value, boolean prev, boolean next) {
-        this.value = (byte)value;
+        this.value = (byte) value;
         this.prev = prev;
         this.next = next;
         this.delay = 0;
     }
 
     public static NpcMessageType getByValue(int value) {
-        for(NpcMessageType type : values()) {
-            if(type.getValue() == value)
+        for (NpcMessageType type : values()) {
+            if (type.getValue() == value)
                 return type;
         }
         return null;

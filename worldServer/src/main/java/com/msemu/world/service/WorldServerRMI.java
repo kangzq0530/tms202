@@ -5,10 +5,9 @@ import com.msemu.commons.rmi.IWorldServerRMI;
 import com.msemu.commons.rmi.model.WorldRegisterResult;
 import com.msemu.commons.thread.EventManager;
 import com.msemu.core.configs.NetworkConfig;
-import com.msemu.world.World;
-import com.msemu.world.channel.Channel;
 import com.msemu.core.network.GameClient;
-import com.msemu.world.client.Account;
+import com.msemu.world.World;
+import com.msemu.world.Channel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,7 +76,7 @@ public class WorldServerRMI extends UnicastRemoteObject implements IWorldServerR
     }
 
     @Override
-    public boolean testConnection() throws RemoteException {
+    public boolean checkConnection() throws RemoteException {
         return true;
     }
 
@@ -105,8 +104,8 @@ public class WorldServerRMI extends UnicastRemoteObject implements IWorldServerR
 
         kickByAccountId(accountId);
 
-        Channel channel = world.getChannels().stream().filter(ch->ch.getChannelId()==channelId).findFirst().orElse(null);
-        if(channel != null) {
+        Channel channel = world.getChannels().stream().filter(ch -> ch.getChannelId() == channelId).findFirst().orElse(null);
+        if (channel != null) {
             channel.addTransfer(accountId, characterId);
         }
 
@@ -126,7 +125,7 @@ public class WorldServerRMI extends UnicastRemoteObject implements IWorldServerR
 
     private void watchLoginServerStatus() {
         try {
-            WorldServerRMI.this.connection.testConnection();
+            WorldServerRMI.this.connection.checkConnection();
         } catch (Exception e) {
             if (WorldServerRMI.this.reconnectTask == null) {
                 WorldServerRMI.this.onConnectionLost();

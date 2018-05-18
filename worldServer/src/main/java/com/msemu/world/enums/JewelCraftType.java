@@ -11,8 +11,7 @@ public enum JewelCraftType {
     SYNTHESIZE_SUCCESS(2),
     SYNTHESIZE_KEEP(3),
     SYNTHESIZE_FAIL(4),
-    ERROR(5),
-    ;
+    ERROR(5),;
     @Getter
     private byte value;
 

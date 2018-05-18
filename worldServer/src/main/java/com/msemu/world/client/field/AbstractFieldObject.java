@@ -9,8 +9,7 @@ import lombok.Setter;
 /**
  * Created by Weber on 2018/5/13.
  */
-public abstract class AbstractFieldObject
-{
+public abstract class AbstractFieldObject {
 
     @Getter
     private final Position position = new Position();

@@ -36,7 +36,7 @@ public class ChannelInfo implements Serializable {
 
     @Getter
     @Setter
-    private short port;
+    private int port;
 
     public int getChannelLoading() {
         if (getMaxConnectedClients() > 0)

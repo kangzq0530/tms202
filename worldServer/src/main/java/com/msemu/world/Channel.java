@@ -1,4 +1,4 @@
-package com.msemu.world.channel;
+package com.msemu.world;
 
 import com.msemu.commons.rmi.model.ChannelInfo;
 import com.msemu.commons.thread.EventManager;
@@ -26,8 +26,12 @@ import java.util.stream.Collectors;
 public class Channel {
 
     @Getter
+    private final List<Field> fields;
+    private final Map<Integer, Character> transfers; // key -> accountId
+    private final Map<Integer, Character> characters; // key -> characterId
+    @Getter
     @Setter
-    private short port;
+    private int port;
     @Getter
     @Setter
     private String host;
@@ -40,10 +44,6 @@ public class Channel {
     @Getter
     @Setter
     private boolean adultChannel;
-    @Getter
-    private final List<Field> fields;
-    private final Map<Integer, Character> transfers; // key -> accountId
-    private final Map<Integer, Character> characters; // key -> accountId
 
     public Channel(String worldName, int worldId, int channelId) {
         this.name = worldName + "-" + channelId;
@@ -157,5 +157,10 @@ public class Channel {
         return getTransferList()
                 .stream().filter(chr -> chr.getId() == characterId)
                 .count() > 0;
+    }
+
+    public Character getCharacterByName(String charName) {
+        return getCharactersList().stream()
+                .filter(chr -> chr.getName().equalsIgnoreCase(charName)).findFirst().orElse(null);
     }
 }

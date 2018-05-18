@@ -3,7 +3,7 @@ package com.msemu.world.enums;
 /**
  * Created by Weber on 2018/5/13.
  */
-public enum  FieldObjectType {
+public enum FieldObjectType {
     NPC,
     MOB,
     DROP,
@@ -14,6 +14,7 @@ public enum  FieldObjectType {
     HAKU,
     SHOP,
     AFFECTED_AREA,
+    MIST,
     REACTOR,
     EXTRACTOR,
     FAMILIAR,

@@ -24,7 +24,8 @@ public class CharacterCard {
     @Column(name = "level")
     private byte level;
 
-    public CharacterCard(){}
+    public CharacterCard() {
+    }
 
     public CharacterCard(int characterId, int job, byte level) {
         this.characterId = characterId;
@@ -58,7 +59,7 @@ public class CharacterCard {
 
     public void encode(OutPacket<GameClient> outPacket) {
         //CHARACTERCARD::Decode
-        for(int i = 0; i < 9; i++) {
+        for (int i = 0; i < 9; i++) {
             outPacket.encodeInt(getCharacterId());
             outPacket.encodeByte(getLevel());
             outPacket.encodeInt(getJob());

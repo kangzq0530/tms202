@@ -82,9 +82,10 @@ public class Party {
     }
 
     public void updateFull() {
-        for(PartyMember pm : getOnlineMembers()) {
-            LoadPartyDoneResponse upr = new LoadPartyDoneResponse(this);
-            pm.getCharacter().write(new LP_PartyResult(upr));
+        LoadPartyDoneResponse upr = new LoadPartyDoneResponse(this);
+        OutPacket<GameClient> outPacket = new LP_PartyResult(upr);
+        for (PartyMember pm : getOnlineMembers()) {
+            pm.getCharacter().write(outPacket);
         }
     }
 
@@ -120,11 +121,12 @@ public class Party {
         for (PartyMember pm : partyMembers) {
             outPacket.encodeInt(pm != null ? pm.getFieldID() : 0);
         }
+        final TownPortal emptyTownPortal = new TownPortal(0);
         for (PartyMember pm : partyMembers) {
             if (pm != null && pm.getTownPortal() != null) {
                 pm.getTownPortal().encode(outPacket, isLeaving);
             } else {
-                new TownPortal(0).encode(outPacket, isLeaving);
+                emptyTownPortal.encode(outPacket, isLeaving);
             }
         }
         outPacket.encodeByte(isAppliable() && !isFull());
@@ -133,13 +135,13 @@ public class Party {
         outPacket.encodeByte(false);
         outPacket.encodeByte(false);
         int unkSize = 0;
-        for(int i = 0 ; i < unkSize; i++) {
+        for (int i = 0; i < unkSize; i++) {
             outPacket.encodeInt(0);
             outPacket.encodeInt(0);
             outPacket.encodeString("");
             outPacket.encodeInt(0);
         }
-        for(int i = 0 ; i < 3;i++ ) {
+        for (int i = 0; i < 3; i++) {
             outPacket.encodeByte(0);
             outPacket.encodeByte(0);
             outPacket.encodeByte(0);

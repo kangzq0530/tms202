@@ -1,16 +1,16 @@
 package com.msemu.world.client.character.skill;
 
-import com.msemu.commons.utils.types.FileTime;
 import com.msemu.commons.network.packets.OutPacket;
+import com.msemu.commons.utils.types.FileTime;
 import com.msemu.core.network.GameClient;
 
 /**
  * Created by Weber on 2018/4/11.
  */
 public class TemporaryStatBase {
+    protected int expireTerm;
     private Option option;
     private FileTime lastUpdated;
-    protected int expireTerm;
     private boolean dynamicTermSet;
 
     public TemporaryStatBase(boolean dynamicTermSet) {
@@ -29,12 +29,16 @@ public class TemporaryStatBase {
         return lastUpdated;
     }
 
+    private void setLastUpdated(long l) {
+        setLastUpdated(new FileTime(l));
+    }
+
     public void setLastUpdated(FileTime lastUpdated) {
         this.lastUpdated = lastUpdated;
     }
 
     public int getExpireTerm() {
-        if(isDynamicTermSet()) {
+        if (isDynamicTermSet()) {
             return 1000 * expireTerm;
         }
         return Integer.MAX_VALUE;
@@ -62,7 +66,7 @@ public class TemporaryStatBase {
 
     public boolean hasExpired(long time) {
         boolean result = false;
-        if(isDynamicTermSet()) {
+        if (isDynamicTermSet()) {
             result = getExpireTerm() > time - getLastUpdated().getLongValue();
         }
         return result;
@@ -72,8 +76,16 @@ public class TemporaryStatBase {
         return getOption().nOption;
     }
 
+    public void setNOption(int i) {
+        getOption().nOption = i;
+    }
+
     public int getROption() {
         return getOption().rOption;
+    }
+
+    public void setROption(int reason) {
+        getOption().rOption = reason;
     }
 
     public void reset() {
@@ -82,25 +94,13 @@ public class TemporaryStatBase {
         setLastUpdated(System.currentTimeMillis());
     }
 
-    private void setLastUpdated(long l) {
-        setLastUpdated(new FileTime(l));
-    }
-
     public void encode(OutPacket<GameClient> outPacket) {
         outPacket.encodeInt(getOption().nOption);
         outPacket.encodeInt(getOption().rOption);
         outPacket.encodeByte(isDynamicTermSet());
         outPacket.encodeInt(getExpireTerm());
-        if(isDynamicTermSet()) {
+        if (isDynamicTermSet()) {
             outPacket.encodeShort(getExpireTerm());
         }
-    }
-
-    public void setNOption(int i) {
-        getOption().nOption = i;
-    }
-
-    public void setROption(int reason) {
-        getOption().rOption = reason;
     }
 }

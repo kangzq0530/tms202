@@ -5,8 +5,7 @@ package com.msemu.world.enums;
  */
 public enum ItemState {
     NOT_ENHANCABLE(0),
-    ENHANCABLE(0x100),
-    ;
+    ENHANCABLE(0x100),;
 
     private int value;
 

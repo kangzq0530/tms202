@@ -21,6 +21,6 @@ public class FoundPossibleMemberResponse implements IPartyResult {
         // s Name
         // 4 4 4
         // 4 - partyID
-        throw  new NotImplementedException();
+        throw new NotImplementedException();
     }
 }

@@ -8,7 +8,7 @@ import java.rmi.RemoteException;
  */
 public interface IWorldServerRMI extends Remote {
 
-    boolean testConnection() throws RemoteException;
+    boolean checkConnection() throws RemoteException;
 
     boolean isAccountOnServer(int accountId) throws RemoteException;
 

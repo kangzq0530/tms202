@@ -8,8 +8,7 @@ import lombok.Getter;
 public enum ClockType {
     EVENT_TIMER(0),
 
-    TIMER_COUNTER(3),
-    ;
+    TIMER_COUNTER(3),;
     @Getter
     private int value;
 

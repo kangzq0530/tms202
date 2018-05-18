@@ -11,7 +11,7 @@ public enum EquipSpecialAttribute {
     ;
     private int value;
 
-    EquipSpecialAttribute(int val) {
+    EquipSpecialAttribute(final int val) {
         this.value = val;
     }
 

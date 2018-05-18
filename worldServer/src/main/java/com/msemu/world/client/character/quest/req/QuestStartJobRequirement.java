@@ -28,8 +28,8 @@ public class QuestStartJobRequirement implements IQuestStartRequirements {
 
     @Override
     public void load(QuestReqData reqData) {
-        if(reqData instanceof QuestJobReqData) {
-            getJobReq().addAll(((QuestJobReqData)reqData).getJobs());
+        if (reqData instanceof QuestJobReqData) {
+            getJobReq().addAll(((QuestJobReqData) reqData).getJobs());
         }
     }
 }

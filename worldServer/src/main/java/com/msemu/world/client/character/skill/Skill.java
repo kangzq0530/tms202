@@ -13,6 +13,9 @@ import javax.persistence.*;
 @Table(name = "skills")
 public class Skill {
 
+    @JoinColumn(name = "dateExpire")
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    protected FileTime dateExpire = FileTime.getFileTimeFromType(FileTime.Type.PERMANENT);
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -29,9 +32,6 @@ public class Skill {
     private int currentLevel;
     @Column(name = "masterLevel")
     private int masterLevel;
-    @JoinColumn(name = "dateExpire")
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    protected FileTime dateExpire = FileTime.getFileTimeFromType(FileTime.Type.PERMANENT);
 
     public int getSkillId() {
         return skillId;
@@ -49,12 +49,12 @@ public class Skill {
         this.rootId = rootId;
     }
 
-    public void setMaxLevel(int maxLevel) {
-        this.maxLevel = maxLevel;
-    }
-
     public int getMaxLevel() {
         return maxLevel;
+    }
+
+    public void setMaxLevel(int maxLevel) {
+        this.maxLevel = maxLevel;
     }
 
     public int getCurrentLevel() {
@@ -81,12 +81,12 @@ public class Skill {
         this.charId = charId;
     }
 
-    public void setMasterLevel(int masterLevel) {
-        this.masterLevel = masterLevel;
-    }
-
     public int getMasterLevel() {
         return masterLevel;
+    }
+
+    public void setMasterLevel(int masterLevel) {
+        this.masterLevel = masterLevel;
     }
 
     public FileTime getDateExpire() {

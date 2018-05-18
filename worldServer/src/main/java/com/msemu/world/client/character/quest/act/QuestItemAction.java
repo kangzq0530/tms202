@@ -60,7 +60,7 @@ public class QuestItemAction implements IQuestAction {
             setGender(((QuestItemActData) actData).getGender());
             setProp(((QuestItemActData) actData).getProp());
             setQuantity(((QuestItemActData) actData).getQuantity());
-            jobs.addAll(((QuestItemActData)actData).getJobReqs());
+            jobs.addAll(((QuestItemActData) actData).getJobReqs());
         }
     }
 }

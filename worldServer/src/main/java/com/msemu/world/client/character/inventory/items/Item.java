@@ -26,12 +26,6 @@ import static com.msemu.world.client.character.inventory.items.Item.Type.ITEM;
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Item implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    @Getter
-    @Setter
-    private long id;
     @Column(name = "inventoryId")
     @Getter
     @Setter
@@ -70,6 +64,12 @@ public class Item implements Serializable {
     @Getter
     @Setter
     protected int quantity;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    @Getter
+    @Setter
+    private long id;
     @Column(name = "owner")
     @Getter
     @Setter
@@ -95,6 +95,18 @@ public class Item implements Serializable {
     }
 
 
+    public Item(int itemId, int bagIndex, long cashItemSerialNumber, FileTime dateExpire, InvType invType,
+                boolean isCash, Type type) {
+        this.template = ItemData.getInstance().getItemInfo(itemId);
+        this.itemId = itemId;
+        this.bagIndex = bagIndex;
+        this.cashItemSerialNumber = cashItemSerialNumber;
+        this.dateExpire = dateExpire;
+        this.invType = invType;
+        this.isCash = isCash;
+        this.type = type;
+    }
+
     public void drop() {
         setBagIndex(0);
     }
@@ -111,46 +123,9 @@ public class Item implements Serializable {
         }
     }
 
-    public enum Type {
-        EQUIP(1),
-        ITEM(2),
-        PET(3);
-        private byte val;
-
-        Type(byte val) {
-            this.val = val;
-        }
-
-        Type(int val) {
-            this((byte) val);
-        }
-
-        public byte getValue() {
-            return val;
-        }
-
-        public static Type getTypeById(int id) {
-            return Arrays.stream(Type.values()).filter(type -> type.getValue() == id).findFirst().orElse(null);
-        }
-    }
-
-    public Item(int itemId, int bagIndex, long cashItemSerialNumber, FileTime dateExpire, InvType invType,
-                boolean isCash, Type type) {
-        this.template = ItemData.getInstance().getItemInfo(itemId);
-        this.itemId = itemId;
-        this.bagIndex = bagIndex;
-        this.cashItemSerialNumber = cashItemSerialNumber;
-        this.dateExpire = dateExpire;
-        this.invType = invType;
-        this.isCash = isCash;
-        this.type = type;
-    }
-
-
     public void setBagIndex(int bagIndex) {
         this.bagIndex = Math.abs(bagIndex);
     }
-
 
     @Override
     public String toString() {
@@ -205,6 +180,29 @@ public class Item implements Serializable {
             outPacket.encodeInt(-1);
             //nGiantRate
             outPacket.encodeShort(100);
+        }
+    }
+
+    public enum Type {
+        EQUIP(1),
+        ITEM(2),
+        PET(3);
+        private byte val;
+
+        Type(byte val) {
+            this.val = val;
+        }
+
+        Type(int val) {
+            this((byte) val);
+        }
+
+        public static Type getTypeById(int id) {
+            return Arrays.stream(Type.values()).filter(type -> type.getValue() == id).findFirst().orElse(null);
+        }
+
+        public byte getValue() {
+            return val;
         }
     }
 

@@ -6,8 +6,7 @@ package com.msemu.world.enums;
 public enum QuestStatus {
     NOT_STARTED(0),
     STARTED(1),
-    COMPLETE(2)
-    ;
+    COMPLETE(2);
 
     private byte value;
 

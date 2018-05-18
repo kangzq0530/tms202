@@ -59,7 +59,7 @@ public class SkillSpecialUserEffect implements IUserEffect {
     @Override
     public void encode(OutPacket<GameClient> outPacket) {
         outPacket.encodeInt(skillID);
-        if(SkillConstants.isExplosionSkill(skillID)) {
+        if (SkillConstants.isExplosionSkill(skillID)) {
             outPacket.encodeInt(nx);
             outPacket.encodeInt(ny);
             outPacket.encodeInt(slv);

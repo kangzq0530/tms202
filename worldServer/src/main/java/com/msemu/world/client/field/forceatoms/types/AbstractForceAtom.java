@@ -9,13 +9,14 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public abstract class AbstractForceAtom {
+public class AbstractForceAtom {
     protected boolean byMob, toMob;
     protected int count, inc, firstImpact, secondImpact, angle, startDelay, createTime,
             maxHitCount, effectIdx, arriveDir, arriveRange;
     protected int skillID;
     protected Position start;
     protected int num;
+
     public AbstractForceAtom(int count, int skillID, int createTime) {
         this.count = count;
         this.skillID = skillID;

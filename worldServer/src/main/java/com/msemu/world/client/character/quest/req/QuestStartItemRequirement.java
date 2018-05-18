@@ -25,9 +25,9 @@ public class QuestStartItemRequirement implements IQuestStartRequirements {
 
     @Override
     public void load(QuestReqData reqData) {
-        if(reqData instanceof QuestItemReqData) {
-            setId(((QuestItemReqData)reqData).getItemId());
-            setQuantity(((QuestItemReqData)reqData).getQuantity());
+        if (reqData instanceof QuestItemReqData) {
+            setId(((QuestItemReqData) reqData).getItemId());
+            setQuantity(((QuestItemReqData) reqData).getQuantity());
         }
     }
 }

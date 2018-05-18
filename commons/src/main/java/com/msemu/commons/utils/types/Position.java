@@ -57,9 +57,9 @@ public class Position {
     }
 
     public double distanceSq(double x, double y) {
-        x -= getX();
-        y -= getY();
-        return (x * x + y * y);
+        double diffX = (x - getX());
+        double diffY = (y - getY());
+        return (diffX * diffX + diffY * diffY);
     }
 
     @Override

@@ -13,12 +13,12 @@ public class Movement2 extends MovementBase {
         super();
         this.command = command;
 
-        short x = inPacket.decodeShort();
-        short y = inPacket.decodeShort();
+        int x = inPacket.decodeShort();
+        int y = inPacket.decodeShort();
         position = new Position(x, y);
 
-        short xv = inPacket.decodeShort();
-        short xy = inPacket.decodeShort();
+        int xv = inPacket.decodeShort();
+        int xy = inPacket.decodeShort();
         vPosition = new Position(xv, xy);
 
         fh = inPacket.decodeShort();

@@ -28,20 +28,20 @@ public class SPSet {
         this.sp = sp;
     }
 
-    public void setJobLevel(byte jobLevel) {
-        this.jobLevel = jobLevel;
-    }
-
-    public void setSp(int sp) {
-        this.sp = sp;
-    }
-
     public byte getJobLevel() {
         return jobLevel;
     }
 
+    public void setJobLevel(byte jobLevel) {
+        this.jobLevel = jobLevel;
+    }
+
     public int getSp() {
         return sp;
+    }
+
+    public void setSp(int sp) {
+        this.sp = sp;
     }
 
     public int getId() {

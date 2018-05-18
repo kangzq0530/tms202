@@ -1,6 +1,5 @@
 package com.msemu.commons.network.packets;
 
-import com.msemu.commons.enums.GameServiceType;
 import com.msemu.commons.enums.OutHeader;
 import com.msemu.commons.network.Client;
 import com.msemu.commons.utils.HexUtils;
@@ -14,7 +13,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.ByteArrayOutputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
 /**
@@ -199,19 +197,16 @@ public class OutPacket<TClient extends Client<TClient>> extends Packet<TClient> 
      * Encodes a String to this OutPacket.
      * Structure: short(size) + char array of <code>s</code>.
      *
-     * @param s The String to encode.
+     * @param str The String to encode.
      */
-    public void encodeString(String s) {
-        if (s == null) {
-            s = "";
-        }
-        byte[] data = s.getBytes(CoreConfig.GAME_SERVICE_TYPE.getCharset());
+    public void encodeString(String str) {
+        byte[] data = str != null ? str.getBytes(CoreConfig.GAME_SERVICE_TYPE.getCharset()) : new byte[] {};
         if (data.length > Short.MAX_VALUE) {
             log.error("Tried to encode a string that is too big.");
             return;
         }
         encodeShort((short) data.length);
-        encodeString(s, (short) s.length());
+        encodeString(str, (short) str.length());
     }
 
     /**
@@ -237,10 +232,10 @@ public class OutPacket<TClient extends Client<TClient>> extends Packet<TClient> 
     }
 
     @Override
-    public void setData(byte[] nD) {
-        super.setData(nD);
+    public void setData(byte[] data) {
+        super.setData(data);
         baos.reset();
-        encodeArr(nD);
+        encodeArr(data);
     }
 
     @Override

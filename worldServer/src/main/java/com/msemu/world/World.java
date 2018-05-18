@@ -6,7 +6,7 @@ import com.msemu.commons.reload.IReloadable;
 import com.msemu.commons.rmi.model.WorldInfo;
 import com.msemu.core.configs.WorldConfig;
 import com.msemu.core.startup.StartupComponent;
-import com.msemu.world.channel.Channel;
+import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.party.Party;
 import com.msemu.world.client.guild.Guild;
 
@@ -23,25 +23,21 @@ import java.util.stream.Collectors;
 @StartupComponent("Network")
 public class World implements IReloadable {
 
-    private int worldId;
-
-    private String name;
-
-    private int state;
-
-    private String worldEventDesc;
-
-    private int worldEventExpWSE = 100;
-
-    private int worldEventDropWSE = 100;
-
     private static final AtomicReference<World> instance = new AtomicReference<>();
-
+    private final Map<Integer, Party> parties = new HashMap<>();
+    private final Map<Integer, Guild> guilds = new HashMap<>();
+    private int worldId;
+    private String name;
+    private int state;
+    private String worldEventDesc;
+    private int worldEventExpWSE = 100;
+    private int worldEventDropWSE = 100;
     private ConcurrentHashMap<Integer, Channel> channels;
 
-    private final Map<Integer, Party> parties = new HashMap<>();
-
-    private final Map<Integer, Guild> guilds = new HashMap<>();
+    public World() {
+        channels = new ConcurrentHashMap<>();
+        initWorld();
+    }
 
     public static World getInstance() {
         World value = instance.get();
@@ -55,11 +51,6 @@ public class World implements IReloadable {
             }
         }
         return value;
-    }
-
-    public World() {
-        channels = new ConcurrentHashMap<>();
-        initWorld();
     }
 
     private void loadSettings() {
@@ -91,6 +82,7 @@ public class World implements IReloadable {
         worldInfo.setWorldEventDesc(worldEventDesc);
         worldInfo.setWorldEventExpWSE(worldEventExpWSE);
         worldInfo.setWorldEventDropWSE(worldEventDropWSE);
+        worldInfo.setWorldId(worldId);
         return worldInfo;
     }
 
@@ -108,44 +100,44 @@ public class World implements IReloadable {
         return worldId;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public int getState() {
-        return state;
-    }
-
-    public String getWorldEventDesc() {
-        return worldEventDesc;
-    }
-
-    public int getWorldEventExpWSE() {
-        return worldEventExpWSE;
-    }
-
-    public int getWorldEventDropWSE() {
-        return worldEventDropWSE;
-    }
-
     public void setWorldId(int worldId) {
         this.worldId = worldId;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
+    public int getState() {
+        return state;
+    }
+
     public void setState(int state) {
         this.state = state;
+    }
+
+    public String getWorldEventDesc() {
+        return worldEventDesc;
     }
 
     public void setWorldEventDesc(String worldEventDesc) {
         this.worldEventDesc = worldEventDesc;
     }
 
+    public int getWorldEventExpWSE() {
+        return worldEventExpWSE;
+    }
+
     public void setWorldEventExpWSE(int worldEventExpWSE) {
         this.worldEventExpWSE = worldEventExpWSE;
+    }
+
+    public int getWorldEventDropWSE() {
+        return worldEventDropWSE;
     }
 
     public void setWorldEventDropWSE(int worldEventDropWSE) {
@@ -168,5 +160,15 @@ public class World implements IReloadable {
 
     public List<Channel> getChannels() {
         return channels.values().stream().collect(Collectors.toList());
+    }
+
+    public Character getCharacterByName(String charName) {
+        Character ret = null;
+        for(Channel channel : getChannels()) {
+            ret = channel.getCharacterByName(charName);
+            if(ret != null)
+                break;
+        }
+        return ret;
     }
 }

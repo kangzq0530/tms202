@@ -18,7 +18,7 @@ public enum FaceEmotion {
     }
 
     public static FaceEmotion getByValue(int emotion) {
-       return Arrays.stream(values()).filter(e-> e.getValue() == emotion)
+        return Arrays.stream(values()).filter(e -> e.getValue() == emotion)
                 .findFirst().orElse(null);
     }
 }

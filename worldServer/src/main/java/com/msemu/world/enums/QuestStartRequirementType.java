@@ -2,8 +2,6 @@ package com.msemu.world.enums;
 
 import com.msemu.world.client.character.quest.req.*;
 
-import java.io.DataInputStream;
-import java.io.IOException;
 import java.util.Arrays;
 
 /**
@@ -16,17 +14,12 @@ public enum QuestStartRequirementType {
     JOB(2),
     MARRIAGE(3),
     MAX_LEVEL(4),
-    MIN_STAT(5)
-    ;
+    MIN_STAT(5);
 
     private byte val;
 
     QuestStartRequirementType(int val) {
         this.val = (byte) val;
-    }
-
-    public byte getVal() {
-        return val;
     }
 
     public static QuestStartRequirementType getQPRTByObj(Object o) {
@@ -42,5 +35,9 @@ public enum QuestStartRequirementType {
     public static QuestStartRequirementType getQPRTByVal(byte val) {
         return Arrays.stream(QuestStartRequirementType.values())
                 .filter(qprt -> qprt.getVal() == val).findFirst().orElse(null);
+    }
+
+    public byte getVal() {
+        return val;
     }
 }

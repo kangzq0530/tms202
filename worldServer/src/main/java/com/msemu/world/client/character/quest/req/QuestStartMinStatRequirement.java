@@ -4,7 +4,6 @@ import com.msemu.commons.data.templates.quest.reqs.QuestLevelMinReqData;
 import com.msemu.commons.data.templates.quest.reqs.QuestPopReqData;
 import com.msemu.commons.data.templates.quest.reqs.QuestReqData;
 import com.msemu.world.client.character.Character;
-import com.msemu.world.client.character.quest.act.QuestPopAction;
 import com.msemu.world.enums.Stat;
 import lombok.Getter;
 import lombok.Setter;
@@ -40,7 +39,7 @@ public class QuestStartMinStatRequirement implements IQuestStartRequirements {
                 break;
             case lvmin:
                 setStat(Stat.LEVEL);
-                setReqAmount((short) ((QuestLevelMinReqData)reqData).getMinLevel());
+                setReqAmount((short) ((QuestLevelMinReqData) reqData).getMinLevel());
                 break;
             case insightMin:
                 setStat(Stat.INSIGHT);
@@ -56,7 +55,7 @@ public class QuestStartMinStatRequirement implements IQuestStartRequirements {
                 break;
             case pop:
                 setStat(Stat.POP);
-                setReqAmount((short) ((QuestPopReqData)reqData).getPop());
+                setReqAmount((short) ((QuestPopReqData) reqData).getPop());
                 break;
         }
     }

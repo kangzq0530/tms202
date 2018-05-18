@@ -10,7 +10,7 @@ import java.rmi.RemoteException;
  * Created by Weber on 2018/3/14.
  */
 public interface ILoginServerRMI extends Remote {
-    boolean testConnection() throws RemoteException;
+    boolean checkConnection() throws RemoteException;
 
     WorldRegisterResult registerWorld(IWorldServerRMI rmi, WorldInfo worldInfo) throws RemoteException;
 

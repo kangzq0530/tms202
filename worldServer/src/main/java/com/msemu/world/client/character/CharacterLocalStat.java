@@ -49,7 +49,7 @@ public class CharacterLocalStat {
             incMaxMpR += equip.getIMaxMpR();
         }
 
-        for(Integer setItemID : setItemIDs) {
+        for (Integer setItemID : setItemIDs) {
             SetItemInfo setItemInfo = ItemData.getInstance().getSetItemInfo(setItemID);
             int matchCount = (int) setItemInfo.getItemIDs().stream()
                     .filter(equippedItemIDs::contains).count();
@@ -61,8 +61,8 @@ public class CharacterLocalStat {
         }
 
 
-        maxHp = ( baseMaxHp + incMaxHp ) * (100 + incMaxHpR)  / 100;
-        maxMp = ( baseMaxMp + incMaxMp ) * (100 + incMaxMpR)  / 100;
+        maxHp = (baseMaxHp + incMaxHp) * (100 + incMaxHpR) / 100;
+        maxMp = (baseMaxMp + incMaxMp) * (100 + incMaxMpR) / 100;
 
 
         this.shouldHealHp = 10;

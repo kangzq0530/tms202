@@ -3,7 +3,7 @@ package com.msemu.world.enums;
 /**
  * Created by Weber on 2018/4/14.
  */
-public enum  GuildResultType {
+public enum GuildResultType {
     ReqLoadGuild(0x0),
     ReqFindGuildByCid(0x1),
     ReqFindGuildByGID(0x2),

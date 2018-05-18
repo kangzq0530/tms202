@@ -8,12 +8,14 @@ import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.HitInfo;
 import com.msemu.world.data.SkillData;
 import com.msemu.world.enums.Stat;
+import lombok.Getter;
 
 /**
  * Created by Weber on 2018/4/12.
  */
 public abstract class JobHandler {
 
+    @Getter
     private Character character;
 
     public JobHandler(Character character) {
@@ -22,10 +24,6 @@ public abstract class JobHandler {
 
     public GameClient getClient() {
         return this.character.getClient();
-    }
-
-    public Character getCharacter() {
-        return character;
     }
 
 
@@ -39,10 +37,9 @@ public abstract class JobHandler {
 
     public abstract boolean isBuff(int skillID);
 
-
     public abstract void handleHitPacket(InPacket inPacket, HitInfo hitInfo);
 
-    public void handleHitPacket(InPacket inPacket){
+    public void handleHitPacket(InPacket inPacket) {
         inPacket.decodeInt(); // tick
         int idk1 = inPacket.decodeInt();
         byte idk2 = inPacket.decodeByte(); // -1?
@@ -59,7 +56,7 @@ public abstract class JobHandler {
         handleHit(hitInfo);
     }
 
-    public void handleHit( HitInfo hitInfo){
+    public void handleHit(HitInfo hitInfo) {
 //        Character character = getClient().getCharacter();
 //        int curHP = character.getStat(Stat.HP);
 //        int newHP = curHP - hitInfo.getHPDamage();

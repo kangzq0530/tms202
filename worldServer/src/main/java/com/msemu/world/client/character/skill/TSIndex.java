@@ -25,10 +25,6 @@ public enum TSIndex {
         this.index = index;
     }
 
-    public int getIndex() {
-        return index;
-    }
-
     public static TSIndex getTSEByIndex(int index) {
         return Arrays.stream(TSIndex.values()).filter(tse -> tse.getIndex() == index).findFirst().orElse(null);
     }
@@ -96,6 +92,10 @@ public enum TSIndex {
             characterTemporaryStats.add(getCTSFromTwoStatIndex(i));
         }
         return characterTemporaryStats;
+    }
+
+    public int getIndex() {
+        return index;
     }
 }
 

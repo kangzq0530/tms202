@@ -2,11 +2,15 @@ package com.msemu.world.client.character;
 
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Created by Weber on 2018/4/13.
  */
 
+@Getter
+@Setter
 public class ZeroInfo {
     private boolean isZeroBetaState;
     private int subHP;
@@ -38,106 +42,10 @@ public class ZeroInfo {
         return zi;
     }
 
-    public boolean isZeroBetaState() {
-        return isZeroBetaState;
-    }
-
-    public void setZeroBetaState(boolean zeroBetaState) {
-        isZeroBetaState = zeroBetaState;
-    }
-
-    public int getSubHP() {
-        return subHP;
-    }
-
-    public void setSubHP(int subHP) {
-        this.subHP = subHP;
-    }
-
-    public int getSubMHP() {
-        return subMHP;
-    }
-
-    public void setSubMHP(int subMHP) {
-        this.subMHP = subMHP;
-    }
-
-    public int getSubMP() {
-        return subMP;
-    }
-
-    public void setSubMP(int subMP) {
-        this.subMP = subMP;
-    }
-
-    public int getSubMMP() {
-        return subMMP;
-    }
-
-    public void setSubMMP(int subMMP) {
-        this.subMMP = subMMP;
-    }
-
-    public int getSubSkin() {
-        return subSkin;
-    }
-
-    public void setSubSkin(int subSkin) {
-        this.subSkin = subSkin;
-    }
-
-    public int getSubHair() {
-        return subHair;
-    }
-
-    public void setSubHair(int subHair) {
-        this.subHair = subHair;
-    }
-
-    public int getSubFace() {
-        return subFace;
-    }
-
-    public void setSubFace(int subFace) {
-        this.subFace = subFace;
-    }
-
-    public int getDbCharZeroLinkCashPart() {
-        return dbCharZeroLinkCashPart;
-    }
-
-    public void setDbCharZeroLinkCashPart(int dbCharZeroLinkCashPart) {
-        this.dbCharZeroLinkCashPart = dbCharZeroLinkCashPart;
-    }
-
-    public int getMixBaseHairColor() {
-        return mixBaseHairColor;
-    }
-
-    public void setMixBaseHairColor(int mixBaseHairColor) {
-        this.mixBaseHairColor = mixBaseHairColor;
-    }
-
-    public int getMixAddHairColor() {
-        return mixAddHairColor;
-    }
-
-    public void setMixAddHairColor(int mixAddHairColor) {
-        this.mixAddHairColor = mixAddHairColor;
-    }
-
-    public int getMixHairBaseProb() {
-        return mixHairBaseProb;
-    }
-
-    public void setMixHairBaseProb(int mixHairBaseProb) {
-        this.mixHairBaseProb = mixHairBaseProb;
-    }
-
     public void encode(OutPacket<GameClient> outPacket) {
         short mask = 0x1 | 0x2 | 0x4 | 0x40 | 0x80;
         outPacket.encodeShort(mask);
-        if((mask & 0x1) != 0){
+        if ((mask & 0x1) != 0) {
             outPacket.encodeByte(true);
         }
         if ((mask & 0x2) != 0) {

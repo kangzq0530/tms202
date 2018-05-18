@@ -19,6 +19,9 @@ import javax.persistence.*;
 @Table(name = "vmatrixRecords")
 public class VMatrixRecord {
 
+    @JoinColumn(name = "dateExpire")
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    protected FileTime dateExpire = FileTime.getFileTimeFromType(FileTime.Type.PERMANENT);
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -36,19 +39,10 @@ public class VMatrixRecord {
     private int masterLevel;
     @Column(name = "coreState")
     private int coreState;
-    @JoinColumn(name = "dateExpire")
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    protected FileTime dateExpire = FileTime.getFileTimeFromType(FileTime.Type.PERMANENT);
     @Transient
     private int row, exp;
     @Transient
     private long crc;
-
-    public static class VCoreRecordState {
-        public static final int DISASSEMBLED = 0;
-        public static final int INACTIVE = 1;
-        public static final int ACTIVE = 2;
-    }
 
     public VMatrixRecord(int iconID, int skillid1, int skillid2, int skillid3, int skillLv, int masterlv, int row, int exp, long crc) {
         this.connectSkill1 = skillid1;
@@ -65,7 +59,6 @@ public class VMatrixRecord {
     public VMatrixRecord(int iconID, int skillID1, int skillID2, int skillID3, int maxLevel) {
         this(iconID, skillID1, skillID2, skillID3, 1, maxLevel, 0, 0, 0);
     }
-
 
     public VMatrixRecord() {
         this(0, 0, 0, 0, 0, 0, 0, 0, 0);
@@ -105,6 +98,12 @@ public class VMatrixRecord {
 
     public boolean isBoostNode() {
         return connectSkill1 != 0 && connectSkill3 != 0;
+    }
+
+    public static class VCoreRecordState {
+        public static final int DISASSEMBLED = 0;
+        public static final int INACTIVE = 1;
+        public static final int ACTIVE = 2;
     }
 
 

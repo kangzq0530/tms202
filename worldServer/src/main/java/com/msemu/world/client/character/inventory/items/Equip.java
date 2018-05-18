@@ -316,9 +316,9 @@ public class Equip extends Item {
 
     public Equip() {
         super();
-        while(this.options.size() < 7)
+        while (this.options.size() < 7)
             this.options.add(0);
-        while(this.sockets.size() < 3)
+        while (this.sockets.size() < 3)
             this.sockets.add((short) 0);
     }
 
@@ -384,9 +384,9 @@ public class Equip extends Item {
         this.fixedGrade = t.getFixedGrade();
         this.options = new ArrayList<>();
         t.getOptions().forEach((index, option) -> this.options.add(option.getOption()));
-        while(this.options.size() < 7)
+        while (this.options.size() < 7)
             this.options.add(0);
-        while(this.sockets.size() < 3)
+        while (this.sockets.size() < 3)
             this.sockets.add((short) 0);
         this.specialGrade = t.getSpecialGrade();
         this.fixedPotential = t.isFixedPotential();
@@ -471,7 +471,7 @@ public class Equip extends Item {
         ret.fixedGrade = fixedGrade;
         ret.options = new ArrayList<>(7);
         ret.options.addAll(options);
-        while(this.options.size() < 7)
+        while (this.options.size() < 7)
             this.options.add(0);
         ret.specialGrade = specialGrade;
         ret.fixedPotential = fixedPotential;
@@ -1005,7 +1005,7 @@ public class Equip extends Item {
     }
 
     public EquipTemplate getTemplate() {
-        if(this.template == null) {
+        if (this.template == null) {
             this.template = ItemData.getInstance().getEquipInfo(getItemId());
         }
         return template;

@@ -29,7 +29,7 @@ import java.util.concurrent.atomic.AtomicReference;
 @StartupComponent("Data")
 public class DropData implements IReloadable {
     private static final Logger log = LoggerFactory.getLogger(QuestData.class);
-
+    private static final AtomicReference<DropData> instance = new AtomicReference<>();
     @Getter
     private final Map<Integer, List<DropInfo>> mobDrops = new HashMap<>();
     @Getter
@@ -37,7 +37,9 @@ public class DropData implements IReloadable {
     @Getter
     private final Map<Integer, List<DropInfo>> globalDrops = new HashMap<>();
 
-    private static final AtomicReference<DropData> instance = new AtomicReference<>();
+    public DropData() {
+        load();
+    }
 
     public static DropData getInstance() {
         DropData value = instance.get();
@@ -51,10 +53,6 @@ public class DropData implements IReloadable {
             }
         }
         return value;
-    }
-
-    public DropData() {
-        load();
     }
 
     private void loadDBDrops() {
@@ -98,7 +96,6 @@ public class DropData implements IReloadable {
             });
         });
     }
-
 
 
     public void load() {

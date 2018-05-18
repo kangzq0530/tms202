@@ -5,7 +5,7 @@ import com.msemu.commons.utils.Rand;
 /**
  * Created by Weber on 2018/5/12.
  */
-public class DemonForceLocal  extends AbstractForceAtom {
+public class DemonForceLocal extends AbstractForceAtom {
 
     public DemonForceLocal(int count, int skillID, int createTime) {
         super(count, skillID, createTime);

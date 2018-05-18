@@ -143,4 +143,33 @@ public class Rect {
     public Rect moveRight() {
         return new Rect(getRight(), getTop(), getRight() + getWidth(), getBottom());
     }
+
+    public boolean contains(Position p) {
+        return contains(p.getX(), p.getY());
+    }
+
+    public boolean contains(int x, int y) {
+        return inside(x, y);
+    }
+
+    public boolean inside(int X, int Y) {
+        int w = getWidth();
+        int h = getHeight();
+        if ((w | h) < 0) {
+            // At least one of the dimensions is negative...
+            return false;
+        }
+        // Note: if either dimension is zero, tests below must return false...
+        int x = left;
+        int y = bottom;
+        if (X < x || Y < y) {
+            return false;
+        }
+        w += x;
+        h += y;
+        //    overflow || intersect
+        return ((w < x || w > X) &&
+                (h < y || h > Y));
+    }
+
 }

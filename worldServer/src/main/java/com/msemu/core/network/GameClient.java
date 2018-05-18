@@ -5,6 +5,7 @@ import com.msemu.commons.network.crypt.MapleCrypt;
 import com.msemu.commons.network.crypt.MapleExCrypt;
 import com.msemu.core.configs.CoreConfig;
 import com.msemu.core.network.packets.out.LP_ConnectToClient;
+import com.msemu.world.Channel;
 import com.msemu.world.World;
 import com.msemu.world.client.Account;
 import com.msemu.world.client.character.Character;
@@ -27,7 +28,7 @@ public class GameClient extends Client<GameClient> {
     private Character character;
 
     @Getter
-    private com.msemu.world.channel.Channel channelInstance;
+    private Channel channelInstance;
 
     public GameClient(Connection<GameClient> connection) {
         super(connection);
@@ -63,7 +64,7 @@ public class GameClient extends Client<GameClient> {
         }
     }
 
-    public void setChannel(com.msemu.world.channel.Channel channelInstance) {
+    public void setChannel(Channel channelInstance) {
         this.channelInstance = channelInstance;
     }
 

@@ -32,6 +32,8 @@ import java.util.*;
 @Setter
 public class Mob extends AbstractInternalAnimatedLife {
     @Getter
+    private final MobTemplate template;
+    @Getter
     private int originFh;
     @Getter
     @Setter
@@ -74,8 +76,6 @@ public class Mob extends AbstractInternalAnimatedLife {
     private List<DropInfo> dropsInfo = new ArrayList<>();
     @Getter
     private List<MobSkill> skills = new ArrayList<>();
-    @Getter
-    private final MobTemplate template;
     @Getter
     @Setter
     private Field field;
@@ -198,9 +198,9 @@ public class Mob extends AbstractInternalAnimatedLife {
         long exp = getExp();
         long totalDamage = getDamageDone().values().stream().mapToLong(l -> l).sum();
         for (Character chr : getDamageDone().keySet()) {
-            double damagePerc = getDamageDone().get(chr) / (double) totalDamage;
-            long appliedExp = (long) (exp * damagePerc);
-            ExpIncreaseInfo eii = chr.getExpIncreaseInfo();
+            double damagePercent = getDamageDone().get(chr) / (double) totalDamage;
+            long appliedExp = (long) (exp * damagePercent);
+            ExpIncreaseInfo eii = new ExpIncreaseInfo();
             eii.setLastHit(true);
             eii.setIncEXP(appliedExp > Integer.MAX_VALUE ? Integer.MAX_VALUE : (int) appliedExp);
             chr.addExp(appliedExp, eii);

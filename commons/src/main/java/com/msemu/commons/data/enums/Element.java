@@ -12,11 +12,11 @@ public enum Element {
     private final int value;
     private boolean special = false;
 
-    private Element(int v) {
+    private Element(final int v) {
         this.value = v;
     }
 
-    private Element(int v, boolean special) {
+    private Element(final int v, final boolean special) {
         this.value = v;
         this.special = special;
     }
@@ -29,7 +29,7 @@ public enum Element {
         return special;
     }
 
-    public static Element getFromChar(String elemAttr) {
+    public static Element getFromChar(final String elemAttr) {
         switch (Character.toUpperCase(elemAttr.charAt(0))) {
             case 'F':
                 return FIRE;
@@ -49,7 +49,7 @@ public enum Element {
         throw new IllegalArgumentException("unknown elemnt char " + elemAttr);
     }
 
-    public static Element getFromId(int value) {
+    public static Element getFromId(final int value) {
         for (Element e : Element.values()) {
             if (e.value == value) {
                 return e;

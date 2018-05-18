@@ -36,12 +36,12 @@ public enum EliteMobAttribute {
         this.value = value;
     }
 
-    public int getValue() {
-        return 0x70 + value;
-    }
-
     public static EliteMobAttribute getRandomAttribute() {
         return EliteMobAttribute.values()[Rand.get(EliteMobAttribute.values().length)];
+    }
+
+    public int getValue() {
+        return 0x70 + value;
     }
 
 }

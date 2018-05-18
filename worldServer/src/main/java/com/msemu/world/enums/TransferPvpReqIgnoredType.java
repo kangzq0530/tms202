@@ -19,6 +19,7 @@ public enum TransferPvpReqIgnoredType {
     ;
     @Getter
     private int value;
+
     TransferPvpReqIgnoredType(int value) {
         this.value = value;
     }

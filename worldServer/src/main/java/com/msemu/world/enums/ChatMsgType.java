@@ -40,9 +40,7 @@ public enum ChatMsgType {
     WHITE_ON_GREEN(36),
     CAKE_MEGAPHONE(37),
     PIE_MEGAPHONE(38),
-    BLACK_ON_WHITE(39),
-
-            ;
+    BLACK_ON_WHITE(39),;
     private short value;
 
     ChatMsgType(short value) {

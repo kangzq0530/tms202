@@ -21,7 +21,7 @@ public enum EnchantStat{
     ;
     private int value;
 
-    EnchantStat(int val) {
+    EnchantStat(final int val) {
         this.value = val;
     }
 

@@ -21,7 +21,8 @@ public class SystemTime {
     @Column(name = "month")
     private int month;
 
-    public SystemTime(){}
+    public SystemTime() {
+    }
 
     public SystemTime(int year, int month) {
         this.year = year;
@@ -32,8 +33,16 @@ public class SystemTime {
         return year;
     }
 
+    public void setYear(int year) {
+        this.year = year;
+    }
+
     public int getMonth() {
         return month;
+    }
+
+    public void setMonth(int month) {
+        this.month = month;
     }
 
     public int getId() {
@@ -42,14 +51,6 @@ public class SystemTime {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public void setYear(int year) {
-        this.year = year;
-    }
-
-    public void setMonth(int month) {
-        this.month = month;
     }
 
 }

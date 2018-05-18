@@ -13,8 +13,7 @@ public enum InventoryOperationType {
     UPDATE_IN_BAG(6),
     REMOVE_IN_BAG(7),
     MOVE_IN_BAG(8),
-    ADD_IN_BAG(9),
-    ;
+    ADD_IN_BAG(9),;
 
     private byte value;
 

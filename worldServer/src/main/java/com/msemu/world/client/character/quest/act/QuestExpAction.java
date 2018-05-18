@@ -13,6 +13,7 @@ public class QuestExpAction implements IQuestAction {
     @Getter
     @Setter
     private long exp;
+
     @Override
     public void action(Character chr) {
         chr.addExp(getExp());
@@ -20,8 +21,8 @@ public class QuestExpAction implements IQuestAction {
 
     @Override
     public void load(QuestActData actData) {
-        if(actData instanceof QuestExpActData) {
-            setExp(((QuestExpActData)actData).getExp());
+        if (actData instanceof QuestExpActData) {
+            setExp(((QuestExpActData) actData).getExp());
         }
     }
 

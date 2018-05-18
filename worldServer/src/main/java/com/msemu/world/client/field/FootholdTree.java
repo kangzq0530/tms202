@@ -14,16 +14,16 @@ import java.util.List;
  */
 @Getter
 public class FootholdTree {
+    private static final byte MAX_DEPTH = 8;
+    private final List<Foothold> footholds = new LinkedList<>();
     private FootholdTree nw = null;
     private FootholdTree ne = null;
     private FootholdTree sw = null;
     private FootholdTree se = null;
-    private final List<Foothold> footholds = new LinkedList<>();
     private Position leftBound;
     private Position rightBound;
     private Position center;
     private int depth = 0;
-    private static final byte MAX_DEPTH = 8;
     private int maxDropX;
     private int minDropX;
 
@@ -42,6 +42,42 @@ public class FootholdTree {
         this.rightBound = p2;
         this.depth = depth;
         center = new Position((p2.getX() - p1.getX()) / 2, (p2.getY() - p1.getY()) / 2);
+    }
+
+    public static final int calcY(final Foothold fh, final Position p) {
+        if (fh.isWall()) {
+            return p.getY();
+        } else if (fh.isSlope()) {
+            int calcY;
+            boolean bool = fh.getX1() < fh.getX2();
+            int x1 = bool ? fh.getX1() : fh.getX2();
+            int x2 = bool ? fh.getX2() : fh.getX1();
+            int y1 = bool ? fh.getY1() : fh.getY2();
+            int y2 = bool ? fh.getY2() : fh.getY1();
+            if (p.getX() <= x1) {
+                calcY = y1;
+            } else if (p.getX() >= x2) {
+                calcY = y2;
+            } else {
+                final double s1 = Math.abs(fh.getY2() - fh.getY1());
+                final double s2 = Math.abs(fh.getX2() - fh.getX1());
+                final double s4 = Math.abs(p.getX() - fh.getX1());
+                final double alpha = Math.atan(s2 / s1);
+                final double beta = Math.atan(s1 / s2);
+                final double s5 = Math.cos(alpha) * (s4 / Math.cos(beta));
+                if (fh.getY2() < fh.getY1()) {
+                    calcY = fh.getY1() - (int) s5;
+                } else {
+                    calcY = fh.getY1() + (int) s5;
+                }
+            }
+            return calcY;
+        } else if (fh.isPlateform()) {
+            return fh.getY1();
+        } else {
+            System.err.println("計算Fh的座標Y值錯誤");
+            return p.getY();
+        }
     }
 
     public final void insertFoothold(final Foothold foothold) {
@@ -276,42 +312,6 @@ public class FootholdTree {
         return yMatches;
     }
 
-    public static final int calcY(final Foothold fh, final Position p) {
-        if (fh.isWall()) {
-            return p.getY();
-        } else if (fh.isSlope()) {
-            int calcY;
-            boolean bool = fh.getX1() < fh.getX2();
-            int x1 = bool ? fh.getX1() : fh.getX2();
-            int x2 = bool ? fh.getX2() : fh.getX1();
-            int y1 = bool ? fh.getY1() : fh.getY2();
-            int y2 = bool ? fh.getY2() : fh.getY1();
-            if (p.getX() <= x1) {
-                calcY = y1;
-            } else if (p.getX() >= x2) {
-                calcY = y2;
-            } else {
-                final double s1 = Math.abs(fh.getY2() - fh.getY1());
-                final double s2 = Math.abs(fh.getX2() - fh.getX1());
-                final double s4 = Math.abs(p.getX() - fh.getX1());
-                final double alpha = Math.atan(s2 / s1);
-                final double beta = Math.atan(s1 / s2);
-                final double s5 = Math.cos(alpha) * (s4 / Math.cos(beta));
-                if (fh.getY2() < fh.getY1()) {
-                    calcY = fh.getY1() - (int) s5;
-                } else {
-                    calcY = fh.getY1() + (int) s5;
-                }
-            }
-            return calcY;
-        } else if (fh.isPlateform()) {
-            return fh.getY1();
-        } else {
-            System.err.println("計算Fh的座標Y值錯誤");
-            return p.getY();
-        }
-    }
-
     public final Foothold findBelow(final Position p, boolean flying) {
         final List<Foothold> xMatches = xMatches(p);
         Foothold lowestFh = null;
@@ -401,16 +401,16 @@ public class FootholdTree {
 
     public Foothold getFootholdById(int fh) {
         Foothold footHold = getFootholds().stream().filter(foothold -> foothold.getId() == fh).findFirst().orElse(null);
-        if(footHold == null) {
+        if (footHold == null) {
             footHold = sw != null ? sw.getFootholdById(fh) : null;
         }
-        if(footHold == null) {
+        if (footHold == null) {
             footHold = se != null ? se.getFootholdById(fh) : null;
         }
-        if(footHold == null) {
+        if (footHold == null) {
             footHold = nw != null ? nw.getFootholdById(fh) : null;
         }
-        if(footHold == null) {
+        if (footHold == null) {
             footHold = ne != null ? ne.getFootholdById(fh) : null;
         }
         return footHold;

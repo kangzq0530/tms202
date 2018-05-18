@@ -3,7 +3,7 @@ package com.msemu.world.client.character.skill;
 /**
  * Created by Weber on 2018/4/11.
  */
-public enum  CharacterTemporaryStat {
+public enum CharacterTemporaryStat {
     NONE_START(-1),
     //==========================Mask[0] - 1 - IDA[0xE]
 
@@ -1176,11 +1176,11 @@ public enum  CharacterTemporaryStat {
     OWL_SPIRIT(888),
     //超級體
     BODY_BOOST(888),;
+    public static final int SIZE = 18;
     private static final long serialVersionUID = 0L;
     private final int nValue;
     private final int nPos;
     private boolean isIndie = false;
-    public static final int SIZE = 18;
 
     private CharacterTemporaryStat(int nValue) {
         this.nValue = 1 << (31 - (nValue % 32));
@@ -1193,14 +1193,6 @@ public enum  CharacterTemporaryStat {
         this.isIndie = isIndie;
     }
 
-    public int getPosition() {
-        return nPos;
-    }
-
-    public int getValue() {
-        return nValue;
-    }
-
     public static CharacterTemporaryStat getCharacterTemporaryStat(int buff) {
         int buf = 1 << (31 - (buff % 32));
         int fir = (int) Math.floor(buff / 32);
@@ -1210,10 +1202,6 @@ public enum  CharacterTemporaryStat {
             }
         }
         return CharacterTemporaryStat.IndiePAD;
-    }
-
-    public final boolean isIndie() {
-        return isIndie;
     }
 
     public static boolean isEncode4Bytes(CharacterTemporaryStat stat) {
@@ -1250,6 +1238,18 @@ public enum  CharacterTemporaryStat {
                 return true;
         }
         return false;
+    }
+
+    public int getPosition() {
+        return nPos;
+    }
+
+    public int getValue() {
+        return nValue;
+    }
+
+    public final boolean isIndie() {
+        return isIndie;
     }
 
     public boolean isMovingEffectingStat() {

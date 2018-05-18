@@ -47,7 +47,7 @@ public class LoginServerRMI extends UnicastRemoteObject implements ILoginServerR
             WorldInfo worldInfo = entry.getValue();
             if (worldInfo.getConnection() == null) continue;
             try {
-                worldInfo.getConnection().testConnection();
+                worldInfo.getConnection().checkConnection();
             } catch (RemoteException except) {
                 worlds.remove(worldInfo.getWorldId());
                 log.info("世界伺服器 - {}({})  is disconnected.", worldInfo.getName(), worldInfo.getWorldId());
@@ -58,7 +58,7 @@ public class LoginServerRMI extends UnicastRemoteObject implements ILoginServerR
     }
 
     @Override
-    public boolean testConnection() throws RemoteException {
+    public boolean checkConnection() throws RemoteException {
         return true;
     }
 

@@ -76,8 +76,7 @@ public class Foothold implements Comparable<Foothold>, DatSerializable {
         // interpolate between the two foothold ends for the y value below pos.x
         int x1 = getX1();
         int x2 = getX2() - x1;
-        x = x - x1;
-        double perc = (double) x / (double) x2;
+        double perc = (double) (x - x1) / (double) x2;
         return (int) (getY1() + (perc * (getY2() - getY1())));
     }
 

@@ -7,7 +7,6 @@ import com.msemu.commons.database.DatabaseFactory;
 import com.msemu.commons.database.Schema;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.utils.types.FileTime;
-import com.msemu.commons.utils.types.Position;
 import com.msemu.core.network.GameClient;
 import com.msemu.core.network.packets.out.mob.LP_MobChangeController;
 import com.msemu.core.network.packets.out.stage.LP_SetField;
@@ -17,7 +16,7 @@ import com.msemu.core.network.packets.out.user.local.LP_ChatMsg;
 import com.msemu.core.network.packets.out.user.remote.LP_UserAvatarModified;
 import com.msemu.core.network.packets.out.user.remote.effect.LP_UserEffectRemote;
 import com.msemu.core.network.packets.out.wvscontext.*;
-import com.msemu.world.channel.Channel;
+import com.msemu.world.Channel;
 import com.msemu.world.client.character.effect.LevelUpUserEffect;
 import com.msemu.world.client.character.friends.FriendList;
 import com.msemu.world.client.character.inventory.items.Equip;
@@ -37,12 +36,12 @@ import com.msemu.world.client.character.skill.vcore.VMatrixRecord;
 import com.msemu.world.client.field.AbstractFieldObject;
 import com.msemu.world.client.field.Field;
 import com.msemu.world.client.field.lifes.AbstractAnimatedFieldLife;
+import com.msemu.world.client.field.lifes.Mob;
+import com.msemu.world.client.field.lifes.Pet;
 import com.msemu.world.client.guild.Guild;
 import com.msemu.world.client.guild.GuildMember;
 import com.msemu.world.client.guild.operations.GuildUpdate;
 import com.msemu.world.client.guild.operations.GuildUpdateMemberLogin;
-import com.msemu.world.client.field.lifes.Mob;
-import com.msemu.world.client.field.lifes.Pet;
 import com.msemu.world.client.scripting.ScriptManager;
 import com.msemu.world.constants.GameConstants;
 import com.msemu.world.constants.ItemConstants;
@@ -52,7 +51,6 @@ import com.msemu.world.data.FieldData;
 import com.msemu.world.data.ItemData;
 import com.msemu.world.data.SkillData;
 import com.msemu.world.enums.*;
-import jdk.nashorn.internal.scripts.JO;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.Session;
@@ -75,72 +73,63 @@ import static com.msemu.world.enums.InventoryOperationType.*;
 @Schema
 @Entity
 @Table(name = "characters")
-public class Character  extends AbstractAnimatedFieldLife {
+public class Character extends AbstractAnimatedFieldLife {
 
+    @Transient
+    private transient final Set<Mob> controlledMobs = new HashSet<>();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     @Getter
     @Setter
     private int id;
-
     @Column(name = "accId")
     @Getter
     @Setter
     private int accId;
-
     @JoinColumn(name = "questManager")
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @Setter
     private QuestManager questManager;
-
     @JoinColumn(name = "equippedInventory")
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @Getter
     @Setter
     private Inventory equippedInventory = new Inventory(EQUIPPED, 50);
-
     @JoinColumn(name = "equipInventory")
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @Getter
     @Setter
     private Inventory equipInventory = new Inventory(EQUIP, 50);
-
     @JoinColumn(name = "consumeInventory")
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @Getter
     @Setter
     private Inventory consumeInventory = new Inventory(InvType.CONSUME, 50);
-
     @JoinColumn(name = "etcInventory")
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @Getter
     @Setter
     private Inventory etcInventory = new Inventory(InvType.ETC, 50);
-
     @JoinColumn(name = "installInventory")
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @Getter
     @Setter
     private Inventory installInventory = new Inventory(InvType.INSTALL, 50);
-
     @JoinColumn(name = "cashInventory")
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @Getter
     @Setter
     private Inventory cashInventory = new Inventory(InvType.CASH, 50);
-
     @JoinColumn(name = "avatarData")
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @Getter
     @Setter
     private AvatarData avatarData;
-
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @Getter
     @Setter
     private FuncKeyMap funcKeyMap;
-
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "charId")
     @Getter
@@ -151,144 +140,115 @@ public class Character  extends AbstractAnimatedFieldLife {
     @Getter
     @Setter
     private List<VMatrixRecord> vMatrixRecords;
-
     @JoinColumn(name = "guild")
     @OneToOne(cascade = CascadeType.ALL)
     @Getter
     @Setter
     private Guild guild;
-
     @Transient
     @Getter
     @Setter
     private GameClient client;
-
     @Transient
     @Getter
     @Setter
     private Ranking ranking;
-
     @Transient
     @Getter
     @Setter
     private int combatOrders;
-
     @Transient
     @Getter
     @Setter
     private List<Skill> stolenSkills;
-
     @Transient
     @Getter
     @Setter
     private List<Skill> chosenSkills;
-
     @Transient
     @Getter
     @Setter
     private List<ItemPot> itemPots;
-
     @Transient
     @Getter
     @Setter
     private List<Pet> pets;
-
     @Transient
     @Getter
     @Setter
     private List<FriendRecord> friendRecords;
-
     @Transient
     @Getter
     @Setter
     private List<ExpConsumeItem> expConsumeItems;
-
     @Transient
     @Getter
     @Setter
     private List<MonsterBattleMobInfo> monsterBattleMobInfos;
-
     @Transient
     @Getter
     @Setter
     private MonsterBattleLadder monsterBattleLadder;
-
     @Transient
     @Getter
     @Setter
     private MonsterBattleRankInfo monsterBattleRankInfo;
-
     @Transient
     private Field field;
-
     @Transient
     @Getter
     private TemporaryStatManager temporaryStatManager;
-
     @Transient
     @Getter
     private ForcedStatManager forcedStatManager;
-
     @Transient
     @Getter
     @Setter
     private JobHandler jobHandler;
-
     @Transient
     @Getter
     @Setter
     private MarriageRing marriageRecord;
-
     @Transient
     @Getter
     @Setter
     private WildHunterInfo wildHunterInfo;
-
     @Transient
     @Getter
     @Setter
     private ZeroInfo zeroInfo;
-
     @Transient
     @Getter
     @Setter
     private int nickItem;
-
     @Transient
     @Getter
     @Setter
     private int damageSkin;
-
     @Transient
     @Getter
     @Setter
     private int premiumDamageSkin;
-
     @Transient
     @Getter
     @Setter
     private boolean partyInvitable;
-
     @Transient
     @Getter
     @Setter
     private ScriptManager scriptManager = new ScriptManager(this);
-
     @Transient
     @Getter
     @Setter
     private int driverID;
-
     @Transient
     @Getter
     @Setter
     private int passengerID;
-
     @Transient
     @Getter
     @Setter
     private int chocoCount;
-
     @Transient
     @Getter
     @Setter
@@ -431,8 +391,6 @@ public class Character  extends AbstractAnimatedFieldLife {
     @Transient
     @Getter
     private FriendList friendList = new FriendList();
-    @Transient
-    private transient final Set<Mob> controlledMobs = new HashSet<>();
     @Getter
     @Transient
     private transient ReentrantReadWriteLock controlledLock = new ReentrantReadWriteLock();
@@ -464,6 +422,16 @@ public class Character  extends AbstractAnimatedFieldLife {
         setObjectId(id);
     }
 
+    public static Character findById(int id) {
+        Session session = DatabaseFactory.getInstance().getSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Character> query = builder.createQuery(Character.class);
+        Root<Character> root = query.from(Character.class);
+        query.select(root).where(builder.equal(root.get("id"), id));
+        Character result = session.createQuery(query).getSingleResult();
+        session.close();
+        return result;
+    }
 
     public String getName() {
         return getAvatarData().getCharacterStat().getName();
@@ -475,6 +443,27 @@ public class Character  extends AbstractAnimatedFieldLife {
 
     public short getJob() {
         return (short) getAvatarData().getCharacterStat().getJob();
+    }
+
+    public void setJob(int jobId) {
+        MapleJob job = MapleJob.getById(jobId);
+        if (job == null)
+            return;
+        if (MapleJob.is影武者(jobId)) {
+            getAvatarData().getCharacterStat().setSubJob(1);
+        } else if (MapleJob.is重砲指揮官(jobId)) {
+            getAvatarData().getCharacterStat().setSubJob(2);
+        } else if (MapleJob.盜賊.getId() != jobId) {
+            getAvatarData().getCharacterStat().setSubJob(0);
+        }
+
+        setJobHandler(JobManager.getJobHandler((short) job.getId(), this));
+        List<Skill> skills = SkillData.getInstance().getSkillsByJob((short) job.getId());
+        skills.stream().filter(jobSkill -> !hasSkill(jobSkill.getSkillId()))
+                .forEach(this::addSkill);
+        getClient().write(new LP_ChangeSkillRecordResult(skills, true,
+                false, false, false));
+        notifyChanges();
     }
 
     public int getLevel() {
@@ -512,12 +501,12 @@ public class Character  extends AbstractAnimatedFieldLife {
         return (int) getAvatarData().getCharacterStat().getPosMap();
     }
 
-    private void setFieldID(long fieldId) {
-        setFieldID((int) fieldId);
-    }
-
     private void setFieldID(int fieldID) {
         getAvatarData().getCharacterStat().setPosMap(fieldID);
+    }
+
+    private void setFieldID(long fieldId) {
+        setFieldID((int) fieldId);
     }
 
     public QuestManager getQuestManager() {
@@ -653,28 +642,6 @@ public class Character  extends AbstractAnimatedFieldLife {
         setJob(job.getId());
     }
 
-    public void setJob(int jobId) {
-        MapleJob job = MapleJob.getById(jobId);
-        if (job == null)
-            return;
-        if (MapleJob.is影武者(jobId)) {
-            getAvatarData().getCharacterStat().setSubJob(1);
-        } else if (MapleJob.is重砲指揮官(jobId)) {
-            getAvatarData().getCharacterStat().setSubJob(2);
-        } else if (MapleJob.盜賊.getId() != jobId) {
-            getAvatarData().getCharacterStat().setSubJob(0);
-        }
-
-        setJobHandler(JobManager.getJobHandler((short) job.getId(), this));
-
-        List<Skill> skills = SkillData.getInstance().getSkillsByJob((short) job.getId());
-        skills.stream().filter(jobSkill -> !hasSkill(jobSkill.getSkillId()))
-                .forEach(this::addSkill);
-        getClient().write(new LP_ChangeSkillRecordResult(skills, true,
-                false, false, false));
-        notifyChanges();
-    }
-
     private void notifyChanges() {
         if (getParty() != null) {
             getParty().updateFull();
@@ -683,7 +650,6 @@ public class Character  extends AbstractAnimatedFieldLife {
             // TODO
         }
     }
-
 
     public boolean isMarried() {
         // TODO
@@ -771,7 +737,6 @@ public class Character  extends AbstractAnimatedFieldLife {
             return item != null && item.getQuantity() >= quantity;
         });
     }
-
 
     public int getCurrentMaxHp() {
         return getCharacterLocalStat().getMaxHp();
@@ -1025,7 +990,6 @@ public class Character  extends AbstractAnimatedFieldLife {
         zeroInfo.setSubMMP(cs.getMaxMp());
         setZeroInfo(zeroInfo);
     }
-
 
     public void encode(OutPacket<GameClient> outPacket, DBChar mask) {
         // CharacterData::Decode
@@ -1860,17 +1824,6 @@ public class Character  extends AbstractAnimatedFieldLife {
         getClient().getChannelInstance().removeCharacter(this);
     }
 
-    public static Character findById(int id) {
-        Session session = DatabaseFactory.getInstance().getSession();
-        CriteriaBuilder builder = session.getCriteriaBuilder();
-        CriteriaQuery<Character> query = builder.createQuery(Character.class);
-        Root<Character> root = query.from(Character.class);
-        query.select(root).where(builder.equal(root.get("id"), id));
-        Character result = session.createQuery(query).getSingleResult();
-        session.close();
-        return result;
-    }
-
     public int getTotalChuc() {
         return getInventoryByType(EQUIPPED).getItems().stream().mapToInt(i -> ((Equip) i).getChuc()).sum();
     }
@@ -1980,7 +1933,7 @@ public class Character  extends AbstractAnimatedFieldLife {
     public void stopControllingMob(Mob mob) {
         getControlledLock().writeLock().lock();
         try {
-            if(controlledMobs.contains(mob)) {
+            if (controlledMobs.contains(mob)) {
                 controlledMobs.remove(mob);
             }
         } finally {

@@ -33,12 +33,13 @@ public final class ServerInfoUtils {
     }
 
     public static String getDoneMessage(String s) {
-        while (s.length() < 83) {
-            s = s + " ";
+        StringBuilder builder = new StringBuilder();
+        builder.append(s);
+        while (builder.length() < 83) {
+            builder.append(" ");
         }
-
-        s = s + " ...done";
-        return s;
+        builder.append(" ...done");
+        return builder.toString();
     }
 
     public static int getAvailableProcessors() {

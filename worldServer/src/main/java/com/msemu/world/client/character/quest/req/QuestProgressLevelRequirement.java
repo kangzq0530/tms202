@@ -3,7 +3,6 @@ package com.msemu.world.client.character.quest.req;
 import com.msemu.commons.data.templates.quest.reqs.QuestLevelMinReqData;
 import com.msemu.commons.data.templates.quest.reqs.QuestReqData;
 import com.msemu.commons.database.Schema;
-import com.msemu.world.client.character.quest.Quest;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,7 +27,7 @@ public class QuestProgressLevelRequirement extends QuestProgressRequirement {
     @Setter
     private int curLevel;
 
-    public QuestProgressLevelRequirement(){
+    public QuestProgressLevelRequirement() {
         this.level = 0;
     }
 
@@ -39,8 +38,8 @@ public class QuestProgressLevelRequirement extends QuestProgressRequirement {
 
     @Override
     public void load(QuestReqData reqData) {
-        if(reqData instanceof QuestLevelMinReqData) {
-            setLevel(((QuestLevelMinReqData)reqData).getMinLevel());
+        if (reqData instanceof QuestLevelMinReqData) {
+            setLevel(((QuestLevelMinReqData) reqData).getMinLevel());
         }
     }
 }

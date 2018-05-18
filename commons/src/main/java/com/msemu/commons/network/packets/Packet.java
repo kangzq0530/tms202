@@ -3,6 +3,8 @@ package com.msemu.commons.network.packets;
 import com.msemu.commons.network.Client;
 import com.msemu.commons.utils.HexUtils;
 
+import java.util.Arrays;
+
 /**
  * Created by Weber on 2018/3/23.
  */
@@ -32,8 +34,8 @@ public class Packet<TClient extends Client<TClient>> {
         return (data[0] + (data[1] << 8));
     }
 
-    public void setData(byte[] nD) {
-        data = nD;
+    public void setData(byte[] data) {
+        this.data = Arrays.copyOf(data, data.length);
     }
 
     public byte[] getData() {

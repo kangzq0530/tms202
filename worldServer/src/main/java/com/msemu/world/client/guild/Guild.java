@@ -84,6 +84,14 @@ public class Guild {
         setName("Default guild");
     }
 
+    public static void defaultEncodeForRemote(OutPacket outPacket) {
+        outPacket.encodeString("");
+        outPacket.encodeShort(0);
+        outPacket.encodeByte(0);
+        outPacket.encodeShort(0);
+        outPacket.encodeByte(0);
+    }
+
     public void encodeForRemote(OutPacket outPacket) {
         outPacket.encodeString(getName());
         outPacket.encodeShort(getMarkBg());
@@ -121,7 +129,7 @@ public class Guild {
             skill.encode(outPacket);
         });
         outPacket.encodeByte(isAppliable());
-        if(isAppliable()) {
+        if (isAppliable()) {
             outPacket.encodeByte(getJoinSetting());
             outPacket.encodeInt(getReqLevel());
         }
@@ -129,10 +137,10 @@ public class Guild {
 
     public void addMember(GuildMember guildMember) {
         getMembers().add(guildMember);
-        if(guildMember.getCharacter() != null && guildMember.getCharacter().getGuild() == null) {
+        if (guildMember.getCharacter() != null && guildMember.getCharacter().getGuild() == null) {
             guildMember.getCharacter().setGuild(this);
         }
-        if(getLeaderID() == 0) {
+        if (getLeaderID() == 0) {
             setLeader(guildMember);
         } else {
             guildMember.setGrade(getGradeNames().size());
@@ -152,7 +160,7 @@ public class Guild {
     }
 
     public void removeMember(GuildMember guildMember) {
-        if(guildMember.getCharacter() != null) {
+        if (guildMember.getCharacter() != null) {
             guildMember.getCharacter().setGuild(null);
         }
         getMembers().remove(guildMember);
@@ -168,7 +176,7 @@ public class Guild {
 
     public void setLeader(GuildMember leader) {
         int oldGrade = leader.getGrade();
-        if(getLeaderID() != 0) {
+        if (getLeaderID() != 0) {
             getMemberByID(getLeaderID()).setGrade(oldGrade);
         }
         this.leaderID = leader.getCharID();
@@ -200,14 +208,5 @@ public class Guild {
 
     public void addGuildSkill(GuildSkill gs) {
         getSkills().put(gs.getSkillID(), gs);
-    }
-
-
-    public static void defaultEncodeForRemote(OutPacket outPacket) {
-        outPacket.encodeString("");
-        outPacket.encodeShort(0);
-        outPacket.encodeByte(0);
-        outPacket.encodeShort(0);
-        outPacket.encodeByte(0);
     }
 }

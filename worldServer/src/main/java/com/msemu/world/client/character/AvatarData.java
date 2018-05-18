@@ -36,7 +36,7 @@ public class AvatarData {
     public void encode(OutPacket<GameClient> outPacket) {
         characterStat.encode(outPacket);
         avatarLook.encode(outPacket);
-        if(MapleJob.is神之子(getCharacterStat().getJob())) {
+        if (MapleJob.is神之子(getCharacterStat().getJob())) {
             zeroAvatarLook.encode(outPacket);
         }
     }

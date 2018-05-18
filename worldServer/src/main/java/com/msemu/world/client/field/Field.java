@@ -48,10 +48,6 @@ import static com.msemu.commons.data.enums.SkillStat.time;
  */
 public class Field {
     @Getter
-    @Setter
-    private long uniqueId;
-
-    @Getter
     private final Map<FieldObjectType, LinkedHashMap<Integer, AbstractFieldObject>> fieldObjects;
     @Getter
     private final Map<FieldObjectType, ReentrantReadWriteLock> fieldObjectLocks;
@@ -61,10 +57,17 @@ public class Field {
     private final List<FieldObject> objects;
     @Getter
     private final Map<AbstractFieldObject, ScheduledFuture> objectSchedules;
-    @Setter
-    private AtomicInteger objectIDCounter = new AtomicInteger(1000000);
     @Getter
     private final FieldTemplate fieldData;
+    @Getter
+    private final FootholdTree footholdTree;
+    @Getter
+    private final AtomicInteger spawnedMobOnField = new AtomicInteger(0);
+    @Getter
+    @Setter
+    private long uniqueId;
+    @Setter
+    private AtomicInteger objectIDCounter = new AtomicInteger(1000000);
     @Getter
     @Setter
     private FieldCustom fieldCustom;
@@ -72,12 +75,8 @@ public class Field {
     @Setter
     private boolean isUserFirstEnter;
     @Getter
-    private final FootholdTree footholdTree;
-    @Getter
     @Setter
     private LocalDateTime lastSpawnEliteMobTime = LocalDateTime.MIN, lastSpawnTime = LocalDateTime.MIN;
-    @Getter
-    private final AtomicInteger spawnedMobOnField = new AtomicInteger(0);
 
     public Field(long uniqueId, FieldTemplate template) {
         this.uniqueId = uniqueId;
@@ -645,6 +644,11 @@ public class Field {
         return (Drop) getFieldObjectsByKey(FieldObjectType.DROP, objectId);
     }
 
+
+    public List<Mob> getMobInRect(Rect rect) {
+        return getMobs().stream().filter(mob -> rect.contains(mob.getPosition())).collect(Collectors.toList());
+    }
+
     public void removeCharacter(Character chr) {
         getFieldObjectWriteLock(FieldObjectType.CHARACTER).lock();
         try {
@@ -682,6 +686,8 @@ public class Field {
             getFieldObjectWriteLock(object.getFieldObjectType()).unlock();
         }
     }
+
+
 
     public void updateFieldObjectVisibility(Character character, AbstractFieldObject object) {
         if (!character.isVisibleFieldObject(object)) {
@@ -766,5 +772,29 @@ public class Field {
         }
         drop.setObjectId(getNewObjectID());
         addFieldObject(drop);
+    }
+
+    public void removeSummon(Summon evilEye) {
+        removeFieldObject(evilEye);
+        evilEye.setField(null);
+    }
+
+
+    public void removeMistByObjectId(int objectId) {
+        AbstractFieldObject mist = getFieldObjectsByKey(FieldObjectType.MIST, objectId);
+        removeFieldObject(mist);
+    }
+
+    public Portal findClosestPortal(Position position) {
+        Portal closest = getPortalByID(0);
+        double distance, shortestDistance = Double.POSITIVE_INFINITY;
+        for (Portal portal : getPortals()) {
+            distance = portal.getPosition().distanceSq(position);
+            if (distance < shortestDistance) {
+                closest = portal;
+                shortestDistance = distance;
+            }
+        }
+        return closest;
     }
 }

@@ -19,7 +19,6 @@ import java.util.Random;
 
 @StartupComponent("Service")
 public class CaptchaFactory {
-    private static final Logger log = LoggerFactory.getLogger(CaptchaFactory.class);
 
     private final static int IMAGE_WIDTH = 194;
 
@@ -34,6 +33,8 @@ public class CaptchaFactory {
     private final int BACKGROUND_POINTS_PER_COLOR = 80;
 
     private final int BACKGOUND_COLORS = 4;
+
+    private final Logger log = LoggerFactory.getLogger(CaptchaFactory.class);
 
     private final Random random = new Random();
 
@@ -62,7 +63,7 @@ public class CaptchaFactory {
         return new Captcha(answer, osImage.toByteArray());
     }
 
-    private void drawBackground(Graphics2D g2dImage) {
+    private void drawBackground(final Graphics2D g2dImage) {
         g2dImage.setColor(Color.WHITE);
         g2dImage.fillRect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
         for (int i = 0; i < BACKGOUND_COLORS; i++) {
@@ -75,7 +76,7 @@ public class CaptchaFactory {
         }
     }
 
-    private void drawTexts(Graphics2D g2dImage, String text) {
+    private void drawTexts(final Graphics2D g2dImage, final String text) {
         for (int i = 0; i < text.length(); i++) {
             String chr = text.substring(i, i + 1);
             int fontSize = IMAGE_HEIGHT * (6 + random.nextInt(1)) / 10;
@@ -104,7 +105,7 @@ public class CaptchaFactory {
         }
     }
 
-    private String randomString(int length) {
+    private String randomString(final int length) {
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < length; i++) {
             builder.append(CHARS[random.nextInt(CHARS.length - 1)]);

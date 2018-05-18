@@ -38,15 +38,11 @@ public class GameConstants {
         CHAR_EXP_TABLE[7] = 560;
         CHAR_EXP_TABLE[8] = 840;
         CHAR_EXP_TABLE[9] = 1242;
-        for (int i = 10; i <= 14; i++) {
-            CHAR_EXP_TABLE[i] = CHAR_EXP_TABLE[i - 1];
-        }
+        System.arraycopy(CHAR_EXP_TABLE, 9, CHAR_EXP_TABLE, 10, 5);
         for (int i = 15; i <= 29; i++) {
             CHAR_EXP_TABLE[i] = (long) (CHAR_EXP_TABLE[i - 1] * 1.2);
         }
-        for (int i = 30; i <= 34; i++) {
-            CHAR_EXP_TABLE[i] = CHAR_EXP_TABLE[i - 1];
-        }
+        System.arraycopy(CHAR_EXP_TABLE, 29, CHAR_EXP_TABLE, 30, 5);
         for (int i = 35; i <= 39; i++) {
             CHAR_EXP_TABLE[i] = (long) (CHAR_EXP_TABLE[i - 1] * 1.2);
         }
@@ -65,20 +61,12 @@ public class GameConstants {
         for (int i = 100; i <= 104; i++) {
             CHAR_EXP_TABLE[i] = CHAR_EXP_TABLE[i - 1];
         }
-        for (int i = 105; i <= 159; i++) {
-            CHAR_EXP_TABLE[i] = (long) (CHAR_EXP_TABLE[i - 1] * 1.07);
-        }
-        for (int i = 160; i <= 199; i++) {
-            CHAR_EXP_TABLE[i] = (long) (CHAR_EXP_TABLE[i - 1] * 1.06);
-        }
+        for (int i = 105; i <= 159; i++) CHAR_EXP_TABLE[i] = (long) (CHAR_EXP_TABLE[i - 1] * 1.07);
+        for (int i = 160; i <= 199; i++) CHAR_EXP_TABLE[i] = (long) (CHAR_EXP_TABLE[i - 1] * 1.06);
         CHAR_EXP_TABLE[200] = CHAR_EXP_TABLE[199] * 2;
-        for (int i = 201; i <= 209; i++) {
-            CHAR_EXP_TABLE[i] = (long) (CHAR_EXP_TABLE[i - 1] * 1.2);
-        }
+        for (int i = 201; i <= 209; i++) CHAR_EXP_TABLE[i] = (long) (CHAR_EXP_TABLE[i - 1] * 1.2);
         CHAR_EXP_TABLE[210] = (long) (CHAR_EXP_TABLE[209] * 1.06 * 2);
-        for (int i = 211; i <= 219; i++) {
-            CHAR_EXP_TABLE[i] = (long) (CHAR_EXP_TABLE[i - 1] * 1.06);
-        }
+        for (int i = 211; i <= 219; i++) CHAR_EXP_TABLE[i] = (long) (CHAR_EXP_TABLE[i - 1] * 1.06);
         CHAR_EXP_TABLE[220] = (long) (CHAR_EXP_TABLE[219] * 1.04 * 2);
         for (int i = 221; i <= 229; i++) {
             CHAR_EXP_TABLE[i] = (long) (CHAR_EXP_TABLE[i - 1] * 1.04);

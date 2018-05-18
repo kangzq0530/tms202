@@ -41,7 +41,7 @@ public class ForcedStatManager {
         int offset = 1 + (getCharacter().getLevel() - 90) / 20;
         stats.put(ForcedStat.STR, character.getStat(Stat.STR) / offset);
         stats.put(ForcedStat.DEX, character.getStat(Stat.DEX) / offset);
-        stats.put(ForcedStat.INT,character.getStat(Stat.INT) / offset);
+        stats.put(ForcedStat.INT, character.getStat(Stat.INT) / offset);
         stats.put(ForcedStat.LUK, character.getStat(Stat.LUK) / offset);
         // TODO 這邊要算攻擊力
 //        stats.put(ForcedStat.WATK, character.getStat(Stat.STR) / offset);

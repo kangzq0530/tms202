@@ -13,7 +13,6 @@ public class ReservedEffectRepeatUserEffect implements IUserEffect {
     private String itemName;
 
 
-
     @Override
     public UserEffectType getType() {
         return UserEffectType.ReservedEffectRepeat;

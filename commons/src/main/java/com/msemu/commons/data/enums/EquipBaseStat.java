@@ -45,7 +45,7 @@ public enum EquipBaseStat {
     ;
     private int val, pos;
 
-    EquipBaseStat(int val, int pos) {
+    EquipBaseStat(final int val, final int pos) {
         this.val = val;
         this.pos = pos;
     }

@@ -5,7 +5,7 @@ import lombok.Getter;
 /**
  * Created by Weber on 2018/5/12.
  */
-public enum  TransferChannelReqIgnoredType {
+public enum TransferChannelReqIgnoredType {
 
     CANT_TRANSFER_TO_CHANNEL_NOW(0), // 目前無法移動到該頻道！請稍後重新再試。
     CANT_TRANSFER_TO_CASHSHOP_NOW(1), //  目前無法進入購物商場！請稍後重新再試。
@@ -23,6 +23,7 @@ public enum  TransferChannelReqIgnoredType {
     ;
     @Getter
     private int value;
+
     TransferChannelReqIgnoredType(int value) {
         this.value = value;
     }

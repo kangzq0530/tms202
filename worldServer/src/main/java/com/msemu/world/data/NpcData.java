@@ -1,10 +1,10 @@
 package com.msemu.world.data;
 
 import com.msemu.commons.data.loader.dat.NpcTemplateDatLoader;
+import com.msemu.commons.data.loader.wz.WzManager;
 import com.msemu.commons.data.templates.NpcTemplate;
 import com.msemu.commons.reload.IReloadable;
 import com.msemu.commons.reload.Reloadable;
-import com.msemu.commons.data.loader.wz.WzManager;
 import com.msemu.core.startup.StartupComponent;
 import com.msemu.world.client.field.lifes.Npc;
 import lombok.Getter;
@@ -24,12 +24,14 @@ public class NpcData implements IReloadable {
 
 
     private static final Logger log = LoggerFactory.getLogger(QuestData.class);
-
+    private static final AtomicReference<NpcData> instance = new AtomicReference<>();
     @Getter
     private final Set<NpcTemplate> npcTemplates = new HashSet<>();
 
-    private static final AtomicReference<NpcData> instance = new AtomicReference<>();
 
+    public NpcData() {
+        load();
+    }
 
     public static NpcData getInstance() {
         NpcData value = instance.get();
@@ -43,10 +45,6 @@ public class NpcData implements IReloadable {
             }
         }
         return value;
-    }
-
-    public NpcData() {
-        load();
     }
 
     public void load() {
@@ -72,7 +70,7 @@ public class NpcData implements IReloadable {
     }
 
     private NpcTemplate getNpcTemplateFromId(int templateId) {
-        return getNpcTemplates().stream().filter(nt->nt.getId()== templateId)
+        return getNpcTemplates().stream().filter(nt -> nt.getId() == templateId)
                 .findFirst().orElse(null);
     }
 }

@@ -3,15 +3,11 @@ package com.msemu.world.data;
 import com.msemu.commons.data.loader.dat.FieldTemplateDatLoader;
 import com.msemu.commons.data.loader.wz.WzManager;
 import com.msemu.commons.data.templates.field.FieldTemplate;
-import com.msemu.commons.data.templates.field.LifeData;
 import com.msemu.commons.reload.IReloadable;
 import com.msemu.commons.reload.Reloadable;
-import com.msemu.commons.utils.types.Position;
 import com.msemu.core.startup.StartupComponent;
 import com.msemu.world.client.field.Field;
 import com.msemu.world.client.field.FieldObject;
-import com.msemu.world.client.field.lifes.Mob;
-import com.msemu.world.client.field.lifes.Npc;
 import com.msemu.world.client.field.spawns.MobSpawnPoint;
 import com.msemu.world.client.field.spawns.NpcSpawnPoint;
 import lombok.Getter;
@@ -28,12 +24,14 @@ import java.util.concurrent.atomic.AtomicReference;
 @StartupComponent("Data")
 public class FieldData implements IReloadable {
     private static final Logger log = LoggerFactory.getLogger(QuestData.class);
-
+    private static final AtomicReference<FieldData> instance = new AtomicReference<>();
     @Getter
     private final HashMap<Integer, FieldTemplate> fieldTemplates = new HashMap<>();
 
-    private static final AtomicReference<FieldData> instance = new AtomicReference<>();
 
+    public FieldData() {
+        load();
+    }
 
     public static FieldData getInstance() {
         FieldData value = instance.get();
@@ -47,10 +45,6 @@ public class FieldData implements IReloadable {
             }
         }
         return value;
-    }
-
-    public FieldData() {
-        load();
     }
 
     public void load() {
@@ -75,7 +69,7 @@ public class FieldData implements IReloadable {
             return null;
         Field field = new Field(-1, fieldTemplate);
         fieldTemplate.getLife().forEach(lifeData -> {
-            if(lifeData.getType().equals("m")) {
+            if (lifeData.getType().equals("m")) {
                 field.addSpawnPoint(new MobSpawnPoint(lifeData));
             } else {
                 field.addSpawnPoint(new NpcSpawnPoint(lifeData));

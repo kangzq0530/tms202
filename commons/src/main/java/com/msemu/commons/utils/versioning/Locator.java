@@ -140,10 +140,10 @@ public final class Locator {
     }
 
     public static URL[] getLocationURLs(File location) throws MalformedURLException {
-        return getLocationURLs(location, new String[]{".jar"});
+        return getLocationURLs(location, ".jar");
     }
 
-    public static URL[] getLocationURLs(File location, String[] extensions) throws MalformedURLException {
+    public static URL[] getLocationURLs(File location, String... extensions) throws MalformedURLException {
         URL[] urls = new URL[0];
         if (!location.exists()) {
             return urls;

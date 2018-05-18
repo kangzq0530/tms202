@@ -3,10 +3,10 @@ package com.msemu.world.client.character.skill;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.thread.EventManager;
 import com.msemu.commons.utils.types.Tuple;
-import com.msemu.world.client.character.Character;
-import com.msemu.world.client.field.AffectedArea;
 import com.msemu.core.network.packets.out.wvscontext.LP_TemporaryStatReset;
 import com.msemu.core.network.packets.out.wvscontext.LP_TemporaryStatSet;
+import com.msemu.world.client.character.Character;
+import com.msemu.world.client.field.AffectedArea;
 import com.sun.istack.internal.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -273,6 +273,10 @@ public class TemporaryStatManager {
         return larknessManager;
     }
 
+    public void setLarknessManager(LarknessManager larknessManager) {
+        this.larknessManager = larknessManager;
+    }
+
     public Character getCharacter() {
         return character;
     }
@@ -291,10 +295,6 @@ public class TemporaryStatManager {
 
     public void sendResetStatPacket() {
         getCharacter().getClient().write(new LP_TemporaryStatReset(this, false));
-    }
-
-    public void setLarknessManager(LarknessManager larknessManager) {
-        this.larknessManager = larknessManager;
     }
 
     public Set<AffectedArea> getAffectedAreas() {

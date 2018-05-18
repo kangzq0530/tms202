@@ -33,11 +33,11 @@ public class PropertiesPacketHandlerFactory<T extends Client<T>> extends Abstrac
 
     private void loadPacketPrototypes() {
         this.removeAllPackets();
-        for(InHeader header : InHeader.values()) {
+        for (InHeader header : InHeader.values()) {
             try {
                 Class clazz = Class.forName("com.msemu.core.network.packets.in." + header.name());
-                this.addClientPacket((InPacket<T>)clazz.getDeclaredConstructor(new Class[]{Short.TYPE})
-                .newInstance(header.getValue()), header.getStates());
+                this.addClientPacket((InPacket<T>) clazz.getDeclaredConstructor(new Class[]{Short.TYPE})
+                        .newInstance(header.getValue()), header.getStates());
 
             } catch (ClassNotFoundException ignored) {
             } catch (NoSuchMethodException | InstantiationException | InvocationTargetException | IllegalAccessException e) {
@@ -54,7 +54,7 @@ public class PropertiesPacketHandlerFactory<T extends Client<T>> extends Abstrac
             props.load(br);
         } catch (IOException ex) {
             InputStream in = OutHeader.class.getClassLoader().getResourceAsStream("properties/" + fileName);
-            if(in == null) {
+            if (in == null) {
                 log.error("Load OutPacket Header Error", ex);
                 return;
             }
@@ -62,7 +62,7 @@ public class PropertiesPacketHandlerFactory<T extends Client<T>> extends Abstrac
                 props.load(in);
                 in.close();
             } catch (IOException e) {
-                throw new RuntimeException("加載 " + fileName + " 檔案出錯", e);
+                throw (RuntimeException) new RuntimeException("加載 " + fileName + " 檔案出錯").initCause(e);
             }
         }
         ExternalOpcodeTableGetter.populateValues(props, OutHeader.values());
@@ -76,7 +76,7 @@ public class PropertiesPacketHandlerFactory<T extends Client<T>> extends Abstrac
             props.load(br);
         } catch (IOException ex) {
             InputStream in = OutHeader.class.getClassLoader().getResourceAsStream("properties/" + fileName);
-            if(in == null) {
+            if (in == null) {
                 log.error("Load OutPacket Header Error", ex);
                 return;
             }
@@ -84,7 +84,7 @@ public class PropertiesPacketHandlerFactory<T extends Client<T>> extends Abstrac
                 props.load(in);
                 in.close();
             } catch (IOException e) {
-                throw new RuntimeException("加載 " + fileName + " 檔案出錯", e);
+                throw (RuntimeException) new RuntimeException("加載 " + fileName + " 檔案出錯", e).initCause(e);
             }
         }
         ExternalOpcodeTableGetter.populateValues(props, InHeader.values());

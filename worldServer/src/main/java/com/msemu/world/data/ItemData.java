@@ -30,21 +30,20 @@ import java.util.concurrent.atomic.AtomicReference;
 public class ItemData implements IReloadable {
 
     private static final Logger log = LoggerFactory.getLogger(ItemData.class);
-
+    private static final AtomicReference<ItemData> instance = new AtomicReference<>();
     @Getter(value = AccessLevel.PRIVATE)
     private final Map<Integer, ItemOptionInfo> itemOptions = new HashMap<>();
-
     @Getter(value = AccessLevel.PRIVATE)
     private final Map<Integer, EquipTemplate> equipTemplates = new HashMap<>();
-
     @Getter(value = AccessLevel.PRIVATE)
     private final Map<Integer, ItemTemplate> itemTemplates = new HashMap<>();
-
     @Getter(value = AccessLevel.PRIVATE)
     private final Map<Integer, SetItemInfo> setItemInfos = new HashMap<>();
 
-    private static final AtomicReference<ItemData> instance = new AtomicReference<>();
 
+    public ItemData() {
+        load();
+    }
 
     public static ItemData getInstance() {
         ItemData value = instance.get();
@@ -58,10 +57,6 @@ public class ItemData implements IReloadable {
             }
         }
         return value;
-    }
-
-    public ItemData() {
-        load();
     }
 
     public void load() {

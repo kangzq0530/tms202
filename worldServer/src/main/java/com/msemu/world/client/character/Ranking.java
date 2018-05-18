@@ -20,7 +20,7 @@ public class Ranking {
     }
 
     public Ranking() {
-        this(1,3,3,7);
+        this(1, 3, 3, 7);
     }
 
     public int getTotRank() {

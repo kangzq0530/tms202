@@ -3,6 +3,8 @@ package com.msemu.world.client.character.jobs;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.jobs.adventurer.Archer;
 import com.msemu.world.client.character.jobs.adventurer.Beginner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -10,6 +12,9 @@ import java.lang.reflect.InvocationTargetException;
  * Created by Weber on 2018/4/23.
  */
 public class JobManager {
+
+    private static final Logger log = LoggerFactory.getLogger(JobManager.class);
+
     private static final Class<?>[] jobClasses = new Class<?>[]{
             Archer.class,
             Beginner.class,
@@ -17,13 +22,13 @@ public class JobManager {
 
     public static JobHandler getJobHandler(short id, Character chr) {
         JobHandler job = null;
-        for(Class clazz : jobClasses) {
+        for (Class clazz : jobClasses) {
             try {
                 job = (JobHandler) clazz.getConstructor(Character.class).newInstance(chr);
             } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-                e.printStackTrace();
+                log.error("getJobHandlerError", e);
             }
-            if(job != null && job.isHandlerOfJob(id)) {
+            if (job != null && job.isHandlerOfJob(id)) {
                 return job;
             }
         }

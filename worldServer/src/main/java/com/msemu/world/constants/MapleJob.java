@@ -195,15 +195,11 @@ public enum MapleJob {
     VSkillBowman(40003),
     VSkillThief(40004),
     VSkillPirate(40005),
-    未知(999999), ;
+    未知(999999),;
     private final int jobid;
 
     private MapleJob(int id) {
         this.jobid = id;
-    }
-
-    public int getId() {
-        return this.jobid;
     }
 
     public static String getName(MapleJob mjob) {
@@ -684,5 +680,9 @@ public enum MapleJob {
         } else {
             return job % 10 + 2;
         }
+    }
+
+    public int getId() {
+        return this.jobid;
     }
 }

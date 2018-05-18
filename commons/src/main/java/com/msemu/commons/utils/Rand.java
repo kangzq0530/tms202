@@ -72,11 +72,11 @@ public class Rand {
         return ThreadLocalRandom.current().nextDouble() * max <= chance;
     }
 
-    public static <E> E get(E[] list) {
+    public static <E> E get(E... list) {
         return list[get(list.length)];
     }
 
-    public static int get(int[] list) {
+    public static int get(int... list) {
         return list[get(list.length)];
     }
 

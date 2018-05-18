@@ -3,7 +3,7 @@ package com.msemu.world.enums;
 /**
  * Created by Weber on 2018/5/3.
  */
-public enum  AswanSiegeAttackUserEffectType {
+public enum AswanSiegeAttackUserEffectType {
     LevelUp(0x0),
     SkillUse(0x1),
     SkillUseBySummoned(0x2),
@@ -72,8 +72,7 @@ public enum  AswanSiegeAttackUserEffectType {
     BiteAttackReceiveFail(0x41),
     IncDecHPEffectDelayed(0x42),
     Lightness(0x43),
-    UserActionSetUsed(0x44),
-;
+    UserActionSetUsed(0x44),;
     private byte value;
 
     AswanSiegeAttackUserEffectType(int value) {

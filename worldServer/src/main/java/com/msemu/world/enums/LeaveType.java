@@ -5,8 +5,7 @@ package com.msemu.world.enums;
  */
 public enum LeaveType {
     NO_ANIMATION(0),
-    ANIMATION(1),
-    ;
+    ANIMATION(1),;
 
 
     private byte value;

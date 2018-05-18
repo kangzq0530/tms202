@@ -14,6 +14,11 @@ public class WorldWzManager extends WzManager {
     private static final AtomicReference<WorldWzManager> instance = new AtomicReference<>();
 
 
+    public WorldWzManager() {
+        super();
+        //super(WzManager.ETC, WzManager.ITEM, WzManager.CHARACTER, WzManager.STRING, WzManager.NPC, WzManager.MAP, WzManager.QUEST, WzManager.SKILL);
+    }
+
     public static WorldWzManager getInstance() {
         WorldWzManager value = instance.get();
         if (value == null) {
@@ -26,11 +31,6 @@ public class WorldWzManager extends WzManager {
             }
         }
         return value;
-    }
-
-    public WorldWzManager() {
-        super();
-        //super(WzManager.ETC, WzManager.ITEM, WzManager.CHARACTER, WzManager.STRING, WzManager.NPC, WzManager.MAP, WzManager.QUEST, WzManager.SKILL);
     }
 
 }

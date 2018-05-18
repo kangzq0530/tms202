@@ -4,14 +4,12 @@ import com.msemu.commons.database.Schema;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.utils.types.FileTime;
 import com.msemu.core.network.GameClient;
-import com.msemu.world.client.character.inventory.items.Equip;
 import com.msemu.world.constants.JobConstants;
 import com.msemu.world.constants.MapleJob;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Collection;
 
 /**
  * Created by Weber on 2018/3/29.

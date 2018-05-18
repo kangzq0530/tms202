@@ -7,7 +7,7 @@ import com.msemu.world.enums.PartyResultType;
 /**
  * Created by Weber on 2018/5/4.
  */
-public class InviteIntrusionSentResponse implements IPartyResult  {
+public class InviteIntrusionSentResponse implements IPartyResult {
 
     private String charName;
 

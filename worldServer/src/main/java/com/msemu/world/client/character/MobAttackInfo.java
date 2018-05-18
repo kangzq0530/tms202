@@ -18,11 +18,11 @@ public class MobAttackInfo {
     private byte idk4;
     private byte idk5;
     private byte calcDamageStatIndex;
-    private short rcDstX;
-    private short rectRight;
-    private short oldPosX;
-    private short oldPosY;
-    private short hpPerc;
+    private int rcDstX;
+    private int rectRight;
+    private int oldPosX;
+    private int oldPosY;
+    private int hpPercent;
     private long[] damages;
     private int mobUpDownYRange;
     private byte type;

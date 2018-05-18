@@ -22,6 +22,8 @@ import java.util.List;
 public class Summon extends AbstractAnimatedFieldLife {
 
     @Getter
+    List<Position> teslaCoilPositions = new ArrayList<>();
+    @Getter
     @Setter
     private int templateId, charID, skillID, bulletID, maxHP, hp;
     @Getter
@@ -39,8 +41,6 @@ public class Summon extends AbstractAnimatedFieldLife {
     @Setter
     private AvatarLook avatarLook;
     @Getter
-    List<Position> teslaCoilPositions = new ArrayList<>();
-    @Getter
     @Setter
     private Position[] kishinPositions = new Position[2];
     @Getter
@@ -49,10 +49,6 @@ public class Summon extends AbstractAnimatedFieldLife {
 
     public Summon(int objectId) {
         setObjectId(objectId);
-    }
-
-    public void setSummonTerm(int summonTerm) {
-        this.summonTerm = 1000 * summonTerm;
     }
 
     public static Summon getSummonBy(Character character, int skillID, byte slv) {
@@ -74,6 +70,10 @@ public class Summon extends AbstractAnimatedFieldLife {
         summon.setSkillID(skillID);
         summon.setAttackActive(true);
         return summon;
+    }
+
+    public void setSummonTerm(int summonTerm) {
+        this.summonTerm = 1000 * summonTerm;
     }
 
     @Override

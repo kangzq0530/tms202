@@ -5,7 +5,7 @@ import com.msemu.commons.network.packets.InPacket;
 import com.msemu.core.network.GameClient;
 import com.msemu.core.network.packets.out.user.local.LP_SetDirectionMode;
 import com.msemu.core.network.packets.out.user.local.LP_SetInGameDirectionMode;
-import com.msemu.world.channel.Channel;
+import com.msemu.world.Channel;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.field.Field;
 

@@ -15,7 +15,7 @@ public class ExternalOpcodeTableGetter {
         props = properties;
     }
 
-    private static <T extends Enum<? extends IHeader> & IHeader> T valueOf(final String name, T[] values) {
+    private static <T extends Enum<? extends IHeader> & IHeader> T valueOf(final String name, T... values) {
         for (T val : values) {
             if (val.name().equals(name)) {
                 return val;
@@ -49,7 +49,7 @@ public class ExternalOpcodeTableGetter {
         return def;
     }
 
-    public final static <T extends Enum<? extends IHeader> & IHeader> String getOpcodeTable(T[] enumeration) {
+    public final static <T extends Enum<? extends IHeader> & IHeader> String getOpcodeTable(T... enumeration) {
         StringBuilder enumVals = new StringBuilder();
         List<T> all = new ArrayList<>(); // need a mutable list plawks
         all.addAll(Arrays.asList(enumeration));
@@ -66,7 +66,7 @@ public class ExternalOpcodeTableGetter {
         return enumVals.toString();
     }
 
-    public final static <T extends Enum<? extends IHeader> & IHeader> void populateValues(Properties properties, T[] values) {
+    public final static <T extends Enum<? extends IHeader> & IHeader> void populateValues(Properties properties, T... values) {
         ExternalOpcodeTableGetter exc = new ExternalOpcodeTableGetter(properties);
         for (T code : values) {
             ((IHeader) code).setValue(exc.getValue(code.name(), values, (short) -2));

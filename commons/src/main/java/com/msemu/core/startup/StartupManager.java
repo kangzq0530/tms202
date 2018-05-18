@@ -57,8 +57,7 @@ public class StartupManager {
             for (StartModule<SL> module : modules) {
                 Class clazz = module.getClazz();
                 Class<? extends Object>[] dependency = ((StartupComponent) clazz.getAnnotation(StartupComponent.class)).dependency();
-                for (int i = 0; i < dependency.length; ++i) {
-                    Class<? extends Object> dep = dependency[i];
+                for (Class<? extends Object> dep : dependency) {
                     Optional<StartModule<SL>> dependencyModule = modules.stream().filter((m) -> m.getClazz().getCanonicalName().equals(dep.getCanonicalName())).findAny();
                     if (dependencyModule.isPresent()) {
                         module.addDependency(dependencyModule.get());

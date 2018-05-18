@@ -38,7 +38,7 @@ public enum EquipAttribute {
     ;
     private int value;
 
-    EquipAttribute(int val) {
+    EquipAttribute(final int val) {
         this.value = val;
     }
 

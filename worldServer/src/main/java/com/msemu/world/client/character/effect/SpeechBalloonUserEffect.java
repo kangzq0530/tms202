@@ -9,7 +9,7 @@ import com.msemu.world.enums.UserEffectType;
  */
 public class SpeechBalloonUserEffect implements IUserEffect {
 
-    private boolean  normal;
+    private boolean normal;
     private int id;
     private int linkType;
     private String speech;

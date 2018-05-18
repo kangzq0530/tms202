@@ -79,9 +79,9 @@ public enum ItemGrade {
         }
     }
 
-    public static ItemGrade getHiddenGradeByVal(short val) {
+    public static ItemGrade getHiddenGradeByValue(short value) {
         ItemGrade ig = NONE;
-        ItemGrade arg = getGradeByVal(val);
+        ItemGrade arg = getGradeByVal(value);
         switch(arg) {
             case RARE:
                 ig = HIDDEN_RARE;

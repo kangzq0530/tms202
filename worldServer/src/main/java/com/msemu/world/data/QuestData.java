@@ -30,23 +30,21 @@ import java.util.concurrent.atomic.AtomicReference;
 @StartupComponent("Data")
 public class QuestData implements IReloadable {
     private static final Logger log = LoggerFactory.getLogger(QuestData.class);
-
+    private static final AtomicReference<QuestData> instance = new AtomicReference<>();
     @Getter(value = AccessLevel.PROTECTED)
     private final Map<Integer, QuestInfo> questsInfo = new HashMap<>();
-
     @Getter(value = AccessLevel.PROTECTED)
     private final Map<Integer, Set<IQuestAction>> questsStartActions = new HashMap<>();
-
     @Getter(value = AccessLevel.PROTECTED)
     private final Map<Integer, Set<IQuestAction>> questsCompleteActions = new HashMap<>();
-
     @Getter(value = AccessLevel.PROTECTED)
     private final Map<Integer, Set<IQuestProgressRequirement>> questsProgressRequirements = new HashMap<>();
-
     @Getter(value = AccessLevel.PROTECTED)
     private final Map<Integer, Set<IQuestStartRequirements>> questsStartRequirements = new HashMap<>();
 
-    private static final AtomicReference<QuestData> instance = new AtomicReference<>();
+    public QuestData() {
+        load();
+    }
 
     public static QuestData getInstance() {
         QuestData value = instance.get();
@@ -60,10 +58,6 @@ public class QuestData implements IReloadable {
             }
         }
         return value;
-    }
-
-    public QuestData() {
-        load();
     }
 
     @Override
@@ -220,7 +214,7 @@ public class QuestData implements IReloadable {
         quest.setStatus(QuestStatus.NOT_STARTED);
         if (qi != null) {
             getQuestsProgressRequirements().get(questID).forEach(req -> quest.addQuestProgressRequirement((QuestProgressRequirement) req));
-            if(qi.isAutoPreComplete())
+            if (qi.isAutoPreComplete())
                 quest.setStatus(QuestStatus.COMPLETE);
         } else {
             // 自定義任務

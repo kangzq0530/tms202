@@ -109,21 +109,6 @@ public class Aran extends JobHandler {
             找回記憶,
             戰鬥衝刺,
     };
-
-    public static int getOriginalSkillByID(int skillID) {
-        switch (skillID) {
-            case 猛擲之矛_COMBO:
-                return 猛擲之矛;
-            case 終極之矛_COMBO:
-            case 終極之矛_粉碎震撼_COMBO:
-                return 終極之矛;
-            case 粉碎震撼_2:
-            case 粉碎震撼_3:
-                return 粉碎震撼_1;
-        }
-        return skillID; // no original skill linked with this one
-    }
-
     private int combo = 0;
 
     public Aran(Character character) {
@@ -139,6 +124,20 @@ public class Aran extends JobHandler {
                 }
             });
         }
+    }
+
+    public static int getOriginalSkillByID(int skillID) {
+        switch (skillID) {
+            case 猛擲之矛_COMBO:
+                return 猛擲之矛;
+            case 終極之矛_COMBO:
+            case 終極之矛_粉碎震撼_COMBO:
+                return 終極之矛;
+            case 粉碎震撼_2:
+            case 粉碎震撼_3:
+                return 粉碎震撼_1;
+        }
+        return skillID; // no original skill linked with this one
     }
 
     public void handleBuff(InPacket packet, int skillID, byte slv) {
@@ -265,13 +264,13 @@ public class Aran extends JobHandler {
         }
     }
 
+    private int getCombo() {
+        return combo;
+    }
+
     private void setCombo(int combo) {
         this.combo = combo;
         getClient().write(new LP_ModCombo(getCombo()));
-    }
-
-    private int getCombo() {
-        return combo;
     }
 
     @Override

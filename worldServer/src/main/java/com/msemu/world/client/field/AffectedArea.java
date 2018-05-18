@@ -77,8 +77,8 @@ public class AffectedArea extends AbstractFieldObject {
         Option o3 = new Option();
         switch (skillID) {
 //            case Magician.POISON_MIST:
-//            case Archer.FLAME_SURGE:
-//            case Kanna.NIMBUS_CURSE:
+//            case Archer.火焰衝擊:
+//            case Kanna.妖雲召喚:
 //                if(!mts.hasBurnFromSkill(skillID)) {
 //                    mts.createAndAddBurnedInfo(getCharID(), skill, 1);
 //                }
@@ -153,13 +153,13 @@ public class AffectedArea extends AbstractFieldObject {
 //                o2.tStart = (int) System.currentTimeMillis();
 //                tsm.putCharacterStatValue(IndieBooster, o2); //Indie
 //                break;
-//            case Kanna.BELLFLOWER_BARRIER:
+//            case Kanna.結界_桔梗:
 //                o1.nReason = skillID;
 //                o1.nValue = si.getValue(bdR, slv);
 //                o1.tStart = (int) System.currentTimeMillis();
 //                tsm.putCharacterStatValue(IndieBDR, o1); //Indie
 //                break;
-//            case Kanna.BLOSSOM_BARRIER:
+//            case Kanna.結界_櫻:
 //                o1.nOption = si.getValue(SkillStat.x, slv);
 //                o1.rOption = skillID;
 //                tsm.putCharacterStatValue(DamageReduce, o1);

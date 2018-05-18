@@ -40,58 +40,6 @@ public abstract class MovementBase implements IMovement {
     @Setter
     protected Position offset;
 
-    @Override
-    public byte getCommand() {
-        return command;
-    }
-
-    @Override
-    public byte getMoveAction() {
-        return moveAction;
-    }
-
-    @Override
-    public byte getForcedStop() {
-        return forcedStop;
-    }
-
-
-    @Override
-    public byte getStat() {
-        return stat;
-    }
-
-    @Override
-    public short getFh() {
-        return fh;
-    }
-
-    @Override
-    public short getFootStart() {
-        return footStart;
-    }
-
-    @Override
-    public Position getPosition() {
-        return position;
-    }
-
-    @Override
-    public Position getVPosition() {
-        return vPosition;
-    }
-
-    @Override
-    public Position getOffset() {
-        return offset;
-    }
-
-    @Override
-    public short getDuration() {
-        return elapse;
-    }
-
-
     public static List<IMovement> decode(InPacket<GameClient> inPacket) {
         List<IMovement> res = new ArrayList<>();
         byte size = inPacket.decodeByte();
@@ -207,9 +155,59 @@ public abstract class MovementBase implements IMovement {
         double skip = inPacket.decodeByte();
         skip = Math.ceil(skip / 2.0D);
         inPacket.skip((int) skip);
-        if(res.size() != size) {
+        if (res.size() != size) {
             log.error("MovementBase error");
         }
         return res;
+    }
+
+    @Override
+    public byte getCommand() {
+        return command;
+    }
+
+    @Override
+    public byte getMoveAction() {
+        return moveAction;
+    }
+
+    @Override
+    public byte getForcedStop() {
+        return forcedStop;
+    }
+
+    @Override
+    public byte getStat() {
+        return stat;
+    }
+
+    @Override
+    public short getFh() {
+        return fh;
+    }
+
+    @Override
+    public short getFootStart() {
+        return footStart;
+    }
+
+    @Override
+    public Position getPosition() {
+        return position;
+    }
+
+    @Override
+    public Position getVPosition() {
+        return vPosition;
+    }
+
+    @Override
+    public Position getOffset() {
+        return offset;
+    }
+
+    @Override
+    public short getDuration() {
+        return elapse;
     }
 }

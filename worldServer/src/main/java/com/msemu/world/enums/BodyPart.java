@@ -3,7 +3,7 @@ package com.msemu.world.enums;
 /**
  * Created by Weber on 2018/4/13.
  */
-public enum  BodyPart {
+public enum BodyPart {
     HAT(1),
     FACE(2),
     EYES(3),

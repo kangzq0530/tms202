@@ -9,7 +9,7 @@ public enum ElementalEffectiveness {
 
     private final double value;
 
-    private ElementalEffectiveness(double val) {
+    private ElementalEffectiveness(final double val) {
         this.value = val;
     }
 
@@ -17,7 +17,7 @@ public enum ElementalEffectiveness {
         return value;
     }
 
-    public static int getNumber(ElementalEffectiveness elementalEffectiveness) {
+    public static int getNumber(final ElementalEffectiveness elementalEffectiveness) {
         switch (elementalEffectiveness) {
             case NORMAL:
                 return 0;
@@ -31,7 +31,7 @@ public enum ElementalEffectiveness {
         return -1;
     }
 
-    public static ElementalEffectiveness getByNumber(int num) {
+    public static ElementalEffectiveness getByNumber(final int num) {
         switch (num) {
             case 0:
                 return NORMAL;

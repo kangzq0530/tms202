@@ -31,7 +31,7 @@ public class LotteryUseUserEffect implements IUserEffect {
     public void encode(OutPacket<GameClient> outPacket) {
         outPacket.encodeInt(itemID);
         outPacket.encodeByte(effect != null);
-        if(effect != null)
+        if (effect != null)
             outPacket.encodeString(effect);
     }
 }
