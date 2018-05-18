@@ -206,7 +206,7 @@ public class OutPacket<TClient extends Client<TClient>> extends Packet<TClient> 
             return;
         }
         encodeShort((short) data.length);
-        encodeString(str, (short) str.length());
+        encodeArr(data);
     }
 
     /**
