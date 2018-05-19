@@ -2,8 +2,8 @@ package com.msemu.world.client.field.lifes;
 
 import com.msemu.commons.utils.types.FileTime;
 import com.msemu.core.network.GameClient;
-import com.msemu.core.network.packets.out.drops.LP_DropEnterField;
-import com.msemu.core.network.packets.out.drops.LP_DropLeaveField;
+import com.msemu.core.network.packets.outpacket.drops.LP_DropEnterField;
+import com.msemu.core.network.packets.outpacket.drops.LP_DropLeaveField;
 import com.msemu.world.client.character.inventory.items.Equip;
 import com.msemu.world.client.character.inventory.items.Item;
 import com.msemu.world.client.field.AbstractFieldObject;

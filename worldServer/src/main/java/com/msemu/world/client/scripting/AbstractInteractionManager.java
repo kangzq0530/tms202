@@ -3,7 +3,7 @@ package com.msemu.world.client.scripting;
 import com.msemu.commons.data.templates.field.Portal;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;
-import com.msemu.core.network.packets.out.wvscontext.LP_GuildResult;
+import com.msemu.core.network.packets.outpacket.wvscontext.LP_GuildResult;
 import com.msemu.world.Channel;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.party.Party;

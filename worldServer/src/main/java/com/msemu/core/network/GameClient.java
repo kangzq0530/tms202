@@ -4,7 +4,7 @@ import com.msemu.commons.network.Connection;
 import com.msemu.commons.network.crypt.MapleCrypt;
 import com.msemu.commons.network.crypt.MapleExCrypt;
 import com.msemu.core.configs.CoreConfig;
-import com.msemu.core.network.packets.out.LP_ConnectToClient;
+import com.msemu.core.network.packets.outpacket.LP_ConnectToClient;
 import com.msemu.world.Channel;
 import com.msemu.world.World;
 import com.msemu.world.client.Account;

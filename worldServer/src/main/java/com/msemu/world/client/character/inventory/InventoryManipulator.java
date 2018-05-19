@@ -1,7 +1,7 @@
 package com.msemu.world.client.character.inventory;
 
 import com.msemu.commons.data.enums.InvType;
-import com.msemu.core.network.packets.out.wvscontext.LP_InventoryOperation;
+import com.msemu.core.network.packets.outpacket.wvscontext.LP_InventoryOperation;
 import com.msemu.world.client.character.AvatarLook;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.inventory.items.Equip;
