@@ -1,10 +1,10 @@
-package com.msemu.core.network.packets.in;
+package com.msemu.core.network.packets.inpacket;
 
 import com.msemu.commons.enums.ClientState;
 import com.msemu.commons.network.packets.InPacket;
 import com.msemu.commons.utils.types.FileTime;
 import com.msemu.core.network.LoginClient;
-import com.msemu.core.network.packets.out.login.LP_CheckPasswordResult;
+import com.msemu.core.network.packets.outpacket.login.LP_CheckPasswordResult;
 import com.msemu.login.LoginServer;
 import com.msemu.login.client.Account;
 import com.msemu.login.enums.LoginResultCode;

@@ -4,7 +4,7 @@ import com.msemu.commons.network.Client;
 import com.msemu.commons.network.Connection;
 import com.msemu.commons.network.crypt.MapleCrypt;
 import com.msemu.core.configs.CoreConfig;
-import com.msemu.core.network.packets.out.login.LP_ConnectToClient;
+import com.msemu.core.network.packets.outpacket.login.LP_ConnectToClient;
 import com.msemu.login.client.Account;
 import com.msemu.login.enums.LoginResultCode;
 import lombok.Getter;

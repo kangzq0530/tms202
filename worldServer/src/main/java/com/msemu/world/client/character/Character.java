@@ -15,7 +15,6 @@ import com.msemu.core.network.packets.outpacket.user.LP_UserLeaveField;
 import com.msemu.core.network.packets.outpacket.user.local.LP_ChatMsg;
 import com.msemu.core.network.packets.outpacket.user.remote.LP_UserAvatarModified;
 import com.msemu.core.network.packets.outpacket.user.remote.effect.LP_UserEffectRemote;
-import com.msemu.core.network.packets.out.wvscontext.*;
 import com.msemu.core.network.packets.outpacket.wvscontext.*;
 import com.msemu.world.Channel;
 import com.msemu.world.client.character.effect.LevelUpUserEffect;

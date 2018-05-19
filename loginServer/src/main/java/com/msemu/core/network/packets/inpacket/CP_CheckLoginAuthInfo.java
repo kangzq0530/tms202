@@ -1,4 +1,4 @@
-package com.msemu.core.network.packets.in;
+package com.msemu.core.network.packets.inpacket;
 
 import com.msemu.commons.enums.ClientState;
 import com.msemu.commons.network.packets.InPacket;
@@ -6,10 +6,10 @@ import com.msemu.commons.rmi.model.WorldInfo;
 import com.msemu.commons.utils.BCryptUtils;
 import com.msemu.commons.utils.HexUtils;
 import com.msemu.core.network.LoginClient;
-import com.msemu.core.network.packets.out.login.LP_CheckPasswordResult;
-import com.msemu.core.network.packets.out.login.LP_SetAccountGender;
-import com.msemu.core.network.packets.out.login.LP_WorldInformation;
-import com.msemu.core.network.packets.out.login.LP_WorldInformationEnd;
+import com.msemu.core.network.packets.outpacket.login.LP_CheckPasswordResult;
+import com.msemu.core.network.packets.outpacket.login.LP_SetAccountGender;
+import com.msemu.core.network.packets.outpacket.login.LP_WorldInformation;
+import com.msemu.core.network.packets.outpacket.login.LP_WorldInformationEnd;
 import com.msemu.login.LoginServer;
 import com.msemu.login.client.Account;
 import com.msemu.login.enums.LoginResultCode;
@@ -55,7 +55,7 @@ public class CP_CheckLoginAuthInfo extends InPacket<LoginClient> {
                 log.warn("LoginStatus: [NotRegistered] IP: {}, username: {}", getClient().getIP(), username);
             } else if (!BCryptUtils.checkPassword(password, account.getPassword())) {
                 status = LoginResultCode.IncorrectPassword;
-                log.warn("LoginStatus: [LoginSuccess] IP: {}, accountID: {}, username: {} can't kick out from WorldServer", getClient().getIP(), account.getId(), account.getUsername());
+                log.warn("LoginStatus: [LoginSuccess] IP: {}, accountID: {}, username: {} can't kick outpacket from WorldServer", getClient().getIP(), account.getId(), account.getUsername());
             } else {
                 //TODO : Check Password, IP
                 if (account.getPic().equals("")) {
@@ -65,7 +65,7 @@ public class CP_CheckLoginAuthInfo extends InPacket<LoginClient> {
                     boolean isOnline = LoginServer.getRmi().isAccountOnline(account);
                     boolean result = LoginServer.getRmi().kickPlayerByAccount(account);
                     if (isOnline && !result) {
-                        log.warn("LoginStatus: [DBFail] IP: {}, accountID: {}, username: {} can't kick out from WorldServer", getClient().getIP(), account.getId(), account.getUsername());
+                        log.warn("LoginStatus: [DBFail] IP: {}, accountID: {}, username: {} can't kick outpacket from WorldServer", getClient().getIP(), account.getId(), account.getUsername());
                         status = LoginResultCode.DBFail;
                     } else {
                         log.warn("LoginStatus: [LoginSuccess] IP: {}, accountID: {}, username: {} is authenticated", getClient().getIP(), account.getId(), account.getUsername());

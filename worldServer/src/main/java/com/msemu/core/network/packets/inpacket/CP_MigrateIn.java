@@ -6,7 +6,6 @@ import com.msemu.commons.utils.DateUtils;
 import com.msemu.core.network.GameClient;
 import com.msemu.core.network.packets.outpacket.field.LP_SetQuestClear;
 import com.msemu.core.network.packets.outpacket.funckey.LP_FuncKeyMappedInit;
-import com.msemu.core.network.packets.out.wvscontext.*;
 import com.msemu.core.network.packets.outpacket.wvscontext.*;
 import com.msemu.world.World;
 import com.msemu.world.Channel;

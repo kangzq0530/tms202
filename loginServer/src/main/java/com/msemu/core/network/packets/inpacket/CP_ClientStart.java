@@ -1,8 +1,8 @@
-package com.msemu.core.network.packets.in;
+package com.msemu.core.network.packets.inpacket;
 
 import com.msemu.commons.network.packets.InPacket;
 import com.msemu.core.network.LoginClient;
-import com.msemu.core.network.packets.out.login.LP_ShowMapleStory;
+import com.msemu.core.network.packets.outpacket.login.LP_ShowMapleStory;
 
 /**
  * Created by Weber on 2018/4/19.

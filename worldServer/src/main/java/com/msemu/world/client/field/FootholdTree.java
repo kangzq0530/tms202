@@ -155,7 +155,7 @@ public class FootholdTree {
     private Foothold findWallR(final Position p1, final Position p2) {
         Foothold ret;
         for (final Foothold f : footholds) {
-            //if (f.isWall()) System.out.println(f.getX1() + " " + f.getX2());
+            //if (f.isWall()) System.outpacket.println(f.getX1() + " " + f.getX2());
             if (f.isWall() && f.getX1() >= p1.getX() && f.getX1() <= p2.getX() && f.getY1() >= p1.getY() && f.getY2() <= p1.getY()) {
                 return f;
             }

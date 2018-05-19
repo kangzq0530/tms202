@@ -35,7 +35,7 @@ public class XMLApi {
     }
 
     /**
-     * Returns a list of Nodes containing all children of a given Node. Filters out all text elements.
+     * Returns a list of Nodes containing all children of a given Node. Filters outpacket all text elements.
      * @param node The Node of which the children are requested.
      * @return The list of children nodes of <code>node</code>. An empty list if there are none.
      */
