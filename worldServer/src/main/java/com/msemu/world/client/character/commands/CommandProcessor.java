@@ -25,7 +25,7 @@ public class CommandProcessor {
                 if(Modifier.isAbstract(cmdClazz.getModifiers())|| cmdClazz.isSynthetic()) {
                     continue;
                 }
-                commands.put(clazz.getName().toLowerCase(), (Class<? extends CommandExecute>) clazz);
+                commands.put(cmdClazz.getSimpleName().toLowerCase(), (Class<? extends CommandExecute>) cmdClazz);
             }
         }
     }

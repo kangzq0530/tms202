@@ -20,16 +20,18 @@ public abstract class SetDatDataLoader<T extends DatSerializable> extends DatDat
     public Set<T> load(Void src) {
         try {
             DataInputStream dis = getDataInputStream();
-            Set<T> data = new HashSet<T>();
+            Set<T> data = new HashSet<>();
             int size = dis.readInt();
             for (int i = 0; i < size; i++) {
-                T t = (T) create().load(dis);
+
+                DatSerializable obj = create().load(dis);
+                T t = (T) obj;
                 data.add(t);
             }
             dis.close();
             return data;
         } catch (IOException ex) {
-            log.error("eror load dat", ex);
+            log.error("load dat error", ex);
         }
         return null;
     }

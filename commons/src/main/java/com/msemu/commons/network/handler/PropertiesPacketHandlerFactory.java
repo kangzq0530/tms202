@@ -35,7 +35,7 @@ public class PropertiesPacketHandlerFactory<T extends Client<T>> extends Abstrac
         this.removeAllPackets();
         for (InHeader header : InHeader.values()) {
             try {
-                Class clazz = Class.forName("com.msemu.core.network.packets.in." + header.name());
+                Class clazz = Class.forName("com.msemu.core.network.packets.inpacket." + header.name());
                 this.addClientPacket((InPacket<T>) clazz.getDeclaredConstructor(new Class[]{Short.TYPE})
                         .newInstance(header.getValue()), header.getStates());
 

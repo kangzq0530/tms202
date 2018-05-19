@@ -273,6 +273,7 @@ public class Field {
             return;
         mob.setObjectId(getNewObjectID());
         mob.setField(this);
+        mob.setAppearType(MobAppearType.Delay);
         addFieldObject(mob);
     }
 
@@ -357,6 +358,8 @@ public class Field {
             item = ItemData.getInstance().getEquipFromTemplate(itemID);
             if (item == null) {
                 item = ItemData.getInstance().getItemFromTemplate(itemID);
+                if(item == null)
+                    return;
                 item.setQuantity(Rand.get(dropInfo.getMinQuantity(), dropInfo.getMaxQuantity()));
                 int slotMax = item.getTemplate().getSlotMax();
                 if (slotMax > 0)

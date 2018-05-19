@@ -182,6 +182,12 @@ public class QuestData implements IReloadable {
                 case item:
                     questReq = new QuestStartItemRequirement();
                     break;
+                case npc:
+                    questReq = new QuestStartNpcRequirement();
+                    break;
+                case quest:
+                    questReq = new QuestStartQuestRequirement();
+                    break;
                 default:
                     log.info("Unimplemented questStartReq: {}", reqData.getType());
                     questReq = null;

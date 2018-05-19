@@ -55,7 +55,7 @@ public class Mob extends AbstractInternalAnimatedLife {
     private byte calcDamageIndex = 1, moveAction, teamForMCarnival;
     @Getter
     @Setter
-    private MobAppearType appearType = MobAppearType.Normal;
+    private MobAppearType appearType = MobAppearType.Delay;
     @Getter
     @Setter
     private DeathType deathType = DeathType.ANIMATION_DEATH;

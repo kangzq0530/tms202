@@ -41,11 +41,11 @@ public class CP_UserChangeStatRequest extends InPacket<GameClient> {
         if (stat.getHp() <= 0)
             return;
 
-        if (healHP != 0) {  // TODO check nodelay hack
+        if (healHP != 0 && chr.getStat(Stat.HP) < chr.getCurrentMaxHp()) {  // TODO check nodelay hack
             // TODO check real heal number
             chr.addStat(Stat.HP, healHP);
         }
-        if (healMP != 0 && !MapleJob.is惡魔殺手(chr.getJob())) { // TODO check nodelay hack
+        if (healMP != 0 && chr.getStat(Stat.MP) < chr.getCurrentMaxMp() && !MapleJob.is惡魔殺手(chr.getJob())) { // TODO check nodelay hack
             // TODO check real heal number
             chr.addStat(Stat.MP, healMP);
         }

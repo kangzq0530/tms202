@@ -1,5 +1,6 @@
 package com.msemu.world.client.character;
 
+import com.msemu.commons.data.templates.ItemTemplate;
 import com.msemu.commons.data.templates.SetInfo;
 import com.msemu.commons.data.templates.SetItemInfo;
 import com.msemu.world.client.character.inventory.items.Equip;
@@ -17,6 +18,7 @@ import java.util.List;
  */
 public class CharacterLocalStat {
 
+    @Getter
     private Character character;
 
     @Getter
@@ -61,11 +63,20 @@ public class CharacterLocalStat {
         }
 
 
-        maxHp = (baseMaxHp + incMaxHp) * (100 + incMaxHpR) / 100;
-        maxMp = (baseMaxMp + incMaxMp) * (100 + incMaxMpR) / 100;
+        this.maxHp = (baseMaxHp + incMaxHp) * (100 + incMaxHpR) / 100;
+        this.maxMp = (baseMaxMp + incMaxMp) * (100 + incMaxMpR) / 100;
 
 
         this.shouldHealHp = 10;
+        this.shouldHealMp = 3;
+
+        ItemTemplate chairInfo = ItemData.getInstance().getItemInfo(getCharacter().getPortableChairID());
+
+        if(chairInfo != null) {
+            this.shouldHealHp += chairInfo.getRecoveryHP();
+            this.shouldHealHp += chairInfo.getRecoveryMP();
+        }
+
     }
 
 

@@ -127,18 +127,15 @@ public class Archer extends JobHandler {
 
     @Override
     public void handleAttack(AttackInfo attackInfo) {
-        Character chr = getCharacter();
-        TemporaryStatManager tsm = chr.getTemporaryStatManager();
-        Skill skill = chr.getSkill(attackInfo.skillId);
-        int skillID = 0;
-        SkillInfo si = null;
-        boolean hasHitMobs = attackInfo.mobAttackInfo.size() > 0;
-        int slv = 0;
-        if (skill != null) {
-            si = SkillData.getInstance().getSkillInfoById(skill.getSkillId());
-            slv = skill.getCurrentLevel();
-            skillID = skill.getSkillId();
-        }
+        final Character chr = getCharacter();
+        final TemporaryStatManager tsm = chr.getTemporaryStatManager();
+        final Skill skill = chr.getSkill(attackInfo.skillId);
+        final SkillInfo si = skill != null ? getSkillInfo(attackInfo.getSkillId()) : null;
+        if (si == null)
+            return;
+        final int slv = skill.getCurrentLevel();
+        final int skillID = skill.getSkillId();
+        final boolean hasHitMobs = attackInfo.getMobAttackInfo().size() > 0;
         if (hasHitMobs) {
             handleQuiverCartridge(chr.getTemporaryStatManager(), attackInfo, slv);
             handleFocusedFury();
@@ -147,7 +144,6 @@ public class Archer extends JobHandler {
         }
         Option o1 = new Option();
         Option o2 = new Option();
-        Option o3 = new Option();
         switch (attackInfo.skillId) {
             case 炸彈箭:
                 if (Rand.getChance(si.getValue(prop, slv))) {
@@ -257,7 +253,6 @@ public class Archer extends JobHandler {
         SkillInfo si = SkillData.getInstance().getSkillInfoById(反向傷害);
         byte slv = (byte) skill.getCurrentLevel();
         Option o = tsm.getOptByCTSAndSkill(DamAbsorbShield, 反向傷害);
-        Option o1 = new Option();
         long totalDamage = 0;
         for (MobAttackInfo mai : ai.mobAttackInfo) {
             for (long dmg : mai.getDamages()) {
@@ -346,7 +341,7 @@ public class Archer extends JobHandler {
         for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
             Mob mob = chr.getField().getMobByObjectId(mai.getObjectID());
             MobTemporaryStat mts = mob.getTemporaryStat();
-            int mobId = mai.getObjectID();
+            final int mobId = mai.getObjectID();
             switch (quiverCartridge.getType()) {
                 case 1: // Blood
                     if (Rand.getChance(si.getValue(w, slv))) {

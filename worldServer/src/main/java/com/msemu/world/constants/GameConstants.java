@@ -13,6 +13,10 @@ public class GameConstants {
     public static final int DROP_DIFF = 25;
     public static long[] CHAR_EXP_TABLE = new long[251];
 
+    // Quest Store
+    public static final int QUESTID_QUICK_SLOT = 123000;
+
+
     static {
         initCharExp();
     }

@@ -6,8 +6,11 @@ import com.msemu.core.network.GameClient;
 import com.msemu.world.Channel;
 import com.msemu.world.World;
 import com.msemu.world.client.character.Character;
+import com.msemu.world.client.character.inventory.items.Equip;
+import com.msemu.world.client.character.inventory.items.Item;
 import com.msemu.world.client.field.Field;
 import com.msemu.world.constants.MapleJob;
+import com.msemu.world.data.ItemData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +39,7 @@ public class AdminCommand {
             if (victim == null && toField == null)
                 return false;
 
-            if(victim != null) {
+            if (victim != null) {
                 toField = victim.getField();
                 chr.warp(toField, toField.findClosestPortal(victim.getPosition()));
             } else {
@@ -56,14 +59,14 @@ public class AdminCommand {
 
         @Override
         public boolean execute(GameClient client, List<String> args) {
-            if(args.size() < 2) {
+            if (args.size() < 2) {
                 return false;
             }
-            if(!StringUtils.isNumber(args.get(1))) {
+            if (!StringUtils.isNumber(args.get(1))) {
                 return false;
             }
             int jobId = Integer.parseInt(args.get(1));
-            if(!MapleJob.isExist(jobId)) {
+            if (!MapleJob.isExist(jobId)) {
                 return false;
             }
             final Character chr = client.getCharacter();
@@ -74,6 +77,39 @@ public class AdminCommand {
         @Override
         public String getHelpMessage() {
             return "";
+        }
+    }
+
+    public static class item extends CommandExecute {
+
+        @Override
+        public boolean execute(GameClient client, List<String> args) {
+            if (args.size() < 2) {
+                return false;
+            }
+            if (!StringUtils.isNumber(args.get(1))) {
+                return false;
+            }
+            final Character chr = client.getCharacter();
+            final int itemID = Integer.parseInt(args.get(1));
+            final ItemData itemData = ItemData.getInstance();
+            final Item item = itemData.getItemFromTemplate(itemID);
+            final Equip equip = itemData.getEquipFromTemplate(itemID);
+            if (item == null && equip == null) {
+                // no item
+                return true;
+            }
+            if(item != null) {
+                chr.addItemToInventory(item);
+            } else {
+                chr.addItemToInventory(equip);
+            }
+            return true;
+        }
+
+        @Override
+        public String getHelpMessage() {
+            return null;
         }
     }
 }

@@ -616,7 +616,7 @@ public class Character extends AbstractAnimatedFieldLife {
                     getAvatarData().getCharacterStat().setMaxHp(amount);
                     break;
                 case MP:
-                    //amount = Math.min(amount, getCurrentMaxMp());
+                    amount = Math.min(amount, getCurrentMaxMp());
                     getAvatarData().getCharacterStat().setMp(amount);
                     break;
                 case MAX_MP:
@@ -975,6 +975,7 @@ public class Character extends AbstractAnimatedFieldLife {
         toField.getCharacters().stream().filter(c -> !c.equals(this)).forEach(c -> {
             write(new LP_UserEnterField(c));
         });
+        renewCharacterStats();
         notifyChanges();
         toField.execUserEnterScript(this);
     }
