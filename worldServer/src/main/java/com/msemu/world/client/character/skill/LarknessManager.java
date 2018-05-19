@@ -2,7 +2,7 @@ package com.msemu.world.client.character.skill;
 
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;
-import com.msemu.core.network.packets.out.user.local.LP_IncLarknessResponse;
+import com.msemu.core.network.packets.outpacket.user.local.LP_IncLarknessResponse;
 import com.msemu.world.client.character.Character;
 import lombok.Getter;
 import lombok.Setter;

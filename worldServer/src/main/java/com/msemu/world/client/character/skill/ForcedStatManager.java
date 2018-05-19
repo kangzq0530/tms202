@@ -1,7 +1,7 @@
 package com.msemu.world.client.character.skill;
 
-import com.msemu.core.network.packets.out.wvscontext.LP_ForcedStatReset;
-import com.msemu.core.network.packets.out.wvscontext.LP_ForcedStatSet;
+import com.msemu.core.network.packets.outpacket.wvscontext.LP_ForcedStatReset;
+import com.msemu.core.network.packets.outpacket.wvscontext.LP_ForcedStatSet;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.enums.ForcedStat;
 import com.msemu.world.enums.Stat;

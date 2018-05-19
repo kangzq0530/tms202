@@ -1,8 +1,8 @@
 package com.msemu.world.client.scripting;
 
-import com.msemu.core.network.packets.out.script.LP_SayScriptMessage;
-import com.msemu.core.network.packets.out.script.LP_ScriptMessage;
-import com.msemu.core.network.packets.out.script.LP_SelfTalkScriptMessage;
+import com.msemu.core.network.packets.outpacket.script.LP_SayScriptMessage;
+import com.msemu.core.network.packets.outpacket.script.LP_ScriptMessage;
+import com.msemu.core.network.packets.outpacket.script.LP_SelfTalkScriptMessage;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.enums.NpcMessageParam;
 import com.msemu.world.enums.NpcMessageType;

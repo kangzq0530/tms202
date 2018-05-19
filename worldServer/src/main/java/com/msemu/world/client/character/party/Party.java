@@ -3,7 +3,7 @@ package com.msemu.world.client.character.party;
 
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;
-import com.msemu.core.network.packets.out.wvscontext.LP_PartyResult;
+import com.msemu.core.network.packets.outpacket.wvscontext.LP_PartyResult;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.party.operations.JoinPartyDoneResponse;
 import com.msemu.world.client.character.party.operations.LoadPartyDoneResponse;

@@ -6,7 +6,7 @@ import com.msemu.commons.network.packets.InPacket;
 import com.msemu.commons.utils.Rand;
 import com.msemu.commons.utils.types.Position;
 import com.msemu.commons.utils.types.Rect;
-import com.msemu.core.network.packets.out.wvscontext.LP_TemporaryStatSet;
+import com.msemu.core.network.packets.outpacket.wvscontext.LP_TemporaryStatSet;
 import com.msemu.world.client.character.*;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.jobs.JobHandler;
