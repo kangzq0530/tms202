@@ -6,10 +6,8 @@ import com.msemu.commons.network.packets.InPacket;
 import com.msemu.commons.utils.Rand;
 import com.msemu.core.network.packets.out.wvscontext.LP_ModCombo;
 import com.msemu.core.network.packets.out.wvscontext.LP_TemporaryStatSet;
-import com.msemu.world.client.character.AttackInfo;
+import com.msemu.world.client.character.*;
 import com.msemu.world.client.character.Character;
-import com.msemu.world.client.character.HitInfo;
-import com.msemu.world.client.character.MobAttackInfo;
 import com.msemu.world.client.character.jobs.JobHandler;
 import com.msemu.world.client.character.skill.Option;
 import com.msemu.world.client.character.skill.Skill;
@@ -140,10 +138,12 @@ public class Aran extends JobHandler {
         return skillID; // no original skill linked with this one
     }
 
-    public void handleBuff(InPacket packet, int skillID, byte slv) {
-        Character character = getCharacter();
-        SkillInfo si = SkillData.getInstance().getSkillInfoById(skillID);
-        TemporaryStatManager tsm = getCharacter().getTemporaryStatManager();
+    public void handleBuff(SkillUseInfo skillUseInfo) {
+        final int skillID = skillUseInfo.getSkillID();
+        final byte slv = skillUseInfo.getSlv();
+        final Character chr = getCharacter();
+        final TemporaryStatManager tsm = chr.getTemporaryStatManager();
+        final SkillInfo si = getSkillInfo(skillID);
         Option o1 = new Option();
         Option o2 = new Option();
         Option o3 = new Option();
@@ -282,11 +282,12 @@ public class Aran extends JobHandler {
         SkillInfo si = null;
         boolean hasHitMobs = attackInfo.mobAttackInfo.size() > 0;
         int slv = 0;
-        if (skill != null) {
-            si = SkillData.getInstance().getSkillInfoById(skill.getSkillId());
-            slv = skill.getCurrentLevel();
-            skillID = skill.getSkillId();
+        if (skill == null) {
+            return;
         }
+        si = SkillData.getInstance().getSkillInfoById(skill.getSkillId());
+        slv = skill.getCurrentLevel();
+        skillID = skill.getSkillId();
         if (hasHitMobs) {
             handleComboAbility(tsm, attackInfo);
             if (character.hasSkill(鬥氣爆發)) {
@@ -427,17 +428,19 @@ public class Aran extends JobHandler {
     }
 
     @Override
-    public void handleSkillPacket(int skillID, byte slv, InPacket inPacket) {
-        Character chr = getCharacter();
-        Skill skill = chr.getSkill(skillID);
-        TemporaryStatManager tsm = chr.getTemporaryStatManager();
-        SkillInfo si = null;
-        if (skill != null) {
-            si = SkillData.getInstance().getSkillInfoById(skillID);
+    public void handleSkillUse(SkillUseInfo skillUseInfo) {
+        final int skillID = skillUseInfo.getSkillID();
+        final byte slv = skillUseInfo.getSlv();
+        final Character chr = getCharacter();
+        final Skill skill = chr.getSkill(skillID);
+        final TemporaryStatManager tsm = chr.getTemporaryStatManager();
+        final SkillInfo si = skill != null ? getSkillInfo(skillID) : null;
+        if (si == null) {
+            return;
         }
         chr.chatMessage(ChatMsgType.YELLOW, "SkillID: " + skillID);
         if (isBuff(skillID)) {
-            handleBuff(inPacket, skillID, slv);
+            handleBuff(skillUseInfo);
         } else {
             Option o1 = new Option();
             Option o2 = new Option();

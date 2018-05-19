@@ -429,16 +429,23 @@ public class ScriptInteraction {
         say(4, nSpeakerTemplateID, nAnotherSpeakerTemplateID, nOtherSpeakerTemplateID, bParam, 0, sMsg, true, true, 0);
     }
 
-    public void say(int nSpeakerTypeID, int nSpeakerTemplateID, int nAnotherSpeakerTemplateID, int nOtherSpeakerTemplateID, int bParam, int eColor, String sMsg, boolean prev, boolean next, int tWait) {
+    public void say(int speakerTypeID, int speakerTemplateID, int anotherSpeakerTemplateID, int overrideSpeakerTemplateID, int bParam, int eColor, String sMsg, boolean prev, boolean next, int delay) {
         if (sMsg.contains("#L")) {
-            askMenu(nSpeakerTypeID, nSpeakerTemplateID, nAnotherSpeakerTemplateID, nOtherSpeakerTemplateID, bParam, eColor, sMsg);
+            askMenu(speakerTypeID, speakerTypeID, anotherSpeakerTemplateID, overrideSpeakerTemplateID, bParam, eColor, sMsg);
             return;
         }
-        NpcMessageType type;
-        type = NpcMessageType.NM_SAY;
-        getNpcScriptInfo().setLastMessageType(type);
-        write(new LP_SayScriptMessage(nSpeakerTemplateID, sMsg, bParam, prev, next));
-        //getClient().write(new LP_ScriptMessage(type, nSpeakerTypeID, nSpeakerTemplateID, nAnotherSpeakerTemplateID, nOtherSpeakerTemplateID, bParam, eColor, new String[]{sMsg}, new int[]{prev ? 1 : 0, next ? 1 : 0, tWait}, null, null));
+        getNpcScriptInfo().setLastMessageType(NpcMessageType.NM_SAY);
+        getNpcScriptInfo().setNext(next);
+        getNpcScriptInfo().setPrev(prev);
+        getNpcScriptInfo().setDelay(delay);
+        getNpcScriptInfo().setParam(bParam);
+        getNpcScriptInfo().setSpeakerType(speakerTypeID);
+        getNpcScriptInfo().setSpeakerTemplateID(speakerTemplateID);
+        getNpcScriptInfo().setAnotherSpeakerTemplateID(anotherSpeakerTemplateID);
+        getNpcScriptInfo().setOverrideSpeakerTemplateID(overrideSpeakerTemplateID);
+        getNpcScriptInfo().setColor((byte) eColor);
+        getNpcScriptInfo().setText(sMsg);
+        write(new LP_SayScriptMessage(getNpcScriptInfo()));
     }
 
     public void askYesNo(String sMsg) {

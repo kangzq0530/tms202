@@ -7,7 +7,7 @@ import com.msemu.world.client.character.Character;
  */
 public class FieldInteractionManager extends AbstractInteractionManager {
 
-    public FieldInteractionManager(Character character) {
-        super(character);
+    public FieldInteractionManager(Character character, int templateID) {
+        super(character, templateID);
     }
 }

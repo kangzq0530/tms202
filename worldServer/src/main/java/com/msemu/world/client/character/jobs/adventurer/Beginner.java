@@ -1,11 +1,15 @@
 package com.msemu.world.client.character.jobs.adventurer;
 
+import com.msemu.commons.data.templates.skill.SkillInfo;
 import com.msemu.commons.network.packets.InPacket;
 import com.msemu.commons.utils.Rand;
 import com.msemu.world.client.character.AttackInfo;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.HitInfo;
+import com.msemu.world.client.character.SkillUseInfo;
 import com.msemu.world.client.character.jobs.JobHandler;
+import com.msemu.world.client.character.skill.Skill;
+import com.msemu.world.client.character.skill.TemporaryStatManager;
 import com.msemu.world.constants.MapleJob;
 import com.msemu.world.enums.Stat;
 
@@ -23,7 +27,16 @@ public class Beginner extends JobHandler {
     }
 
     @Override
-    public void handleSkillPacket(int skillID, byte slv, InPacket inPacket) {
+    public void handleSkillUse(SkillUseInfo skillUseInfo) {
+        final int skillID = skillUseInfo.getSkillID();
+        final byte slv = skillUseInfo.getSlv();
+        final Character chr = getCharacter();
+        final Skill skill = chr.getSkill(skillID);
+        final TemporaryStatManager tsm = chr.getTemporaryStatManager();
+        final SkillInfo si = skill != null ? getSkillInfo(skillID) : null;
+        if (si == null) {
+            return;
+        }
 
     }
 

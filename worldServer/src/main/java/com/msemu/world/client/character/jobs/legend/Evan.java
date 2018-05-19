@@ -4,6 +4,7 @@ import com.msemu.commons.network.packets.InPacket;
 import com.msemu.world.client.character.AttackInfo;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.HitInfo;
+import com.msemu.world.client.character.SkillUseInfo;
 import com.msemu.world.client.character.jobs.JobHandler;
 import com.msemu.world.client.character.skill.TemporaryStatManager;
 
@@ -94,7 +95,7 @@ public class Evan extends JobHandler {
     }
 
     @Override
-    public void handleSkillPacket(int skillID, byte slv, InPacket inPacket) {
+    public void handleSkillUse(SkillUseInfo skillUseInfo) {
 
     }
 

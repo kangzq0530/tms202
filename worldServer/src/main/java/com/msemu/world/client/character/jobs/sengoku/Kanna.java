@@ -6,10 +6,8 @@ import com.msemu.commons.network.packets.InPacket;
 import com.msemu.commons.utils.types.Position;
 import com.msemu.core.network.packets.out.user.LP_FoxManEnterField;
 import com.msemu.core.network.packets.out.wvscontext.LP_TemporaryStatSet;
-import com.msemu.world.client.character.AttackInfo;
+import com.msemu.world.client.character.*;
 import com.msemu.world.client.character.Character;
-import com.msemu.world.client.character.HitInfo;
-import com.msemu.world.client.character.MobAttackInfo;
 import com.msemu.world.client.character.jobs.JobHandler;
 import com.msemu.world.client.character.skill.Option;
 import com.msemu.world.client.character.skill.Skill;
@@ -121,10 +119,12 @@ public class Kanna extends JobHandler {
     }
 
 
-    public void handleBuff(InPacket inPacket, int skillID, byte slv) {
-        Character chr = getCharacter();
-        SkillInfo si = SkillData.getInstance().getSkillInfoById(skillID);
-        TemporaryStatManager tsm = getCharacter().getTemporaryStatManager();
+    public void handleBuff(SkillUseInfo skillUseInfo) {
+        final int skillID = skillUseInfo.getSkillID();
+        final byte slv = skillUseInfo.getSlv();
+        final Character chr = getCharacter();
+        final TemporaryStatManager tsm = chr.getTemporaryStatManager();
+        final SkillInfo si = getSkillInfo(skillID);
         Summon summon;
         Field field;
         Option o1 = new Option();
@@ -188,7 +188,9 @@ public class Kanna extends JobHandler {
 
 
     @Override
-    public void handleSkillPacket(int skillID, byte slv, InPacket inPacket) {
+    public void handleSkillUse(SkillUseInfo skillUseInfo) {
+        final int skillID = skillUseInfo.getSkillID();
+        final byte slv = skillUseInfo.getSlv();
         TemporaryStatManager tsm = getCharacter().getTemporaryStatManager();
         Character chr = getCharacter();
         Skill skill = chr.getSkill(skillID);
@@ -198,7 +200,7 @@ public class Kanna extends JobHandler {
         }
         chr.chatMessage(ChatMsgType.YELLOW, "SkillID: " + skillID);
         if (isBuff(skillID)) {
-            handleBuff(inPacket, skillID, slv);
+            handleBuff(skillUseInfo);
         } else {
             Option o1 = new Option();
             Option o2 = new Option();

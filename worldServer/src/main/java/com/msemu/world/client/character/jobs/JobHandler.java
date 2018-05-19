@@ -6,6 +6,7 @@ import com.msemu.core.network.GameClient;
 import com.msemu.world.client.character.AttackInfo;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.HitInfo;
+import com.msemu.world.client.character.SkillUseInfo;
 import com.msemu.world.data.SkillData;
 import com.msemu.world.enums.Stat;
 import lombok.Getter;
@@ -29,7 +30,7 @@ public abstract class JobHandler {
 
     public abstract void handleAttack(AttackInfo attackInfo);
 
-    public abstract void handleSkillPacket(int skillID, byte slv, InPacket inPacket);
+    public abstract void handleSkillUse(SkillUseInfo skillUseInfo);
 
     public abstract boolean isHandlerOfJob(short id);
 
@@ -82,7 +83,7 @@ public abstract class JobHandler {
 //        getClient().write(wvscontext.statChanged(stats));
     }
 
-    public SkillInfo getInfo(int skillID) {
+    public SkillInfo getSkillInfo(int skillID) {
         return SkillData.getInstance().getSkillInfoById(skillID);
     }
 

@@ -748,4 +748,500 @@ public class SkillConstants {
         }
         return false;
     }
+
+    public static boolean isSetPoseSkill(int skillID) {
+        return skillID == 11101022 || skillID == 11111022;
+    }
+
+    public static boolean isMechanicMetalarmorSkill(int skillID) {
+        return skillID == 35001002 || skillID == 35111003;
+    }
+
+    public static boolean isAntiRepeatBuffSkill(int skillID) {
+        if (skillID > 15001022) {
+            if (skillID > 40011186) {
+                if (skillID > 80000365) {
+                    if (skillID > 131001018) {
+                        if (skillID > 400021035) {
+                            if (skillID > 400051001) {
+                                return skillID == 400051015;
+                            } else {
+                                return skillID == 400051001 || skillID == 400031002 || skillID == 400041008;
+                            }
+                        } else {
+                            if (skillID == 400021035)
+                                return true;
+                            if (skillID > 400011010) {
+                                return skillID == 400021024;
+                            } else {
+                                return skillID == 400011010 || skillID == 142121016 || skillID == 400001020;
+                            }
+                        }
+                    } else {
+                        if (skillID == 131001018)
+                            return true;
+                        if (skillID > 100001271) {
+                            if (skillID > 112121010) {
+                                return skillID == 112121056;
+                            } else {
+                                return skillID == 112121010 || skillID == 110001511 || skillID == 112121006;
+                            }
+                        } else {
+                            if (skillID == 100001271)
+                                return true;
+                            if (skillID > 80010019) {
+                                return skillID == 80011032 || skillID == 100001268;
+                            } else {
+                                return skillID == 80010019 || skillID == 80001361 || skillID == 80001816;
+                            }
+                        }
+                    }
+                }
+                if (skillID == 80000365)
+                    return true;
+                if (skillID > 0x3A453CA) {
+                    if (skillID > 0x3E1843C) {
+                        switch (skillID) {
+                            case 0x3E1AAEC:
+                            case 0x3E1AAF1:
+                            case 0x3E1AAF3:
+                            case 0x3E1AB1D:
+                            case 0x3E1AB1E:
+                                return true;
+                            default:
+                                return false;
+                        }
+                    }
+                    if (skillID == 0x3E1843C)
+                        return true;
+                    if (skillID > 0x3A49E07) {
+                        if (skillID == 0x3A4A1F6)
+                            return true;
+                        return skillID == 0x3A4A2C1;
+
+                    }
+                    if (skillID == 0x3A49E07)
+                        return true;
+                    if (skillID >= 0x3A477C3) {
+                        return skillID <= 61110212 || skillID == 0x3A47AE0;
+                    }
+                } else {
+                    if (skillID == 61101002)
+                        return true;
+                    if (skillID > 42121054) {
+                        if (skillID > 51121005) {
+                            if (skillID >= 51121053) {
+                                return skillID <= 51121054;
+                            }
+                        } else {
+                            if (skillID == 51121005 || skillID == 51101004)
+                                return true;
+                            if (skillID > 51111003) {
+                                return skillID <= 51111005;
+                            }
+                        }
+                    } else {
+                        if (skillID >= 0x282B75D)
+                            return true;
+                        if (skillID <= 0xEC29D0 + 1) {
+                            return skillID == 15477201 || skillID == 41001010 || skillID == 41101003;
+                        }
+                        if (skillID >= 41121053) {
+                            return skillID <= 41121054 || skillID == 42121006;
+
+                        }
+                    }
+                }
+            } else
+            {
+                if ( skillID == 0x26285B0 + 2 )
+                    return true;
+                if ( skillID > 0x19DD56C + 2 )
+                {
+                    if ( skillID > 0x1EA20DD )
+                    {
+                        if ( skillID > 0x217E79D )
+                        {
+                            if ( skillID > 0x22729DE )
+                            {
+                                return skillID == 0x2366C1D;
+                            }
+                            else {
+                                return skillID >= 0x22729DB + 2 || skillID == 0x227029A + 2 || skillID == 0x22729B0;
+                            }
+                        }
+                        else
+                        {
+                            if ( skillID == 0x217E79D )
+                                return true;
+                            if ( skillID > 0x217C063 + 2 )
+                            {
+                                return skillID == 0x217E38E;
+                            }
+                            else {
+                                return skillID == 0x217C063 + 2 || skillID == 0x1F962EE + 1 || skillID - (0x1F962EE + 1) == 46;
+                            }
+                        }
+                    }
+                    if ( skillID == 0x1EA20DD )
+                        return true;
+                    if ( skillID > 0x1DC3DFC )
+                    {
+                        if ( skillID > 0x1DC653C + 2 )
+                        {
+                            return skillID == 0x1EA20AC + 3;
+                        }
+                        else {
+                            return skillID >= 0x1DC653C + 1 || skillID == 0x1DC6507 + 2 || skillID - (0x1DC6507 + 2) == 7;
+                        }
+                    }
+                    if ( skillID >= 0x1DC3DF7 + 4 )
+                        return true;
+                    if ( skillID > 0x1D930B9 )
+                    {
+                        if ( skillID >= 0x1DADE6B ) {
+                            return skillID <= 0x1DADE6B + 2 || skillID == 0x1DADE9D;
+                        }
+                    }
+                    else
+                    {
+                        if ( skillID == 0x1D930B9 || skillID == 0x19DD571 )
+                            return true;
+                        if ( skillID > 0x19DD597 + 5 )
+                        {
+                            return skillID <= 0x19DD59D + 1;
+                        }
+                    }
+                }
+                else
+                {
+                    if ( skillID == 0x19DD56C + 2 )
+                        return true;
+                    if ( skillID > 0x160A55B + 1 )
+                    {
+                        if ( skillID > 0x1700ED9 + 4 )
+                        {
+                            if ( skillID <= 0x17F516B + 1 ) {
+                                return skillID == 0x17F516B + 1 || skillID == 0x17F02D1 || skillID == 0x17F514E + 6;
+
+                            }
+                            if ( skillID >= 0x19DAE59 + 4 )
+                            {
+                                return skillID <= 0x19DAE5E;
+                            }
+                        }
+                        else
+                        {
+                            if ( skillID == 0x1700ED9 + 4 )
+                                return true;
+                            if ( skillID <= 0x16FE79B )
+                            {
+                                if ( skillID != 0x16FE79B )
+                                {
+                                    switch ( skillID )
+                                    {
+                                        case 23121004:
+                                        case 23121005:
+                                        case 23121053:
+                                        case 23121054:
+                                        return true;
+                                        default:
+                                            return false;
+                                    }
+                                }
+                                return true;
+                            }
+                            if ( skillID == 0x1700EAC )
+                                return true;
+                            if ( skillID > 0x1700EAE )
+                            {
+                                if ( skillID > 24121008 )
+                                    return false;;
+                                return true;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if ( skillID == 0x160A55B + 1 )
+                            return true;
+                        if ( skillID > 0x14247E8 )
+                        {
+                            if ( skillID > 0x1524DC0 + 1 )
+                            {
+                                return skillID == 0x1524DCA;
+                            }
+                            if ( skillID == 0x1524DC0 + 1 )
+                                return true;
+                            if ( skillID >= 0x1424817 + 6 ) {
+                                return skillID <= 0x142481E || skillID == 0x1524DBB + 1;
+                            }
+                        }
+                        else
+                        {
+                            if ( skillID == 0x14247E8 )
+                                return true;
+                            if ( skillID <= 0xE6BA9B + 2 ) {
+                                return skillID == 0xE6BA9B + 2 || skillID == 0xE6BA68 || skillID - 0xE6BA68 == 5;
+                            }
+                            if ( skillID >= 0x131A6E7 + 2 ) {
+                                return skillID <= 0x131A6E7 + 3 || skillID == 0x14220DD + 7;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        else
+        {
+            if ( skillID == 0xE4E5BE )
+                return true;
+            if ( skillID > 0x423D08 )
+            {
+                if ( skillID > 0x574BDE )
+                {
+                    if ( skillID > 13101024 )
+                    {
+                        if ( skillID > 0xD5A36D + 2 )
+                        {
+                            if ( skillID > 0xD77827 + 1 )
+                            {
+                                return  skillID == 0xD7785D;
+                                
+                            }
+                            if ( skillID == 0xD77827 + 1 )
+                                return true;
+                            if ( skillID >= 0xD5A379 + 5 )
+                            {
+                                if ( skillID <= 0xD5A37F )
+                                    return true;
+                                return  skillID == 0xD5A381 + 2;
+                                
+                            }
+                        }
+                        else
+                        {
+                            if ( skillID == 0xD5A36D + 2 )
+                                return true;
+                            if ( skillID > 0xC8361A + 3 )
+                            {
+                                return  skillID == 0xD5A36B;
+                                
+                            }
+                            if ( skillID == 0xC8361A + 3 || skillID == 0xC835E2 + 6 )
+                                return true;
+                            if ( skillID > 13121003 )
+                            {
+                                if ( skillID > 0xC835ED )
+                                    return false;
+                                return true;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if ( skillID == 13101024 )
+                            return true;
+                        if ( skillID <= 0xA9B19A + 4 )
+                        {
+                            if ( skillID >= 0xA9B19A + 3 )
+                                return true;
+                            if ( skillID > 0xA98A6E + 1 ) {
+                                return skillID == 0xA9B167 + 1 || skillID - (0xA9B167 + 1) == 5;
+                            }
+                            else {
+                                return skillID >= 0xA98A6E || skillID == 0xA7DCBC + 2 || skillID == 0xA9635E;
+                            }
+                            
+                        }
+                        if ( skillID > 0xB8F3DC + 1 )
+                        {
+                            return  skillID == 0xC6613E;
+                            
+                        }
+                        if ( skillID == 0xB8F3DC + 1 )
+                            return true;
+                        if ( skillID >= 0xB8A587 + 1 ) {
+                            return skillID <= 0xB8A587 + 2 || skillID == 0xB8F3A8;
+
+                        }
+                    }
+                }
+                else
+                {
+                    if ( skillID >= 5721053 )
+                        return true;
+                    if ( skillID > 5221018 )
+                    {
+                        if ( skillID > 0x51315D )
+                        {
+                            if ( skillID > 5711024 )
+                            {
+                                return  skillID == 0x574BA5 + 3;
+                            }
+                            else {
+                                return skillID == 0x5724AF + 1 || skillID == 0x56FD94 + 1 || skillID == 0x57249E + 1;
+                            }
+                            
+                        }
+                        if ( skillID == 0x51315D )
+                            return true;
+                        if ( skillID > 0x510A1D )
+                        {
+                            if ( skillID >= 5320007 ) {
+                                return skillID <= 5320008 || skillID == 0x51312B + 2;
+
+                            }
+                        }
+                        else
+                        {
+                            if ( skillID >= 0x510A1C )
+                                return true;
+                            if ( skillID >= 5221053 ) {
+                                return skillID <= 5221054 || skillID == 0x50E309 + 2;
+
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if ( skillID == 0x4FAA9A )
+                            return true;
+                        if ( skillID <= 0x4E23F7 )
+                        {
+                            if ( skillID == 0x4E23F7 )
+                                return true;
+                            if ( skillID > 5120012 ) {
+                                return skillID == 0x4E23E8 || skillID - 0x4E23E8 == 9;
+                            }
+                            else {
+                                return skillID == 5120012 || skillID == 0x423D3D || skillID == 0x4DFCDF;
+                            }
+                            
+                        }
+                        if ( skillID > 0x4FA6AE )
+                        {
+                            return  skillID == 0x4FAA86 + 2;
+                            
+                        }
+                        if ( skillID == 0x4FA6AE )
+                            return true;
+                        if ( skillID >= 0x4E241B + 2 ) {
+                            return skillID <= 0x4E241E || skillID == 0x4F837D + 2;
+
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if ( skillID == 0x423D08 )
+                    return true;
+                if ( skillID > 2221053 )
+                {
+                    if ( skillID > 3211012 )
+                    {
+                        if ( skillID > 4121000 )
+                        {
+                            if ( skillID > 0x40687D )
+                            {
+                                return  skillID == 0x41A0C8 + 3;
+                            }
+                            else {
+                                return skillID == 0x40687D || skillID == 4121053 || skillID == 0x406846 + 2;
+                            }
+                        }
+                        else
+                        {
+                            if ( skillID == 4121000 )
+                                return true;
+                            if ( skillID > 4001003 ) {
+                                return skillID == 4001005 || skillID == 4101011;
+                            }
+                            else {
+                                return skillID == 4001003 || skillID == 3221000 || skillID - 3221000 == 53;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if ( skillID == 3211012 )
+                            return true;
+                        if ( skillID > 2321053 )
+                        {
+                            if ( skillID > 3121002 )
+                            {
+                                return  skillID == 3121053;
+                            }
+                            else {
+                                return skillID == 3121002 || skillID == 3111011 || skillID == 3121000;
+                            }
+                        }
+                        else
+                        {
+                            if ( skillID == 2321053 )
+                                return true;
+                            if ( skillID > 2311003 ) {
+                                return skillID == 2321000 || skillID - 2321000 == 5;
+                            }
+                            else {
+                                return skillID == 2311003 || skillID == 2301004 || skillID == 2311001;
+                            }
+                        }
+                    }
+                }
+                if ( skillID == 2221053 )
+                    return true;
+                if ( skillID > 1301007 )
+                {
+                    if ( skillID <= 2101010 )
+                    {
+                        if ( skillID == 2101010 )
+                            return true;
+                        if ( skillID > 1321015 ) {
+                            return skillID == 1321053 || skillID == 2101001;
+                        }
+                        else {
+                            return skillID >= 1321014 || skillID == 1311015 || skillID == 1321000;
+                        }
+                    }
+                    if ( skillID > 2201001 )
+                    {
+                        return  skillID == 2221000;
+                    }
+                    if ( skillID == 2201001 || skillID == 2121000 )
+                        return true;
+                    if ( skillID > 2121052 )
+                    {
+                        return skillID <= 2121054;
+                    }
+                }
+                else
+                {
+                    if ( skillID >= 1301006 )
+                        return true;
+                    if ( skillID <= 1211010 ) {
+                        if (skillID == 1211010)
+                            return true;
+                        if (skillID > 1121000) {
+                            return !(skillID != 1121016 && (skillID <= 1121052 || skillID > 1121054));
+                        }
+                        return skillID == 1121000 || skillID == 1000003 || skillID == 1101006;
+                    }
+                    if ( skillID <= 1221014 ) {
+                        return skillID == 1221014 || skillID == 1211013 || skillID == 1221000;
+                    }
+                    if ( skillID >= 1221052 )
+                    {
+                        return skillID <= 1221053;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public static boolean is混沌共鳴(int skillID) {
+        return skillID == 400021041 || skillID > 400021048 && skillID <= 400021050;
+    }
 }

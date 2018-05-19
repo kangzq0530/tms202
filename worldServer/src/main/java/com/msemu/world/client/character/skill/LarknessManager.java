@@ -49,14 +49,6 @@ public class LarknessManager {
         outPacket.encodeInt(getUnk());
     }
 
-    public boolean isDark() {
-        return dark;
-    }
-
-    public void setDark(boolean dark) {
-        this.dark = dark;
-    }
-
     /**
      * Adds a dark feather, up to a maximum of 5.
      */

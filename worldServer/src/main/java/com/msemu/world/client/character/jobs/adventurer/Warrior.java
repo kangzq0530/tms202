@@ -4,15 +4,12 @@ import com.msemu.commons.data.enums.MobBuffStat;
 import com.msemu.commons.data.templates.skill.SkillInfo;
 import com.msemu.commons.network.packets.InPacket;
 import com.msemu.commons.utils.Rand;
-import com.msemu.commons.utils.types.Rect;
 import com.msemu.core.network.packets.out.mob.LP_MobStatSet;
 import com.msemu.core.network.packets.out.summon.LP_SummonLeaveField;
 import com.msemu.core.network.packets.out.wvscontext.LP_TemporaryStatReset;
 import com.msemu.core.network.packets.out.wvscontext.LP_TemporaryStatSet;
-import com.msemu.world.client.character.AttackInfo;
+import com.msemu.world.client.character.*;
 import com.msemu.world.client.character.Character;
-import com.msemu.world.client.character.HitInfo;
-import com.msemu.world.client.character.MobAttackInfo;
 import com.msemu.world.client.character.jobs.JobHandler;
 import com.msemu.world.client.character.skill.Option;
 import com.msemu.world.client.character.skill.Skill;
@@ -158,10 +155,12 @@ public class Warrior extends JobHandler {
         }
     }
 
-    public void handleBuff(InPacket inPacket, int skillID, byte slv) {
-        Character chr = getCharacter();
-        SkillInfo si = SkillData.getInstance().getSkillInfoById(skillID);
-        TemporaryStatManager tsm = chr.getTemporaryStatManager();
+    public void handleBuff(SkillUseInfo skillUseInfo) {
+        final int skillID = skillUseInfo.getSkillID();
+        final byte slv = skillUseInfo.getSlv();
+        final Character chr = getCharacter();
+        final TemporaryStatManager tsm = chr.getTemporaryStatManager();
+        final SkillInfo si = getSkillInfo(skillID);
         Option o1 = new Option();
         Option o2 = new Option();
         Option o3 = new Option();
@@ -624,22 +623,23 @@ public class Warrior extends JobHandler {
     }
 
     @Override
-    public void handleSkillPacket(int skillID, byte slv, InPacket inPacket) {
-        Character chr = getCharacter();
-        Skill skill = chr.getSkill(skillID);
-        SkillInfo si = null;
-        if(skill != null) {
-            si = SkillData.getInstance().getSkillInfoById(skillID);
+    public void handleSkillUse(SkillUseInfo skillUseInfo) {
+        final int skillID = skillUseInfo.getSkillID();
+        final byte slv = skillUseInfo.getSlv();
+        final Character chr = getCharacter();
+        final Skill skill = chr.getSkill(skillID);
+        final TemporaryStatManager tsm = chr.getTemporaryStatManager();
+        final SkillInfo si = skill != null ? getSkillInfo(skillID) : null;
+        if (si == null) {
+            return;
         }
         chr.chatMessage(ChatMsgType.YELLOW, "SkillID: " + skillID);
         if (isBuff(skillID)) {
-            handleBuff(inPacket, skillID, slv);
+            handleBuff(skillUseInfo);
         } else {
             Option o1 = new Option();
             Option o2 = new Option();
             Option o3 = new Option();
-            if(si == null)
-                return;
             switch(skillID) {
                 case 回歸楓之谷:
                     o1.nValue = si.getValue(x, slv);
@@ -657,43 +657,39 @@ public class Warrior extends JobHandler {
                     lastHpRecovery = cur;
                     break;
                 case 降魔咒:
-                    Rect rect = new Rect(inPacket.decodeShort(), inPacket.decodeShort()
-                            , inPacket.decodeShort(), inPacket.decodeShort());
-                    for(Mob mob : chr.getField().getMobInRect(rect)) {
-                        if(mob.getHp() > 0) {
-                            MobTemporaryStat mts = mob.getTemporaryStat();
-                            if(Rand.getChance(si.getValue(prop, slv))) {
-                                o1.nOption = si.getValue(x, slv);
-                                o1.rOption = skillID;
-                                o1.tOption = si.getValue(time, slv);
-                                mts.addStatOptions(MobBuffStat.PAD, o1);
-                                mts.addStatOptions(MobBuffStat.MAD, o1);
-                                mts.addStatOptions(MobBuffStat.PDR, o1);
-                                mts.addStatOptions(MobBuffStat.MDR, o1);
-                                o2.nOption = -si.getValue(z, slv);
-                                o2.rOption = skillID;
-                                o2.tOption = si.getValue(subTime, slv);
-                                mts.addStatOptionsAndBroadcast(MobBuffStat.Darkness, o2);
-                            }
-                        }
-                    }
+//                    Rect rect = new Rect(inPacket.decodeShort(), inPacket.decodeShort()
+//                            , inPacket.decodeShort(), inPacket.decodeShort());
+//                    chr.getField().getMobInRect(rect).stream().filter(mob -> mob.getHp() > 0).forEach(mob -> {
+//                        MobTemporaryStat mts = mob.getTemporaryStat();
+//                        if (Rand.getChance(si.getValue(prop, slv))) {
+//                            o1.nOption = si.getValue(x, slv);
+//                            o1.rOption = skillID;
+//                            o1.tOption = si.getValue(time, slv);
+//                            mts.addStatOptions(MobBuffStat.PAD, o1);
+//                            mts.addStatOptions(MobBuffStat.MAD, o1);
+//                            mts.addStatOptions(MobBuffStat.PDR, o1);
+//                            mts.addStatOptions(MobBuffStat.MDR, o1);
+//                            o2.nOption = -si.getValue(z, slv);
+//                            o2.rOption = skillID;
+//                            o2.tOption = si.getValue(subTime, slv);
+//                            mts.addStatOptionsAndBroadcast(MobBuffStat.Darkness, o2);
+//                        }
+//                    });
                     break;
                 case 魔防消除_黑騎士:
                 case 魔防消除_英雄:
                 case 魔防消除_聖騎士:
-                    Rect rect2 = new Rect(inPacket.decodeShort(), inPacket.decodeShort()
-                            , inPacket.decodeShort(), inPacket.decodeShort());
-                    for(Mob mob : chr.getField().getMobInRect(rect2)) {
-                        if(mob.getHp() > 0) {
-                            MobTemporaryStat mts = mob.getTemporaryStat();
-                            if(Rand.getChance(si.getValue(prop, slv))) {
-                                o1.nOption = 1;
-                                o1.rOption = skillID;
-                                o1.tOption = si.getValue(time, slv);
-                                mts.addStatOptionsAndBroadcast(MobBuffStat.MagicCrash, o1);
-                            }
-                        }
-                    }
+//                    Rect rect2 = new Rect(inPacket.decodeShort(), inPacket.decodeShort()
+//                            , inPacket.decodeShort(), inPacket.decodeShort());
+//                    chr.getField().getMobInRect(rect2).stream().filter(mob -> mob.getHp() > 0).forEach(mob -> {
+//                        MobTemporaryStat mts = mob.getTemporaryStat();
+//                        if (Rand.getChance(si.getValue(prop, slv))) {
+//                            o1.nOption = 1;
+//                            o1.rOption = skillID;
+//                            o1.tOption = si.getValue(time, slv);
+//                            mts.addStatOptionsAndBroadcast(MobBuffStat.MagicCrash, o1);
+//                        }
+//                    });
                     break;
             }
         }

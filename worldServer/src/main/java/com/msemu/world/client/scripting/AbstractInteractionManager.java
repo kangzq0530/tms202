@@ -36,7 +36,6 @@ public abstract class AbstractInteractionManager {
         this.templateID = templateID;
     }
 
-
     public GameClient getClient() {
         return getCharacter().getClient();
     }

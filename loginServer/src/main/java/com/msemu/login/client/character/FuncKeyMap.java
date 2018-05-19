@@ -21,7 +21,7 @@ public class FuncKeyMap {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "fkMapId")
-    private List<Keymapping> keymap = new ArrayList<>();
+    private List<KeyMapping> keymap = new ArrayList<>();
 
     @Transient
     private static final int MAX_KEYBINDS = 89;
@@ -31,16 +31,16 @@ public class FuncKeyMap {
 
     }
 
-    public List<Keymapping> getKeymap() {
+    public List<KeyMapping> getKeymap() {
         return keymap;
     }
 
-    public void setKeymap(List<Keymapping> keymap) {
+    public void setKeymap(List<KeyMapping> keymap) {
         this.keymap = keymap;
     }
 
-    public Keymapping getMappingAt(int index) {
-        for(Keymapping km : getKeymap()) {
+    public KeyMapping getMappingAt(int index) {
+        for(KeyMapping km : getKeymap()) {
             if(km.getIndex() == index) {
                 return km;
             }
@@ -54,7 +54,7 @@ public class FuncKeyMap {
         } else {
             outPacket.encodeByte(false);
             for (int i = 0; i < MAX_KEYBINDS; i++) {
-                Keymapping tuple = getMappingAt(i);
+                KeyMapping tuple = getMappingAt(i);
                 if(tuple == null) {
                     outPacket.encodeByte(0);
                     outPacket.encodeInt(0);
@@ -67,9 +67,9 @@ public class FuncKeyMap {
     }
 
     public void putKeyBinding(int index, byte type, int value) {
-        Keymapping km = getMappingAt(index);
+        KeyMapping km = getMappingAt(index);
         if(km == null) {
-            km = new Keymapping();
+            km = new KeyMapping();
             km.setIndex(index);
             km.setType(type);
             km.setVal(value);
