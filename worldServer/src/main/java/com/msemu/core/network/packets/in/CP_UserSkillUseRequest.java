@@ -2,6 +2,7 @@ package com.msemu.core.network.packets.in;
 
 import com.msemu.commons.network.packets.InPacket;
 import com.msemu.core.network.GameClient;
+import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.SkillUseInfo;
 import com.msemu.world.constants.SkillConstants;
 
@@ -94,6 +95,10 @@ public class CP_UserSkillUseRequest extends InPacket<GameClient> {
 
     @Override
     public void runImpl() {
+
+        Character chr = getClient().getCharacter();
+
+        chr.getJobHandler().handleSkillUse(skillUseInfo);
 
     }
 }
