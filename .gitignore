@@ -50,7 +50,7 @@ fabric.properties
 
 *.config
 target/
-wz/
+./wz/
 log/
 *.log
 dat/
