@@ -170,11 +170,14 @@ public class QuestData implements IReloadable {
                 case insightMin:
                 case senseMin:
                 case willMin:
+
                     questReq = new QuestStartMinStatRequirement();
                     break;
                 case job:
                 case job_TW:
-                    questReq = new QuestStartJobRequirement();
+                    questReq = reqs.get(questId).stream()
+                            .filter(req -> req instanceof QuestStartJobRequirement)
+                            .findFirst().orElse(new QuestStartJobRequirement());
                     break;
                 case lvmax:
                     questReq = new QuestStartMaxLevelRequirement();
@@ -193,9 +196,10 @@ public class QuestData implements IReloadable {
                     questReq = null;
                     break;
             }
-
             if (questReq != null) {
                 questReq.load(reqData);
+            }
+            if (!reqs.get(questId).contains(questReq)) {
                 reqs.get(questId).add(questReq);
             }
         });

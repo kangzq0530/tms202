@@ -31,6 +31,8 @@ public class CP_UserSitRequest extends InPacket<GameClient> {
             Item item = chr.getInstallInventory().getItemBySlot(otherChairPos);
             if(item == null || !ItemConstants.類型.椅子(item.getItemId())) {
                 otherChairPos = -1;
+            } else {
+                chr.setPortableChairID(item.getInventoryId());
             }
         }
         getClient().write(new LP_UserSitResult(chr, otherChairPos));

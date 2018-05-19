@@ -30,6 +30,7 @@ public class QuestStartJobRequirement implements IQuestStartRequirements {
     public void load(QuestReqData reqData) {
         if (reqData instanceof QuestJobReqData) {
             getJobReq().addAll(((QuestJobReqData) reqData).getJobs());
+            getJobReq().addAll(((QuestJobReqData) reqData).getJobs());
         }
     }
 }

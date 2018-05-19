@@ -52,9 +52,7 @@ public class QuestInfoLoader extends WzDataLoader<Map<Integer, QuestInfo>> {
                                         QuestJobReqData jobReq;
                                         reqData = jobReq = new QuestJobReqData();
                                         if (prop instanceof WzSubProperty) {
-                                            ((WzSubProperty) prop).getProperties().forEach(p -> {
-                                                jobReq.addJob(p.getShort());
-                                            });
+                                            ((WzSubProperty) prop).getProperties().forEach(p -> jobReq.addJob(p.getShort()));
                                         }
                                         break;
                                     case item:

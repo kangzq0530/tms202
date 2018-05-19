@@ -513,6 +513,11 @@ public class Character extends AbstractAnimatedFieldLife {
         return questManager;
     }
 
+    public long getExp() {
+        CharacterStat cs = getAvatarData().getCharacterStat();
+        return cs.getExp();
+    }
+
     public void addExp(long amount) {
         ExpIncreaseInfo eii = new ExpIncreaseInfo();
         eii.setLastHit(true);
@@ -593,7 +598,6 @@ public class Character extends AbstractAnimatedFieldLife {
                 case STR:
                     amount = Math.min(amount, GameConstants.MAX_BASIC_STAT);
                     getAvatarData().getCharacterStat().setStr(amount);
-
                     break;
                 case DEX:
                     amount = Math.min(amount, GameConstants.MAX_BASIC_STAT);
