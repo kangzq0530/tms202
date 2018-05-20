@@ -52,8 +52,8 @@ public enum QuickMoveNpcInfo {
         this.id = id;
         this.level = level;
         this.desc = desc;
-        this.start = FileTime.getFileTimeFromType(FileTime.Type.PERMANENT);
-        this.end = FileTime.getFileTimeFromType(FileTime.Type.PERMANENT);
+        this.start = FileTime.getFileTimeFromType(FileTime.Type.ZERO_TIME);
+        this.end = FileTime.getFileTimeFromType(FileTime.Type.MAX_TIME);
     }
 
     private QuickMoveNpcInfo(int value, int type, int id, int level, String desc) {
@@ -74,11 +74,11 @@ public enum QuickMoveNpcInfo {
     public boolean show(int mapId) {
         QuickMoveInfo quick = null;
         for (QuickMoveInfo q : QuickMoveInfo.values()) {
-            if (q.getMap() == mapId) {
+            if (q.getFieldID() == mapId) {
                 quick = q;
                 break;
             }
         }
-        return (quick != null && check(quick.getNpc())) || check(QuickMoveInfo.GLOBAL_NPC);
+        return (quick != null && check(quick.getNpcFlag())) || check(QuickMoveInfo.GLOBAL_NPC);
     }
 }

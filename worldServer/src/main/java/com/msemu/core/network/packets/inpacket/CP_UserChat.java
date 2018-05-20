@@ -6,6 +6,7 @@ import com.msemu.core.network.GameClient;
 import com.msemu.core.network.packets.outpacket.user.local.LP_UserChat;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.commands.CommandProcessor;
+import com.msemu.world.enums.Stat;
 
 import java.util.Arrays;
 import java.util.List;
@@ -36,6 +37,7 @@ public class CP_UserChat extends InPacket<GameClient> {
         Character chr = getClient().getCharacter();
 
 
+        chr.addStat(Stat.MP, 50);
 
         if (text.charAt(0) == '!') {
             List<String> args = Arrays.stream(text.split(" ")).collect(Collectors.toList());

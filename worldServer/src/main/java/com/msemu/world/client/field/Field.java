@@ -4,6 +4,7 @@ import com.msemu.commons.data.templates.field.FieldTemplate;
 import com.msemu.commons.data.templates.field.Foothold;
 import com.msemu.commons.data.templates.field.Portal;
 import com.msemu.commons.data.templates.skill.SkillInfo;
+import com.msemu.commons.enums.FieldLimit;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.thread.EventManager;
 import com.msemu.commons.utils.Rand;
@@ -23,7 +24,6 @@ import com.msemu.world.client.character.skill.TemporaryStatManager;
 import com.msemu.world.client.field.lifes.*;
 import com.msemu.world.client.field.spawns.AbstractSpawnPoint;
 import com.msemu.world.client.field.spawns.NpcSpawnPoint;
-import com.msemu.world.constants.FieldConstants;
 import com.msemu.world.constants.GameConstants;
 import com.msemu.world.data.ItemData;
 import com.msemu.world.data.SkillData;
@@ -169,27 +169,14 @@ public class Field {
         updateCharacterPosition(chr);
         if (!getCharacters().contains(chr)) {
             addFieldObject(chr);
-                if (!isUserFirstEnter() && hasUserFirstEnterScript()) {
-                    chr.getScriptManager().startScript(getId(), getOnFirstUserEnter(), ScriptType.FIELD);
+            if (!isUserFirstEnter() && hasUserFirstEnterScript()) {
+                chr.getScriptManager().startScript(getId(), getOnFirstUserEnter(), ScriptType.FIELD);
             }
             if (chr.getParty() != null) {
                 chr.getParty().updateFull();
             }
-            QuickMoveInfo quickMoveInfo = QuickMoveInfo.getByMap(getId());
-            if (quickMoveInfo != null) {
-                List<QuickMoveNpcInfo> quickMoveNpcInfos = new LinkedList<>();
-                if (QuickMoveInfo.GLOBAL_NPC != 0 && !FieldConstants.isBossMap(getId()) && !FieldConstants.isTutorialMap(getId()) && (getId() / 100 != 9100000 || getId() == 910000000)) {
-                    for (QuickMoveNpcInfo npc : QuickMoveNpcInfo.values()) {
-                        if (npc.check(QuickMoveInfo.GLOBAL_NPC) && npc.show(getId())) {
-                            quickMoveNpcInfos.add(npc);
-                        }
-                    }
-                }
-                if (!quickMoveNpcInfos.isEmpty()) {
-                    chr.write(new LP_SetQuickMoveInfo(quickMoveNpcInfos));
-                }
-            }
-
+            List<QuickMoveNpcInfo> quickMoveNpcInfos = QuickMoveInfo.getVisibleQuickMoveNpcs(getId());
+            chr.write(new LP_SetQuickMoveInfo(quickMoveNpcInfos));
             // TODO LP_IncJudgementStack
 
             // TODO mapEffect (song , broadcast)
@@ -358,7 +345,7 @@ public class Field {
             item = ItemData.getInstance().getEquipFromTemplate(itemID);
             if (item == null) {
                 item = ItemData.getInstance().getItemFromTemplate(itemID);
-                if(item == null)
+                if (item == null)
                     return;
                 item.setQuantity(Rand.get(dropInfo.getMinQuantity(), dropInfo.getMaxQuantity()));
                 int slotMax = item.getTemplate().getSlotMax();
@@ -687,7 +674,6 @@ public class Field {
     }
 
 
-
     public void updateFieldObjectVisibility(Character character, AbstractFieldObject object) {
         if (!character.isVisibleFieldObject(object)) {
             if (character.getPosition().distanceSq(object.getPosition()) <= GameConstants.maxViewRangeSq()) {
@@ -732,7 +718,7 @@ public class Field {
     public void update(LocalDateTime now) {
         getDrops().forEach(drop -> {
             if (drop.isExpired()) {
-                // expire
+
             }
         });
         int charSize = getCharacters().size();
@@ -793,5 +779,23 @@ public class Field {
             }
         }
         return closest;
+    }
+
+    public int getFieldLimit() {
+        return getFieldData().getFieldLimit();
+    }
+
+    public boolean checkFieldLimit(FieldLimit limits) {
+        return limits.isLimit(getFieldLimit());
+    }
+
+    public boolean checkFieldLimits(FieldLimit... limits) {
+        return Arrays.stream(limits).allMatch(
+                limit -> limit.isLimit(getFieldLimit())
+        );
+    }
+
+    public int getConsumeItemCoolTime() {
+        return getFieldData().getConsumeItemCoolTime();
     }
 }

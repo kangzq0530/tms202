@@ -1,6 +1,10 @@
 package com.msemu.world.enums;
 
+import com.msemu.world.constants.FieldConstants;
 import lombok.Getter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Weber on 2018/5/12.
@@ -33,9 +37,9 @@ public enum QuickMoveInfo {
             = QuickMoveNpcInfo.次元傳送門.getValue()
             | QuickMoveNpcInfo.聚合功能.getValue();
     @Getter
-    private final int map;
+    private final int fieldID;
     @Getter
-    private final long npc;
+    private final long npcFlag;
     @Getter
     private final long generalNpc
             = QuickMoveNpcInfo.怪物公園.getValue()
@@ -49,17 +53,43 @@ public enum QuickMoveInfo {
             //            | QuickMoveNpcInfo.楓之谷拍賣場.getValue()
             | QuickMoveNpcInfo.初音未來.getValue();
 
-    QuickMoveInfo(int map, long npc) {
-        this.map = map;
-        this.npc = npc | generalNpc;
+    QuickMoveInfo(int fieldID, long npcFlag) {
+        this.fieldID = fieldID;
+        this.npcFlag = npcFlag | generalNpc;
     }
 
-    public static QuickMoveInfo getByMap(int map) {
+    public static QuickMoveInfo getByFieldID(int fieldID) {
         for (QuickMoveInfo qm : QuickMoveInfo.values()) {
-            if (qm.getMap() == map) {
+            if (qm.getFieldID() == fieldID) {
                 return qm;
             }
         }
         return null;
+    }
+
+    public static List<QuickMoveNpcInfo> getVisibleQuickMoveNpcs(int fieldID) {
+        QuickMoveInfo quickMoveInfo = QuickMoveInfo.getByFieldID(fieldID);
+        List<QuickMoveNpcInfo> quickMoveNpcInfos = new ArrayList<>();
+        if (quickMoveInfo != null) {
+            for (QuickMoveInfo qm : QuickMoveInfo.values()) {
+                if (qm.getFieldID() == fieldID) {
+                    long npcs = qm.getNpcFlag();
+                    for (QuickMoveNpcInfo npc : QuickMoveNpcInfo.values()) {
+                        if (npc.check(npcs) && npc.show(fieldID) && !npc.check(QuickMoveInfo.GLOBAL_NPC)) {
+                            quickMoveNpcInfos.add(npc);
+                        }
+                    }
+                    break;
+                }
+            }
+            if (QuickMoveInfo.GLOBAL_NPC != 0 && !FieldConstants.isBossMap(fieldID) && !FieldConstants.isTutorialMap(fieldID) && (fieldID / 100 != 9100000 || fieldID == 910000000)) {
+                for (QuickMoveNpcInfo npc : QuickMoveNpcInfo.values()) {
+                    if (npc.check(QuickMoveInfo.GLOBAL_NPC) && npc.show(fieldID)) {
+                        quickMoveNpcInfos.add(npc);
+                    }
+                }
+            }
+        }
+        return quickMoveNpcInfos;
     }
 }

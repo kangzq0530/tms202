@@ -270,7 +270,7 @@ public class CharacterLocalStat {
                 maxMastery = 0.99;
             }
 
-            mastery = weaponType.getBaseMastery() / 100.0;
+
 
 
             // 熟練技能有限制武器，需要計算技能適用的武器
@@ -284,7 +284,7 @@ public class CharacterLocalStat {
 
         if (weaponType != null) {
             weaponDamage = calculateBaseWeaponDamage(weaponType, pad, mad, 0, false, 0);
-            weaponMindamage = (int) (this.mastery * weaponDamage + 0.5);
+            weaponMindamage = (int) Math.round(this.mastery * weaponDamage + 0.5);
             pvpWeaponDamage = calculateBaseWeaponDamage(weaponType, pad, mad, 0, true, 0);
             weaponDamage += (weaponDamage * ((pdR + damR) / 100.0));
             pvpWeaponDamage += (weaponDamage * ((pdR + damR) / 100.0));

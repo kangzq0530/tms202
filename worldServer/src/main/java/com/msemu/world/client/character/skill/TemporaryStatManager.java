@@ -104,11 +104,11 @@ public class TemporaryStatManager {
         if (!indie) {
             List<Option> optList = new ArrayList<>();
             optList.add(option);
-            getNewStats().put(cts, optList);
-            getCurrentStats().put(cts, optList);
-            if (option.tOption > 0) {
-                if (getSchedules().containsKey(cts)) {
-                    getSchedules().get(cts).cancel(false);
+                    getNewStats().put(cts, optList);
+                    getCurrentStats().put(cts, optList);
+                    if (option.tOption > 0) {
+                        if (getSchedules().containsKey(cts)) {
+                            getSchedules().get(cts).cancel(false);
                 }
                 ScheduledFuture sf = EventManager.getInstance().addEvent(() -> removeStat(cts, true), option.tOption);
                 getSchedules().put(cts, sf);

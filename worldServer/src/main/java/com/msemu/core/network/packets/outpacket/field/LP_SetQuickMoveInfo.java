@@ -2,6 +2,7 @@ package com.msemu.core.network.packets.outpacket.field;
 
 import com.msemu.commons.enums.OutHeader;
 import com.msemu.commons.network.packets.OutPacket;
+import com.msemu.commons.utils.types.FileTime;
 import com.msemu.core.network.GameClient;
 import com.msemu.world.enums.QuickMoveNpcInfo;
 
@@ -22,7 +23,7 @@ public class LP_SetQuickMoveInfo extends OutPacket<GameClient> {
             encodeInt(npc.getLevel());
             encodeString(npc.getDesc());
             npc.getStart().encode(this);
-            npc.getEnd().encode(this);
+           npc.getEnd().encode(this);
         });
     }
 }

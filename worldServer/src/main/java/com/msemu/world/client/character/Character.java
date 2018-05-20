@@ -57,6 +57,7 @@ import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Predicate;
@@ -398,6 +399,10 @@ public class Character extends AbstractAnimatedFieldLife {
     @Getter
     @Transient
     private transient ReentrantReadWriteLock visibleMapObjectsLock = new ReentrantReadWriteLock();
+    @Getter
+    @Setter
+    @Transient
+    LocalDateTime lastUseStatChangeItemTime = LocalDateTime.MIN;
 
     public Character() {
         avatarData = new AvatarData();
