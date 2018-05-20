@@ -169,8 +169,8 @@ public class Field {
         updateCharacterPosition(chr);
         if (!getCharacters().contains(chr)) {
             addFieldObject(chr);
-            if (!isUserFirstEnter() && hasUserFirstEnterScript()) {
-                chr.getScriptManager().startScript(getId(), getOnFirstUserEnter(), ScriptType.FIELD);
+                if (!isUserFirstEnter() && hasUserFirstEnterScript()) {
+                    chr.getScriptManager().startScript(getId(), getOnFirstUserEnter(), ScriptType.FIELD);
             }
             if (chr.getParty() != null) {
                 chr.getParty().updateFull();
@@ -218,17 +218,17 @@ public class Field {
             //叫出花狐 龍
 
             // 強化任意門剩餘次數
-
-
         }
+        getMobs().forEach(this::updateMobController);
         broadcastPacket(new LP_UserEnterField(chr), chr);
     }
+
 
     private boolean hasUserFirstEnterScript() {
         return getOnFirstUserEnter() != null && !getOnFirstUserEnter().equalsIgnoreCase("");
     }
 
-    public void broadcastPacket(OutPacket outPacket, Character exceptChr) {
+    public void broadcastPacket(OutPacket<GameClient> outPacket, Character exceptChr) {
         getCharacters().stream().filter(chr -> !chr.equals(exceptChr)).forEach(
                 chr -> chr.write(outPacket)
         );
@@ -247,6 +247,7 @@ public class Field {
     }
 
     public void spawnAffectedArea(AffectedArea affectedArea) {
+
         addFieldObject(affectedArea);
         SkillInfo si = SkillData.getInstance().getSkillInfoById(affectedArea.getSkillID());
         if (si != null) {
@@ -271,9 +272,8 @@ public class Field {
     public void spawnMob(Mob mob) {
         if (getMobs().contains(mob))
             return;
-        mob.setObjectId(getNewObjectID());
         mob.setField(this);
-        mob.setAppearType(MobAppearType.Delay);
+        mob.setAppearType(MobAppearType.Regen);
         addFieldObject(mob);
     }
 
@@ -653,12 +653,7 @@ public class Field {
     }
 
     public void removeCharacter(Character chr) {
-        getFieldObjectWriteLock(FieldObjectType.CHARACTER).lock();
-        try {
-            getFieldObjects().get(FieldObjectType.CHARACTER).remove(chr.getId());
-        } finally {
-            getFieldObjectWriteLock(FieldObjectType.CHARACTER).unlock();
-        }
+        removeFieldObject(chr);
         broadcastPacket(new LP_UserLeaveField(chr), chr);
         chr.getControlledMobs().forEach(mob -> {
             if (mob.getController().equals(chr)) {
@@ -673,6 +668,7 @@ public class Field {
     }
 
     public void addFieldObject(AbstractFieldObject object) {
+        object.setObjectId(getNewObjectID());
         getFieldObjectWriteLock(object.getFieldObjectType()).lock();
         try {
             getFieldObjects().get(object.getFieldObjectType()).put(object.getObjectId(), object);
@@ -765,7 +761,6 @@ public class Field {
     public void spawnNpc(Npc npc) {
         if (getNpcs().contains(npc))
             return;
-        npc.setObjectId(getNewObjectID());
         addFieldObject(npc);
     }
 
@@ -773,7 +768,6 @@ public class Field {
         if (getDrops().contains(drop)) {
             return;
         }
-        drop.setObjectId(getNewObjectID());
         addFieldObject(drop);
     }
 

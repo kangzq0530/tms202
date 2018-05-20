@@ -1,19 +1,20 @@
 package com.msemu.core.network.packets.inpacket;
 
+import com.msemu.commons.data.enums.SkillStat;
 import com.msemu.commons.data.templates.skill.SkillInfo;
 import com.msemu.commons.network.packets.InPacket;
 import com.msemu.core.network.GameClient;
 import com.msemu.core.network.packets.outpacket.user.remote.LP_UserMeleeAttack;
-import com.msemu.core.network.packets.outpacket.wvscontext.LP_Message;
 import com.msemu.world.client.character.AttackInfo;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.MobAttackInfo;
-import com.msemu.world.client.character.messages.ComboKillMessage;
+import com.msemu.world.client.character.skill.Skill;
 import com.msemu.world.client.field.Field;
 import com.msemu.world.client.field.lifes.Mob;
 import com.msemu.world.constants.SkillConstants;
 import com.msemu.world.data.SkillData;
 import com.msemu.world.enums.ChatMsgType;
+import com.msemu.world.enums.Stat;
 
 import java.util.Arrays;
 
@@ -192,23 +193,35 @@ public class CP_UserMeleeAttack extends InPacket<GameClient> {
     public void runImpl() {
         Character chr = getClient().getCharacter();
         Field field = chr.getField();
-        chr.getJobHandler().handleAttack(ai);
+        final Skill skill = chr.getSkill(ai.getSkillId());
+        SkillInfo si = skill != null ? SkillData.getInstance().getSkillInfoById(ai.getSkillId()) : null;
+        boolean attackSuccess = chr.getJobHandler().handleAttack(ai);
         field.broadcastPacket(new LP_UserMeleeAttack(chr, ai));
-        ai.getMobAttackInfo().forEach(mai -> {
-            Mob mob = field.getMobByObjectId(mai.getObjectID());
-            if (mob != null) {
-                chr.write(new LP_Message(new ComboKillMessage(111, mob.getObjectId())));
-                long totalDamage = Arrays.stream(mai.getDamages()).sum();
-                SkillInfo si = null;
-                if (ai.getSkillId() > 0)
-                    si = SkillData.getInstance().getSkillInfoById(ai.getSkillId());
-                chr.chatMessage(ChatMsgType.GAME_DESC, String.format("近距離攻擊: 技能: %s(%d) 怪物: %s(%d)  HP: (%d/%d) MP: 總攻擊: %d 座標: %s",
-                        (si != null ? si.getName() : "普通攻擊"), ai.getSkillId(), mob.getTemplate().getName(),
-                        mob.getTemplateId(), mob.getHp(), mob.getMaxHp(), mob.getMp(), mob.getMaxHp(), totalDamage, ai.getPos().toString()));
 
-                mob.addDamage(chr, totalDamage);
-                mob.damage(totalDamage);
+        if (attackSuccess) {
+            if (skill != null) {
+                final int hpCon = si.getValue(SkillStat.hpCon, ai.getSlv());
+                final int mpCon = si.getValue(SkillStat.mpCon, ai.getSlv());
+                final int hpRCon = si.getValue(SkillStat.hpRCon, ai.getSlv());
+                if (hpCon > 0)
+                    chr.addStat(Stat.HP, -hpCon);
+                if (mpCon > 0)
+                    chr.addStat(Stat.MP, -mpCon);
+                if (hpRCon > 0)
+                    chr.addStat(Stat.HP, (int) -(chr.getStat(Stat.HP) * (chr.getStat(Stat.HP) * (hpRCon /100.0))));
             }
-        });
+            chr.renewCharacterStats();
+            ai.getMobAttackInfo().forEach(mai -> {
+                Mob mob = field.getMobByObjectId(mai.getObjectID());
+                if (mob != null) {
+                    long totalDamage = Arrays.stream(mai.getDamages()).sum();
+                    chr.chatMessage(ChatMsgType.GAME_DESC, String.format("近距離攻擊: 技能: %s(%d) 怪物: %s(%d)  HP: (%d/%d) MP: (%d/%d) 總攻擊: %d 座標: %s",
+                            (si != null ? si.getName() : "普通攻擊"), ai.getSkillId(), mob.getTemplate().getName(),
+                            mob.getTemplateId(), mob.getHp(), mob.getMaxHp(), mob.getMp(), mob.getMaxHp(), totalDamage, ai.getPos().toString()));
+                    mob.addDamage(chr, totalDamage);
+                    mob.damage(totalDamage);
+                }
+            });
+        }
     }
 }

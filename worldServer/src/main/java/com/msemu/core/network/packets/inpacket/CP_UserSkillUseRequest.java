@@ -1,10 +1,15 @@
 package com.msemu.core.network.packets.inpacket;
 
+import com.msemu.commons.data.enums.SkillStat;
+import com.msemu.commons.data.templates.skill.SkillInfo;
 import com.msemu.commons.network.packets.InPacket;
 import com.msemu.core.network.GameClient;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.SkillUseInfo;
+import com.msemu.world.client.character.skill.Skill;
 import com.msemu.world.constants.SkillConstants;
+import com.msemu.world.data.SkillData;
+import com.msemu.world.enums.Stat;
 
 /**
  * Created by Weber on 2018/5/19.
@@ -35,7 +40,7 @@ public class CP_UserSkillUseRequest extends InPacket<GameClient> {
             skillUseInfo.setPosition(decodePosition());
         }
 
-        if( SkillConstants.isAntiRepeatBuffSkill(skillUseInfo.getSkillID())) {
+        if (SkillConstants.isAntiRepeatBuffSkill(skillUseInfo.getSkillID())) {
             skillUseInfo.setPosition2(decodePosition());
         }
 
@@ -52,7 +57,7 @@ public class CP_UserSkillUseRequest extends InPacket<GameClient> {
 
         final int skillID = skillUseInfo.getSkillID();
 
-        if(skillID == 100001261
+        if (skillID == 100001261
                 || skillID == 80001408
                 || skillID == 25111206
                 || skillID == 0xB8F3AD
@@ -71,24 +76,23 @@ public class CP_UserSkillUseRequest extends InPacket<GameClient> {
                 || skillID == 51120057
                 || skillID == 400031012
                 || skillID == 400001017
-                || SkillConstants.is混沌共鳴(skillID) ) {
+                || SkillConstants.is混沌共鳴(skillID)) {
             decodeShort();
         } else {
-            boolean isAffectedBitmap = decodeByte() > 0;
-
-            switch (skillID) {
-                case 2311001:
-                case 112121010:
-                    decodeShort();
-                    decodeByte();
-                    break;
-                default:
-                    break;
-            }
-            //
+//            boolean isAffectedBitmap = decodeByte() > 0;
+//
+//            switch (skillID) {
+//                case 2311001:
+//                case 112121010:
+//                    decodeShort();
+//                    decodeByte();
+//                    break;
+//                default:
+//                    break;
+//            }
+//            //
 
         }
-
 
 
     }
@@ -98,7 +102,23 @@ public class CP_UserSkillUseRequest extends InPacket<GameClient> {
 
         Character chr = getClient().getCharacter();
 
-        chr.getJobHandler().handleSkillUse(skillUseInfo);
+
+        boolean result = chr.getJobHandler().handleSkillUse(skillUseInfo);
+
+        if (result) {
+            final Skill skill = chr.getSkill(skillUseInfo.getSkillID());
+            final SkillInfo si = SkillData.getInstance().getSkillInfoById(skill.getSkillId());
+            final int hpCon = si.getValue(SkillStat.hpCon, skillUseInfo.getSlv());
+            final int mpCon = si.getValue(SkillStat.mpCon, skillUseInfo.getSlv());
+            final int hpRCon = si.getValue(SkillStat.hpRCon, skillUseInfo.getSlv());
+            if (hpCon > 0)
+                chr.addStat(Stat.HP, -hpCon);
+            if (mpCon > 0)
+                chr.addStat(Stat.MP, -mpCon);
+            if (hpRCon > 0)
+                chr.addStat(Stat.HP, (int) (chr.getStat(Stat.HP) * (chr.getStat(Stat.HP) * (hpRCon / 100.0))));
+            chr.renewCharacterStats();
+        }
 
     }
 }

@@ -62,6 +62,7 @@ public class CP_UserAbilityMassUpRequest extends InPacket<GameClient> {
             if (secondaryStat != null)
                 stats.put(secondaryStat, secondaryStatAmount);
         }
+        chr.addStat(Stat.AP, -(primaryStatAmount + secondaryStatAmount));
         chr.addStat(stats);
     }
 }

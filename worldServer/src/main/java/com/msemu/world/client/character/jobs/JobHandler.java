@@ -28,9 +28,9 @@ public abstract class JobHandler {
     }
 
 
-    public abstract void handleAttack(AttackInfo attackInfo);
+    public abstract boolean handleAttack(AttackInfo attackInfo);
 
-    public abstract void handleSkillUse(SkillUseInfo skillUseInfo);
+    public abstract boolean handleSkillUse(SkillUseInfo skillUseInfo);
 
     public abstract boolean isHandlerOfJob(short id);
 

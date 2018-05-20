@@ -126,25 +126,33 @@ public class Archer extends JobHandler {
     }
 
     @Override
-    public void handleAttack(AttackInfo attackInfo) {
+    public boolean handleAttack(AttackInfo attackInfo) {
+        final boolean normalAttack = attackInfo.skillId == 0;
         final Character chr = getCharacter();
         final TemporaryStatManager tsm = chr.getTemporaryStatManager();
         final Skill skill = chr.getSkill(attackInfo.skillId);
-        final SkillInfo si = skill != null ? getSkillInfo(attackInfo.getSkillId()) : null;
-        if (si == null)
-            return;
-        final int slv = skill.getCurrentLevel();
-        final int skillID = skill.getSkillId();
-        final boolean hasHitMobs = attackInfo.getMobAttackInfo().size() > 0;
+        final int skillID = skill != null ? skill.getSkillId() : 0;
+        SkillInfo si = skill != null ? getSkillInfo(skillID) : null;
+        boolean hasHitMobs = attackInfo.mobAttackInfo.size() > 0;
+        int slv = attackInfo.getSlv();
+
+        if ((!normalAttack && (skill == null || si == null)))
+            return false;
+        if ((!normalAttack) && skill.getCurrentLevel() != slv)
+            return false;
+        if (normalAttack && slv != 0)
+            return false;
+        // trigger cheat attack
         if (hasHitMobs) {
             handleQuiverCartridge(chr.getTemporaryStatManager(), attackInfo, slv);
             handleFocusedFury();
             handleMortalBlow();
             handleAggresiveResistance(attackInfo);
         }
+        if(normalAttack) return true;
         Option o1 = new Option();
         Option o2 = new Option();
-        switch (attackInfo.skillId) {
+        switch (skillID) {
             case 炸彈箭:
                 if (Rand.getChance(si.getValue(prop, slv))) {
                     for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
@@ -242,6 +250,7 @@ public class Archer extends JobHandler {
                 }
                 break;
         }
+        return true;
     }
 
     private void handleAggresiveResistance(AttackInfo ai) {
@@ -386,7 +395,7 @@ public class Archer extends JobHandler {
     }
 
     @Override
-    public void handleSkillUse(SkillUseInfo skillUseInfo) {
+    public boolean handleSkillUse(SkillUseInfo skillUseInfo) {
         final int skillID = skillUseInfo.getSkillID();
         final byte slv = skillUseInfo.getSlv();
         final Character chr = getCharacter();
@@ -394,7 +403,7 @@ public class Archer extends JobHandler {
         final TemporaryStatManager tsm = chr.getTemporaryStatManager();
         final SkillInfo si = skill != null ? getSkillInfo(skillID) : null;
         if (si == null) {
-            return;
+            return false;
         }
         if (isBuff(skillID)) {
             handleBuff(skillUseInfo);
@@ -406,9 +415,9 @@ public class Archer extends JobHandler {
                     Field toField = getClient().getChannelInstance().getField(o1.nValue);
                     chr.warp(toField);
                     break;
-
             }
         }
+        return true;
     }
 
     @Override

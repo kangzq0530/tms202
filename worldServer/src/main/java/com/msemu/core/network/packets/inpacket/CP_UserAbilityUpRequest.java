@@ -35,6 +35,7 @@ public class CP_UserAbilityUpRequest extends InPacket<GameClient> {
             // TODO 不同職業增加不同數量
             amount = Rand.get(10, 50);
         }
+        chr.addStat(Stat.AP, -amount);
         chr.addStat(stat, amount);
     }
 }

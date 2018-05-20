@@ -22,10 +22,10 @@ public class InventoryManipulator {
         AvatarLook al = chr.getAvatarData().getAvatarLook();
         List<InventoryOperationInfo> operates = new ArrayList<>();
         Equip srcEquip = (Equip) chr.getEquippedInventory()
-                .getItemBySlot(srcSlot);
+                .getItemBySlot(-srcSlot);
         Equip destEquip = (Equip) chr.getEquipInventory()
                 .getItemBySlot(destSlot);
-        if (destSlot < 0 || srcEquip == null || srcSlot == -55
+        if (destSlot <= 0 || srcEquip == null || srcSlot == -55
                 || (destEquip != null && srcSlot <= 0))
             return;
 
@@ -46,8 +46,6 @@ public class InventoryManipulator {
         chr.write(new LP_InventoryOperation(true, false, operates));
         chr.renewAvatarLook();
         chr.renewCharacterStats();
-        if (destEquip != null)
-            equip(chr, destSlot, srcSlot);
     }
 
     public static void equip(Character chr, short srcSlot, short destSlot) {
@@ -57,16 +55,20 @@ public class InventoryManipulator {
         Equip srcEquip = (Equip) chr.getEquipInventory()
                 .getItemBySlot(srcSlot);
         Equip destEquip = (Equip) chr.getEquippedInventory()
-                .getItemBySlot(destSlot);
+                .getItemBySlot(-destSlot);
         List<Integer> hairEquips = al.getHairEquips();
         if (srcEquip == null || ItemConstants.類型.isHarvesting(srcEquip.getItemId())) {
             chr.enableActions();
             return;
         }
         if (destEquip != null) {
-            chr.enableActions();
-            chr.chatMessage("[移動道具] 暫時無法交換穿上的物品");
-            return;
+            short nextSlot = (short) chr.getEquipInventory().getFirstOpenSlot();
+            if (nextSlot > 0)
+                unequip(chr, destSlot, nextSlot);
+            else {
+                chr.enableActions();
+                return;
+            }
         }
         chr.getEquipInventory().removeItem(srcEquip);
         chr.getEquippedInventory().addItem(srcEquip);

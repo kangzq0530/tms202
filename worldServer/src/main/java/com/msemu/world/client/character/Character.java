@@ -417,7 +417,6 @@ public class Character extends AbstractAnimatedFieldLife {
             pets.add(new Pet(-1));
         }
         setFieldInstanceType(FieldInstanceType.CHANNEL);
-        setObjectId(id);
     }
 
     public static Character findById(int id) {
@@ -453,6 +452,12 @@ public class Character extends AbstractAnimatedFieldLife {
             getAvatarData().getCharacterStat().setSubJob(2);
         } else if (MapleJob.盜賊.getId() != jobId) {
             getAvatarData().getCharacterStat().setSubJob(0);
+        }
+        final int oldJob = getAvatarData().getCharacterStat().getJob();
+
+        if (oldJob != jobId) {
+            setStat(Stat.JOB, jobId);
+            getAvatarData().getCharacterStat().setJob(jobId);
         }
 
         setJobHandler(JobManager.getJobHandler((short) job.getId(), this));
@@ -518,6 +523,14 @@ public class Character extends AbstractAnimatedFieldLife {
         return cs.getExp();
     }
 
+    public void setExp(long amount) {
+        CharacterStat cs = getAvatarData().getCharacterStat();
+        cs.setExp(amount);
+        Map<Stat, Object> stats = new HashMap<>();
+        stats.put(Stat.EXP, amount);
+        getClient().write(new LP_StatChanged(stats));
+    }
+
     public void addExp(long amount) {
         ExpIncreaseInfo eii = new ExpIncreaseInfo();
         eii.setLastHit(true);
@@ -534,6 +547,8 @@ public class Character extends AbstractAnimatedFieldLife {
         }
         long newExp = curExp + amount;
         Map<Stat, Object> stats = new HashMap<>();
+        if (level == 250)
+            newExp = 0;
         while (newExp > GameConstants.CHAR_EXP_TABLE[level]) {
             newExp -= GameConstants.CHAR_EXP_TABLE[level];
             addStat(Stat.LEVEL, 1);
@@ -548,7 +563,7 @@ public class Character extends AbstractAnimatedFieldLife {
     }
 
     public void addStat(Stat charStat, int amount) {
-        addStat(Collections.singletonMap(charStat, getStat(charStat) + amount));
+        addStat(Collections.singletonMap(charStat, amount));
     }
 
     public void addStat(Map<Stat, Integer> stats) {
@@ -593,7 +608,7 @@ public class Character extends AbstractAnimatedFieldLife {
     public void setStat(Map<Stat, Integer> stats) {
         Map<Stat, Object> changedStats = new EnumMap<>(Stat.class);
         stats.forEach((charStat, amount) -> {
-            changedStats.put(charStat, amount);
+            amount = Math.max(amount, 0);
             switch (charStat) {
                 case STR:
                     amount = Math.min(amount, GameConstants.MAX_BASIC_STAT);
@@ -635,6 +650,7 @@ public class Character extends AbstractAnimatedFieldLife {
                     getAvatarData().getCharacterStat().setLevel(amount);
                     break;
             }
+            changedStats.put(charStat, amount);
         });
         notifyChanges();
         write(new LP_StatChanged(changedStats));
@@ -970,15 +986,11 @@ public class Character extends AbstractAnimatedFieldLife {
                 (byte) portal.getId(), false, 100, null, true, -1));
         setPosition(portal.getPosition());
         toField.addCharacter(this);
-
         if (characterData) {
             if (getGuild() != null) {
                 write(new LP_GuildResult(new GuildUpdate(getGuild())));
             }
         }
-        toField.getCharacters().stream().filter(c -> !c.equals(this)).forEach(c -> {
-            write(new LP_UserEnterField(c));
-        });
         renewCharacterStats();
         notifyChanges();
         toField.execUserEnterScript(this);
@@ -1820,8 +1832,7 @@ public class Character extends AbstractAnimatedFieldLife {
     public void logout() {
         setOnline(false);
         FieldTemplate ft = getField().getFieldData();
-        setFieldID((ft.getForcedReturn() > 0 && ft.getForcedReturn() != 999999999 ? ft.getForcedReturn() :
-                (ft.getReturnMap() > 0 && ft.getReturnMap() != 999999999 ? ft.getReturnMap() : getFieldID())));
+        getAvatarData().getCharacterStat().setPosMap((ft.getForcedReturn() > 0 && ft.getForcedReturn() != 999999999 ? ft.getForcedReturn() : getFieldID()));
         getField().removeCharacter(this);
         DatabaseFactory.getInstance().saveToDB(this);
         getClient().getChannelInstance().removeCharacter(this);
@@ -2007,7 +2018,7 @@ public class Character extends AbstractAnimatedFieldLife {
 
     public void addSp(int jobLevel, int amount) {
         final CharacterStat stats = getAvatarData().getCharacterStat();
-        if(JobConstants.isSeparatedSp(getJob())) {
+        if (JobConstants.isSeparatedSp(getJob())) {
             int sp = stats.getExtendSP().getSpByJobLevel((byte) jobLevel) + amount;
             Math.min(GameConstants.MAX_BASIC_STAT, sp);
             stats.getExtendSP().setSpToJobLevel(jobLevel, sp);

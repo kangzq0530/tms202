@@ -233,6 +233,13 @@ public class QuestManager {
         }
     }
 
+    public void handleLevelChange(int level) {
+        getQuestsInProgress().stream().filter(Quest::hasLevelReq).forEach(q -> {
+            q.handleLevel(level);
+            getCharacter().write(new LP_Message(new QuestRecordMessage(q)));
+        });
+    }
+
     public void removeQuest(int questID) {
         Quest q = getQuestsList().get(questID);
         if (q != null) {

@@ -161,23 +161,27 @@ public class Magician extends JobHandler {
     }
 
     @Override
-    public void handleAttack(AttackInfo attackInfo) {
-        Character chr = getCharacter();
-        TemporaryStatManager tsm = chr.getTemporaryStatManager();
-        Skill skill = chr.getSkill(attackInfo.skillId);
-        int skillID = 0;
-        SkillInfo si = null;
+    public boolean handleAttack(AttackInfo attackInfo) {
+        final boolean normalAttack = attackInfo.skillId == 0;
+        final Character chr = getCharacter();
+        final TemporaryStatManager tsm = chr.getTemporaryStatManager();
+        final Skill skill = chr.getSkill(attackInfo.skillId);
+        final int skillID = skill != null ? skill.getSkillId() : 0;
+        SkillInfo si = skill != null ? getSkillInfo(skillID) : null;
         boolean hasHitMobs = attackInfo.mobAttackInfo.size() > 0;
-        byte slv = 0;
-        if (skill != null) {
-            si = SkillData.getInstance().getSkillInfoById(skill.getSkillId());
-            slv = (byte) skill.getCurrentLevel();
-            skillID = skill.getSkillId();
-        }
+        int slv = attackInfo.getSlv();
+
+        if ((!normalAttack && (skill == null || si == null)))
+            return false;
+        if ((!normalAttack) && skill.getCurrentLevel() != slv)
+            return false;
+        if (normalAttack && slv != 0)
+            return false;
+        // trigger cheat attack
 
         if (hasHitMobs) {                                   //Common
             handleArcaneAim();
-            handleMegiddoFlameReCreation(skillID, slv, attackInfo);
+            handleMegiddoFlameReCreation(skillID, (byte) slv, attackInfo);
         }
 
         if (chr.getJob() >= MapleJob.巫師_火毒.getId() && chr.getJob() <=  MapleJob.大魔導士_火毒.getId()) {
@@ -193,7 +197,7 @@ public class Magician extends JobHandler {
         if (chr.getJob() >= MapleJob.巫師_冰雷.getId() && chr.getJob() <=  MapleJob.大魔導士_冰雷.getId()) {
             if (hasHitMobs) {
                 //Freezing Crush / Frozen Clutch
-                handleFreezingCrush(attackInfo, slv);
+                handleFreezingCrush(attackInfo, (byte) slv);
             }
         }
 
@@ -203,8 +207,8 @@ public class Magician extends JobHandler {
             }
         }
 
-        if (si == null)
-            return;
+        if (normalAttack)
+            return true;
 
         Option o1 = new Option();
         Option o2 = new Option();
@@ -333,11 +337,11 @@ public class Magician extends JobHandler {
                 getClient().write(new LP_TemporaryStatSet(tsm));
                 break;
         }
-
+        return true;
     }
 
     @Override
-    public void handleSkillUse(SkillUseInfo skillUseInfo) {
+    public boolean handleSkillUse(SkillUseInfo skillUseInfo) {
         final int skillID = skillUseInfo.getSkillID();
         final byte slv = skillUseInfo.getSlv();
         final Character chr = getCharacter();
@@ -345,7 +349,7 @@ public class Magician extends JobHandler {
         final TemporaryStatManager tsm = chr.getTemporaryStatManager();
         final SkillInfo si = skill != null ? getSkillInfo(skillID) : null;
         if (si == null) {
-            return;
+            return false;
         }
         chr.chatMessage(ChatMsgType.YELLOW, "SkillID: " + skillID);
         if (isBuff(skillID)) {
@@ -377,6 +381,7 @@ public class Magician extends JobHandler {
                     break;
             }
         }
+        return true;
     }
 
     @Override

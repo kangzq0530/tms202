@@ -573,12 +573,12 @@ public class LP_ScriptMessage extends OutPacket<GameClient> {
         encodeByte(nsi.getSpeakerType());
         encodeInt(nsi.getSpeakerTemplateID());
         int overrideTemplateID = nsi.getOverrideSpeakerTemplateID();
-        encodeByte(overrideTemplateID > 0);
-        if (overrideTemplateID > 0) {
+        encodeByte(overrideTemplateID > -1);
+        if (overrideTemplateID > -1) {
             encodeInt(overrideTemplateID);
         }
         encodeByte(nsi.getLastMessageType().getValue());
-        encodeByte(nsi.getParam());
+        encodeShort(nsi.getParam());
         encodeByte(nsi.getColor());
         switch (nsi.getLastMessageType()) {
             case NM_SAY:

@@ -96,8 +96,13 @@ public class CP_UserQuestRequest extends InPacket<GameClient> {
                 if (startScript.isEmpty()) {
                     startScript = String.format("%d%s%s", questID, ScriptManager.QUEST_START_SCRIPT_END_TAG, ScriptManager.SCRIPT_ENGINE_EXTENSION);
                 }
+
                 if (qm.canStartQuest(questID)) {
-                    chr.getScriptManager().startScript(questID, startScript, ScriptType.QUEST);
+                    if(qi.isAutoAccept()) {
+                        qm.startQuest(questID);
+                    } else {
+                        chr.getScriptManager().startScript(questID, startScript, ScriptType.QUEST);
+                    }
                 }
                 break;
             case 5:

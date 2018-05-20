@@ -1,6 +1,7 @@
 package com.msemu.world.client.character.jobs.adventurer;
 
 import com.msemu.commons.data.enums.MobBuffStat;
+import com.msemu.commons.data.enums.SkillStat;
 import com.msemu.commons.data.templates.skill.SkillInfo;
 import com.msemu.commons.network.packets.InPacket;
 import com.msemu.commons.utils.Rand;
@@ -282,7 +283,7 @@ public class Warrior extends JobHandler {
                 tsm.putCharacterStatValue(Beholder, o1);
                 break;
             case 暗之獻祭:
-                if(tsm.hasStat(Beholder)) {
+                if (tsm.hasStat(Beholder)) {
                     o1.nOption = si.getValue(y, slv);
                     o1.rOption = skillID;
                     o1.tOption = si.getValue(time, slv);
@@ -371,20 +372,23 @@ public class Warrior extends JobHandler {
     }
 
     @Override
-    public void handleAttack(AttackInfo attackInfo) {
-        Character chr = getCharacter();
-        TemporaryStatManager tsm = chr.getTemporaryStatManager();
-        Skill skill = chr.getSkill(attackInfo.skillId);
-        int skillID = 0;
-        SkillInfo si = null;
+    public boolean handleAttack(AttackInfo attackInfo) {
+        final boolean normalAttack = attackInfo.skillId == 0;
+        final Character chr = getCharacter();
+        final TemporaryStatManager tsm = chr.getTemporaryStatManager();
+        final Skill skill = chr.getSkill(attackInfo.skillId);
+        final int skillID = skill != null ? skill.getSkillId() : 0;
+        SkillInfo si = skill != null ? getSkillInfo(skillID) : null;
         boolean hasHitMobs = attackInfo.mobAttackInfo.size() > 0;
-        int slv = 0;
-        if (skill != null) {
-            si = SkillData.getInstance().getSkillInfoById(skill.getSkillId());
-            slv = skill.getCurrentLevel();
-            skillID = skill.getSkillId();
-        }
-        int comboProp = getComboProp();
+        int slv = attackInfo.getSlv();
+        if ((!normalAttack && (skill == null || si == null)))
+            return false;
+        if ((!normalAttack) && skill.getCurrentLevel() != slv)
+            return false;
+        if (normalAttack && slv != 0)
+            return false;
+        // trigger cheat attack
+        final int comboProp = getComboProp();
         if (chr.getJob() >= MapleJob.狂戰士.getId() && chr.getJob() <= MapleJob.英雄.getId()) {
             if (hasHitMobs) {
                 //Combo
@@ -412,14 +416,14 @@ public class Warrior extends JobHandler {
             }
         }
 
+        if (normalAttack) return true;
+
         Option o1 = new Option();
         Option o2 = new Option();
         Option o3 = new Option();
 
-        if (si == null)
-            return;
 
-        switch (attackInfo.skillId) {
+        switch (skillID) {
             case COMBO_FURY:
                 for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
                     Mob mob = chr.getField().getMobByObjectId(mai.getObjectID());
@@ -620,10 +624,11 @@ public class Warrior extends JobHandler {
 //                    c.write(MobPool.mobDamaged(mob.getObjectId(),dmg, mob.getTemplateId(), (byte) 1,(int)  mob.getHp(), (int) mob.getMaxHp()));
 //                }
         }
+        return true;
     }
 
     @Override
-    public void handleSkillUse(SkillUseInfo skillUseInfo) {
+    public boolean handleSkillUse(SkillUseInfo skillUseInfo) {
         final int skillID = skillUseInfo.getSkillID();
         final byte slv = skillUseInfo.getSlv();
         final Character chr = getCharacter();
@@ -631,7 +636,7 @@ public class Warrior extends JobHandler {
         final TemporaryStatManager tsm = chr.getTemporaryStatManager();
         final SkillInfo si = skill != null ? getSkillInfo(skillID) : null;
         if (si == null) {
-            return;
+            return false;
         }
         chr.chatMessage(ChatMsgType.YELLOW, "SkillID: " + skillID);
         if (isBuff(skillID)) {
@@ -640,7 +645,7 @@ public class Warrior extends JobHandler {
             Option o1 = new Option();
             Option o2 = new Option();
             Option o3 = new Option();
-            switch(skillID) {
+            switch (skillID) {
                 case 回歸楓之谷:
                     o1.nValue = si.getValue(x, slv);
                     Field toField = getClient().getChannelInstance().getField(o1.nValue);
@@ -649,10 +654,10 @@ public class Warrior extends JobHandler {
                 case 復原:
                     int t = 1000 * si.getValue(time, slv);
                     long cur = System.currentTimeMillis();
-                    if(lastHpRecovery + t < cur) {
+                    if (lastHpRecovery + t < cur) {
                         recoveryAmount = si.getValue(x, slv);
                     } else {
-                        recoveryAmount = Math.max(si.getValue(y, slv), (int) (recoveryAmount * (si.getValue(z, slv)/100D)));
+                        recoveryAmount = Math.max(si.getValue(y, slv), (int) (recoveryAmount * (si.getValue(z, slv) / 100D)));
                     }
                     lastHpRecovery = cur;
                     break;
@@ -693,6 +698,7 @@ public class Warrior extends JobHandler {
                     break;
             }
         }
+        return true;
     }
 
     @Override
@@ -750,7 +756,7 @@ public class Warrior extends JobHandler {
             TemporaryStatManager tsm = chr.getTemporaryStatManager();
             SkillInfo si = SkillData.getInstance().getSkillInfoById(祝福護甲);
             int slv = si.getCurrentLevel();
-            int shieldprop = 50;//      si.getValue(SkillStat.prop, slv);       //TODO should be prop in WzFiles, but it's actually 0
+            int shieldProp = si.getValue(SkillStat.prop, slv);       //TODO should be prop in WzFiles, but it's actually 0
             Option o1 = new Option();
             Option o2 = new Option();
 
@@ -762,7 +768,7 @@ public class Warrior extends JobHandler {
                     divShieldAmount = 0;
                 }
             } else {
-                if (Rand.getChance(shieldprop)) {
+                if (Rand.getChance(shieldProp)) {
                     o1.nOption = 1;
                     o1.rOption = 祝福護甲;
                     o1.tOption = si.getValue(time, slv);

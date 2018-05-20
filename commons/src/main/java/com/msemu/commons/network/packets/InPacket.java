@@ -120,7 +120,7 @@ public abstract class InPacket<TClient extends Client<TClient>> extends Packet<T
 
     @Override
     public String toString() {
-        return toString(false);
+        return toString(true);
     }
 
     public String toString(boolean showNow) {

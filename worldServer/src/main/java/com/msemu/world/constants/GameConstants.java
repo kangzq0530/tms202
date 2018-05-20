@@ -42,11 +42,16 @@ public class GameConstants {
         CHAR_EXP_TABLE[7] = 560;
         CHAR_EXP_TABLE[8] = 840;
         CHAR_EXP_TABLE[9] = 1242;
-        System.arraycopy(CHAR_EXP_TABLE, 9, CHAR_EXP_TABLE, 10, 5);
+        for (int i = 10; i <= 14; i++) {
+            CHAR_EXP_TABLE[i] = CHAR_EXP_TABLE[i - 1];
+        }
+
         for (int i = 15; i <= 29; i++) {
             CHAR_EXP_TABLE[i] = (long) (CHAR_EXP_TABLE[i - 1] * 1.2);
         }
-        System.arraycopy(CHAR_EXP_TABLE, 29, CHAR_EXP_TABLE, 30, 5);
+        for (int i = 30; i <= 34; i++) {
+            CHAR_EXP_TABLE[i] = CHAR_EXP_TABLE[i - 1];
+        }
         for (int i = 35; i <= 39; i++) {
             CHAR_EXP_TABLE[i] = (long) (CHAR_EXP_TABLE[i - 1] * 1.2);
         }
@@ -114,5 +119,52 @@ public class GameConstants {
             default:
                 return 0;
         }
+    }
+
+    public static double getJobDamageConst(int nJob) {
+        if (nJob > 222) {
+            if (nJob > 1200) {
+                if (nJob >= 1210 && nJob <= 1212)
+                    return 0.2;
+            } else if (nJob == 1200 || nJob >= 230 && nJob <= 232) {
+                return 0.2;
+            }
+            return 0.0;
+        }
+        if (nJob < 220) {
+            switch (nJob) {
+                case 110:
+                case 111:
+                case 112:
+                    return 0.1;
+                case 200:
+                case 210:
+                case 211:
+                case 212:
+                    return 0.2;
+                default:
+                    return 0.0;
+            }
+        }
+        return 0.2;
+    }
+
+    public static int calcBaseDamage(int p1, int p2, int p3, int ad, double k, boolean bPvP) {
+        double v6; // st7
+        double result; // eax
+        double v8; // st7
+        double nDamage; // [esp+8h] [ebp+8h]
+        double nDamagea; // [esp+8h] [ebp+8h]
+        result = ((p3 + p2 + 4 * p1) / 100.0 * (ad * k) + 0.5);
+        if (bPvP)
+            return (int) Math.log10(result);
+        return (int) result;
+    }
+
+    public static int calcHybridBaseDamage(int p1, int p2, int p3, int p4, int ad, double k, boolean bPvP) {
+        int result = (int) ((p1 * 3.5 + p2 * 3.5 + 3.5 * p3 + p4) / 100.0 * (ad * k) + 0.5);
+        if (bPvP)
+            return (int) Math.log10(result);
+        return result;
     }
 }

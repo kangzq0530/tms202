@@ -164,7 +164,7 @@ public class Mob extends AbstractInternalAnimatedLife {
         long oldHp = getHp();
         long newHp = oldHp - totalDamage;
         setHp(newHp);
-        double hpPecentAfterDamage = ((double) newHp / maxHP);
+        double hpPercentAfterDamage = ((double) newHp / maxHP);
         newHp = newHp > Integer.MAX_VALUE ? Integer.MAX_VALUE : newHp;
         if (newHp <= 0) {
             die();
@@ -172,7 +172,7 @@ public class Mob extends AbstractInternalAnimatedLife {
         } else if (isBoss()) {
             getField().broadcastPacket(new LP_FieldEffect(new MobHPTagFieldEffect(this)));
         } else {
-            getField().broadcastPacket(new LP_MobHpIndicator(getObjectId(), (byte) (hpPecentAfterDamage * 100)));
+            getField().broadcastPacket(new LP_MobHpIndicator(getObjectId(), (byte) (hpPercentAfterDamage * 100)));
         }
     }
 

@@ -71,30 +71,39 @@ public class Kanna extends JobHandler {
     }
 
     @Override
-    public void handleAttack(AttackInfo attackInfo) {
-        Character chr = getCharacter();
-        TemporaryStatManager tsm = chr.getTemporaryStatManager();
-        Skill skill = chr.getSkill(attackInfo.skillId);
-        int skillID = 0;
-        SkillInfo si = null;
+    public boolean handleAttack(AttackInfo attackInfo) {
+        final boolean normalAttack = attackInfo.skillId == 0;
+        final Character chr = getCharacter();
+        final TemporaryStatManager tsm = chr.getTemporaryStatManager();
+        final Skill skill = chr.getSkill(attackInfo.skillId);
+        final int skillID = skill != null ? skill.getSkillId() : 0;
+        SkillInfo si = skill != null ? getSkillInfo(skillID) : null;
         boolean hasHitMobs = attackInfo.mobAttackInfo.size() > 0;
-        int slv = 0;
-        if (skill != null) {
-            si = SkillData.getInstance().getSkillInfoById(skill.getSkillId());
-            slv = skill.getCurrentLevel();
-            skillID = skill.getSkillId();
-        }
+        int slv = attackInfo.getSlv();
+
+        if ((!normalAttack && (skill == null || si == null)))
+            return false;
+        if ((!normalAttack) && skill.getCurrentLevel() != slv)
+            return false;
+        if (normalAttack && slv != 0)
+            return false;
+        // trigger cheat attack
+
+
+        if(normalAttack) return true;
+
         Option o1 = new Option();
         Option o2 = new Option();
         Option o3 = new Option();
-        switch (attackInfo.skillId) {
+
+        switch (skillID) {
             case 退魔流星符:
             case 百鬼夜行:
                 for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
                     Mob mob = chr.getField().getMobByObjectId(mai.getObjectID());
                     MobTemporaryStat mts = mob.getTemporaryStat();
                     o1.nOption = 1;
-                    o1.rOption = skill.getSkillId();
+                    o1.rOption = skillID;
                     o1.tOption = si.getValue(time, slv);
                     mts.addStatOptionsAndBroadcast(MobBuffStat.Stun, o1);
                 }
@@ -110,6 +119,7 @@ public class Kanna extends JobHandler {
                 chr.getField().spawnAffectedArea(aa);
                 break;
         }
+        return true;
     }
 
     public void getHakuFollow() {
@@ -121,6 +131,7 @@ public class Kanna extends JobHandler {
 
     public void handleBuff(SkillUseInfo skillUseInfo) {
         final int skillID = skillUseInfo.getSkillID();
+
         final byte slv = skillUseInfo.getSlv();
         final Character chr = getCharacter();
         final TemporaryStatManager tsm = chr.getTemporaryStatManager();
@@ -188,7 +199,7 @@ public class Kanna extends JobHandler {
 
 
     @Override
-    public void handleSkillUse(SkillUseInfo skillUseInfo) {
+    public boolean handleSkillUse(SkillUseInfo skillUseInfo) {
         final int skillID = skillUseInfo.getSkillID();
         final byte slv = skillUseInfo.getSlv();
         TemporaryStatManager tsm = getCharacter().getTemporaryStatManager();
@@ -226,6 +237,7 @@ public class Kanna extends JobHandler {
                     break;
             }
         }
+        return true;
     }
 
     @Override

@@ -7,20 +7,21 @@ import com.msemu.core.network.GameClient;
 import com.msemu.world.Channel;
 import com.msemu.world.World;
 import com.msemu.world.client.character.Character;
+import com.msemu.world.client.character.CharacterLocalStat;
+import com.msemu.world.client.character.CharacterStat;
 import com.msemu.world.client.character.inventory.items.Equip;
 import com.msemu.world.client.character.inventory.items.Item;
 import com.msemu.world.client.field.Field;
 import com.msemu.world.client.field.lifes.Drop;
 import com.msemu.world.constants.MapleJob;
 import com.msemu.world.data.ItemData;
+import com.msemu.world.enums.ChatMsgType;
 import com.msemu.world.enums.DropType;
 import com.msemu.world.enums.Stat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.EnumMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Weber on 2018/5/7.
@@ -196,10 +197,9 @@ public class AdminCommand {
             }
             final Character chr = client.getCharacter();
             int level = Integer.parseInt(args.get(1));
-            level = Math.min(255, level);
+            level = Math.min(250, level);
             level = Math.max(1, level);
-            Map<Stat, Object> stats = new EnumMap<>(Stat.class);
-            chr.addExp(-chr.getExp());
+            chr.setExp(0);
             chr.setStat(Stat.LEVEL, level);
             return true;
         }
@@ -207,6 +207,33 @@ public class AdminCommand {
         @Override
         public String getHelpMessage() {
             return "!level <level> : change level";
+        }
+    }
+
+    public static class info extends CommandExecute {
+
+        @Override
+        public boolean execute(GameClient client, List<String> args) {
+            Character chr = client.getCharacter();
+            CharacterStat cs = chr.getAvatarData().getCharacterStat();
+            CharacterLocalStat localStat = chr.getCharacterLocalStat();
+            chr.chatMessage(ChatMsgType.NOTICE, String.format("[Ability] Level: %d HP: (%d/%d) MP: (%d/%d)",
+                    cs.getLevel(), cs.getHp(), localStat.getMaxHp(), cs.getMp(), localStat.getMaxMp()));
+            chr.chatMessage(ChatMsgType.NOTICE, String.format("[Ability] STR: %d(+%d) DEX %d(+%d) INT: %d(+%d) LUK %d(+%d) ",
+                    localStat.getStr(), (localStat.getStr() - cs.getStr()),
+                    localStat.getDex(), (localStat.getDex() - cs.getDex()),
+                    localStat.getInte(), (localStat.getInte() - cs.getInte()),
+                    localStat.getLuk(), (localStat.getLuk() - cs.getLuk())));
+            chr.chatMessage(ChatMsgType.NOTICE, String.format("[Ability] PAD: %d MAD: %d ",
+                    localStat.getPad(), localStat.getMad()));
+            chr.chatMessage(ChatMsgType.NOTICE, String.format("[Ability] Damage: %d ~ %d ",
+                    localStat.getWeaponDamage() / 5, localStat.getWeaponDamage()));
+            return true;
+        }
+
+        @Override
+        public String getHelpMessage() {
+            return "!info - Display character information";
         }
     }
 

@@ -86,17 +86,19 @@ public class Evan extends JobHandler {
     }
 
     @Override
-    public void handleAttack(AttackInfo attackInfo) {
+    public boolean handleAttack(AttackInfo attackInfo) {
 
         Character chr = getCharacter();
 
         TemporaryStatManager tsm = chr.getTemporaryStatManager();
 
+        return true;
+
     }
 
     @Override
-    public void handleSkillUse(SkillUseInfo skillUseInfo) {
-
+    public boolean handleSkillUse(SkillUseInfo skillUseInfo) {
+        return true;
     }
 
     @Override

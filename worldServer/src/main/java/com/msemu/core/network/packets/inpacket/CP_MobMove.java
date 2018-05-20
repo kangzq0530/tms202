@@ -116,6 +116,9 @@ public class CP_MobMove extends InPacket<GameClient> {
                 getClient().write(new LP_MobCtrlAck(mob, true, moveId, mobSkillID, (byte) mobSkillLevel, 0));
                 field.broadcastPacket(new LP_MobMove(mob, msai, movements), controller);
             }
+        } else if ( controller == null) {
+            mob.setController(chr);
+            mob.setControllerLevel(2);
         }
     }
 }

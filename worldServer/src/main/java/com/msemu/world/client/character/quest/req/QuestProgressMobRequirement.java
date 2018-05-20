@@ -3,6 +3,7 @@ package com.msemu.world.client.character.quest.req;
 import com.msemu.commons.data.templates.quest.reqs.QuestMobReqData;
 import com.msemu.commons.data.templates.quest.reqs.QuestReqData;
 import com.msemu.commons.database.Schema;
+import com.msemu.world.client.character.Character;
 import lombok.Getter;
 import lombok.Setter;
 

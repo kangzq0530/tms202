@@ -2,6 +2,7 @@ package com.msemu.world.constants;
 
 
 import com.msemu.commons.data.enums.InvType;
+import com.msemu.world.enums.WeaponType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -620,6 +621,10 @@ public class ItemConstants {
             return id / 10000 == 500;
         }
 
+        public static boolean 重拳槍(int itemid) { return itemid / 10000 == 158;}
+
+
+
         //</editor-fold>
         public static boolean 防具(int itemid) {
             return 帽子(itemid) || 上衣(itemid) || 套服(itemid) || 褲裙(itemid) || 鞋子(itemid) || 手套(itemid) || 披風(itemid);
@@ -627,6 +632,99 @@ public class ItemConstants {
 
         public static boolean 飾品(int itemid) {
             return 臉飾(itemid) || 眼飾(itemid) || 耳環(itemid) || 戒指(itemid) || 墜飾(itemid) || 腰帶(itemid) || 勳章(itemid) || 肩飾(itemid) || 口袋道具(itemid) || 胸章(itemid) || 能源(itemid) || 圖騰(itemid);
+        }
+        public static WeaponType 武器類型(final int itemID) {
+            if (類型.閃亮克魯(itemID)) {
+                return WeaponType.閃亮克魯;
+            }
+            if (類型.靈魂射手(itemID)) {
+                return WeaponType.靈魂射手;
+            }
+            if (類型.魔劍(itemID)) {
+                return WeaponType.魔劍;
+            }
+            if (類型.能量劍(itemID)) {
+                return WeaponType.能量劍;
+            }
+            if (類型.幻獸棍棒(itemID)) {
+                return WeaponType.幻獸棍棒;
+            }
+            if (類型.ESP限制器(itemID)) {
+                return WeaponType.ESP限制器;
+            }
+            if (類型.單手劍(itemID)) {
+                return WeaponType.單手劍;
+            }
+            if (類型.單手斧(itemID)) {
+                return WeaponType.單手斧;
+            }
+            if (類型.單手棍(itemID)) {
+                return WeaponType.單手棍;
+            }
+            if (類型.短劍(itemID)) {
+                return WeaponType.短劍;
+            }
+            if (類型.雙刀(itemID)) {
+                return WeaponType.雙刀;
+            }
+            if (類型.手杖(itemID)) {
+                return WeaponType.手杖;
+            }
+            if (類型.短杖(itemID)) {
+                return WeaponType.短杖;
+            }
+            if (類型.長杖(itemID)) {
+                return WeaponType.長杖;
+            }
+            if (類型.雙手劍(itemID)) {
+                return WeaponType.雙手劍;
+            }
+            if (類型.雙手斧(itemID)) {
+                return WeaponType.雙手斧;
+            }
+            if (類型.雙手棍(itemID)) {
+                return WeaponType.雙手棍;
+            }
+            if (類型.槍(itemID)) {
+                return WeaponType.槍;
+            }
+            if (類型.矛(itemID)) {
+                return WeaponType.矛;
+            }
+            if (類型.弓(itemID)) {
+                return WeaponType.弓;
+            }
+            if (類型.弩(itemID)) {
+                return WeaponType.弩;
+            }
+            if (類型.拳套(itemID)) {
+                return WeaponType.拳套;
+            }
+            if (類型.指虎(itemID)) {
+                return WeaponType.指虎;
+            }
+            if (類型.火槍(itemID)) {
+                return WeaponType.火槍;
+            }
+            if (類型.雙弩槍(itemID)) {
+                return WeaponType.雙弩槍;
+            }
+            if (類型.加農炮(itemID)) {
+                return WeaponType.加農炮;
+            }
+            if (類型.太刀(itemID)) {
+                return WeaponType.太刀;
+            }
+            if (類型.扇子(itemID)) {
+                return WeaponType.扇子;
+            }
+            if (類型.琉(itemID)) {
+                return WeaponType.琉;
+            }
+            if (類型.璃(itemID)) {
+                return WeaponType.璃;
+            }
+            return WeaponType.未知;
         }
 
         public static boolean 副手(int itemid) {

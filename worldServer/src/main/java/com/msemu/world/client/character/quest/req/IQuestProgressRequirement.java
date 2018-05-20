@@ -1,5 +1,7 @@
 package com.msemu.world.client.character.quest.req;
 
+import com.msemu.world.client.character.Character;
+
 /**
  * Created by Weber on 2018/4/23.
  */
