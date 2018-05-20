@@ -29,6 +29,7 @@ public class EquipTemplate extends ItemTemplate {
     private boolean fixedPotential, only, exItem, equipTradeBlock;
     private Map<Integer, EquipOption> options = new HashMap<>(7);
 
+
     public EquipTemplate() {
     }
 

@@ -1,14 +1,10 @@
 package com.msemu.commons.tools;
 
 import com.msemu.commons.config.utils.ConfigLoader;
-import com.msemu.commons.data.loader.dat.SkillInfoDatLoader;
-import com.msemu.commons.data.loader.wz.FieldTemplateLoader;
 import com.msemu.commons.data.loader.wz.SkillInfoLoader;
 import com.msemu.commons.data.loader.wz.WzManager;
-import com.msemu.commons.data.templates.skill.SkillInfo;
 
 import java.io.IOException;
-import java.util.Map;
 
 /**
  * Created by Weber on 2018/4/28.
@@ -28,11 +24,11 @@ public class wzToDat {
 //        new FieldTemplateLoader().saveToDat(wzManager);
 //        new NpcTemplateLoader().saveToDat(wzManager);
 //
-//        new SkillInfoLoader().saveToDat(wzManager);
+        new SkillInfoLoader().saveToDat(wzManager);
 //        Map<Integer, SkillInfo> skillInfoMap = new SkillInfoDatLoader().load(null);
 //        new QuestInfoLoader().saveToDat(wzManager);
 //        new MobTemplateLoader().saveToDat(wzManager);
-        new FieldTemplateLoader().saveToDat(wzManager);
+//        new FieldTemplateLoader().saveToDat(wzManager);
 
     }
 }

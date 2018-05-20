@@ -138,7 +138,7 @@ public class FileTime implements Serializable {
     }
 
     public boolean equal(FileTime time) {
-        return this.getLongValue() > time.getLongValue();
+        return this.getLongValue() == time.getLongValue();
     }
 }
 

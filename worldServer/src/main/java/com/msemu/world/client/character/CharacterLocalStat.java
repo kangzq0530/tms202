@@ -1,17 +1,21 @@
 package com.msemu.world.client.character;
 
+import com.msemu.commons.data.enums.SkillStat;
 import com.msemu.commons.data.templates.ItemTemplate;
 import com.msemu.commons.data.templates.SetInfo;
 import com.msemu.commons.data.templates.SetItemInfo;
+import com.msemu.commons.data.templates.skill.SkillInfo;
 import com.msemu.world.client.character.inventory.items.Equip;
 import com.msemu.world.client.character.inventory.items.Item;
 import com.msemu.world.client.character.skill.CharacterTemporaryStat;
 import com.msemu.world.client.character.skill.Option;
+import com.msemu.world.client.character.skill.Skill;
 import com.msemu.world.client.character.skill.TemporaryStatManager;
 import com.msemu.world.constants.GameConstants;
 import com.msemu.world.constants.ItemConstants;
 import com.msemu.world.constants.MapleJob;
 import com.msemu.world.data.ItemData;
+import com.msemu.world.data.SkillData;
 import com.msemu.world.enums.BodyPart;
 import com.msemu.world.enums.Stat;
 import com.msemu.world.enums.WeaponType;
@@ -37,7 +41,9 @@ public class CharacterLocalStat {
     @Getter
     private int shouldHealHp, shouldHealMp;
     @Getter
-    private int weaponDamage, pvpWeaponDamage;
+    private int maxDamage, pvpMaxDamage, minDamage, pvpMinDamage;
+    @Getter
+    private double mastery;
 
 
     public CharacterLocalStat(Character character) {
@@ -57,7 +63,11 @@ public class CharacterLocalStat {
 
         int incStr = 0, incDex = 0, incInt = 0, incLuk = 0, incStatR = 0;
 
-        int incPad = 0, incMad = 0;
+        int incPad = 0, incMad = 0, incPadR = 0, incMadR = 0, incMastery = 0;
+
+        int pdR = 0, damR = 0;
+
+        int incAcc = 0, incSpeed = 0, incJump = 0;
 
 
         List<Integer> equippedItemIDs = new ArrayList<>();
@@ -75,6 +85,10 @@ public class CharacterLocalStat {
             incLuk += equip.getILuk();
             incPad += equip.getIPad();
             incMad += equip.getIMad();
+            incAcc += equip.getIAcc();
+            incJump += equip.getIJump();
+            incSpeed = equip.getISpeed();
+
         }
 
         for (Integer setItemID : setItemIDs) {
@@ -85,12 +99,18 @@ public class CharacterLocalStat {
                 SetInfo effect = setItemInfo.getEffects().get(matchCount);
                 incMaxHp += effect.getIncMHP();
                 incMaxMp += effect.getIncMMP();
+                incMaxHpR += effect.getIncMHPr();
+                incMaxMpR += effect.getIncMMPr();
                 incStr += effect.getIncSTR() + effect.getIncAllStat();
                 incDex += effect.getIncDEX() + effect.getIncAllStat();
                 incInt += effect.getIncINT() + effect.getIncAllStat();
                 incLuk += effect.getIncLUK() + effect.getIncAllStat();
                 incPad += effect.getIncPAD();
                 incMad += effect.getIncMAD();
+                incAcc += effect.getIncACC();
+                incJump += effect.getIncJump();
+                incSpeed += effect.getIncSpeed();
+
             }
         }
 
@@ -120,6 +140,90 @@ public class CharacterLocalStat {
                         incMaxMp += option.nOption;
                     }
                     break;
+                case ACC:
+                case IndieACC:
+                    for (Option option : entry.getValue()) {
+                        incAcc += option.nOption;
+                    }
+                    break;
+                case Speed:
+                case IndieSpeed:
+                    for (Option option : entry.getValue()) {
+                        incAcc += option.nOption;
+                    }
+                    break;
+                case Jump:
+                case IndieJump:
+                    for (Option option : entry.getValue()) {
+                        incJump += option.nOption;
+                    }
+                    break;
+                case IndiePAD:
+                case PAD:
+                    for (Option option : entry.getValue()) {
+                        incPad += option.nValue;
+                    }
+                    break;
+                case IndieMAD:
+                case MAD:
+                    for (Option option : entry.getValue()) {
+                        incMad += option.nValue;
+                    }
+                    break;
+                case IndiePADR:
+                    for (Option option : entry.getValue()) {
+                        incPadR += option.nValue;
+                    }
+                    break;
+                case IndieMADR:
+                    for (Option option : entry.getValue()) {
+                        incMadR += option.nValue;
+                    }
+                    break;
+                case BasicStatUp:
+                    for (Option option : entry.getValue()) {
+                        incStatR += option.nOption;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        Item weapon = character.getEquippedInventory().getFirstItemByBodyPart(BodyPart.WEAPON);
+        WeaponType weaponType = weapon != null ? ItemConstants.類型.武器類型(weapon.getItemId()) : null;
+
+        for (Skill skill : getCharacter().getSkills()) {
+            if (skill.getCurrentLevel() == 0)
+                continue;
+            SkillInfo si = SkillData.getInstance().getSkillInfoById(skill.getSkillId());
+
+            incMaxHp += getCharacter().getLevel() * si.getValue(SkillStat.lv2mhp, skill.getCurrentLevel());
+            incMaxMp += getCharacter().getLevel() * si.getValue(SkillStat.lv2mmp, skill.getCurrentLevel());
+            incMaxHpR += si.getValue(SkillStat.mhpR, skill.getCurrentLevel());
+            incMaxMpR += si.getValue(SkillStat.mmpR, skill.getCurrentLevel());
+            incPad += si.getValue(SkillStat.pad, skill.getCurrentLevel());
+            incMad += si.getValue(SkillStat.mad, skill.getCurrentLevel());
+            incPadR += si.getValue(SkillStat.padR, skill.getCurrentLevel());
+            incMadR += si.getValue(SkillStat.madR, skill.getCurrentLevel());
+            incStr += si.getValue(SkillStat.strX, skill.getCurrentLevel());
+            incDex += si.getValue(SkillStat.dexX, skill.getCurrentLevel());
+            incInt += si.getValue(SkillStat.intX, skill.getCurrentLevel());
+            incLuk += si.getValue(SkillStat.lukX, skill.getCurrentLevel());
+            incMastery += si.getValue(SkillStat.mastery, skill.getCurrentLevel());
+            pdR += si.getValue(SkillStat.pdR, skill.getCurrentLevel());
+
+            if (weapon != null) {
+                int wtVal = (weapon.getItemId() / 10000) % 100;
+                if (si.getPsdWT().containsKey(wtVal)) {
+                    for (Map.Entry<SkillStat, Integer> entry : si.getPsdWT().get(wtVal).entrySet()) {
+                        switch (entry.getKey()) {
+                            case damR:
+                                damR += entry.getValue();
+                                break;
+                        }
+                    }
+                }
             }
         }
 
@@ -127,13 +231,14 @@ public class CharacterLocalStat {
         this.maxHp = (baseMaxHp + incMaxHp) * (100 + incMaxHpR) / 100;
         this.maxMp = (baseMaxMp + incMaxMp) * (100 + incMaxMpR) / 100;
 
-        this.str = cs.getStr() + incStr;
-        this.dex = cs.getDex() + incDex;
-        this.inte = cs.getInte() + incInt;
-        this.luk = cs.getLuk() + incLuk;
+        this.str = (cs.getStr()) * (100 + incStatR) / 100 + incStr;
+        this.dex = (cs.getDex()) * (100 + incStatR) / 100 + incDex;
+        this.inte = (cs.getInte() + incInt) * (100 + incStatR) / 100;
+        this.luk = (cs.getLuk() + incLuk) * (100 + incStatR) / 100;
 
-        this.pad = incPad;
-        this.mad = incMad;
+        this.pad = (incPad) * (100 + incPadR) / 100;
+        this.mad = (incMad) * (100 + incMad) / 100;
+        this.mastery = 0;
 
 
         this.shouldHealHp = 10;
@@ -153,11 +258,44 @@ public class CharacterLocalStat {
             character.setStat(Stat.MP, character.getCurrentMaxMp());
         }
 
-        Item weapon = character.getEquippedInventory().getFirstItemByBodyPart(BodyPart.WEAPON);
-        WeaponType weaponType = weapon != null ? ItemConstants.類型.武器類型(weapon.getItemId()) : null;
+        int weaponDamage = 0, pvpWeaponDamage = 0;
+        int weaponMindamage = 0;
+        double mastery = 0;
 
-        this.weaponDamage = weaponType != null ? calculateBaseWeaponDamage(weaponType, pad, mad, 0, false, 0) : 0;
-        this.pvpWeaponDamage = weaponType != null ? calculateBaseWeaponDamage(weaponType, pad, mad, 0, true, 0) : 0;
+        if (weaponType != null) {
+
+            double maxMastery = 0.95;
+
+            if (job == 14000 || job == 14200 || job == 14210 || job == 14211 || job == 14212) {
+                maxMastery = 0.99;
+            }
+
+            mastery = weaponType.getBaseMastery() / 100.0;
+
+
+            // 熟練技能有限制武器，需要計算技能適用的武器
+            mastery = mastery + (incMastery / 100.0);
+            mastery = Math.min(mastery, maxMastery);
+
+            this.mastery = mastery;
+
+        }
+
+
+        if (weaponType != null) {
+            weaponDamage = calculateBaseWeaponDamage(weaponType, pad, mad, 0, false, 0);
+            weaponMindamage = (int) (this.mastery * weaponDamage + 0.5);
+            pvpWeaponDamage = calculateBaseWeaponDamage(weaponType, pad, mad, 0, true, 0);
+            weaponDamage += (weaponDamage * ((pdR + damR) / 100.0));
+            pvpWeaponDamage += (weaponDamage * ((pdR + damR) / 100.0));
+            weaponMindamage += (weaponMindamage * ((pdR + damR) / 100.0));
+        }
+
+
+        this.maxDamage = weaponDamage;
+        this.pvpMaxDamage = pvpWeaponDamage;
+        this.minDamage = weaponMindamage;
+
 
     }
 

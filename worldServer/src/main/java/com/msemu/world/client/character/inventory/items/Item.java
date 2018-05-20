@@ -45,7 +45,7 @@ public class Item implements Serializable {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @Getter
     @Setter
-    protected FileTime dateExpire = FileTime.getFileTimeFromType(FileTime.Type.PERMANENT);
+    protected FileTime dateExpire = FileTime.getFileTimeFromType(FileTime.Type.ZERO_TIME);
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "invType")
     @Getter

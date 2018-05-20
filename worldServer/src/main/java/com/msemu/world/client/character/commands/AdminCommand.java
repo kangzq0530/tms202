@@ -227,7 +227,7 @@ public class AdminCommand {
             chr.chatMessage(ChatMsgType.NOTICE, String.format("[Ability] PAD: %d MAD: %d ",
                     localStat.getPad(), localStat.getMad()));
             chr.chatMessage(ChatMsgType.NOTICE, String.format("[Ability] Damage: %d ~ %d ",
-                    localStat.getWeaponDamage() / 5, localStat.getWeaponDamage()));
+                    localStat.getMinDamage() , localStat.getMaxDamage()));
             return true;
         }
 

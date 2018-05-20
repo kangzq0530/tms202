@@ -14,10 +14,7 @@ import javax.script.ScriptException;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Weber on 2018/4/23.
@@ -39,6 +36,7 @@ public class SkillInfo implements DatSerializable {
     private List<Integer> psdSkills = new ArrayList<>();
     private List<Rect> rects = new ArrayList<>();
     private Map<Integer, Map<SkillStat, String>> skillStatInfo = new HashMap<>();
+    private Map<Integer, Map<SkillStat, Integer>> psdWT = new HashMap<>();
 
     public void addSkillStatInfo(int slv,  SkillStat sc, String value) {
         if(!getSkillStatInfo().containsKey(slv))
@@ -164,6 +162,15 @@ public class SkillInfo implements DatSerializable {
                 dos.writeUTF(subEntry.getValue());
             }
         }
+        dos.writeInt(psdWT.size());
+        for(Map.Entry<Integer, Map<SkillStat, Integer>> entry: psdWT.entrySet()) {
+            dos.writeInt(entry.getKey());
+            dos.writeInt(entry.getValue().size());
+            for(Map.Entry<SkillStat, Integer> subEntry : entry.getValue().entrySet()) {
+                dos.writeUTF(subEntry.getKey().name());
+                dos.writeInt(subEntry.getValue());
+            }
+        }
     }
 
     @Override
@@ -215,10 +222,19 @@ public class SkillInfo implements DatSerializable {
         int skillStatSize = dis.readInt();
         for (int i = 0; i < skillStatSize; i++) {
             int slv = dis.readInt();
-            getSkillStatInfo().put(slv, new HashMap<>());
+            getSkillStatInfo().put(slv, new EnumMap<>(SkillStat.class));
             int size = dis.readInt();
             for(int j = 0 ; j < size; j++)
                 getSkillStatInfo().get(slv).put(SkillStat.valueOf(dis.readUTF()), dis.readUTF());
+        }
+        int psdWTSize = dis.readInt();
+        for(int i = 0 ; i < psdWTSize; i++) {
+            int wt = dis.readInt();
+            getPsdWT().put(wt, new EnumMap<>(SkillStat.class));
+            int size = dis.readInt();
+            for(int j = 0 ; j < size; j++) {
+                getPsdWT().get(wt).put(SkillStat.valueOf(dis.readUTF()), dis.readInt());
+            }
         }
         return this;
     }

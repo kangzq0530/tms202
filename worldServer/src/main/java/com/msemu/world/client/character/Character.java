@@ -817,7 +817,9 @@ public class Character extends AbstractAnimatedFieldLife {
         getQuestManager().handleItemGain(item);
         Inventory inventory = getInventoryByType(type);
         if (inventory != null) {
-            Item existingItem = inventory.getItemByItemID(item.getItemId());
+            Item existingItem = inventory.getItems().stream()
+                    .filter(_item -> _item.getDateExpire().equal(item.getDateExpire()) &&
+                    _item.getItemId() == item.getItemId()).findFirst().orElse(null);
             if (existingItem != null && existingItem.getInvType().isStackable()) {
                 existingItem.addQuantity(item.getQuantity());
                 write(new LP_InventoryOperation(true, false,
@@ -2022,10 +2024,13 @@ public class Character extends AbstractAnimatedFieldLife {
             int sp = stats.getExtendSP().getSpByJobLevel((byte) jobLevel) + amount;
             Math.min(GameConstants.MAX_BASIC_STAT, sp);
             stats.getExtendSP().setSpToJobLevel(jobLevel, sp);
+            Map<Stat, Object> newStats = new EnumMap<>(Stat.class);
+            newStats.put(Stat.SP, stats.getExtendSP());
+            write(new LP_StatChanged(newStats));
         } else {
             int sp = stats.getSp() + amount;
             Math.min(GameConstants.MAX_BASIC_STAT, sp);
-            stats.setSp(sp);
+            setStat(Stat.SP, sp);
         }
     }
 }

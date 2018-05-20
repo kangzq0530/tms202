@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -136,7 +137,7 @@ public class SkillInfoLoader extends WzDataLoader<Map<Integer, SkillInfo>> {
                     } else {
                         SkillStat skillStat = SkillStat.getSkillStatByString(subPrpname);
                         if (skillStat == null) {
-                            if(log.isWarnEnabled()) {
+                            if (log.isWarnEnabled()) {
                                 log.warn("Unknown SkillStat: " + subPrpname);
                             }
                             return;
@@ -147,6 +148,25 @@ public class SkillInfoLoader extends WzDataLoader<Map<Integer, SkillInfo>> {
                 for (int i = 1; i <= skillInfo.getMaxLevel(); i++) {
                     skillInfo.getSkillStatInfo().put(i, skillStatInfo);
                 }
+            } else if (propName.equalsIgnoreCase("psdWT")) {
+                ((WzSubProperty)prop).getProperties().stream()
+                        .map(p -> (WzSubProperty)p).forEach(wtProp -> {
+
+                    Map<SkillStat, Integer> stats = new EnumMap<>(SkillStat.class);
+
+                    wtProp.getProperties().forEach(pp -> {
+                        SkillStat skillStat = SkillStat.getSkillStatByString(pp.getName());
+                        if (skillStat == null) {
+                            if (log.isWarnEnabled()) {
+                                log.warn("Unknown psdWT SkillStat: " + pp.getName());
+                            }
+                            return;
+                        }
+                        stats.put(skillStat, Integer.parseInt(pp.getString()));
+                    });
+                    skillInfo.getPsdWT().put(Integer.parseInt(wtProp.getName()), stats);
+
+                });
             } else if (propName.equalsIgnoreCase("level")) {
                 ((WzSubProperty) prop).getProperties()
                         .stream()
@@ -164,7 +184,7 @@ public class SkillInfoLoader extends WzDataLoader<Map<Integer, SkillInfo>> {
                                 } else {
                                     SkillStat skillStat = SkillStat.getSkillStatByString(pppName);
                                     if (skillStat == null) {
-                                        if(log.isWarnEnabled()) {
+                                        if (log.isWarnEnabled()) {
                                             log.warn("Unknown SkillStat: " + pppName);
                                         }
                                         return;

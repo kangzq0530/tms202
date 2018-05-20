@@ -302,11 +302,10 @@ public class Warrior extends JobHandler {
             case 楓葉祝福_英雄:
             case 楓葉祝福_聖騎士:
             case 楓葉祝福_黑騎士:
-                o1.nReason = skillID;
-                o1.nValue = si.getValue(x, slv);
-                o1.tStart = (int) System.currentTimeMillis();
-                o1.tTerm = si.getValue(time, slv);
-                tsm.putCharacterStatValue(IndieStatR, o1);
+                o1.nOption = si.getValue(x, slv);
+                o1.rOption = skillID;
+                o1.tOption = si.getValue(time, slv);
+                tsm.putCharacterStatValue(BasicStatUp, o1);
                 break;
             case 騎士衝擊波:
                 o1.nOption = si.getValue(cr, slv);
