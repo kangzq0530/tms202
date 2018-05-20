@@ -21,6 +21,8 @@ import com.msemu.core.network.packets.outpacket.user.LP_UserLeaveField;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.inventory.items.Item;
 import com.msemu.world.client.character.skill.TemporaryStatManager;
+import com.msemu.world.client.field.forceatoms.ForceAtomHandler;
+import com.msemu.world.client.field.forceatoms.types.ForceAtomInfo;
 import com.msemu.world.client.field.lifes.*;
 import com.msemu.world.client.field.spawns.AbstractSpawnPoint;
 import com.msemu.world.client.field.spawns.NpcSpawnPoint;
@@ -77,6 +79,8 @@ public class Field {
     @Getter
     @Setter
     private LocalDateTime lastSpawnEliteMobTime = LocalDateTime.MIN, lastSpawnTime = LocalDateTime.MIN;
+    @Getter
+    private ForceAtomHandler forceAtomHandler = new ForceAtomHandler();
 
     public Field(long uniqueId, FieldTemplate template) {
         this.uniqueId = uniqueId;
@@ -797,5 +801,21 @@ public class Field {
 
     public int getConsumeItemCoolTime() {
         return getFieldData().getConsumeItemCoolTime();
+    }
+
+    public void addForceAtom(ForceAtomInfo atomInfo) {
+        getForceAtomHandler().addForceAtom(atomInfo);
+    }
+
+    public void removeForceAtomByCount(int count) {
+        getForceAtomHandler().removeAtom(count);
+    }
+
+    public ForceAtomInfo getForceAtomByCount(int count) {
+        return getForceAtomHandler().getForceAtom(count);
+    }
+
+    public boolean hasForceAtom(int count) {
+        return getForceAtomHandler().getForceAtom(count) != null;
     }
 }

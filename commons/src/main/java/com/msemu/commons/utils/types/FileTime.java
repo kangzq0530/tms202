@@ -1,6 +1,7 @@
 package com.msemu.commons.utils.types;
 
 import com.msemu.commons.database.Schema;
+import com.msemu.commons.enums.FileTimeUnit;
 import com.msemu.commons.network.Client;
 import com.msemu.commons.network.packets.OutPacket;
 
@@ -95,7 +96,7 @@ public class FileTime implements Serializable {
         return highDateTime;
     }
 
-    public static FileTime getTime() {
+    public static FileTime now() {
         return getFTFromLong(System.currentTimeMillis() * 10000L + Type.FT_UT_OFFSET.getVal()); // Mushy
     }
 
@@ -139,6 +140,25 @@ public class FileTime implements Serializable {
 
     public boolean equal(FileTime time) {
         return this.getLongValue() == time.getLongValue();
+    }
+
+    public FileTime plus(int amount, FileTimeUnit unit) {
+        long timeValue = lowDateTime + (((long)highDateTime) << 32);
+        switch (unit) {
+            case MILLIS:
+                timeValue += amount;
+                break;
+            case SEC:
+                timeValue += amount * 10000L;
+                break;
+            case MINUTE:
+                timeValue += amount * 10000L * 60L;
+                break;
+            case HOUR:
+                timeValue += amount * 10000L * 3600L;
+                break;
+        }
+        return new FileTime(timeValue);
     }
 }
 

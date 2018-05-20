@@ -28,7 +28,7 @@ public class LP_SelectWorldResult extends OutPacket<LoginClient> {
 
         int reserved = 0;
         encodeInt(reserved); // TODO: 閃耀之星
-        FileTime.getTime().encode(this);
+        FileTime.now().encode(this);
         for (int i = 0; i < reserved; i++) {
             FileTime ft = FileTime.getFTFromLong(0);
             encodeInt(ft.getLowDateTime());
@@ -54,12 +54,12 @@ public class LP_SelectWorldResult extends OutPacket<LoginClient> {
         encodeInt(0); // 50 等角色卡數量
         encodeInt(-1); // nEventNewCharJob
         encodeByte(0); // nRenameCount
-        FileTime.getTime().encodeR(this);
+        FileTime.now().encodeR(this);
         encodeByte(0);   // 變更角色名稱開關(在名字下方的, 不能單獨控制哪個角色能改)[0:關、1:開]
         encodeByte(0);  // 協議書開關[-1:開、0:關]
         encodeByte(0);
         encodeInt(0);
         encodeInt(0);
-        FileTime.getTime().encodeR(this);
+        FileTime.now().encodeR(this);
     }
 }

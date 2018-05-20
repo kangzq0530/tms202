@@ -6,7 +6,7 @@ import com.msemu.commons.utils.types.Position;
 import com.msemu.commons.utils.types.Rect;
 import com.msemu.core.network.GameClient;
 import com.msemu.world.client.character.Character;
-import com.msemu.world.client.field.forceatoms.types.AbstractForceAtom;
+import com.msemu.world.client.field.forceatoms.types.ForceAtomInfo;
 import com.msemu.world.enums.ForceAtomType;
 
 import java.util.List;
@@ -18,7 +18,7 @@ public class LP_CreateForceAtom extends OutPacket<GameClient> {
 
 
     public LP_CreateForceAtom(boolean byMob, Character chr, int targetOD, boolean toMob
-            , ForceAtomType type, List<Integer> targetMob, int target, List<AbstractForceAtom> atoms, Position forcedTarget, Rect rcStart, int bulletItemID, int arriveDir, int arriveRange) {
+            , ForceAtomType type, List<Integer> targetMob, int target, List<ForceAtomInfo> atoms, Position forcedTarget, Rect rcStart, int bulletItemID, int arriveDir, int arriveRange) {
         super(OutHeader.LP_CreateForceAtom);
         encodeByte(byMob);
         if (byMob) {
@@ -67,20 +67,10 @@ public class LP_CreateForceAtom extends OutPacket<GameClient> {
 
         }
 
-        for (AbstractForceAtom fi : atoms) {
-            encodeByte(1);
-            encodeInt(fi.getCount());
-            encodeInt(fi.getInc());
-            encodeInt(fi.getFirstImpact());
-            encodeInt(fi.getSecondImpact());
-            encodeInt(fi.getAngle());
-            encodeInt(fi.getStartDelay());
-            encodeInt(fi.getStart().getX());
-            encodeInt(fi.getStart().getY());
-            encodeInt(fi.getCreateTime());
-            encodeInt(fi.getMaxHitCount());
-            encodeInt(fi.getEffectIdx());
-            encodeInt(0);
+        atoms.forEach(atom -> atom.encode(this));
+
+        for (ForceAtomInfo fi : atoms) {
+
         }
 
         encodeByte(0);

@@ -91,7 +91,7 @@ public class Drop extends AbstractFieldObject {
     }
 
     public boolean isExpired() {
-        return getExpireTime() != null && getExpireTime().after(FileTime.getTime());
+        return getExpireTime() != null && getExpireTime().after(FileTime.now());
     }
 
 }

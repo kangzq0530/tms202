@@ -67,7 +67,7 @@ public class LP_SetField extends OutPacket<GameClient> {
         // 41 bytes below
         encodeByte(setWhiteFadeInOut);
         encodeByte(0); // unsure
-        encodeFT(FileTime.getTime());
+        encodeFT(FileTime.now());
         encodeInt(mobStatAdjustRate);
         boolean hasFieldCustom = fieldCustom != null;
         encodeByte(hasFieldCustom);

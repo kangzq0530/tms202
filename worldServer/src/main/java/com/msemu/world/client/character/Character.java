@@ -1068,7 +1068,7 @@ public class Character extends AbstractAnimatedFieldLife {
             // 終極冒險家 (捨棄了)
             outPacket.encodeByte(false); // ultimate explorer, deprecated
 
-            outPacket.encodeFT(FileTime.getTime());
+            outPacket.encodeFT(FileTime.now());
             outPacket.encodeFT(FileTime.getFileTimeFromType(FileTime.Type.ZERO_TIME));
 
             //sub_510BF0
@@ -1348,7 +1348,7 @@ public class Character extends AbstractAnimatedFieldLife {
                 outPacket.encodeInt(0);
                 outPacket.encodeInt(0); // SkillID
                 outPacket.encodeShort(0); // sLv
-                outPacket.encodeFT(FileTime.getTime()); // dateExpire
+                outPacket.encodeFT(FileTime.now()); // dateExpire
             }
         }
 
@@ -1588,7 +1588,7 @@ public class Character extends AbstractAnimatedFieldLife {
             outPacket.encodeInt(0);
             outPacket.encodeInt(0);
 
-            outPacket.encodeLong(FileTime.getTime().getLongValue() + 86400000L);
+            outPacket.encodeLong(FileTime.now().getLongValue() + 86400000L);
             outPacket.encodeByte(MapleJob.is蒼龍俠客(getJob()) && MapleJob.is幻獸師(getJob()));
 
             outPacket.encodeByte(1);
@@ -1775,7 +1775,7 @@ public class Character extends AbstractAnimatedFieldLife {
                 outPacket.encodeInt(1);
                 outPacket.encodeInt(0);
                 outPacket.encodeInt(0);
-                FileTime.getTime().encode(outPacket);
+                FileTime.now().encode(outPacket);
             }
             short v192 = 0;
             outPacket.encodeShort(v192);

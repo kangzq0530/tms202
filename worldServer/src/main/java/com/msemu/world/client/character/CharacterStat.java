@@ -193,7 +193,7 @@ public class CharacterStat {
         outPacket.encodeInt(getPop());
         outPacket.encodeInt(getWp()); // 神之子武器點數
         outPacket.encodeLong(getGachExp());
-        outPacket.encodeFT(FileTime.getTime());
+        outPacket.encodeFT(FileTime.now());
         outPacket.encodeInt((int) getPosMap());
         outPacket.encodeByte(getPortal());
         outPacket.encodeShort(getSubJob());

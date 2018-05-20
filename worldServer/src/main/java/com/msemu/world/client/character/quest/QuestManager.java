@@ -171,7 +171,7 @@ public class QuestManager {
             addQuest(quest);
         }
         quest.setStatus(COMPLETE);
-        quest.setCompletedTime(FileTime.getTime());
+        quest.setCompletedTime(FileTime.now());
         getCharacter().chatMessage(YELLOW, String.format("[任務資訊] 已完成任務 : %s(%d) ", qi.getName(), quest.getQRKey()));
         getCharacter().write(new LP_Message(new QuestRecordMessage(quest)));
         getCharacter().write(new LP_UserEffectLocal(new QuestCompleteUserEffect()));
