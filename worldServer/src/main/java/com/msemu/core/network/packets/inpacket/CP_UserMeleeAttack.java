@@ -195,6 +195,8 @@ public class CP_UserMeleeAttack extends InPacket<GameClient> {
         Field field = chr.getField();
         final Skill skill = chr.getSkill(ai.getSkillId());
         SkillInfo si = skill != null ? SkillData.getInstance().getSkillInfoById(ai.getSkillId()) : null;
+
+        chr.getCharacterLocalStat().getCalcDamage().PDamageForPvM(ai);
         boolean attackSuccess = chr.getJobHandler().handleAttack(ai);
         field.broadcastPacket(new LP_UserMeleeAttack(chr, ai));
 

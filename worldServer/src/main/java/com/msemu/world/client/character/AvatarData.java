@@ -3,6 +3,7 @@ package com.msemu.world.client.character;
 import com.msemu.commons.database.Schema;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;
+import com.msemu.world.client.character.stats.CharacterStat;
 import com.msemu.world.constants.MapleJob;
 import lombok.Getter;
 import lombok.Setter;

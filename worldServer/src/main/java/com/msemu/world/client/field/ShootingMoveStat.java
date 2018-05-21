@@ -1,4 +1,4 @@
-package com.msemu.world.client.field.lifes;
+package com.msemu.world.client.field;
 
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;

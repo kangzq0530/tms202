@@ -2,6 +2,8 @@ package com.msemu.world.client.character.skill;
 
 import com.msemu.commons.database.Schema;
 import com.msemu.commons.utils.types.FileTime;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -11,6 +13,8 @@ import javax.persistence.*;
 @Schema
 @Entity
 @Table(name = "skills")
+@Getter
+@Setter
 public class Skill {
 
     @JoinColumn(name = "dateExpire")
@@ -32,70 +36,6 @@ public class Skill {
     private int currentLevel;
     @Column(name = "masterLevel")
     private int masterLevel;
-
-    public int getSkillId() {
-        return skillId;
-    }
-
-    public void setSkillId(int skillId) {
-        this.skillId = skillId;
-    }
-
-    public int getRootId() {
-        return rootId;
-    }
-
-    public void setRootId(int rootId) {
-        this.rootId = rootId;
-    }
-
-    public int getMaxLevel() {
-        return maxLevel;
-    }
-
-    public void setMaxLevel(int maxLevel) {
-        this.maxLevel = maxLevel;
-    }
-
-    public int getCurrentLevel() {
-        return currentLevel;
-    }
-
-    public void setCurrentLevel(int currentLevel) {
-        this.currentLevel = currentLevel;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getCharId() {
-        return charId;
-    }
-
-    public void setCharId(int charId) {
-        this.charId = charId;
-    }
-
-    public int getMasterLevel() {
-        return masterLevel;
-    }
-
-    public void setMasterLevel(int masterLevel) {
-        this.masterLevel = masterLevel;
-    }
-
-    public FileTime getDateExpire() {
-        return dateExpire;
-    }
-
-    public void setDateExpire(FileTime dateExpire) {
-        this.dateExpire = dateExpire;
-    }
 
     @Override
     public String toString() {

@@ -6,7 +6,7 @@ import com.msemu.core.network.packets.outpacket.wvscontext.LP_ChangeSkillRecordR
 import com.msemu.core.network.packets.outpacket.wvscontext.LP_StatChanged;
 import com.msemu.world.client.character.AvatarData;
 import com.msemu.world.client.character.Character;
-import com.msemu.world.client.character.CharacterStat;
+import com.msemu.world.client.character.stats.CharacterStat;
 import com.msemu.world.client.character.ExtendSP;
 import com.msemu.world.client.character.skill.Skill;
 import com.msemu.world.constants.JobConstants;

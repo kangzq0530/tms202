@@ -33,6 +33,8 @@ import com.msemu.world.client.character.skill.ForcedStatManager;
 import com.msemu.world.client.character.skill.Skill;
 import com.msemu.world.client.character.skill.TemporaryStatManager;
 import com.msemu.world.client.character.skill.vcore.VMatrixRecord;
+import com.msemu.world.client.character.stats.CharacterLocalStat;
+import com.msemu.world.client.character.stats.CharacterStat;
 import com.msemu.world.client.field.AbstractFieldObject;
 import com.msemu.world.client.field.AffectedArea;
 import com.msemu.world.client.field.Field;
@@ -1855,7 +1857,7 @@ public class Character extends AbstractAnimatedFieldLife {
     }
 
     public void renewCharacterStats() {
-        getCharacterLocalStat().recalculateLocalStat();
+        getCharacterLocalStat().reCalculateLocalStat();
     }
 
     public void enableActions() {

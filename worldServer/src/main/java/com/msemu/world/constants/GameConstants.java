@@ -150,11 +150,7 @@ public class GameConstants {
     }
 
     public static int calcBaseDamage(int p1, int p2, int p3, int ad, double k, boolean bPvP) {
-        double v6; // st7
         double result; // eax
-        double v8; // st7
-        double nDamage; // [esp+8h] [ebp+8h]
-        double nDamagea; // [esp+8h] [ebp+8h]
         result = ((p3 + p2 + 4 * p1) / 100.0 * (ad * k) + 0.5);
         if (bPvP)
             return (int) Math.log10(result);
@@ -166,5 +162,29 @@ public class GameConstants {
         if (bPvP)
             return (int) Math.log10(result);
         return result;
+    }
+
+    public static double getRand(long rand, double min, double max) {
+        double swap;
+        if (min > max) {
+            swap = min;
+            min = max;
+            max = swap;
+        }
+        return min + (rand % 10000000L) * (max - min) / 9999999.0;
+    }
+
+    public static double adjustRandomDamage(double damage, int rand, double k, int mastery, double limitedMastery) {
+        double v6 = Math.min(mastery / 100.0 + k, limitedMastery) * damage + 0.5;
+        double v5 = damage;
+        if (v5 > v6) {
+            double swap = v5;
+            v5 = v6;
+            v6 = v5;
+        }
+        if (v6 != v5) {
+            return (rand % 10000000) * (v6 - v5) / 9999999.0 + v5;
+        }
+        return damage;
     }
 }

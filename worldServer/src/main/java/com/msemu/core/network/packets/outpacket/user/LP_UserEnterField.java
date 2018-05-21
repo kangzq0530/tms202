@@ -5,7 +5,7 @@ import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;
 import com.msemu.world.client.character.AvatarLook;
 import com.msemu.world.client.character.Character;
-import com.msemu.world.client.character.CharacterStat;
+import com.msemu.world.client.character.stats.CharacterStat;
 import com.msemu.world.client.character.skill.CharacterTemporaryStat;
 import com.msemu.world.client.character.skill.TSIndex;
 import com.msemu.world.client.character.skill.TemporaryStatManager;

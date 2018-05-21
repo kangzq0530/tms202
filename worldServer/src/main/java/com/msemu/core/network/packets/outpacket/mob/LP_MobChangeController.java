@@ -5,7 +5,7 @@ import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;
 import com.msemu.world.client.field.lifes.ForcedMobStat;
 import com.msemu.world.client.field.lifes.Mob;
-import com.msemu.world.client.field.lifes.ShootingMoveStat;
+import com.msemu.world.client.field.ShootingMoveStat;
 import com.msemu.world.enums.MobAppearType;
 
 /**

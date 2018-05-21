@@ -3,7 +3,6 @@ package com.msemu.core.network.packets.outpacket.stage;
 import com.msemu.commons.enums.OutHeader;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.utils.HexUtils;
-import com.msemu.commons.utils.Rand;
 import com.msemu.commons.utils.types.FileTime;
 import com.msemu.core.network.GameClient;
 import com.msemu.world.client.character.Character;
@@ -42,9 +41,10 @@ public class LP_SetField extends OutPacket<GameClient> {
         }
         if (characterData) {
             // CalcDamage setSeed
-            int s1 = Rand.nextInt();
-            int s2 = Rand.nextInt();
-            int s3 = Rand.nextInt();
+            int s1 = 1;//Rand.nextInt();
+            int s2 = 1;//Rand.nextInt();
+            int s3 = 1;//Rand.nextInt();
+            chr.getCharacterLocalStat().getCalcDamage().setSeed(s1, s2, s3);
             encodeInt(s1);
             encodeInt(s2);
             encodeInt(s3);

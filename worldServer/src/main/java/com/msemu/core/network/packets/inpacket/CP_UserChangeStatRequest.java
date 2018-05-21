@@ -4,7 +4,7 @@ import com.msemu.commons.network.packets.InPacket;
 import com.msemu.core.network.GameClient;
 import com.msemu.world.client.character.AvatarData;
 import com.msemu.world.client.character.Character;
-import com.msemu.world.client.character.CharacterStat;
+import com.msemu.world.client.character.stats.CharacterStat;
 import com.msemu.world.constants.MapleJob;
 import com.msemu.world.enums.Stat;
 

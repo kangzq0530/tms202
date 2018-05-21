@@ -1,9 +1,13 @@
-package com.msemu.world.client.character;
+package com.msemu.world.client.character.stats;
 
 import com.msemu.commons.database.Schema;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.utils.types.FileTime;
 import com.msemu.core.network.GameClient;
+import com.msemu.world.client.character.CharacterCard;
+import com.msemu.world.client.character.ExtendSP;
+import com.msemu.world.client.character.NonCombatStatDayLimit;
+import com.msemu.world.client.character.SystemTime;
 import com.msemu.world.constants.JobConstants;
 import com.msemu.world.constants.MapleJob;
 import lombok.Getter;

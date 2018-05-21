@@ -12,6 +12,7 @@ import com.msemu.core.network.packets.outpacket.mob.LP_MobLeaveField;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.ExpIncreaseInfo;
 import com.msemu.world.client.field.Field;
+import com.msemu.world.client.field.ShootingMoveStat;
 import com.msemu.world.client.field.effect.MobHPTagFieldEffect;
 import com.msemu.world.client.field.lifes.skills.MobSkill;
 import com.msemu.world.client.field.lifes.skills.MobTemporaryStat;
@@ -399,5 +400,9 @@ public class Mob extends AbstractInternalAnimatedLife {
 
     public int getEliteGrade() {
         return getEliteMobInfo() == null ? -1 : getEliteMobInfo().getGrade();
+    }
+
+    public double getPDRate() {
+        return getTemplate().getPDRate();
     }
 }

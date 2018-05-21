@@ -24,7 +24,7 @@ public class JobManager {
             Magician.class
     };
 
-    public static JobHandler getJobHandler(short id, Character chr) {
+    public static JobHandler getJobHandler(short jobID, Character chr) {
         JobHandler job = null;
         for (Class clazz : jobClasses) {
             try {
@@ -32,7 +32,7 @@ public class JobManager {
             } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
                 log.error("getJobHandlerError", e);
             }
-            if (job != null && job.isHandlerOfJob(id)) {
+            if (job != null && job.isHandlerOfJob(jobID)) {
                 return job;
             }
         }

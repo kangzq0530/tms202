@@ -6,6 +6,7 @@ import com.msemu.core.network.GameClient;
 import com.msemu.core.network.packets.outpacket.npc.LP_NpcChangeController;
 import com.msemu.core.network.packets.outpacket.npc.LP_NpcEnterField;
 import com.msemu.core.network.packets.outpacket.npc.LP_NpcLeaveField;
+import com.msemu.world.client.field.ScreenInfo;
 import com.msemu.world.enums.FieldObjectType;
 import lombok.Getter;
 import lombok.Setter;

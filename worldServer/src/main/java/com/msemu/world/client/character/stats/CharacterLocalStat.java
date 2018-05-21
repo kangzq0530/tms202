@@ -1,10 +1,12 @@
-package com.msemu.world.client.character;
+package com.msemu.world.client.character.stats;
 
 import com.msemu.commons.data.enums.SkillStat;
 import com.msemu.commons.data.templates.ItemTemplate;
 import com.msemu.commons.data.templates.SetInfo;
 import com.msemu.commons.data.templates.SetItemInfo;
 import com.msemu.commons.data.templates.skill.SkillInfo;
+import com.msemu.world.client.character.AvatarData;
+import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.inventory.items.Equip;
 import com.msemu.world.client.character.inventory.items.Item;
 import com.msemu.world.client.character.skill.CharacterTemporaryStat;
@@ -43,15 +45,19 @@ public class CharacterLocalStat {
     @Getter
     private int maxDamage, pvpMaxDamage, minDamage, pvpMinDamage;
     @Getter
-    private double mastery;
-
+    private int mastery;
+    @Getter
+    private int cirticalRate;
+    @Getter
+    private CalcDamage calcDamage;
 
     public CharacterLocalStat(Character character) {
         this.character = character;
+        this.calcDamage = new CalcDamage(character);
     }
 
 
-    public void recalculateLocalStat() {
+    public void reCalculateLocalStat() {
         AvatarData ad = character.getAvatarData();
         CharacterStat cs = ad.getCharacterStat();
         TemporaryStatManager tsm = character.getTemporaryStatManager();
@@ -66,6 +72,8 @@ public class CharacterLocalStat {
         int incPad = 0, incMad = 0, incPadR = 0, incMadR = 0, incMastery = 0;
 
         int pdR = 0, damR = 0;
+
+        int incCritical = 0;
 
         int incAcc = 0, incSpeed = 0, incJump = 0;
 
@@ -240,9 +248,12 @@ public class CharacterLocalStat {
         this.mad = (incMad) * (100 + incMad) / 100;
         this.mastery = 0;
 
+        this.cirticalRate = 5 + incCritical;
 
         this.shouldHealHp = 10;
         this.shouldHealMp = 3;
+
+        this.mastery = incMastery;
 
         ItemTemplate chairInfo = ItemData.getInstance().getItemInfo(getCharacter().getPortableChairID());
 
@@ -258,46 +269,36 @@ public class CharacterLocalStat {
             character.setStat(Stat.MP, character.getCurrentMaxMp());
         }
 
-        int weaponDamage = 0, pvpWeaponDamage = 0;
-        int weaponMindamage = 0;
-        double mastery = 0;
+        int maxBaseWeaponDamage = 0, pvpWeaponDamage = 0;
+        int minBaseWeaponDamage = 0;
+
 
         if (weaponType != null) {
-
             double maxMastery = 0.95;
 
             if (job == 14000 || job == 14200 || job == 14210 || job == 14211 || job == 14212) {
                 maxMastery = 0.99;
             }
-
-
-
-
             // 熟練技能有限制武器，需要計算技能適用的武器
-            mastery = mastery + (incMastery / 100.0);
-            mastery = Math.min(mastery, maxMastery);
+            double finalMastery = Math.min((this.mastery + weaponType.getBaseMastery()) / 100.0, maxMastery);
 
-            this.mastery = mastery;
+            maxBaseWeaponDamage = calculateBaseWeaponDamage(weaponType, pad, mad, 0, false, 0);
+            minBaseWeaponDamage = (int) Math.floor(finalMastery * maxBaseWeaponDamage + 0.5);
 
-        }
-
-
-        if (weaponType != null) {
-            weaponDamage = calculateBaseWeaponDamage(weaponType, pad, mad, 0, false, 0);
-            weaponMindamage = (int) Math.round(this.mastery * weaponDamage + 0.5);
             pvpWeaponDamage = calculateBaseWeaponDamage(weaponType, pad, mad, 0, true, 0);
-            weaponDamage += (weaponDamage * ((pdR + damR) / 100.0));
-            pvpWeaponDamage += (weaponDamage * ((pdR + damR) / 100.0));
-            weaponMindamage += (weaponMindamage * ((pdR + damR) / 100.0));
+//            weaponDamage += (weaponDamage * ((pdR + damR) / 100.0));
+//            pvpWeaponDamage += (weaponDamage * ((pdR + damR) / 100.0));
+//            weaponMindamage += (weaponMindamage * ((pdR + damR) / 100.0));
         }
 
 
-        this.maxDamage = weaponDamage;
+        this.maxDamage = maxBaseWeaponDamage;
         this.pvpMaxDamage = pvpWeaponDamage;
-        this.minDamage = weaponMindamage;
+        this.minDamage = minBaseWeaponDamage;
 
 
     }
+
 
     private int calculateBaseWeaponDamage(WeaponType weaponType, int pad, int mad, int skillID, boolean pvp, int setBaseDamage) {
 
