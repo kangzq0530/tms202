@@ -143,4 +143,5 @@ public class InventoryManipulator {
 
         chr.write(new LP_InventoryOperation(true, false, operates));
     }
+
 }

@@ -75,7 +75,6 @@ public class Item implements Serializable {
     @Setter
     private String owner = "";
     @Transient
-    @Getter
     @Setter
     private ItemTemplate template;
 
@@ -206,5 +205,10 @@ public class Item implements Serializable {
         }
     }
 
+    public ItemTemplate getTemplate() {
+        if(this.template == null)
+            this.template = ItemData.getInstance().getItemInfo(itemId);
+        return this.template;
+    }
 }
 
