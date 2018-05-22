@@ -270,6 +270,14 @@ public class Aran extends JobHandler {
 
     private void setCombo(int combo) {
         this.combo = combo;
+        this.showCombo();
+    }
+
+    public void incCombo() {
+        setCombo(getCombo() + 1);
+    }
+
+    public void showCombo() {
         getClient().write(new LP_ModCombo(getCombo()));
     }
 
@@ -304,7 +312,7 @@ public class Aran extends JobHandler {
             }
         }
 
-        if(normalAttack) return true;
+        if (normalAttack) return true;
         handleSwingStudies(getOriginalSkillByID(skillID), tsm);
 
         Option o1 = new Option();

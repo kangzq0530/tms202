@@ -157,6 +157,8 @@ public class FileTime implements Serializable {
             case HOUR:
                 timeValue += amount * 10000L * 3600L;
                 break;
+            case DAY:
+                timeValue += amount * 24 * 10000L * 3600L;
         }
         return new FileTime(timeValue);
     }

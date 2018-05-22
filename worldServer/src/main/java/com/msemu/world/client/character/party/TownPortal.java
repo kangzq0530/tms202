@@ -3,6 +3,13 @@ package com.msemu.world.client.character.party;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.utils.types.Position;
 import com.msemu.core.network.GameClient;
+import com.msemu.core.network.packets.outpacket.townportal.LP_TownPortalCreated;
+import com.msemu.core.network.packets.outpacket.townportal.LP_TownPortalRemoved;
+import com.msemu.core.network.packets.outpacket.wvscontext.LP_TownPortal;
+import com.msemu.world.client.character.Character;
+import com.msemu.world.client.field.AbstractFieldObject;
+import com.msemu.world.client.field.Field;
+import com.msemu.world.enums.FieldObjectType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,7 +18,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class TownPortal {
+public class TownPortal extends AbstractFieldObject {
 
     private int portalIndex;
 
@@ -21,16 +28,52 @@ public class TownPortal {
 
     private int skillID = 0;
 
-    private Position position = new Position(0, 0);
+    private Position townPosition = new Position(0, 0);
 
-    public TownPortal(int portalIndex) {
-        this.portalIndex = 0;
+    public TownPortal() {
     }
 
-    public void encode(OutPacket<GameClient> outPacket, boolean isLeaving) {
+    public void encodeForTown(OutPacket<GameClient> outPacket, boolean isLeaving) {
         outPacket.encodeInt(isLeaving ? 999999999 : getTownID());
         outPacket.encodeInt(isLeaving ? 999999999 : getFieldID());
-        outPacket.encodeInt(isLeaving ? 0 : getSkillID());
-        outPacket.encodePosition(isLeaving ? new Position(-1, -1) : getPosition());
+        if (!isLeaving) {
+            outPacket.encodeInt(getSkillID());
+            outPacket.encodePosition(getTownPosition());
+        }
+    }
+
+    @Override
+    public FieldObjectType getFieldObjectType() {
+        return null;
+    }
+
+    @Override
+    public void enterScreen(GameClient client) {
+        final int fieldId = client.getCharacter().getFieldID();
+        if (getTownID() == fieldId) {
+            client.write(new LP_TownPortal(this, false));
+        } else if (getFieldID() == fieldId) {
+            client.write(new LP_TownPortalCreated(this, false));
+        }
+    }
+
+    @Override
+    public void outScreen(GameClient client) {
+        final int fieldId = client.getCharacter().getFieldID();
+        if (getTownID() == fieldId) {
+            client.write(new LP_TownPortal(this, true));
+        } else if (getFieldID() == fieldId) {
+            client.write(new LP_TownPortalRemoved(this, false));
+        }
+    }
+
+    public void warp(Character chr, boolean fromTown) {
+        if (fromTown) {
+            Field toField = chr.getClient().getChannelInstance().getField(fieldID);
+            chr.warp(toField);
+        } else {
+            Field toField = chr.getClient().getChannelInstance().getField(townID);
+            chr.warp(toField);
+        }
     }
 }

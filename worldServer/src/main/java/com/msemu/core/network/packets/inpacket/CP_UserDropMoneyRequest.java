@@ -5,7 +5,6 @@ import com.msemu.core.network.GameClient;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.field.Field;
 import com.msemu.world.client.field.lifes.Drop;
-import com.msemu.world.client.field.lifes.DropInfo;
 import com.msemu.world.enums.DropType;
 
 /**
@@ -40,6 +39,6 @@ public class CP_UserDropMoneyRequest extends InPacket<GameClient> {
         drop.setDropType(DropType.MONEY);
         drop.setOwnerID(chr.getId());
         drop.setPosition(chr.getPosition());
-        field.drop(drop, chr.getPosition(), chr.getPosition());
+        field.drop(drop, chr.getPosition());
     }
 }

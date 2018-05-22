@@ -72,9 +72,8 @@ public class CalcDamage {
                 int mastery = localStat.getMastery();
 
 
-                if(si != null) {
-                    maxDamage = (int) (maxDamage + (maxDamage * (si.getValue(SkillStat.damR, skill.getCurrentLevel()) / 100.0)));
-                    minDamage = (int) (minDamage + (minDamage * (si.getValue(SkillStat.damR, skill.getCurrentLevel()) / 100.0)));
+                if(si != null && skill != null) {
+
                 }
 
                 double adjustedRandomDamage = GameConstants.getRand(rand[index++], minDamage, maxDamage);
@@ -102,6 +101,7 @@ public class CalcDamage {
                 if (si != null && skill != null) {
                     realDamage = realDamage * (double) si.getValue(SkillStat.damage, skill.getCurrentLevel()) / 100.0;
 
+//                    realDamage = (int) (realDamage + (realDamage * (si.getValue(SkillStat.damR, skill.getCurrentLevel()) / 100.0)));
 
 
                     cr = si.getValue(SkillStat.cr, skill.getCurrentLevel());

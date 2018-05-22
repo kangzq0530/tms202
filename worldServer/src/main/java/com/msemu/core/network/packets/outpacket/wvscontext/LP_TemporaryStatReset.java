@@ -12,7 +12,7 @@ public class LP_TemporaryStatReset extends OutPacket<GameClient> {
 
     public LP_TemporaryStatReset(TemporaryStatManager temporaryStatManager, boolean demount) {
         super(OutHeader.LP_TemporaryStatReset);
-        for (int i : temporaryStatManager.getRemovedMask()) {
+        for (int i : temporaryStatManager.getRemovedFlags()) {
             encodeInt(i);
         }
         temporaryStatManager.encodeRemovedIndieTempStat(this);

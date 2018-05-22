@@ -153,7 +153,7 @@ public class LP_UserEnterField extends OutPacket<GameClient> {
             encodeByte(chr.getKaiserMorphRotateHueInnner());
         }
         encodeInt(chr.getMakingMeisterSkillEff());
-        // chr.getFarmUserInfo().encode(this);
+        // chr.getFarmUserInfo().encodeForTown(this);
         for (int i = 0; i < 5; i++) {
             encodeByte(-1); // activeEventNameTag
         }

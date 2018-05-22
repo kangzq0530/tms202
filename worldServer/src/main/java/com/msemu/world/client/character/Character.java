@@ -221,10 +221,6 @@ public class Character extends AbstractAnimatedFieldLife {
     @Transient
     @Getter
     @Setter
-    private int nickItem;
-    @Transient
-    @Getter
-    @Setter
     private int damageSkin;
     @Transient
     @Getter
@@ -405,6 +401,9 @@ public class Character extends AbstractAnimatedFieldLife {
     @Setter
     @Transient
     LocalDateTime lastUseStatChangeItemTime = LocalDateTime.MIN;
+    @Transient
+    private Android activedAndroid;
+
 
     public Character() {
         avatarData = new AvatarData();
@@ -1687,7 +1686,7 @@ public class Character extends AbstractAnimatedFieldLife {
             }
         }
         if (mask.isInMask(DBChar.ReturnEffectInfo)) {
-//            getReturnEffectInfo().encode(outPacket); // ReturnEffectInfo::Decode
+//            getReturnEffectInfo().encodeForTown(outPacket); // ReturnEffectInfo::Decode
             outPacket.encodeByte(0);
         }
 
@@ -1761,7 +1760,7 @@ public class Character extends AbstractAnimatedFieldLife {
         if (mask.isInMask(DBChar.VMatrixInfo)) {
             int vmatrix_size = 0;
             outPacket.encodeInt(vmatrix_size);
-            // getVMatrixRecords().encode(outPacket)
+            // getVMatrixRecords().encodeForTown(outPacket)
         }
 
         if (mask.isInMask(0x4000000000000000L)) {
@@ -2040,6 +2039,7 @@ public class Character extends AbstractAnimatedFieldLife {
             setStat(Stat.SP, sp);
         }
     }
+
 }
 
 

@@ -145,8 +145,8 @@ public class AdminCommand {
             drop.setOwnerID(chr.getId());
             drop.setDropType(DropType.ITEM);
             drop.setItem(dropItem);
-            drop.setExpireTime(FileTime.getFileTimeFromType(FileTime.Type.PERMANENT));
-            field.spawnDrop(drop);
+            drop.setExpireTime(FileTime.getFileTimeFromType(FileTime.Type.ZERO_TIME));
+            field.drop(drop, chr.getPosition());
             return true;
         }
 
@@ -173,8 +173,8 @@ public class AdminCommand {
             drop.setOwnerID(chr.getId());
             drop.setDropType(DropType.MONEY);
             drop.setMoney(money);
-            drop.setExpireTime(FileTime.getFileTimeFromType(FileTime.Type.PERMANENT));
-            field.spawnDrop(drop);
+            drop.setExpireTime(FileTime.getFileTimeFromType(FileTime.Type.ZERO_TIME));
+            field.drop(drop, chr.getPosition());
             return true;
         }
 

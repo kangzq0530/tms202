@@ -107,7 +107,7 @@ public class InventoryManipulator {
             operates.add(new InventoryOperationInfo(InventoryOperationType.UPDATE,
                     srcItem, srcSlot));
         }
-        chr.getField().drop(drop, chr.getPosition(), chr.getPosition());
+        chr.getField().drop(drop, chr.getPosition());
         chr.write(new LP_InventoryOperation(true, false, operates));
     }
 

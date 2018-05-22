@@ -1,19 +1,20 @@
 package com.msemu.world.client.character.stats;
 
 import com.msemu.commons.database.Schema;
+import com.msemu.commons.enums.FileTimeUnit;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.utils.types.FileTime;
 import com.msemu.core.network.GameClient;
-import com.msemu.world.client.character.CharacterCard;
-import com.msemu.world.client.character.ExtendSP;
-import com.msemu.world.client.character.NonCombatStatDayLimit;
-import com.msemu.world.client.character.SystemTime;
+import com.msemu.world.client.character.*;
 import com.msemu.world.constants.JobConstants;
 import com.msemu.world.constants.MapleJob;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Weber on 2018/3/29.
@@ -147,6 +148,9 @@ public class CharacterStat {
     private FileTime lastLogout;
     @Column(name = "gachExp")
     private int gachExp;
+    @Transient // TODO 建表
+    @Getter
+    private List<PopularityRecord> popularityRecords = new ArrayList<>();
 
     public CharacterStat() {
         extendSP = new ExtendSP(5);
@@ -226,7 +230,7 @@ public class CharacterStat {
         //outPacket.encodeByte(getPvpModeType());
         outPacket.encodeInt(getEventPoint());
 //        outPacket.encodeByte(getAlbaActivityID()); // part time job
-//        getAlbaStartTime().encode(outPacket); // long
+//        getAlbaStartTime().encodeForTown(outPacket); // long
 //        outPacket.encodeInt(getAlbaDuration());
 //        outPacket.encodeByte(getAlbaSpecialReward());
         outPacket.encodeInt(0);
@@ -246,6 +250,20 @@ public class CharacterStat {
         outPacket.encodeByte(0);
         outPacket.encodeByte(0);
         outPacket.encodeByte(isBurning()); // bBurning 不確定
+    }
+
+
+    public PopularityRecord getLastGivePopRecord() {
+        return getPopularityRecords()
+                .stream()
+                .sorted( (r1, r2) -> r1.getCreatedDate().getLowDateTime() - r2.getCreatedDate().getLowDateTime()).findFirst().orElse(new PopularityRecord());
+    }
+
+    public List<PopularityRecord> getLastMonthGivePopRecords() {
+        return getPopularityRecords()
+                .stream()
+                .filter( record -> record.getCreatedDate().plus(30, FileTimeUnit.DAY)
+                        .before(FileTime.now())).collect(Collectors.toList());
     }
 
 }

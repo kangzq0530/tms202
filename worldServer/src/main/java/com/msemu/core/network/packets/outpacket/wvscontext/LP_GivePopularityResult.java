@@ -9,30 +9,41 @@ import com.msemu.core.network.GameClient;
  */
 public class LP_GivePopularityResult extends OutPacket<GameClient> {
 
-    public static class LPGivePopularitySlefAddError extends LP_GivePopularityResult {
-        public LPGivePopularitySlefAddError() {
+    public static class LP_GivePopularitySlefAddError extends LP_GivePopularityResult {
+        public LP_GivePopularitySlefAddError() {
             super(1, "", false, 0);
         }
     }
 
-    public static class LPGivePopularityLevelBelow15Error extends LP_GivePopularityResult {
-        public LPGivePopularityLevelBelow15Error() {
+    public static class LP_GivePopularityLevelBelow15Error extends LP_GivePopularityResult {
+        public LP_GivePopularityLevelBelow15Error() {
             super(2, "", false, 0);
         }
     }
 
-    public static class LPGivePopularityNotTodayError extends LP_GivePopularityResult {
-        public LPGivePopularityNotTodayError() {
+    public static class LP_GivePopularityNotTodayError extends LP_GivePopularityResult {
+        public LP_GivePopularityNotTodayError() {
             super(3, "", false, 0);
         }
     }
 
-    public static class LPGivePopularityNotThisMonthError extends LP_GivePopularityResult {
-        public LPGivePopularityNotThisMonthError() {
+    public static class LP_GivePopularityNotThisMonthError extends LP_GivePopularityResult {
+        public LP_GivePopularityNotThisMonthError() {
             super(4, "", false, 0);
         }
     }
 
+    public static class LP_GivePopularitySuccess extends LP_GivePopularityResult {
+        public LP_GivePopularitySuccess(String name, boolean raise, int newFame) {
+            super(0, name, raise, newFame);
+        }
+    }
+
+    public static class LP_GivePopularitySuccessForTarget extends LP_GivePopularityResult {
+        public LP_GivePopularitySuccessForTarget(String name, boolean raise) {
+            super(5, name, raise, 0);
+        }
+    }
 
     public LP_GivePopularityResult(int type, String name, boolean raise, int newFame) {
         super(OutHeader.LP_GivePopularityResult);

@@ -8,7 +8,7 @@ public enum FieldObjectType {
     MOB,
     DROP,
     CHARACTER,
-    TOWN,
+    TOWN_PORTAL,
     SUMMON,
     PET,
     HAKU,
@@ -20,5 +20,6 @@ public enum FieldObjectType {
     FAMILIAR,
     HIRED_MERCHANT,
     RUNE,
+    ANDROID,
     KITE
 }

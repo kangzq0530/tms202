@@ -102,7 +102,8 @@ public class Connection<TClient extends Client<TClient>> extends ChannelInboundH
                         inPacket.read();
                         inPacket.runImpl();
                     } catch (Exception e) {
-                        log.error("Created packet [{}] has not been read.", inPacket.getClass().getSimpleName(), e);
+                        log.error(String.format("Created packet [{}] has not been read.\n\t[All]\t%s\n\t[Now]\t%s\n", inPacket.getClass().getSimpleName(),
+                                inPacket.toString(), inPacket.toString(false)), inPacket.getClass().getSimpleName(), e);
                         this.close();
                     }
                 } else {

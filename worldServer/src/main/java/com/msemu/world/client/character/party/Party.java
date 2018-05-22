@@ -121,12 +121,12 @@ public class Party {
         for (PartyMember pm : partyMembers) {
             outPacket.encodeInt(pm != null ? pm.getFieldID() : 0);
         }
-        final TownPortal emptyTownPortal = new TownPortal(0);
+        final TownPortal emptyTownPortal = new TownPortal();
         for (PartyMember pm : partyMembers) {
             if (pm != null && pm.getTownPortal() != null) {
-                pm.getTownPortal().encode(outPacket, isLeaving);
+                pm.getTownPortal().encodeForTown(outPacket, isLeaving);
             } else {
-                emptyTownPortal.encode(outPacket, isLeaving);
+                emptyTownPortal.encodeForTown(outPacket, isLeaving);
             }
         }
         outPacket.encodeByte(isAppliable() && !isFull());

@@ -36,5 +36,4 @@ public abstract class AbstractFieldObject {
         getOldPosition().setX(position.getX());
         getOldPosition().setY(position.getY());
     }
-
 }

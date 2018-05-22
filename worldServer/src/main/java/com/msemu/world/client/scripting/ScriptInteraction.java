@@ -333,13 +333,10 @@ public class ScriptInteraction {
         getClient().write(new LP_TutorMsg());
     }
 
-    public void setEmotion(FaceEmotion emotion, int duration) {
-        getClient().write(new LP_EmotionLocal(emotion, duration));
+    public void setEmotion(int emotion, int duration) {
+        getClient().write(new LP_UserEmotionLocal(emotion, duration, false));
     }
 
-    public void setEmotion(int emotion, int duration) {
-        setEmotion(FaceEmotion.getByValue(emotion), duration);
-    }
     /////////////////////////////////////////////////////////
     ////////////////////////NPC//////////////////////////////
 

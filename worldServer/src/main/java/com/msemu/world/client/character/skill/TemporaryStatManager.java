@@ -282,21 +282,21 @@ public class TemporaryStatManager {
     }
 
 
-    public int[] getTotalMask() {
+    public int[] getCurrentFlags() {
         return getMaskByCollection(getCurrentStats());
     }
 
-    public int[] getNewMask() {
+    public int[] getNewFlags() {
         return getMaskByCollection(getNewStats());
     }
 
-    public int[] getRemovedMask() {
+    public int[] getRemovedFlags() {
         return getMaskByCollection(getRemovedStats());
     }
 
     public void encodeForLocal(OutPacket outPacket) {
-        int[] mask = getNewMask();
-        for (int i = 0; i < getNewMask().length; i++) {
+        int[] mask = getNewFlags();
+        for (int i = 0; i < getNewFlags().length; i++) {
             outPacket.encodeInt(mask[i]);
         }
         if (hasNewStat(STR)) {

@@ -8,4 +8,5 @@ public enum  FileTimeUnit {
     SEC,
     MINUTE,
     HOUR,
+    DAY,
 }
