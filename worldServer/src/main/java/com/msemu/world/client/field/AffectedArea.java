@@ -5,9 +5,9 @@ import com.msemu.commons.utils.types.Rect;
 import com.msemu.core.network.GameClient;
 import com.msemu.world.client.character.AttackInfo;
 import com.msemu.world.client.character.Character;
-import com.msemu.world.client.character.skill.Option;
+import com.msemu.world.client.character.stats.Option;
 import com.msemu.world.client.character.skill.Skill;
-import com.msemu.world.client.character.skill.TemporaryStatManager;
+import com.msemu.world.client.character.stats.TemporaryStatManager;
 import com.msemu.world.client.field.lifes.Mob;
 import com.msemu.world.client.field.lifes.skills.MobTemporaryStat;
 import com.msemu.world.data.SkillData;
@@ -61,7 +61,7 @@ public class AffectedArea extends AbstractFieldObject {
     }
 
     public void handleMobInside(Mob mob) {
-        Character chr = getField().getCharByID(getCharID());
+        Character chr = getField().getCharacterById(getCharID());
         if (chr == null) {
             return;
         }

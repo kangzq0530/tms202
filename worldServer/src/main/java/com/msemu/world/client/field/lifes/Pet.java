@@ -11,7 +11,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class Pet extends AbstractAnimatedFieldLife {
+public class Pet extends Life {
     private int id;
     private int idx;
     private String name;

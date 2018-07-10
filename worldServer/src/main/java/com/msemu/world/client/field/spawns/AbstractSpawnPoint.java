@@ -3,7 +3,7 @@ package com.msemu.world.client.field.spawns;
 import com.msemu.commons.data.templates.field.LifeData;
 import com.msemu.commons.utils.types.Position;
 import com.msemu.world.client.field.Field;
-import com.msemu.world.client.field.lifes.AbstractInternalAnimatedLife;
+import com.msemu.world.client.field.lifes.InternalLife;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -52,6 +52,6 @@ public abstract class AbstractSpawnPoint {
 
     public abstract boolean shouldSpawn(LocalDateTime time);
 
-    public abstract AbstractInternalAnimatedLife spawn(Field field);
+    public abstract InternalLife spawn(Field field);
 
 }

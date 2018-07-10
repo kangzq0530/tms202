@@ -17,6 +17,7 @@ import com.msemu.world.client.field.effect.MobHPTagFieldEffect;
 import com.msemu.world.client.field.lifes.skills.MobSkill;
 import com.msemu.world.client.field.lifes.skills.MobTemporaryStat;
 import com.msemu.world.constants.GameConstants;
+import com.msemu.world.data.MobData;
 import com.msemu.world.enums.DeathType;
 import com.msemu.world.enums.FieldObjectType;
 import com.msemu.world.enums.MobAppearType;
@@ -31,9 +32,7 @@ import java.util.*;
  */
 @Getter
 @Setter
-public class Mob extends AbstractInternalAnimatedLife {
-    @Getter
-    private final MobTemplate template;
+public class Mob extends InternalLife {
     @Getter
     private int originFh;
     @Getter
@@ -56,7 +55,7 @@ public class Mob extends AbstractInternalAnimatedLife {
     private byte calcDamageIndex = 1, moveAction, teamForMCarnival;
     @Getter
     @Setter
-    private MobAppearType appearType = MobAppearType.Delay;
+    private MobAppearType appearType = MobAppearType.Regen;
     @Getter
     @Setter
     private DeathType deathType = DeathType.ANIMATION_DEATH;
@@ -79,22 +78,18 @@ public class Mob extends AbstractInternalAnimatedLife {
     private List<MobSkill> skills = new ArrayList<>();
     @Getter
     @Setter
-    private Field field;
-    @Getter
-    @Setter
     private IMobListener mobListener;
-    private WeakReference<Character> controller = new WeakReference<>(null);
     @Getter
     @Setter
     private int controllerLevel;
     @Getter
     @Setter
     private EliteMobInfo eliteMobInfo = null;
+    private WeakReference<Character> controller = new WeakReference<>(null);
 
     public Mob(int objectId, MobTemplate template) {
         super(template.getId());
         super.setObjectId(objectId);
-        this.template = template;
         temporaryStat = new MobTemporaryStat(this);
         scale = 100;
         calcDamageIndex = 1;
@@ -103,7 +98,7 @@ public class Mob extends AbstractInternalAnimatedLife {
     }
 
     public Mob deepCopy() {
-        Mob copy = new Mob(getObjectId(), getTemplate());
+        Mob copy = new Mob(getObjectId(), MobData.getInstance().getMobTemplate(getTemplateId()));
         // start life
         copy.getPosition().setX(getPosition().getX());
         copy.getPosition().setY(getPosition().getY());
@@ -146,6 +141,10 @@ public class Mob extends AbstractInternalAnimatedLife {
         getSkills().forEach(copy::addSkill);
         getQuests().forEach(copy::addQuest);
         return copy;
+    }
+
+    public MobTemplate getTemplate() {
+        return MobData.getInstance().getMobTemplate(getTemplateId());
     }
 
     public boolean isBoss() {

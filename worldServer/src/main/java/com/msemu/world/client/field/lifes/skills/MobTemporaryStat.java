@@ -7,7 +7,7 @@ import com.msemu.commons.thread.EventManager;
 import com.msemu.core.network.GameClient;
 import com.msemu.core.network.packets.outpacket.mob.LP_MobStatReset;
 import com.msemu.core.network.packets.outpacket.mob.LP_MobStatSet;
-import com.msemu.world.client.character.skill.Option;
+import com.msemu.world.client.character.stats.Option;
 import com.msemu.world.client.character.skill.Skill;
 import com.msemu.world.client.field.lifes.Mob;
 import com.msemu.world.data.SkillData;
@@ -351,7 +351,7 @@ public class MobTemporaryStat {
     }
 
     private int[] getMaskByCollection(Map<MobBuffStat, Option> map) {
-        int[] res = new int[MobBuffStat.MAX_LENGTH];
+        int[] res = new int[MobBuffStat.getMAX_LENGTH()];
         for (MobBuffStat mobStat : map.keySet()) {
             res[mobStat.getPosition()] |= mobStat.getValue();
         }

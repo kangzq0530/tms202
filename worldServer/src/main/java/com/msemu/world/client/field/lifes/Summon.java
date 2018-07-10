@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * Created by Weber on 2018/4/11.
  */
-public class Summon extends AbstractAnimatedFieldLife {
+public class Summon extends Life {
 
     @Getter
     List<Position> teslaCoilPositions = new ArrayList<>();
@@ -43,9 +43,6 @@ public class Summon extends AbstractAnimatedFieldLife {
     @Getter
     @Setter
     private Position[] kishinPositions = new Position[2];
-    @Getter
-    @Setter
-    private Field field;
 
     public Summon(int objectId) {
         setObjectId(objectId);

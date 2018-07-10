@@ -37,7 +37,7 @@ public class NpcSpawnPoint extends AbstractSpawnPoint {
             npc.setCy(getCy());
             npc.setPosition(getPosition());
             npc.setLimitedName(getLimitedName());
-            field.spawnNpc(npc);
+            field.spawnLife(npc);
             return npc;
         }
         return null;

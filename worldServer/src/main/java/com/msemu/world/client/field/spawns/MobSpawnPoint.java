@@ -78,7 +78,7 @@ public class MobSpawnPoint extends AbstractSpawnPoint {
                 }
                 getSpawnedCount().getAndDecrement();
             });
-            field.spawnMob(mob);
+            field.spawnLife(mob);
             return mob;
         }
 

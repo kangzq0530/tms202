@@ -2,7 +2,7 @@ package com.msemu.world.client.field.lifes.skills;
 
 import com.msemu.commons.data.enums.MobBuffStat;
 import com.msemu.commons.data.templates.skill.MobSkillInfo;
-import com.msemu.world.client.character.skill.Option;
+import com.msemu.world.client.character.stats.Option;
 import com.msemu.world.client.field.lifes.Mob;
 import com.msemu.world.data.SkillData;
 import com.msemu.world.enums.MobSkillID;

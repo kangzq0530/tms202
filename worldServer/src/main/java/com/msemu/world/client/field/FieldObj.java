@@ -1,26 +1,24 @@
 package com.msemu.world.client.field;
 
 import com.msemu.commons.data.templates.field.FieldObjectInfo;
+import com.msemu.commons.utils.types.Position;
+import com.msemu.core.network.GameClient;
+import com.msemu.world.enums.FieldObjectType;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.util.List;
 
 /**
  * Created by Weber on 2018/5/12.
  */
-public class FieldObj {
+public class FieldObj extends AbstractFieldObject {
     @Getter
     public FieldObjectInfo data;
 
-    @Getter
-    @Setter
-    private int currentX, currentY;
 
     public FieldObj(FieldObjectInfo data) {
         this.data = data;
-        this.currentX = data.getX1();
-        this.currentY = data.getY1();
+        this.setPosition(new Position(data.getX1(), data.getY1()));
     }
 
     public boolean isMove() {
@@ -63,4 +61,18 @@ public class FieldObj {
         return getData().getSns();
     }
 
+    @Override
+    public FieldObjectType getFieldObjectType() {
+        return null;
+    }
+
+    @Override
+    public void enterScreen(GameClient client) {
+
+    }
+
+    @Override
+    public void outScreen(GameClient client) {
+
+    }
 }

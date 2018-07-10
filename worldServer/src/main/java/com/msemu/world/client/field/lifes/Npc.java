@@ -16,7 +16,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class Npc extends AbstractInternalAnimatedLife {
+public class Npc extends InternalLife {
     private boolean enabled = true;
     private int presentItemID;
     private byte presentItemState;
