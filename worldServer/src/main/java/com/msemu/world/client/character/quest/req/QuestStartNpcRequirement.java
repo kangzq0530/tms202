@@ -13,7 +13,7 @@ public class QuestStartNpcRequirement implements IQuestStartRequirements {
 
     @Override
     public boolean hasRequirements(Character chr) {
-        return chr.getField().getNpcs().stream()
+        return chr.getField().getAllNpc().stream()
                 .anyMatch(npc -> npc.getTemplateId() == npcID);
     }
 

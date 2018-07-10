@@ -15,6 +15,6 @@ public class MobTemplateLoaderTest {
     public void testLoad() {
         CoreConfig.WZ_PATH = "F:/repos/ZZMS_Dev/wz";
         WzManager wzManager = new WzManager(WzManager.MOB, WzManager.MOB2);
-        Map<Integer, MobTemplate> templates = new MobTemplateLoader().load(wzManager);
+        new MobTemplateLoader(wzManager).load();
     }
 }

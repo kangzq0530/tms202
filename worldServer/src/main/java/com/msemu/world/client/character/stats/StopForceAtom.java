@@ -1,4 +1,4 @@
-package com.msemu.world.client.character.skill;
+package com.msemu.world.client.character.stats;
 
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;

@@ -3,7 +3,7 @@ package com.msemu.core.network.packets.inpacket;
 import com.msemu.commons.network.packets.InPacket;
 import com.msemu.core.network.GameClient;
 import com.msemu.world.client.character.Character;
-import com.msemu.world.client.character.skill.TemporaryStatManager;
+import com.msemu.world.client.character.stats.TemporaryStatManager;
 
 /**
  * Created by Weber on 2018/5/19.

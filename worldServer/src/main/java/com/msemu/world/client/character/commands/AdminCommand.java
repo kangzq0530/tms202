@@ -7,10 +7,9 @@ import com.msemu.core.network.GameClient;
 import com.msemu.world.Channel;
 import com.msemu.world.World;
 import com.msemu.world.client.character.Character;
+import com.msemu.world.client.character.inventory.items.Item;
 import com.msemu.world.client.character.stats.CharacterLocalStat;
 import com.msemu.world.client.character.stats.CharacterStat;
-import com.msemu.world.client.character.inventory.items.Equip;
-import com.msemu.world.client.character.inventory.items.Item;
 import com.msemu.world.client.field.Field;
 import com.msemu.world.client.field.lifes.Drop;
 import com.msemu.world.constants.MapleJob;
@@ -100,17 +99,11 @@ public class AdminCommand {
             final Character chr = client.getCharacter();
             final int itemID = Integer.parseInt(args.get(1));
             final ItemData itemData = ItemData.getInstance();
-            final Item item = itemData.getItemFromTemplate(itemID);
-            final Equip equip = itemData.getEquipFromTemplate(itemID);
-            if (item == null && equip == null) {
-                // no item
+            final Item item = itemData.createItem(itemID);
+            if (item == null) {
                 return true;
             }
-            if (item != null) {
-                chr.addItemToInventory(item);
-            } else {
-                chr.addItemToInventory(equip);
-            }
+            chr.addItemToInventory(item);
             return true;
         }
 
@@ -134,13 +127,12 @@ public class AdminCommand {
             final Field field = chr.getField();
             final int itemID = Integer.parseInt(args.get(1));
             final ItemData itemData = ItemData.getInstance();
-            final Item item = itemData.getItemFromTemplate(itemID);
-            final Equip equip = itemData.getEquipFromTemplate(itemID);
-            if (item == null && equip == null) {
+            final Item item = itemData.createItem(itemID);
+            if (item == null) {
                 // no item
                 return true;
             }
-            final Item dropItem = item != null ? item : equip;
+            final Item dropItem = item;
             final Drop drop = new Drop(-1);
             drop.setOwnerID(chr.getId());
             drop.setDropType(DropType.ITEM);
@@ -227,7 +219,7 @@ public class AdminCommand {
             chr.chatMessage(ChatMsgType.NOTICE, String.format("[Ability] PAD: %d MAD: %d ",
                     localStat.getPad(), localStat.getMad()));
             chr.chatMessage(ChatMsgType.NOTICE, String.format("[Ability] Damage: %d ~ %d ",
-                    localStat.getMinDamage() , localStat.getMaxDamage()));
+                    localStat.getMinDamage(), localStat.getMaxDamage()));
             return true;
         }
 

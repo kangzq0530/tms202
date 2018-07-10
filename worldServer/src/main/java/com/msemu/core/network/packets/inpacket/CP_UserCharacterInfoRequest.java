@@ -29,7 +29,7 @@ public class CP_UserCharacterInfoRequest extends InPacket<GameClient> {
 
         final Character chr = getClient().getCharacter();
         final Field field = chr.getField();
-        final Character target = field.getCharByID(charId);
+        final Character target = field.getCharacterById(charId);
 
         if(target != null)
             chr.write(new LP_CharacterInfo(target, target == chr));

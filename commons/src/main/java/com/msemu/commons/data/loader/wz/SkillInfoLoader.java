@@ -14,6 +14,7 @@ import com.msemu.commons.wz.WzImageProperty;
 import com.msemu.commons.wz.properties.WzStringProperty;
 import com.msemu.commons.wz.properties.WzSubProperty;
 import com.msemu.commons.wz.properties.WzVectorProperty;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,11 +27,19 @@ import java.util.Map;
  * Created by Weber on 2018/4/23.
  */
 public class SkillInfoLoader extends WzDataLoader<Map<Integer, SkillInfo>> {
+
     private static final Logger log = LoggerFactory.getLogger(SkillInfoLoader.class);
 
+    @Getter
+    Map<Integer, SkillInfo> data = new HashMap<>();
+
+    public SkillInfoLoader(WzManager wzManager) {
+        super(wzManager);
+    }
+
     @Override
-    public Map<Integer, SkillInfo> load(WzManager wzManager) {
-        Map<Integer, SkillInfo> data = new HashMap<>();
+    public void load() {
+
         WzFile skillWZ = wzManager.getWz(WzManager.SKILL);
         WzDirectory wzDir = skillWZ.getWzDirectory();
         wzDir.getImages().stream()
@@ -58,7 +67,6 @@ public class SkillInfoLoader extends WzDataLoader<Map<Integer, SkillInfo>> {
                     skillInfo.setDesc(descProp.getString());
             }
         });
-        return data;
     }
 
 
@@ -201,7 +209,9 @@ public class SkillInfoLoader extends WzDataLoader<Map<Integer, SkillInfo>> {
 
 
     @Override
-    public void saveToDat(WzManager wzManager) throws IOException {
-        new SkillInfoDatLoader().saveDat(load(wzManager));
+    public void saveToDat() throws IOException {
+        if(getData().isEmpty())
+            load();
+        new SkillInfoDatLoader().saveDat(getData());
     }
 }

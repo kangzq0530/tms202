@@ -29,7 +29,7 @@ public class CP_UserGivePopularityRequest extends InPacket<GameClient> {
     @Override
     public void runImpl() {
         final Character chr = getClient().getCharacter();
-        final Character target = chr.getField().getCharByID(targetCharId);
+        final Character target = chr.getField().getCharacterById(targetCharId);
         final CharacterStat cs = chr.getAvatarData().getCharacterStat();
         final CharacterStat targetCs = target.getAvatarData().getCharacterStat();
         if (chr == target) {

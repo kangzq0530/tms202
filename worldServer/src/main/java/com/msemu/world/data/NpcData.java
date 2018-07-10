@@ -11,8 +11,6 @@ import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -26,7 +24,7 @@ public class NpcData implements IReloadable {
     private static final Logger log = LoggerFactory.getLogger(QuestData.class);
     private static final AtomicReference<NpcData> instance = new AtomicReference<>();
     @Getter
-    private final Set<NpcTemplate> npcTemplates = new HashSet<>();
+    private final NpcTemplateDatLoader npcTemplateDatLoader = new NpcTemplateDatLoader();
 
 
     public NpcData() {
@@ -49,12 +47,12 @@ public class NpcData implements IReloadable {
 
     public void load() {
         WzManager wzManager = WorldWzManager.getInstance();
-        getNpcTemplates().addAll(new NpcTemplateDatLoader().load(null));
-        log.info("{} NpcTemplate loaded", this.npcTemplates.size());
+        getNpcTemplateDatLoader().load();
+        log.info("{} NpcTemplate loaded", getNpcTemplateDatLoader().getData().size());
     }
 
     public void clear() {
-        this.npcTemplates.clear();
+        getNpcTemplateDatLoader().getData().clear();
     }
 
     @Override
@@ -70,7 +68,7 @@ public class NpcData implements IReloadable {
     }
 
     private NpcTemplate getNpcTemplateFromId(int templateId) {
-        return getNpcTemplates().stream().filter(nt -> nt.getId() == templateId)
+        return getNpcTemplateDatLoader().getData().stream().filter(nt -> nt.getId() == templateId)
                 .findFirst().orElse(null);
     }
 }

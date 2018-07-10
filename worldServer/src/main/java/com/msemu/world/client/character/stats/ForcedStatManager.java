@@ -1,4 +1,4 @@
-package com.msemu.world.client.character.skill;
+package com.msemu.world.client.character.stats;
 
 import com.msemu.core.network.packets.outpacket.wvscontext.LP_ForcedStatReset;
 import com.msemu.core.network.packets.outpacket.wvscontext.LP_ForcedStatSet;

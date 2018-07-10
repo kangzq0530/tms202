@@ -42,13 +42,7 @@ public class QuestItemAction implements IQuestAction {
 
     @Override
     public void action(Character chr) {
-        Item item;
-        if (ItemConstants.isEquip(getItemId())) {
-            item = ItemData.getInstance().getEquipFromTemplate(getItemId());
-        } else {
-            item = ItemData.getInstance().getItemFromTemplate(getItemId());
-            item.setQuantity(getQuantity());
-        }
+        Item item = ItemData.getInstance().createItem(getItemId());
         chr.addItemToInventory(item);
     }
 

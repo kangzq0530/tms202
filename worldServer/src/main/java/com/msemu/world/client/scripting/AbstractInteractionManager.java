@@ -45,7 +45,7 @@ public abstract class AbstractInteractionManager {
     }
 
     public int getFieldID() {
-        return getCharacter().getField().getId();
+        return getCharacter().getField().getFieldId();
     }
 
     public void openNpc(int npc, String scriptName) {

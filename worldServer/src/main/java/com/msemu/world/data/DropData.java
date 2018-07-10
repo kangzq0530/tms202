@@ -71,7 +71,7 @@ public class DropData implements IReloadable {
     }
 
     public void loadMonsterBookDrops() {
-        List<MonsterBook> monsterBooks = new MonsterBookDatLoader().load(null);
+        List<MonsterBook> monsterBooks = new MonsterBookDatLoader().getData();
         monsterBooks.forEach(mb -> {
             mb.getRewards().forEach(itemID -> {
                 int cate = itemID / 10000;

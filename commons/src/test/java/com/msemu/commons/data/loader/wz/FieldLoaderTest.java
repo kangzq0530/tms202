@@ -15,6 +15,6 @@ public class FieldLoaderTest {
     public void testLoad() {
         CoreConfig.WZ_PATH = "F:/repos/ZZMS_Dev/wz";
         WzManager wzManager = new WzManager(WzManager.MAP, WzManager.MAP2);
-        Map<Integer, FieldTemplate> templates = new FieldTemplateLoader().load(wzManager);
+        new FieldTemplateLoader(wzManager).load();
     }
 }

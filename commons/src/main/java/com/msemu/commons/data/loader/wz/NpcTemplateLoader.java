@@ -7,6 +7,7 @@ import com.msemu.commons.wz.WzFile;
 import com.msemu.commons.wz.WzImage;
 import com.msemu.commons.wz.properties.WzStringProperty;
 import com.msemu.commons.wz.properties.WzSubProperty;
+import lombok.Getter;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -16,15 +17,21 @@ import java.util.Set;
  * Created by Weber on 2018/4/25.
  */
 public class NpcTemplateLoader extends WzDataLoader<Set<NpcTemplate>> {
+
+    @Getter
+    Set<NpcTemplate> data = new HashSet<>();
+
+    public NpcTemplateLoader(WzManager wzManager) {
+        super(wzManager);
+    }
+
     @Override
-    public Set<NpcTemplate> load(WzManager wzManager) {
-        Set<NpcTemplate> data = new HashSet<>();
+    public void load() {
         WzFile npcWZ = wzManager.getWz(WzManager.NPC);
         WzImage npcStrImg = wzManager.getWz(WzManager.STRING).getWzDirectory().getImage("Npc.img");
 
         npcWZ.getWzDirectory().getImages().forEach(img -> data.add(importNpcImg(img)));
         importStrings(data, npcStrImg);
-        return data;
 
     }
 
@@ -60,7 +67,9 @@ public class NpcTemplateLoader extends WzDataLoader<Set<NpcTemplate>> {
     }
 
     @Override
-    public void saveToDat(WzManager wzManager) throws IOException {
-        new NpcTemplateDatLoader().saveDat(load(wzManager));
+    public void saveToDat() throws IOException {
+        if(getData().isEmpty())
+            load();
+        new NpcTemplateDatLoader().saveDat(getData());
     }
 }

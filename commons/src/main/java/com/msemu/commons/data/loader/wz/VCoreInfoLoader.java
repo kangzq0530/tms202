@@ -7,6 +7,7 @@ import com.msemu.commons.data.templates.skill.VCoreInfo;
 import com.msemu.commons.wz.WzFile;
 import com.msemu.commons.wz.WzImage;
 import com.msemu.commons.wz.properties.WzSubProperty;
+import lombok.Getter;
 
 import java.io.IOException;
 
@@ -15,11 +16,19 @@ import java.io.IOException;
  */
 public class VCoreInfoLoader extends WzDataLoader<VCoreInfo> {
 
-    @Override
-    public VCoreInfo load(WzManager source) throws IOException {
-        VCoreInfo vCoreInfo = new VCoreInfo();
 
-        WzFile etc = source.getWz(WzManager.ETC);
+    @Getter
+    VCoreInfo data = new VCoreInfo();
+
+    public VCoreInfoLoader(WzManager wzManager) {
+        super(wzManager);
+    }
+
+    @Override
+    public void load() throws IOException {
+
+
+        WzFile etc = wzManager.getWz(WzManager.ETC);
         WzImage vCoreImg = etc.getWzDirectory().getImage("VCore.img");
 
         WzSubProperty skillProp = (WzSubProperty) vCoreImg.getFromPath("Enforcement/Skill");
@@ -31,7 +40,7 @@ public class VCoreInfoLoader extends WzDataLoader<VCoreInfo> {
             int expEnforce = prop.getFromPath("expEnforce").getInt();
             int extract = prop.getFromPath("extract").getInt();
             VCoreEnforcementEntry entry = new VCoreEnforcementEntry(level, nextExp, expEnforce, extract);
-            vCoreInfo.addSkill(level, entry);
+            data.addSkill(level, entry);
         });
         enforceProp.getProperties().forEach(prop -> {
             int level = Integer.parseInt(prop.getName());
@@ -39,7 +48,7 @@ public class VCoreInfoLoader extends WzDataLoader<VCoreInfo> {
             int expEnforce = prop.getFromPath("expEnforce").getInt();
             int extract = prop.getFromPath("extract").getInt();
             VCoreEnforcementEntry entry = new VCoreEnforcementEntry(level, nextExp, expEnforce, extract);
-            vCoreInfo.addEnhance(level, entry);
+            data.addEnhance(level, entry);
         });
         specialProp.getProperties().forEach(prop -> {
             int level = Integer.parseInt(prop.getName());
@@ -47,13 +56,13 @@ public class VCoreInfoLoader extends WzDataLoader<VCoreInfo> {
             int expEnforce = prop.getFromPath("expEnforce").getInt();
             int extract = prop.getFromPath("extract").getInt();
             VCoreEnforcementEntry entry = new VCoreEnforcementEntry(level, nextExp, expEnforce, extract);
-            vCoreInfo.addSpecial(level, entry);
+            data.addSpecial(level, entry);
         });
-        return vCoreInfo;
     }
 
     @Override
-    public void saveToDat(WzManager wzManager) throws IOException {
-        new VCoreDatLoader().saveDat(load(wzManager));
+    public void saveToDat() throws IOException {
+        if(getData() == null)
+        new VCoreDatLoader().saveDat(getData());
     }
 }

@@ -6,7 +6,7 @@ import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.HitInfo;
 import com.msemu.world.client.character.SkillUseInfo;
 import com.msemu.world.client.character.jobs.JobHandler;
-import com.msemu.world.client.character.skill.TemporaryStatManager;
+import com.msemu.world.client.character.stats.TemporaryStatManager;
 
 import java.util.Arrays;
 

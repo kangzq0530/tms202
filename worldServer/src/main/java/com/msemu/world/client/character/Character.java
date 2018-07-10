@@ -9,7 +9,6 @@ import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.utils.types.FileTime;
 import com.msemu.core.network.GameClient;
 import com.msemu.core.network.packets.outpacket.mob.LP_MobChangeController;
-import com.msemu.core.network.packets.outpacket.stage.LP_SetField;
 import com.msemu.core.network.packets.outpacket.user.LP_UserEnterField;
 import com.msemu.core.network.packets.outpacket.user.LP_UserLeaveField;
 import com.msemu.core.network.packets.outpacket.user.local.LP_ChatMsg;
@@ -29,12 +28,12 @@ import com.msemu.world.client.character.messages.MoneyDropPickUpMessage;
 import com.msemu.world.client.character.party.Party;
 import com.msemu.world.client.character.quest.Quest;
 import com.msemu.world.client.character.quest.QuestManager;
-import com.msemu.world.client.character.skill.ForcedStatManager;
 import com.msemu.world.client.character.skill.Skill;
-import com.msemu.world.client.character.skill.TemporaryStatManager;
 import com.msemu.world.client.character.skill.vcore.VMatrixRecord;
 import com.msemu.world.client.character.stats.CharacterLocalStat;
 import com.msemu.world.client.character.stats.CharacterStat;
+import com.msemu.world.client.character.stats.ForcedStatManager;
+import com.msemu.world.client.character.stats.TemporaryStatManager;
 import com.msemu.world.client.field.AbstractFieldObject;
 import com.msemu.world.client.field.AffectedArea;
 import com.msemu.world.client.field.Field;
@@ -403,6 +402,10 @@ public class Character extends AbstractAnimatedFieldLife {
     LocalDateTime lastUseStatChangeItemTime = LocalDateTime.MIN;
     @Transient
     private Android activedAndroid;
+    @Transient
+    @Getter
+    @Setter
+    private int team;
 
 
     public Character() {
@@ -503,7 +506,7 @@ public class Character extends AbstractAnimatedFieldLife {
 
     public void setField(Field field) {
         this.field = field;
-        setFieldID(field.getId());
+        setFieldID(field.getFieldId());
     }
 
     public int getFieldID() {
@@ -745,7 +748,7 @@ public class Character extends AbstractAnimatedFieldLife {
      */
     public void consumeItem(int id, int quantity) {
         quantity -= 1;
-        Item checkItem = ItemData.getInstance().getItemFromTemplate(id);
+        Item checkItem = ItemData.getInstance().createItem(id);
         Item item = getInventoryByType(checkItem.getInvType()).getItemByItemID(id);
         item.setQuantity(quantity);
         consumeItem(item);
@@ -825,7 +828,7 @@ public class Character extends AbstractAnimatedFieldLife {
         if (inventory != null) {
             Item existingItem = inventory.getItems().stream()
                     .filter(_item -> _item.getDateExpire().equal(item.getDateExpire()) &&
-                    _item.getItemId() == item.getItemId()).findFirst().orElse(null);
+                            _item.getItemId() == item.getItemId()).findFirst().orElse(null);
             if (existingItem != null && existingItem.getInvType().isStackable()) {
                 existingItem.addQuantity(item.getQuantity());
                 write(new LP_InventoryOperation(true, false,
@@ -986,14 +989,11 @@ public class Character extends AbstractAnimatedFieldLife {
             tsm.removeStatsBySkill(aa.getSkillID());
         }
         if (getField() != null) {
-            getField().removeCharacter(this);
+            getField().leave(this);
         }
         removeAllVisibleObjects();
         removeControlledMobs();
-        getClient().write(new LP_SetField(this, toField, getClient().getChannel(), false, portal.getId(), characterData, hasBuffProtector(),
-                (byte) portal.getId(), false, 100, null, true, -1));
-        setPosition(portal.getPosition());
-        toField.addCharacter(this);
+        toField.enter(this, portal, true);
         if (characterData) {
             if (getGuild() != null) {
                 write(new LP_GuildResult(new GuildUpdate(getGuild())));
@@ -1839,9 +1839,11 @@ public class Character extends AbstractAnimatedFieldLife {
 
     public void logout() {
         setOnline(false);
-        FieldTemplate ft = getField().getFieldData();
-        getAvatarData().getCharacterStat().setPosMap((ft.getForcedReturn() > 0 && ft.getForcedReturn() != 999999999 ? ft.getForcedReturn() : getFieldID()));
-        getField().removeCharacter(this);
+        if (getField() != null) {
+            FieldTemplate ft = getField().getFieldData();
+            getAvatarData().getCharacterStat().setPosMap((ft.getForcedReturn() > 0 && ft.getForcedReturn() != 999999999 ? ft.getForcedReturn() : getFieldID()));
+            getField().leave(this);
+        }
         DatabaseFactory.getInstance().saveToDB(this);
         getClient().getChannelInstance().removeCharacter(this);
     }
@@ -1875,7 +1877,7 @@ public class Character extends AbstractAnimatedFieldLife {
                     res = getFields().get(fieldID);
                 } else {
                     Field field = FieldData.getInstance().getFieldFromTemplate(fieldID);
-                    getFields().put(field.getId(), field);
+                    getFields().put(field.getFieldId(), field);
                     res = field;
                 }
                 break;
@@ -1911,11 +1913,10 @@ public class Character extends AbstractAnimatedFieldLife {
 
     public void giveItem(int itemID, int quantity) {
         double isEquip = Math.floor((itemID / 1000000));
-        if (isEquip == 1) {  //Equip
-            Equip equip = ItemData.getInstance().getEquipFromTemplate(itemID);
-            addItemToInventory(equip.getInvType(), equip, false);
+        Item item = ItemData.getInstance().createItem(itemID);
+        if (item.getType() == Item.Type.EQUIP) {  //Equip
+            addItemToInventory(item.getInvType(), item, false);
         } else {    //Item
-            Item item = ItemData.getInstance().getItemFromTemplate(itemID);
             item.setQuantity(quantity);
             addItemToInventory(item);
         }

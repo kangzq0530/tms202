@@ -9,9 +9,9 @@ import com.msemu.core.network.packets.outpacket.wvscontext.LP_TemporaryStatSet;
 import com.msemu.world.client.character.*;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.jobs.JobHandler;
-import com.msemu.world.client.character.skill.Option;
+import com.msemu.world.client.character.stats.Option;
 import com.msemu.world.client.character.skill.Skill;
-import com.msemu.world.client.character.skill.TemporaryStatManager;
+import com.msemu.world.client.character.stats.TemporaryStatManager;
 import com.msemu.world.client.field.AffectedArea;
 import com.msemu.world.client.field.Field;
 import com.msemu.world.client.field.lifes.Mob;
@@ -22,7 +22,7 @@ import com.msemu.world.enums.ChatMsgType;
 import com.msemu.world.enums.MoveAbility;
 
 import static com.msemu.commons.data.enums.SkillStat.*;
-import static com.msemu.world.client.character.skill.CharacterTemporaryStat.*;
+import static com.msemu.world.client.character.stats.CharacterTemporaryStat.*;
 
 /**
  * Created by Weber on 2018/4/14.
@@ -166,7 +166,7 @@ public class Kanna extends JobHandler {
                 int x2 = chr.getPosition().deepCopy().getX() + 500;
                 summon.setKishinPositions(new Position[]{new Position(x1, chr.getPosition().getY()), new Position(x2, chr.getPosition().getY())});
                 summon.setMoveAbility(MoveAbility.STATIC.getVal());
-                field.spawnSummon(summon);
+                field.spawnLife(summon);
                 break;
             case 曉月勇者:
                 o1.nReason = skillID;

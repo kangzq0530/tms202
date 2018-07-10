@@ -24,8 +24,8 @@ public class LP_FootHoldMove extends OutPacket<GameClient> {
             encodeInt(object.getX2());
             encodeInt(object.getY1());
             encodeInt(object.getY2());
-            encodeInt(object.getCurrentX());
-            encodeInt(object.getCurrentY());
+            encodeInt(object.getPosition().getX());
+            encodeInt(object.getPosition().getY());
             encodeByte(object.getR());
             encodeByte(0);
         });

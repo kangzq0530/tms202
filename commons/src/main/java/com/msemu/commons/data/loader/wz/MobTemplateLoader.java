@@ -10,6 +10,7 @@ import com.msemu.commons.wz.WzFile;
 import com.msemu.commons.wz.WzImage;
 import com.msemu.commons.wz.WzPropertyType;
 import com.msemu.commons.wz.properties.WzSubProperty;
+import lombok.Getter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,9 +22,16 @@ import java.util.Map;
  * Created by Weber on 2018/4/25.
  */
 public class MobTemplateLoader extends WzDataLoader<Map<Integer, MobTemplate>> {
+
+    @Getter
+    Map<Integer, MobTemplate> data = new HashMap<>();
+
+    public MobTemplateLoader(WzManager wzManager) {
+        super(wzManager);
+    }
+
     @Override
-    public Map<Integer, MobTemplate> load(WzManager wzManager) {
-        Map<Integer, MobTemplate> data = new HashMap<>();
+    public void load() {
         WzFile mobWz = wzManager.getWz(WzManager.MOB);
         WzFile mob2Wz = wzManager.getWz(WzManager.MOB2);
         WzFile stringWz = wzManager.getWz(WzManager.STRING);
@@ -36,7 +44,6 @@ public class MobTemplateLoader extends WzDataLoader<Map<Integer, MobTemplate>> {
         });
         WzImage mobStrImage = stringWz.getWzDirectory().getImage("Mob.img");
         importStrings(data, mobStrImage);
-        return data;
     }
 
     private void importStrings(Map<Integer, MobTemplate> data, WzImage mobStrImage) {
@@ -219,7 +226,9 @@ public class MobTemplateLoader extends WzDataLoader<Map<Integer, MobTemplate>> {
     }
 
     @Override
-    public void saveToDat(WzManager wzManager) throws IOException {
-        new MobTemplateDatLoader().saveDat(load(wzManager));
+    public void saveToDat() throws IOException {
+        if(getData().isEmpty())
+            load();
+        new MobTemplateDatLoader().saveDat(getData());
     }
 }

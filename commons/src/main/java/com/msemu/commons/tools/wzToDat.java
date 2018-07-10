@@ -17,14 +17,14 @@ public class wzToDat {
 //        new ForbiddenNameLoader().saveToDat(wzManager);
 //        new ItemOptionLoader().saveToDat(wzManager);
 //        new ItemOptionDatLoader().load(null);
-//        new ItemTemplateLoader().saveToDat(wzManager);
+//        new ItemTemplateDatLoader().saveToDat(wzManager);
 //        new EquipTemplateLoader().saveToDat(wzManager);
 //        new SetItemInfoLoader().saveToDat(wzManager);
 //        new MonsterBookLoader().saveToDat(wzManager);
 //        new FieldTemplateLoader().saveToDat(wzManager);
 //        new NpcTemplateLoader().saveToDat(wzManager);
 //
-        new SkillInfoLoader().saveToDat(wzManager);
+        new SkillInfoLoader(wzManager).saveToDat();
 //        Map<Integer, SkillInfo> skillInfoMap = new SkillInfoDatLoader().load(null);
 //        new QuestInfoLoader().saveToDat(wzManager);
 //        new MobTemplateLoader().saveToDat(wzManager);

@@ -9,6 +9,7 @@ import com.msemu.commons.wz.WzDirectory;
 import com.msemu.commons.wz.WzFile;
 import com.msemu.commons.wz.WzImage;
 import com.msemu.commons.wz.properties.WzSubProperty;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +24,14 @@ import java.util.Map;
  */
 public class EquipTemplateLoader extends WzDataLoader<Map<Integer, EquipTemplate>> {
 
+    @Getter
+    Map<Integer, EquipTemplate> data = new HashMap<>();
+
     private static final Logger log = LoggerFactory.getLogger(EquipTemplateLoader.class);
+
+    public EquipTemplateLoader(WzManager wzManager) {
+        super(wzManager);
+    }
 
     private EquipTemplate importItem(WzImage itemImage) {
 
@@ -164,20 +172,22 @@ public class EquipTemplateLoader extends WzDataLoader<Map<Integer, EquipTemplate
         return data;
     }
 
+
     @Override
-    public Map<Integer, EquipTemplate> load(WzManager wzManager) {
-        Map<Integer, EquipTemplate> data = new HashMap<>();
-        WzFile wzFile = wzManager.getWz(WzManager.CHARACTER);
+    public void load() {
+        data.clear();
+        WzFile wzFile = getWzManager().getWz(WzManager.CHARACTER);
         WzDirectory wzDir = wzFile.getWzDirectory();
         wzDir.getDirs()
                 .stream()
                 .filter(dir -> !dir.getName().equals("Afterimage"))
                 .forEach(dir -> importCates(dir).forEach(equip -> data.put(equip.getItemId(), equip)));
-        return data;
     }
 
     @Override
-    public void saveToDat(WzManager wzManager) throws IOException {
-        new EquipTemplateDatLoader().saveDat(load(wzManager));
+    public void saveToDat() throws IOException {
+        if(data.isEmpty())
+            load();
+        new EquipTemplateDatLoader().saveDat(data);
     }
 }

@@ -34,4 +34,3 @@ public class LarknessInfo {
         outPacket.encodeInt(getTLarkness());
     }
 }
-

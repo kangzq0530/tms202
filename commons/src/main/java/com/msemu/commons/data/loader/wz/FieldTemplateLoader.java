@@ -12,6 +12,7 @@ import com.msemu.commons.wz.WzImage;
 import com.msemu.commons.wz.WzPropertyType;
 import com.msemu.commons.wz.properties.WzIntProperty;
 import com.msemu.commons.wz.properties.WzSubProperty;
+import lombok.Getter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,11 +26,15 @@ import java.util.stream.Collectors;
  */
 public class FieldTemplateLoader extends WzDataLoader<Map<Integer, FieldTemplate>> {
 
-    private List<String> tmps = new ArrayList<>();
+    @Getter
+    private Map<Integer, FieldTemplate> data = new HashMap<>();
+
+    public FieldTemplateLoader(WzManager wzManager) {
+        super(wzManager);
+    }
 
     @Override
-    public Map<Integer, FieldTemplate> load(WzManager wzManager) {
-        Map<Integer, FieldTemplate> data = new HashMap<>();
+    public void load() {
         WzFile map1 = wzManager.getWz(WzManager.MAP);
         WzFile map2 = wzManager.getWz(WzManager.MAP2);
         List<WzImage> maps = new ArrayList<>();
@@ -56,8 +61,6 @@ public class FieldTemplateLoader extends WzDataLoader<Map<Integer, FieldTemplate
                 }
             }
         });
-
-        return data;
     }
 
     private void importMap(Map<Integer, FieldTemplate> data, WzImage mapImg) {
@@ -566,16 +569,6 @@ public class FieldTemplateLoader extends WzDataLoader<Map<Integer, FieldTemplate
         LifeData lifeData = new LifeData();
         lifeProp.getProperties().forEach(p -> {
 
-            if (!mob && !tmps.contains(p.getName())) {
-                tmps.add(p.getName());
-                System.out.println(p.getName());
-                if (p.getName().equalsIgnoreCase("mobTime")) {
-                    if (p.getInt() > 0) {
-                        int y = 1;
-                    }
-                }
-            }
-
             if (p.getName().equalsIgnoreCase("id")) {
                 lifeData.setId(p.getInt());
             } else if (p.getName().equalsIgnoreCase("type")) {
@@ -625,7 +618,9 @@ public class FieldTemplateLoader extends WzDataLoader<Map<Integer, FieldTemplate
     }
 
     @Override
-    public void saveToDat(WzManager wzManager) throws IOException {
-        new FieldTemplateDatLoader().saveDat(load(wzManager));
+    public void saveToDat() throws IOException {
+        if(data.isEmpty())
+            load();
+        new FieldTemplateDatLoader().saveDat(data);
     }
 }

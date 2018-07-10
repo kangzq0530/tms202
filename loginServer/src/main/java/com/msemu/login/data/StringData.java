@@ -51,8 +51,7 @@ public class StringData implements IReloadable {
     }
 
     private void load() {
-        WzManager wzManager = LoginWzManager.getInstance();
-        forbiddenName = (new ForbiddenNameDatLoader().load(null));
+        forbiddenName = (new ForbiddenNameDatLoader().getData());
         log.info("{} forbiddenName loaded.", forbiddenName.getNames().size());
     }
 

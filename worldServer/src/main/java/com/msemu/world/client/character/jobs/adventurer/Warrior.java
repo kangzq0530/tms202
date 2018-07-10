@@ -12,9 +12,9 @@ import com.msemu.core.network.packets.outpacket.wvscontext.LP_TemporaryStatSet;
 import com.msemu.world.client.character.*;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.jobs.JobHandler;
-import com.msemu.world.client.character.skill.Option;
+import com.msemu.world.client.character.stats.Option;
 import com.msemu.world.client.character.skill.Skill;
-import com.msemu.world.client.character.skill.TemporaryStatManager;
+import com.msemu.world.client.character.stats.TemporaryStatManager;
 import com.msemu.world.client.field.Field;
 import com.msemu.world.client.field.lifes.Mob;
 import com.msemu.world.client.field.lifes.Summon;
@@ -29,7 +29,7 @@ import com.msemu.world.enums.Stat;
 import java.util.Arrays;
 
 import static com.msemu.commons.data.enums.SkillStat.*;
-import static com.msemu.world.client.character.skill.CharacterTemporaryStat.*;
+import static com.msemu.world.client.character.stats.CharacterTemporaryStat.*;
 
 /**
  * Created by Weber on 2018/5/18.
@@ -922,7 +922,7 @@ public class Warrior extends JobHandler {
         field = getCharacter().getField();
         evilEye.setFlyMob(true);
         evilEye.setMoveAbility(MoveAbility.FLY_AROUND_CHAR.getVal());
-        field.spawnSummon(evilEye);
+        field.spawnLife(evilEye);
     }
 
     public void removeEvilEye() {

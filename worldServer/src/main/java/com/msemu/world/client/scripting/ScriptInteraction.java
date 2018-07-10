@@ -111,7 +111,7 @@ public class ScriptInteraction {
     }
 
     public int getFieldID() {
-        return getCharacter().getField().getId();
+        return getCharacter().getField().getFieldId();
     }
 
     public void openNpc(int npc, String scriptName) {
@@ -292,18 +292,18 @@ public class ScriptInteraction {
         if (mob.getField() == null) {
             mob.setField(field);
         }
-        field.spawnMob(mob);
+        field.spawnLife(mob);
     }
 
     public void showMobHP(int templateID) {
-        getCharacter().getField().getMobs().stream()
+        getCharacter().getField().getAllMobs().stream()
                 .filter(m -> m.getTemplateId() == templateID)
                 .findFirst()
                 .ifPresent(mob -> getCharacter().getField().broadcastPacket(new LP_FieldEffect(new MobHPTagFieldEffect(mob))));
     }
 
     public void showHP() {
-        getCharacter().getField().getMobs().stream()
+        getCharacter().getField().getAllMobs().stream()
                 .filter(m -> m.getHp() > 0)
                 .findFirst()
                 .ifPresent(mob -> getCharacter().getField().broadcastPacket(new LP_FieldEffect(new MobHPTagFieldEffect(mob))));

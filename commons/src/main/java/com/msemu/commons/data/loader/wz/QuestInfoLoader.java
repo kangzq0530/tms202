@@ -10,8 +10,7 @@ import com.msemu.commons.data.templates.quest.reqs.*;
 import com.msemu.commons.wz.WzDirectory;
 import com.msemu.commons.wz.WzImage;
 import com.msemu.commons.wz.properties.WzSubProperty;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.Getter;
 
 import java.io.IOException;
 import java.util.*;
@@ -21,7 +20,14 @@ import java.util.*;
  */
 public class QuestInfoLoader extends WzDataLoader<Map<Integer, QuestInfo>> {
 
-    private static final Logger log = LoggerFactory.getLogger(QuestInfoLoader.class);
+
+    @Getter
+    Map<Integer, QuestInfo> data = new HashMap<>();
+
+
+    public QuestInfoLoader(WzManager wzManager) {
+        super(wzManager);
+    }
 
 
     private void addRequirements(Map<Integer, QuestInfo> data, WzImage checkImg) {
@@ -218,10 +224,8 @@ public class QuestInfoLoader extends WzDataLoader<Map<Integer, QuestInfo>> {
 
 
     @Override
-    public Map<Integer, QuestInfo> load(WzManager wzManager) {
+    public void load() {
         WzDirectory wzDirectory = wzManager.getWz(WzManager.QUEST).getWzDirectory();
-
-        Map<Integer, QuestInfo> data = new HashMap<>();
 
 
         WzImage questInfoImg = wzDirectory.getImage("QuestInfo.img");
@@ -271,9 +275,6 @@ public class QuestInfoLoader extends WzDataLoader<Map<Integer, QuestInfo>> {
 
         addRequirements(data, wzDirectory.getImage("Check.img"));
         addActions(data, wzDirectory.getImage("Act.img"));
-
-        return data;
-
     }
 
     private void addActions(Map<Integer, QuestInfo> data, WzImage image) {
@@ -443,7 +444,9 @@ public class QuestInfoLoader extends WzDataLoader<Map<Integer, QuestInfo>> {
 
 
     @Override
-    public void saveToDat(WzManager wzManager) throws IOException {
-        new QuestInfoDatLoader().saveDat(load(wzManager));
+    public void saveToDat() throws IOException {
+        if (getData().isEmpty())
+            load();
+        new QuestInfoDatLoader().saveDat(getData());
     }
 }

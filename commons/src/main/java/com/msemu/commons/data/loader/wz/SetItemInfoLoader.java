@@ -8,6 +8,7 @@ import com.msemu.commons.utils.types.Tuple;
 import com.msemu.commons.wz.WzImage;
 import com.msemu.commons.wz.properties.WzIntProperty;
 import com.msemu.commons.wz.properties.WzSubProperty;
+import lombok.Getter;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
@@ -18,10 +19,18 @@ import java.util.Map;
  * Created by Weber on 2018/5/6.
  */
 public class SetItemInfoLoader extends WzDataLoader<Map<Integer, SetItemInfo>> {
+
+    @Getter
+    Map<Integer, SetItemInfo> data = new HashMap<>();
+
+
+    public SetItemInfoLoader(WzManager wzManager) {
+        super(wzManager);
+    }
+
     @Override
-    public Map<Integer, SetItemInfo> load(WzManager source) throws IOException {
-        Map<Integer, SetItemInfo> data = new HashMap<>();
-        WzImage setInfoImg = source.getWz(WzManager.ETC).getWzDirectory().getImage("SetItemInfo.img");
+    public void load() throws IOException {
+        WzImage setInfoImg = wzManager.getWz(WzManager.ETC).getWzDirectory().getImage("SetItemInfo.img");
 
         setInfoImg.getProperties().stream()
                 .map(p -> (WzSubProperty) p)
@@ -130,11 +139,12 @@ public class SetItemInfoLoader extends WzDataLoader<Map<Integer, SetItemInfo>> {
                             });
 
                 });
-        return data;
     }
 
     @Override
-    public void saveToDat(WzManager wzManager) throws IOException {
-        new SetItemInfoDatLoader().saveDat(load(wzManager));
+    public void saveToDat() throws IOException {
+        if(getData().isEmpty())
+            load();
+        new SetItemInfoDatLoader().saveDat(getData());
     }
 }

@@ -13,6 +13,7 @@ import com.msemu.commons.wz.WzFile;
 import com.msemu.commons.wz.WzImage;
 import com.msemu.commons.wz.properties.WzIntProperty;
 import com.msemu.commons.wz.properties.WzSubProperty;
+import lombok.Getter;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
@@ -23,7 +24,13 @@ import java.util.*;
  */
 public class ItemTemplateLoader extends WzDataLoader<Map<Integer, ItemTemplate>> {
 
-    private List<String> tmp = new ArrayList<>();
+
+    @Getter
+    Map<Integer, ItemTemplate> data = new HashMap<>();
+
+    public ItemTemplateLoader(WzManager wzManager) {
+        super(wzManager);
+    }
 
 
     private ItemTemplate loadProp(WzSubProperty itemProp) {
@@ -31,7 +38,7 @@ public class ItemTemplateLoader extends WzDataLoader<Map<Integer, ItemTemplate>>
         WzSubProperty specPorp = (WzSubProperty) itemProp.getFromPath("spec");
         ItemTemplate item = new ItemTemplate();
         item.setItemId(itemProp.getInt());
-
+        List<String> tmp = new ArrayList<>();
 
         if (specPorp != null) {
             specPorp.getProperties().forEach(p -> {
@@ -353,20 +360,15 @@ public class ItemTemplateLoader extends WzDataLoader<Map<Integer, ItemTemplate>>
     }
 
     @Override
-    public Map<Integer, ItemTemplate> load(WzManager wzManager) {
+    public void load() {
         WzFile itemWz = wzManager.getWz(WzManager.ITEM);
         WzDirectory wzDir = itemWz.getWzDirectory();
-
-        Map<Integer, ItemTemplate> data = new HashMap<>();
 
         //TODO 寵物?
         String[] cateDirs = new String[]{"Cash", "Consume", "Etc", "Install", "Special"};
 
         Arrays.stream(cateDirs).forEach(cate -> {
             WzDirectory dir = wzDir.getDir(cate);
-            if (cate.equals("Etc")) {
-                int x = 1;
-            }
             dir.getImages().forEach(img -> {
                 loadImage(img).forEach(item -> {
                     item.setInvType(InvType.getInvTypeByString(cate));
@@ -374,11 +376,13 @@ public class ItemTemplateLoader extends WzDataLoader<Map<Integer, ItemTemplate>>
                 });
             });
         });
-        return data;
     }
 
     @Override
-    public void saveToDat(WzManager wzManager) throws IOException {
-        new ItemTemplateDatLoader().saveDat(load(wzManager));
+    public void saveToDat() throws IOException {
+        if(getData().isEmpty()) {
+            load();
+        }
+        new ItemTemplateDatLoader().saveDat(getData());
     }
 }

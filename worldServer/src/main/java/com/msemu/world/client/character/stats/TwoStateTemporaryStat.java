@@ -1,4 +1,4 @@
-package com.msemu.world.client.character.skill;
+package com.msemu.world.client.character.stats;
 
 /**
  * Created by Weber on 2018/4/11.

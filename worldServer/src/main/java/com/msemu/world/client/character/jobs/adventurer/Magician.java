@@ -10,9 +10,9 @@ import com.msemu.core.network.packets.outpacket.wvscontext.LP_TemporaryStatSet;
 import com.msemu.world.client.character.*;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.jobs.JobHandler;
-import com.msemu.world.client.character.skill.Option;
+import com.msemu.world.client.character.stats.Option;
 import com.msemu.world.client.character.skill.Skill;
-import com.msemu.world.client.character.skill.TemporaryStatManager;
+import com.msemu.world.client.character.stats.TemporaryStatManager;
 import com.msemu.world.client.field.AffectedArea;
 import com.msemu.world.client.field.Field;
 import com.msemu.world.client.field.lifes.Mob;
@@ -28,7 +28,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.msemu.commons.data.enums.SkillStat.*;
-import static com.msemu.world.client.character.skill.CharacterTemporaryStat.*;
+import static com.msemu.world.client.character.stats.CharacterTemporaryStat.*;
 
 /**
  * Created by Weber on 2018/5/18.
@@ -562,7 +562,7 @@ public class Magician extends JobHandler {
                 field = chr.getField();
                 summon.setFlyMob(true);
                 summon.setMoveAbility(MoveAbility.SLOW_FORWARD.getVal());
-                field.spawnSummon(summon);
+                field.spawnLife(summon);
                 break;
             case BLESS:
 
@@ -582,7 +582,7 @@ public class Magician extends JobHandler {
                 field = getCharacter().getField();
                 summon.setFlyMob(true);
                 summon.setMoveAbility(MoveAbility.FOLLOW.getVal());
-                field.spawnSummon(summon);
+                field.spawnLife(summon);
                 break;
             case MAPLE_WARRIOR_FP:
             case MAPLE_WARRIOR_IL:
@@ -597,7 +597,7 @@ public class Magician extends JobHandler {
                 summon = Summon.getSummonBy(chr, skillID, slv);
                 field = chr.getField();
                 summon.setFlyMob(true);
-                field.spawnSummon(summon);
+                field.spawnLife(summon);
                 break;
             case CHILLING_STEP:
                 o1.nOption = 1;

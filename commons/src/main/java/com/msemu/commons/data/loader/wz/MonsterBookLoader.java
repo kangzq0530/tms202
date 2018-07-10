@@ -5,6 +5,7 @@ import com.msemu.commons.data.loader.dat.MonsterBookDatLoader;
 import com.msemu.commons.data.templates.MonsterBook;
 import com.msemu.commons.wz.WzImage;
 import com.msemu.commons.wz.properties.WzSubProperty;
+import lombok.Getter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,10 +15,18 @@ import java.util.List;
  * Created by Weber on 2018/5/6.
  */
 public class MonsterBookLoader extends WzDataLoader<List<MonsterBook>> {
+
+    @Getter
+    List<MonsterBook> data = new ArrayList<>();
+
+    public MonsterBookLoader(WzManager wzManager) {
+        super(wzManager);
+    }
+
     @Override
-    public List<MonsterBook> load(WzManager source) throws IOException {
-        WzImage mbImg = source.getWz(WzManager.STRING).getWzDirectory().getImage("MonsterBook.img");
-        List<MonsterBook> data = new ArrayList<>();
+    public void load() throws IOException {
+        WzImage mbImg = getWzManager().getWz(WzManager.STRING).getWzDirectory().getImage("MonsterBook.img");
+
         mbImg.getProperties()
                 .stream()
                 .map(prop -> (WzSubProperty) prop)
@@ -43,12 +52,12 @@ public class MonsterBookLoader extends WzDataLoader<List<MonsterBook>> {
                         }
                     });
                 });
-
-        return data;
     }
 
     @Override
-    public void saveToDat(WzManager wzManager) throws IOException {
-        new MonsterBookDatLoader().saveDat(load(wzManager));
+    public void saveToDat() throws IOException {
+        if(getData().isEmpty())
+            load();
+        new MonsterBookDatLoader().saveDat(getData());
     }
 }

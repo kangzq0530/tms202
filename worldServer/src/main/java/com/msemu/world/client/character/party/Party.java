@@ -159,15 +159,15 @@ public class Party {
             return getFields().get(fieldID);
         } else {
             Field field = FieldData.getInstance().getFieldFromTemplate(fieldID);
-            getFields().put(field.getId(), field);
+            getFields().put(field.getFieldId(), field);
             return field;
         }
     }
 
     public void clearFieldInstances() {
         Set<Character> chrs = new HashSet<>();
-        for (Field f : getFields().values()) {
-            chrs.addAll(f.getCharacters());
+        for (Field field : getFields().values()) {
+            chrs.addAll(field.getAllCharacters());
         }
         for (Character chr : chrs) {
             chr.setFieldInstanceType(FieldInstanceType.CHANNEL);

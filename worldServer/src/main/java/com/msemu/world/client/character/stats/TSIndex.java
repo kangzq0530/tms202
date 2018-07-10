@@ -1,4 +1,4 @@
-package com.msemu.world.client.character.skill;
+package com.msemu.world.client.character.stats;
 
 import java.util.ArrayList;
 import java.util.Arrays;

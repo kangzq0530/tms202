@@ -105,7 +105,7 @@ public class Field {
      * @return the field data
      */
     public FieldTemplate getFieldData() {
-        return FieldData.getInstance().getFieldTemplates().get(fieldId);
+        return FieldData.getInstance().getFieldTemplate(getFieldId());
     }
 
     /**
@@ -691,6 +691,7 @@ public class Field {
     }
 
     private void removeCharacter(Character chr) {
+        chr.setField(null);
         removeFieldObject(chr);
         broadcastPacket(new LP_UserLeaveField(chr), chr);
         chr.getControlledMobs().forEach(mob -> {

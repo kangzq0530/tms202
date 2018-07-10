@@ -8,5 +8,5 @@ import java.io.IOException;
  * Created by Weber on 2018/4/27.
  */
 public interface IWzToDatExporter {
-    void saveToDat(WzManager wzManager) throws IOException;
+    void saveToDat() throws IOException;
 }

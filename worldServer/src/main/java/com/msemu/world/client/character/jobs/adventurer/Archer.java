@@ -11,9 +11,9 @@ import com.msemu.core.network.packets.outpacket.wvscontext.LP_TemporaryStatSet;
 import com.msemu.world.client.character.*;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.jobs.JobHandler;
-import com.msemu.world.client.character.skill.Option;
+import com.msemu.world.client.character.stats.Option;
 import com.msemu.world.client.character.skill.Skill;
-import com.msemu.world.client.character.skill.TemporaryStatManager;
+import com.msemu.world.client.character.stats.TemporaryStatManager;
 import com.msemu.world.client.field.AffectedArea;
 import com.msemu.world.client.field.Field;
 import com.msemu.world.client.field.lifes.Mob;
@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.msemu.commons.data.enums.SkillStat.*;
-import static com.msemu.world.client.character.skill.CharacterTemporaryStat.*;
+import static com.msemu.world.client.character.stats.CharacterTemporaryStat.*;
 
 /**
  * Created by Weber on 2018/4/14.
@@ -495,7 +495,7 @@ public class Archer extends JobHandler {
                 field = getCharacter().getField();
                 summon.setFlyMob(true);
                 summon.setMoveAbility(MoveAbility.FLY_AROUND_CHAR.getVal());
-                field.spawnSummon(summon);
+                field.spawnLife(summon);
 
                 break;
             case 終極射擊_箭:
@@ -577,7 +577,7 @@ public class Archer extends JobHandler {
                 summon.setMoveAbility(MoveAbility.STATIC.getVal());
                 summon.setMaxHP(si.getValue(x, slv));
                 field = getCharacter().getField();
-                field.spawnSummon(summon);
+                field.spawnLife(summon);
                 break;
 
             case 傳說冒險_弓:

@@ -7,6 +7,7 @@ import com.msemu.commons.data.templates.ItemOptionInfo;
 import com.msemu.commons.wz.WzImageProperty;
 import com.msemu.commons.wz.WzImage;
 import com.msemu.commons.wz.properties.*;
+import lombok.Getter;
 
 import java.io.IOException;
 import java.util.*;
@@ -15,11 +16,16 @@ import java.util.*;
  * Created by Weber on 2018/4/21.
  */
 public class ItemOptionLoader extends WzDataLoader<Map<Integer, ItemOptionInfo>> {
+
+    @Getter
+    Map<Integer, ItemOptionInfo> data = new HashMap<>();
+
+    public ItemOptionLoader(WzManager wzManager) {
+        super(wzManager);
+    }
+
     @Override
-    public Map<Integer, ItemOptionInfo> load(WzManager wzManager) {
-
-        Map<Integer, ItemOptionInfo> data = new HashMap<>();
-
+    public void load() {
         WzImage itemOptImg = wzManager.getWz("Item.wz").getWzDirectory().getImage("ItemOption.img");
 
         itemOptImg.getProperties().forEach(prop -> {
@@ -55,13 +61,13 @@ public class ItemOptionLoader extends WzDataLoader<Map<Integer, ItemOptionInfo>>
             });
             data.put(optProp.getInt(), levelData);
         });
-
-        return data;
-
     }
 
     @Override
-    public void saveToDat(WzManager wzManager) throws IOException {
-        new ItemOptionDatLoader().saveDat(load(wzManager));
+    public void saveToDat() throws IOException {
+        if(getData().isEmpty()) {
+            load();
+        }
+        new ItemOptionDatLoader().saveDat(getData());
     }
 }

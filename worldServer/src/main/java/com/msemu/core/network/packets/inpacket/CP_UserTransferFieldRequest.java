@@ -46,7 +46,7 @@ public class CP_UserTransferFieldRequest extends InPacket<GameClient> {
 
         if (targetMapId != -1) {
 
-            int divi = field.getId() / 100;
+            int divi = field.getFieldId() / 100;
             boolean unlock = false;
             boolean warp = false;
             if ((divi / 10 == 1020) && (targetMapId == 1020000 || targetMapId == 4000026)) {

@@ -1,13 +1,18 @@
 package com.msemu.commons.data.enums;
 
-import lombok.Getter;
-
 /**
  * Created by Weber on 2018/4/25.
  */
 public enum Element {
 
-    NEUTRAL(0), PHYSICAL(1), FIRE(2, true), ICE(3, true), LIGHTING(4), POISON(5), HOLY(6, true), DARKNESS(7);
+    NEUTRAL(0),
+    PHYSICAL(1),
+    FIRE(2, true),
+    ICE(3, true),
+    LIGHTING(4),
+    POISON(5),
+    HOLY(6, true),
+    DARKNESS(7);
 
     private final int value;
     private boolean special = false;

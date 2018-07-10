@@ -100,7 +100,7 @@ public class InventoryManipulator {
             operates.add(new InventoryOperationInfo(InventoryOperationType.REMOVE,
                     srcItem, srcSlot));
         } else {
-            Item dropItem = ItemData.getInstance().getItemFromTemplate(srcItem.getItemId());
+            Item dropItem = ItemData.getInstance().createItem(srcItem.getItemId());
             dropItem.setQuantity(quantity);
             srcItem.removeQuantity(quantity);
             drop = new Drop(-1, dropItem);

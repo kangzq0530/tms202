@@ -1,4 +1,4 @@
-package com.msemu.world.client.character.skill;
+package com.msemu.world.client.character.stats;
 
 import com.msemu.commons.data.enums.SkillStat;
 import com.msemu.commons.data.templates.skill.SkillInfo;

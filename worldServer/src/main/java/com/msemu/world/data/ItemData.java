@@ -5,7 +5,6 @@ import com.msemu.commons.data.loader.dat.ItemOptionDatLoader;
 import com.msemu.commons.data.loader.dat.ItemTemplateDatLoader;
 import com.msemu.commons.data.loader.dat.SetItemInfoDatLoader;
 import com.msemu.commons.data.templates.EquipTemplate;
-import com.msemu.commons.data.templates.ItemOptionInfo;
 import com.msemu.commons.data.templates.ItemTemplate;
 import com.msemu.commons.data.templates.SetItemInfo;
 import com.msemu.commons.reload.IReloadable;
@@ -13,13 +12,12 @@ import com.msemu.commons.reload.Reloadable;
 import com.msemu.core.startup.StartupComponent;
 import com.msemu.world.client.character.inventory.items.Equip;
 import com.msemu.world.client.character.inventory.items.Item;
+import com.msemu.world.constants.ItemConstants;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -31,14 +29,15 @@ public class ItemData implements IReloadable {
 
     private static final Logger log = LoggerFactory.getLogger(ItemData.class);
     private static final AtomicReference<ItemData> instance = new AtomicReference<>();
-    @Getter(value = AccessLevel.PRIVATE)
-    private final Map<Integer, ItemOptionInfo> itemOptions = new HashMap<>();
-    @Getter(value = AccessLevel.PRIVATE)
-    private final Map<Integer, EquipTemplate> equipTemplates = new HashMap<>();
-    @Getter(value = AccessLevel.PRIVATE)
-    private final Map<Integer, ItemTemplate> itemTemplates = new HashMap<>();
-    @Getter(value = AccessLevel.PRIVATE)
-    private final Map<Integer, SetItemInfo> setItemInfos = new HashMap<>();
+
+    @Getter(AccessLevel.PRIVATE)
+    private static final ItemOptionDatLoader itemOptionsLoader = new ItemOptionDatLoader();
+    @Getter(AccessLevel.PRIVATE)
+    private static final ItemTemplateDatLoader itemTemplateDatLoader = new ItemTemplateDatLoader();
+    @Getter(AccessLevel.PRIVATE)
+    private static final EquipTemplateDatLoader equipTemplateDatLoader = new EquipTemplateDatLoader();
+    @Getter(AccessLevel.PRIVATE)
+    private static final SetItemInfoDatLoader setItemInfoDatLoader = new SetItemInfoDatLoader();
 
 
     public ItemData() {
@@ -60,22 +59,17 @@ public class ItemData implements IReloadable {
     }
 
     public void load() {
-        WorldWzManager wzManager = WorldWzManager.getInstance();
-        itemOptions.putAll(new ItemOptionDatLoader().load(null));
-        log.info("{} ItemOptions loaded.", itemOptions.size());
-        itemTemplates.putAll(new ItemTemplateDatLoader().load(null));
-        log.info("{} ItemTemplate loaded.", itemTemplates.size());
-        equipTemplates.putAll(new EquipTemplateDatLoader().load(null));
-        log.info("{} EquipTemplate loaded.", equipTemplates.size());
-        setItemInfos.putAll(new SetItemInfoDatLoader().load(null));
-        log.info("{} SetItemInfo loaded.", equipTemplates.size());
+        getItemOptionsLoader().load();
+        log.info("{} ItemOptions loaded.", getItemOptionsLoader().getData().size());
+        getSetItemInfoDatLoader().load();
+        log.info("{} SetItemInfo loaded.", getSetItemInfoDatLoader().getData().size());
     }
 
     private void clear() {
-        itemOptions.clear();
-        itemTemplates.clear();
-        equipTemplates.clear();
-        setItemInfos.clear();
+        getItemOptionsLoader().getData().clear();
+        getItemTemplateDatLoader().getData().clear();
+        getEquipTemplateDatLoader().getData().clear();
+        getSetItemInfoDatLoader().getData().clear();
     }
 
     @Override
@@ -93,7 +87,7 @@ public class ItemData implements IReloadable {
      * <code>itemId</code>.
      */
     public Equip getEquipFromTemplate(int itemId) {
-        EquipTemplate template = getEquipTemplates().get(itemId);
+        EquipTemplate template = getEquipTemplateDatLoader().getItem(itemId);
         if (template == null)
             return null;
         Equip equip = new Equip(template);
@@ -102,23 +96,34 @@ public class ItemData implements IReloadable {
 
 
     public Item getItemFromTemplate(int itemId) {
-        ItemTemplate template = getItemTemplates().get(itemId);
+        ItemTemplate template = getItemTemplateDatLoader().getItem(itemId);
         if (template == null)
             return null;
         Item item = new Item(template);
         return item;
     }
 
-    public ItemTemplate getItemInfo(int itemId) {
-        return getItemTemplates().get(itemId);
+    public Item createItem(int itemId) {
+        Item item;
+        if (ItemConstants.isEquip(itemId)) {
+            item = ItemData.getInstance().getEquipFromTemplate(itemId);
+        } else {
+            item = ItemData.getInstance().getItemFromTemplate(itemId);
+            item.setQuantity(itemId);
+        }
+        return item;
     }
 
-    public EquipTemplate getEquipInfo(int itemID) {
-        return getEquipTemplates().get(itemID);
+    public ItemTemplate getItemInfo(int itemId) {
+        return getItemTemplateDatLoader().getItem(itemId);
+    }
+
+    public EquipTemplate getEquipInfo(int itemId) {
+        return getEquipTemplateDatLoader().getItem(itemId);
     }
 
     public SetItemInfo getSetItemInfo(int setItemID) {
-        return getSetItemInfos().get(setItemID);
+        return getSetItemInfoDatLoader().getItem(setItemID);
     }
 
 }

@@ -29,7 +29,7 @@ public class SkillData implements IReloadable {
     private static final Logger log = LoggerFactory.getLogger(QuestData.class);
     private static final AtomicReference<SkillData> instance = new AtomicReference<>();
     @Getter
-    private final Map<Integer, SkillInfo> skillsInfo = new HashMap<>();
+    private final SkillInfoDatLoader skillInfoDatLoader = new SkillInfoDatLoader();
     @Getter
     private final Map<Integer, MobSkillInfo> mobSkillsInfo = new HashMap<>();
 
@@ -54,12 +54,12 @@ public class SkillData implements IReloadable {
 
     public void load() {
         WzManager wzManager = WorldWzManager.getInstance();
-        this.skillsInfo.putAll(new SkillInfoDatLoader().load(null));
-        log.info("{} SkillInfo loaded", this.skillsInfo.size());
+        getSkillInfoDatLoader().load();
+        log.info("{} SkillInfo loaded", getSkillInfoDatLoader().getData().size());
     }
 
     public void clear() {
-        this.skillsInfo.clear();
+        this.getSkillInfoDatLoader().getData().clear();
     }
 
     @Override
@@ -69,7 +69,7 @@ public class SkillData implements IReloadable {
     }
 
     public SkillInfo getSkillInfoById(int skillID) {
-        return this.skillsInfo.get(skillID);
+        return this.getSkillInfoDatLoader().getItem(skillID);
     }
 
     public Skill getSkillById(int skillID) {
@@ -96,7 +96,7 @@ public class SkillData implements IReloadable {
 
     public List<Skill> getSkillsByJob(short jobID) {
         List<Skill> res = new ArrayList<>();
-        getSkillsInfo().forEach((skillId, skillsInfo) -> {
+        getSkillInfoDatLoader().getData().forEach((skillId, skillsInfo) -> {
             if (skillsInfo.getRootId() == jobID && !skillsInfo.isInvisible()) {
                 res.add(getSkillById(skillId));
             }

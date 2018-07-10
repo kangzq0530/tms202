@@ -13,7 +13,7 @@ public class SkillInfoLoaderTest {
 
         CoreConfig.WZ_PATH = "F:/repos/ZZMS_dev/wz";
         WzManager wzManager = new WzManager(WzManager.SKILL);
-        new SkillInfoLoader().load(wzManager);
+        new SkillInfoLoader(wzManager).load();
 
 
     }

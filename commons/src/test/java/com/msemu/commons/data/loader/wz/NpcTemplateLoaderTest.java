@@ -14,6 +14,6 @@ public class NpcTemplateLoaderTest {
     public void testLoad() {
         CoreConfig.WZ_PATH = "F:/repos/ZZMS_Dev/wz";
         WzManager wzManager = new WzManager(WzManager.NPC);
-        Set<NpcTemplate> templates = new NpcTemplateLoader().load(wzManager);
+        new NpcTemplateLoader(wzManager).load();
     }
 }

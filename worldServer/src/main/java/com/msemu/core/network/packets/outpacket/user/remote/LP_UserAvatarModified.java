@@ -5,8 +5,8 @@ import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;
 import com.msemu.world.client.character.AvatarLook;
 import com.msemu.world.client.character.Character;
-import com.msemu.world.client.character.skill.CharacterTemporaryStat;
-import com.msemu.world.client.character.skill.TemporaryStatManager;
+import com.msemu.world.client.character.stats.CharacterTemporaryStat;
+import com.msemu.world.client.character.stats.TemporaryStatManager;
 import com.msemu.world.enums.AvatarModifiedMask;
 
 /**

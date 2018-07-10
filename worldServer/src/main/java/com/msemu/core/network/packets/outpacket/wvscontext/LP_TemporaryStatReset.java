@@ -3,7 +3,7 @@ package com.msemu.core.network.packets.outpacket.wvscontext;
 import com.msemu.commons.enums.OutHeader;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;
-import com.msemu.world.client.character.skill.TemporaryStatManager;
+import com.msemu.world.client.character.stats.TemporaryStatManager;
 
 /**
  * Created by Weber on 2018/4/12.

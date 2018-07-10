@@ -12,8 +12,6 @@ import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -25,7 +23,7 @@ public class MobData implements IReloadable {
     private static final Logger log = LoggerFactory.getLogger(MobData.class);
     private static final AtomicReference<MobData> instance = new AtomicReference<>();
     @Getter
-    private final Map<Integer, MobTemplate> mobTemplates = new HashMap<>();
+    private final MobTemplateDatLoader mobTemplateDatLoader = new MobTemplateDatLoader();
 
 
     public MobData() {
@@ -48,13 +46,13 @@ public class MobData implements IReloadable {
 
     public void load() {
         WzManager wzManager = WorldWzManager.getInstance();
-        getMobTemplates().putAll(new MobTemplateDatLoader().load(null));
+        getMobTemplateDatLoader().load();
         linkMobAndQuest();
-        log.info("{} MobTemplates laoded", this.mobTemplates.size());
+        log.info("{} MobTemplates laoded", getMobTemplateDatLoader().getData().size());
     }
 
     public void clear() {
-        getMobTemplates().clear();
+        getMobTemplateDatLoader().getData().clear();
     }
 
     @Override
@@ -65,7 +63,7 @@ public class MobData implements IReloadable {
 
     public Mob getMobFromTemplate(int templateId) {
         DropData dropData = DropData.getInstance();
-        MobTemplate mt = getMobTemplates().get(templateId);
+        MobTemplate mt = getMobTemplateDatLoader().getItem(templateId);
         if (mt == null)
             return null;
         Mob mob = new Mob(-1, mt);
@@ -74,13 +72,17 @@ public class MobData implements IReloadable {
         return mob;
     }
 
+    public MobTemplate getMobTemplate(int templateId) {
+        return getMobTemplateDatLoader().getItem(templateId);
+    }
+
     public void linkMobAndQuest() {
         QuestData.getInstance().getQuestsProgressRequirements()
                 .forEach((questID, reqs) -> {
                     reqs.stream().filter(req -> req instanceof QuestProgressMobRequirement)
                             .map(req -> (QuestProgressMobRequirement) req)
                             .forEach(req -> {
-                                MobTemplate mt = getMobTemplates().get(req.getMobID());
+                                MobTemplate mt = getMobTemplate(req.getMobID());
                                 if (mt != null) {
                                     mt.addLinkedQuest(questID);
                                 }

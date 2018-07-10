@@ -20,9 +20,6 @@ public class QuestTemplateTest {
         WzDirectory wzDirectory = wzManager.getWz(WzManager.QUEST).getWzDirectory();
 
 
-        Map<Integer, QuestInfo> info = new QuestInfoLoader().load(wzManager);
-
-
-        int x = 1;
+        new QuestInfoLoader(wzManager).load();
     }
 }

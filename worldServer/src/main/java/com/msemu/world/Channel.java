@@ -72,7 +72,7 @@ public class Channel {
 
     public Field getField(int fieldId) {
         for (Field field : getFields()) {
-            if (field.getId() == fieldId) {
+            if (field.getFieldId() == fieldId) {
                 return field;
             }
         }

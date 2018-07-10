@@ -18,7 +18,7 @@ import com.msemu.world.enums.DBChar;
 public class LP_SetField extends OutPacket<GameClient> {
 
     public LP_SetField(Character chr, Field field, int channelId, boolean dev, int oldDriverID,
-                       boolean characterData, boolean usingBuffProtector, byte portal,
+                       boolean characterData, boolean usingBuffProtector, int portal,
                        boolean setWhiteFadeInOut, int mobStatAdjustRate, FieldCustom fieldCustom,
                        boolean canNotifyAnnouncedQuest, int stackEventGauge) {
         super(OutHeader.LP_SetField);
@@ -53,7 +53,7 @@ public class LP_SetField extends OutPacket<GameClient> {
             sub_1EA0150();
         } else {
             encodeByte(usingBuffProtector);
-            encodeInt(field.getId());
+            encodeInt(field.getFieldId());
             encodeByte(portal);
             encodeInt(chr.getAvatarData().getCharacterStat().getHp());
             boolean bool = false;

@@ -7,9 +7,6 @@ import com.msemu.world.client.character.Character;
 import lombok.Getter;
 import lombok.Setter;
 
-/**
- * Created by Weber on 2018/4/11.
- */
 public class LarknessManager {
     @Getter
     private final Character chr;

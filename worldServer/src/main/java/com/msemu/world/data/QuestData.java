@@ -32,7 +32,7 @@ public class QuestData implements IReloadable {
     private static final Logger log = LoggerFactory.getLogger(QuestData.class);
     private static final AtomicReference<QuestData> instance = new AtomicReference<>();
     @Getter(value = AccessLevel.PROTECTED)
-    private final Map<Integer, QuestInfo> questsInfo = new HashMap<>();
+    private final QuestInfoDatLoader questInfoDatLoader = new QuestInfoDatLoader();
     @Getter(value = AccessLevel.PROTECTED)
     private final Map<Integer, Set<IQuestAction>> questsStartActions = new HashMap<>();
     @Getter(value = AccessLevel.PROTECTED)
@@ -68,8 +68,8 @@ public class QuestData implements IReloadable {
 
     private void load() {
         WzManager wzManager = WorldWzManager.getInstance();
-        getQuestsInfo().putAll(new QuestInfoDatLoader().load(null));
-        log.info("{} QuestInfo loaded", getQuestsInfo().size());
+        getQuestInfoDatLoader().load();
+        log.info("{} QuestInfo loaded", getQuestInfoDatLoader().getData().size());
         transformToQuestObjects();
         log.info("{} QuestStartActions loaded", getQuestsStartActions().size());
         log.info("{} QuestCompleteActions loaded", getQuestsCompleteActions().values().stream().map(Set::size).reduce(0, Integer::sum));
@@ -79,7 +79,7 @@ public class QuestData implements IReloadable {
 
 
     private void clear() {
-        getQuestsInfo().clear();
+        getQuestInfoDatLoader().getData().clear();
         getQuestsStartActions().clear();
         getQuestsCompleteActions().clear();
         getQuestsStartRequirements().clear();
@@ -116,7 +116,7 @@ public class QuestData implements IReloadable {
     }
 
     private void transformToQuestObjects() {
-        getQuestsInfo().values().forEach(questInfo -> {
+        getQuestInfoDatLoader().getData().values().forEach(questInfo -> {
             transformActs(questInfo.getId(), questInfo.getStartActsData(), getQuestsStartActions());
             transformActs(questInfo.getId(), questInfo.getCompleteActsData(), getQuestsCompleteActions());
             transformStartReqs(questInfo.getId(), questInfo.getStartReqsData(), getQuestsStartRequirements());
@@ -214,7 +214,7 @@ public class QuestData implements IReloadable {
     }
 
     public QuestInfo getQuestInfoById(int questId) {
-        return getQuestsInfo().get(questId);
+        return getQuestInfoDatLoader().getItem(questId);
     }
 
     public Quest createQuestFromId(int questID) {
