@@ -20,13 +20,13 @@ public abstract class DatMappingDataLoader<T extends DatSerializable> extends Ma
     private static final Logger log = LoggerFactory.getLogger(DatMappingDataLoader.class);
 
     @Getter
-    private String datDirName;
+    private String datFileName;
 
     @Getter
     private HashMap<Integer, T> data = new HashMap<>();
 
-    public DatMappingDataLoader(String datDirName) {
-        this.datDirName = datDirName;
+    public DatMappingDataLoader(String datFileName) {
+        this.datFileName = datFileName;
     }
 
     @Override
@@ -34,7 +34,7 @@ public abstract class DatMappingDataLoader<T extends DatSerializable> extends Ma
         try {
             DataInputStream dis = getDataInputStream();
             int size = dis.readInt();
-            for(int i = 0; i < size; i++) {
+            for (int i = 0; i < size; i++) {
                 int key = dis.readInt();
                 T t = (T) create().load(dis);
                 data.put(key, t);
@@ -61,11 +61,11 @@ public abstract class DatMappingDataLoader<T extends DatSerializable> extends Ma
     }
 
     protected DataOutputStream getDataOutputStream() throws FileNotFoundException {
-        FileUtils.makeDirIfAbsent(CoreConfig.DAT_PATH + "/" + datDirName);
-        return new DataOutputStream(new FileOutputStream(CoreConfig.DAT_PATH + "/" + datDirName));
+        FileUtils.makeDirIfAbsent(CoreConfig.DAT_PATH);
+        return new DataOutputStream(new FileOutputStream(CoreConfig.DAT_PATH + "/" + datFileName));
     }
 
     protected DataInputStream getDataInputStream() throws IOException {
-        return new DataInputStream(new FileInputStream(CoreConfig.DAT_PATH + "/" + datDirName));
+        return new DataInputStream(new FileInputStream(CoreConfig.DAT_PATH + "/" + datFileName));
     }
 }

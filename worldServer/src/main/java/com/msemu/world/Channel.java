@@ -62,9 +62,7 @@ public class Channel {
     private void updateField() {
         try {
             ArrayList<Field> newFieldsAry = new ArrayList<>(this.getFields());
-            newFieldsAry.forEach(field -> {
-                field.update(LocalDateTime.now());
-            });
+            newFieldsAry.forEach(field -> field.update(LocalDateTime.now()));
         } catch (Exception ex) {
             LoggerFactory.getLogger(Channel.class).error("update error", ex);
         }
@@ -88,8 +86,7 @@ public class Channel {
     }
 
     public List<Character> getTransferList() {
-        return getTransfers().values().stream()
-                .collect(Collectors.toList());
+        return new ArrayList<>(getTransfers().values());
     }
 
     @Synchronized

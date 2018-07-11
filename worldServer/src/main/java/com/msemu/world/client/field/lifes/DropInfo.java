@@ -18,7 +18,7 @@ import javax.persistence.*;
 public class DropInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "fieldId")
+    @Column(name = "id")
     @Getter
     @Setter
     private int id;

@@ -58,9 +58,7 @@ public class CP_SelectWorld extends InPacket<LoginClient> {
         int finalChannelID = channelID;
         boolean checkWorld = worldInfo != null
                 && worldInfo.getChannels().stream()
-                .filter(ch -> ch.getChannel() == finalChannelID)
-                .findFirst()
-                .isPresent();
+                .anyMatch(ch -> ch.getChannel() == finalChannelID);
 
         if (!checkWorld) {
             getClient().write(new LP_CheckPasswordResult(null, LoginResultCode.DBFail, null));

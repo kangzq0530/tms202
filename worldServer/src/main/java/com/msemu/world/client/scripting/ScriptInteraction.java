@@ -83,9 +83,7 @@ public class ScriptInteraction {
                         .filter(req -> req.getType().equals(QuestRequirementDataType.npc))
                         .map(req -> (QuestNpcReqData) req)
                         .findFirst();
-                if (rData.isPresent()) {
-                    speakerTemplateID = rData.get().getNpcId();
-                }
+                rData.ifPresent(questNpcReqData -> speakerTemplateID = questNpcReqData.getNpcId());
             } else if (scriptName.endsWith(ScriptManager.QUEST_START_SCRIPT_END_TAG)) {
                 Optional<QuestNpcReqData> rData = qi.getStartReqsData().stream()
                         .filter(req -> req.getType().equals(QuestRequirementDataType.npc))
@@ -504,6 +502,8 @@ public class ScriptInteraction {
     }
 
     public void selfTalk(String text) {
+        getNpcScriptInfo().setLastMessageType(NpcMessageType.NM_SAY);
+        getNpcScriptInfo().setNext(true);
         getClient().write(new LP_SelfTalkScriptMessage(text));
     }
 

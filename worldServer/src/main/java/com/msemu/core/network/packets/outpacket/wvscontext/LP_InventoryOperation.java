@@ -55,7 +55,7 @@ public class LP_InventoryOperation extends OutPacket<GameClient> {
                     }
                     break;
                 case UPDATE:
-                    encodeInt(item.getQuantity());
+                    encodeShort(item.getQuantity());
                     break;
                 case MOVE:
                     int bagIndex = item.getInvType() == EQUIPPED ? -item.getBagIndex() : item.getBagIndex();
@@ -98,8 +98,8 @@ public class LP_InventoryOperation extends OutPacket<GameClient> {
 
             }
             encodeByte(false);
-            op.clear();
         });
+
 //        if (nBeforeCount[0]) {
 //            encodeByte(false);
 //        }

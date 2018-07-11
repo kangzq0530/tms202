@@ -36,8 +36,9 @@ public abstract class LazyDatMappingDataLoader<T extends DatSerializable> extend
         if (data.containsKey(index)) return data.get(index);
         try {
             DataInputStream dis = getDataInputStream(index);
+            int key = dis.readInt();
             T t = (T) create().load(dis);
-            data.put(index, t);
+            data.put(key, t);
             return t;
         } catch (IOException e) {
             log.error("load dat error", e);

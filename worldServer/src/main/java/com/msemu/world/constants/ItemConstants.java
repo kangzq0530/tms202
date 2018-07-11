@@ -313,7 +313,7 @@ public class ItemConstants {
     }
 
     public static boolean isEquip(int id) {
-        return id / 1000000 == 1;
+        return id / 1000000 == 1 || id == 0;
     }
 
     public static boolean isClaw(int id) {

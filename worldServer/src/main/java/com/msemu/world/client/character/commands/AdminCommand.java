@@ -35,8 +35,8 @@ public class AdminCommand {
         public boolean execute(GameClient client, List<String> args) {
             Character chr = client.getCharacter();
             Channel channel = client.getChannelInstance();
-            Character victim = null;
-            Field toField = null;
+            Character victim;
+            Field toField;
             if (args.size() < 2) {
                 return false;
             }

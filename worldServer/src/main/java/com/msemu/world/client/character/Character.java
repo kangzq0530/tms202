@@ -473,6 +473,13 @@ public class Character extends AbstractAnimatedFieldLife {
         List<Skill> skills = SkillData.getInstance().getSkillsByJob((short) job.getId());
         skills.stream().filter(jobSkill -> !hasSkill(jobSkill.getSkillId()))
                 .forEach(this::addSkill);
+
+        // 升級技能
+        Skill beginnerSkill = SkillData.getInstance().getSkillById(80001770);
+        beginnerSkill.setCurrentLevel(1);
+        teachSkill(beginnerSkill);
+
+
         getClient().write(new LP_ChangeSkillRecordResult(skills, true,
                 false, false, false));
         notifyChanges();
@@ -506,7 +513,8 @@ public class Character extends AbstractAnimatedFieldLife {
 
     public void setField(Field field) {
         this.field = field;
-        setFieldID(field.getFieldId());
+        if (field != null)
+            setFieldID(field.getFieldId());
     }
 
     public int getFieldID() {
@@ -569,6 +577,7 @@ public class Character extends AbstractAnimatedFieldLife {
         stats.put(Stat.EXP, newExp);
         write(new LP_Message(new IncExpMessage(eii)));
         getClient().write(new LP_StatChanged(stats));
+        this.addSp(1, 30);
     }
 
     public void addStat(Stat charStat, int amount) {

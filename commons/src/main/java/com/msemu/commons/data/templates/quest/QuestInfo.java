@@ -45,7 +45,7 @@ public class QuestInfo implements DatSerializable {
     }
 
     public boolean hasEndScript() {
-        return !startScript.isEmpty();
+        return !endScript.isEmpty();
     }
 
     @Override

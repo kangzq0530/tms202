@@ -800,9 +800,13 @@ public enum OutHeader implements IHeader {
 
     public boolean ignoreDebug() {
         switch (this.name()) {
+            case "LP_MobEnterField":
+            case "LP_MobChangeController":
             case "LP_MobCtrlAck":
+            case "LP_UserChatMsg":
             case "LP_StatChanged":
             case "LP_UserMeleeAttack":
+            case "LP_MobLeaveField":
                 return true;
             default:
                 return false;

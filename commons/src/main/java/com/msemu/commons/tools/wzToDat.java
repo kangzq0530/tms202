@@ -1,8 +1,9 @@
 package com.msemu.commons.tools;
 
 import com.msemu.commons.config.utils.ConfigLoader;
-import com.msemu.commons.data.loader.wz.SkillInfoLoader;
-import com.msemu.commons.data.loader.wz.WzManager;
+import com.msemu.commons.data.loader.dat.ItemOptionDatLoader;
+import com.msemu.commons.data.loader.dat.ItemTemplateDatLoader;
+import com.msemu.commons.data.loader.wz.*;
 
 import java.io.IOException;
 
@@ -14,21 +15,19 @@ public class wzToDat {
     public static void main(String[] args) throws IOException {
         ConfigLoader.getInstance().reload();
         WzManager wzManager = new WzManager();
-//        new ForbiddenNameLoader().saveToDat(wzManager);
-//        new ItemOptionLoader().saveToDat(wzManager);
-//        new ItemOptionDatLoader().load(null);
-//        new ItemTemplateDatLoader().saveToDat(wzManager);
-//        new EquipTemplateLoader().saveToDat(wzManager);
-//        new SetItemInfoLoader().saveToDat(wzManager);
-//        new MonsterBookLoader().saveToDat(wzManager);
-//        new FieldTemplateLoader().saveToDat(wzManager);
-//        new NpcTemplateLoader().saveToDat(wzManager);
+//        new ForbiddenNameLoader(wzManager).saveToDat();
+//        new ItemOptionLoader(wzManager).saveToDat();
+//        new ItemTemplateLoader(wzManager).saveToDat();
+//        new EquipTemplateLoader(wzManager).saveToDat();
+//        new SetItemInfoLoader(wzManager).saveToDat();
+//        new MonsterBookLoader(wzManager).saveToDat();
+//        new FieldTemplateLoader(wzManager).saveToDat();
+//        new NpcTemplateLoader(wzManager).saveToDat();
 //
         new SkillInfoLoader(wzManager).saveToDat();
-//        Map<Integer, SkillInfo> skillInfoMap = new SkillInfoDatLoader().load(null);
-//        new QuestInfoLoader().saveToDat(wzManager);
-//        new MobTemplateLoader().saveToDat(wzManager);
-//        new FieldTemplateLoader().saveToDat(wzManager);
+        new QuestInfoLoader(wzManager).saveToDat();
+        new MobTemplateLoader(wzManager).saveToDat();
+        new FieldTemplateLoader(wzManager).saveToDat();
 
     }
 }

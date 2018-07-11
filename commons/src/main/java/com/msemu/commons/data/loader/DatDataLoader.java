@@ -38,7 +38,7 @@ public abstract class DatDataLoader<T extends DatSerializable> implements IDataL
 
     @Override
     public T getData() {
-        return null;
+        return data;
     }
 
     @Override

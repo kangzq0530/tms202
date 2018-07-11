@@ -67,7 +67,6 @@ public class QuestData implements IReloadable {
     }
 
     private void load() {
-        WzManager wzManager = WorldWzManager.getInstance();
         getQuestInfoDatLoader().load();
         log.info("{} QuestInfo loaded", getQuestInfoDatLoader().getData().size());
         transformToQuestObjects();
@@ -198,10 +197,11 @@ public class QuestData implements IReloadable {
             }
             if (questReq != null) {
                 questReq.load(reqData);
+                if (!reqs.get(questId).contains(questReq)) {
+                    reqs.get(questId).add(questReq);
+                }
             }
-            if (!reqs.get(questId).contains(questReq)) {
-                reqs.get(questId).add(questReq);
-            }
+
         });
     }
 

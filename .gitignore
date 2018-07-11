@@ -48,7 +48,9 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
-configs/*.properties
+/configs/
+/worldserver/configs/
+/loginserver/configs/
 target/
 ./wz/
 log/

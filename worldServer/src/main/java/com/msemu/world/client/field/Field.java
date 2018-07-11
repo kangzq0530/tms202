@@ -227,6 +227,7 @@ public class Field {
 
     public void enter(Character chr, Portal portal, boolean characterData) {
         chr.setPosition(portal.getPosition());
+        chr.setField(this);
         chr.getClient().write(new LP_SetField(chr, this, chr.getClient().getChannel(), false, portal.getId(), characterData, chr.hasBuffProtector(),
                 portal.getId(), false, 100, null, true, -1));
         this.addCharacter(chr);
@@ -235,10 +236,10 @@ public class Field {
 
     public void leave(Character chr) {
         removeCharacter(chr);
+        chr.setField(null);
     }
 
     private void addCharacter(Character chr) {
-        chr.setField(this);
         updateCharacterPosition(chr);
         if (!getAllCharacters().contains(chr)) {
             addFieldObject(chr);
@@ -559,15 +560,19 @@ public class Field {
         AtomicReference<Integer> minControlledMobCount = new AtomicReference<>(-1);
         AtomicReference<Character> newController = new AtomicReference<>(null);
         getFieldObjectWriteLock(FieldObjectType.CHARACTER).lock();
-        getFieldObjects().get(FieldObjectType.CHARACTER).values().stream()
-                .map(object -> (Character)object)
-                .forEach(chr -> {
-                    if ((chr.getControlledMobs().size() < minControlledMobCount.get() || minControlledMobCount.get() == -1)
-                            && chr.getPosition().distanceSq(mob.getPosition()) <= GameConstants.maxViewRangeSq()) {
-                        minControlledMobCount.set(chr.getControlledMobs().size());
-                        newController.set(chr);
-                    }
-                });
+        try {
+            getFieldObjects().get(FieldObjectType.CHARACTER).values().stream()
+                    .map(object -> (Character) object)
+                    .forEach(chr -> {
+                        if ((chr.getControlledMobs().size() < minControlledMobCount.get() || minControlledMobCount.get() == -1)
+                                && chr.getPosition().distanceSq(mob.getPosition()) <= GameConstants.maxViewRangeSq()) {
+                            minControlledMobCount.set(chr.getControlledMobs().size());
+                            newController.set(chr);
+                        }
+                    });
+        } finally {
+            getFieldObjectWriteLock(FieldObjectType.CHARACTER).unlock();
+        }
         return newController.get();
     }
 
@@ -691,7 +696,6 @@ public class Field {
     }
 
     private void removeCharacter(Character chr) {
-        chr.setField(null);
         removeFieldObject(chr);
         broadcastPacket(new LP_UserLeaveField(chr), chr);
         chr.getControlledMobs().forEach(mob -> {

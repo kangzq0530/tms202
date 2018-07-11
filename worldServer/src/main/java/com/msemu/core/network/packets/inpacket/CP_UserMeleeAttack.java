@@ -36,7 +36,7 @@ public class CP_UserMeleeAttack extends InPacket<GameClient> {
         ai.setFieldKey(decodeByte());
         Byte atkMask = decodeByte();
         ai.setHits((byte) (atkMask & 0xF));
-        ai.setMobCount(atkMask >>> 4);
+        ai.setMobCount((atkMask&0xF0) >> 4) ;
         ai.setSkillId(decodeInt());
         ai.setSlv(decodeByte());
         ai.setAddAttackProc(decodeByte());

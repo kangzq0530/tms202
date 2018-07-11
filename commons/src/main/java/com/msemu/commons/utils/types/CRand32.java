@@ -36,7 +36,6 @@ public class CRand32 {
         this.seed1 = newSeed1 & 0xFFFFFFFFL;
         this.seed2 = newSeed2 & 0xFFFFFFFFL;
         this.seed3 = newSeed3 & 0xFFFFFFFFL;
-        LoggerFactory.getLogger(Rand32.class).info(String.format("s1=%s,s2=%s,s3=%s", Long.toHexString(seed1), Long.toHexString(seed2), Long.toHexString(seed3)));
         return (seed1 ^ seed2 ^ seed3) & 0xffffffffL;//& 0xffffffffl will help you convert long to unsigned int
     }
 
@@ -49,6 +48,5 @@ public class CRand32 {
 
         this.seed3 = s3 | 0x10L;
         this.oldSeed3 = s3 | 0x10L;
-        LoggerFactory.getLogger(Rand32.class).info(String.format("s1=%s,s2=%s,s3=%s", Long.toHexString(seed1), Long.toHexString(seed2), Long.toHexString(seed3)));
     }
 }

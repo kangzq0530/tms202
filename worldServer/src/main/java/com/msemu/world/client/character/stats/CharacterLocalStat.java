@@ -252,11 +252,12 @@ public class CharacterLocalStat {
 
         this.mastery = incMastery;
 
-        ItemTemplate chairInfo = ItemData.getInstance().getItemInfo(getCharacter().getPortableChairID());
-
-        if (chairInfo != null) {
-            this.shouldHealHp += chairInfo.getRecoveryHP();
-            this.shouldHealHp += chairInfo.getRecoveryMP();
+        if( getCharacter().getPortableChairID() > 0) {
+           ItemTemplate chairInfo = ItemData.getInstance().getItemInfo(getCharacter().getPortableChairID());
+            if (chairInfo != null) {
+                this.shouldHealHp += chairInfo.getRecoveryHP();
+                this.shouldHealHp += chairInfo.getRecoveryMP();
+            }
         }
 
         if (character.getStat(Stat.HP) > character.getCurrentMaxHp()) {

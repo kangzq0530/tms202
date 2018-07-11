@@ -1,4 +1,4 @@
-var status = -1;
+﻿var status = -1;
 
 function start() {
     action(1, 0, 0);
@@ -14,12 +14,12 @@ function action(mode, type, selection) {
         cm.setInGameCurNodeEventEnd(true);
         cm.setInGameDirectionMode(true);
         cm.onScreenDelayedFieldEffect("maplemap/enter/10000", 0);
-        cm.exceTime(2000);
+        cm.exceTime(1000);
         cm.setInGameCurNodeEventEnd(true);
     } else if (status === 1) {
         cm.spawnNPCRequestController(10300, -240, 220);
         cm.onNpcDirectionEffect(10300, "Effect/Direction12.img/effect/tuto/BalloonMsg1/1", 900, 0, -120);
-        cm.exceTime(1800);
+        cm.exceTime(900);
     } else if (status === 2) {
         cm.updateNPCSpecialAction(10300, 1, 1000, 100);
         cm.cameraMove([0, 200, 200, 200]);

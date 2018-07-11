@@ -481,8 +481,10 @@ public enum InHeader implements IHeader {
 
     public boolean ignoreDebug() {
         switch (this.name()) {
+            case "CP_UserQuestRequest":
             case "CP_MobMove":
             case "CP_UserMove":
+            case "CP_UserHit":
             case "CP_UserMeleeAttack":
             case "CP_DummyCode":
             case "CP_UserChangeStatRequest":

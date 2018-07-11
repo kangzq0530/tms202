@@ -44,12 +44,13 @@ public class CP_UserScriptMessageAnswer extends InPacket<GameClient> {
             selection = decodeByte();
         }
 
-        Character chr = getClient().getCharacter();
-        chr.getScriptManager().handleAction(lastMessageType, action, selection);
+
+
     }
 
     @Override
     public void runImpl() {
-
+        Character chr = getClient().getCharacter();
+        chr.getScriptManager().handleAction(lastMessageType, action, selection);
     }
 }

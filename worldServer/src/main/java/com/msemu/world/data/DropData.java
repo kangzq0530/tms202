@@ -30,6 +30,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class DropData implements IReloadable {
     private static final Logger log = LoggerFactory.getLogger(QuestData.class);
     private static final AtomicReference<DropData> instance = new AtomicReference<>();
+
     @Getter
     private final Map<Integer, List<DropInfo>> mobDrops = new HashMap<>();
     @Getter
@@ -71,7 +72,9 @@ public class DropData implements IReloadable {
     }
 
     public void loadMonsterBookDrops() {
-        List<MonsterBook> monsterBooks = new MonsterBookDatLoader().getData();
+        MonsterBookDatLoader monsterBookDatLoader = new MonsterBookDatLoader();
+        monsterBookDatLoader.load();
+        List<MonsterBook> monsterBooks = monsterBookDatLoader.getData();
         monsterBooks.forEach(mb -> {
             mb.getRewards().forEach(itemID -> {
                 int cate = itemID / 10000;

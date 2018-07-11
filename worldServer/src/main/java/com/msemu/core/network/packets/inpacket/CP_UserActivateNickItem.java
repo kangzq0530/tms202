@@ -5,6 +5,7 @@ import com.msemu.commons.network.packets.InPacket;
 import com.msemu.core.network.GameClient;
 import com.msemu.core.network.packets.outpacket.user.remote.LP_UserSetActiveNickItem;
 import com.msemu.world.client.character.Character;
+import com.msemu.world.client.character.inventory.items.Item;
 import com.msemu.world.client.field.Field;
 import com.msemu.world.data.ItemData;
 
@@ -22,14 +23,26 @@ public class CP_UserActivateNickItem extends InPacket<GameClient> {
 
     @Override
     public void read() {
-
+        nickItemID = decodeInt();
+        slotPos = decodeInt();
     }
 
     @Override
     public void runImpl() {
         final Character chr = getClient().getCharacter();
         final Field field = chr.getField();
+
+        if ( nickItemID  == 0) {
+            chr.enableActions();
+            return;
+        }
         final ItemTemplate itemInfo = ItemData.getInstance().getItemInfo(nickItemID);
+        final Item item = chr.getInventoryByType(itemInfo.getInvType()).getItemBySlot(slotPos);
+
+        if(item.getItemId() != itemInfo.getItemId() ) {
+            chr.enableActions();
+            return;
+        }
 
         final boolean hasItem = chr.getInventoryByType(itemInfo.getInvType())
                 .containsItem(nickItemID);

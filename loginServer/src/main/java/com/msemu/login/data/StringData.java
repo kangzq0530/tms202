@@ -11,6 +11,7 @@ import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.activation.MimeTypeParameterList;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -22,7 +23,7 @@ public class StringData implements IReloadable {
     private static final Logger log = LoggerFactory.getLogger(StringData.class);
 
     @Getter
-    private ForbiddenName forbiddenName;
+    private ForbiddenNameDatLoader forbiddenNameDatLoader = new ForbiddenNameDatLoader();
 
     private static final AtomicReference<StringData> instance = new AtomicReference<>();
 
@@ -46,18 +47,22 @@ public class StringData implements IReloadable {
     }
 
     private void clear() {
-        if (forbiddenName != null)
-            forbiddenName.getNames().clear();
+        //TODO
     }
 
     private void load() {
-        forbiddenName = (new ForbiddenNameDatLoader().getData());
-        log.info("{} forbiddenName loaded.", forbiddenName.getNames().size());
+
+        getForbiddenNameDatLoader().load();
+        log.info("{} forbiddenName loaded.", getForbiddenNameDatLoader().getData().getNames().size());
     }
 
     @Override
     public void reload() {
         clear();
         load();
+    }
+
+    public ForbiddenName getForbiddenName() {
+        return getForbiddenNameDatLoader().getData();
     }
 }
