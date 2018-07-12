@@ -705,9 +705,9 @@ public class Field {
                 updateMobController(mob);
             }
         });
-        //remove follow
-        //remove Extractor
-        //remove summon
+        //removeParty follow
+        //removeParty Extractor
+        //removeParty summon
     }
 
     public void addFieldObject(AbstractFieldObject object) {

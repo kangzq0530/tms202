@@ -12,6 +12,7 @@ public class LP_PartyResult extends OutPacket<GameClient> {
 
     public LP_PartyResult(IPartyResult result) {
         super(OutHeader.LP_PartyResult);
+        encodeByte(result.getType().getValue());
         result.encode(this);
     }
 }

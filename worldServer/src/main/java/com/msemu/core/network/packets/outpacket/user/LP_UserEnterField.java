@@ -9,8 +9,8 @@ import com.msemu.world.client.character.stats.CharacterStat;
 import com.msemu.world.client.character.stats.CharacterTemporaryStat;
 import com.msemu.world.client.character.stats.TSIndex;
 import com.msemu.world.client.character.stats.TemporaryStatManager;
-import com.msemu.world.client.guild.Guild;
 import com.msemu.world.client.field.lifes.Pet;
+import com.msemu.world.client.guild.Guild;
 import com.msemu.world.constants.MapleJob;
 
 /**
@@ -28,7 +28,10 @@ public class LP_UserEnterField extends OutPacket<GameClient> {
         encodeByte(chr.getLevel());
         encodeString(chr.getName());
         // m_sParentName
-        encodeString("m_sParentName");
+        // 終極冒險加
+        encodeString("");
+
+
         if (chr.getGuild() != null) {
             chr.getGuild().encodeForRemote(this);
         } else {
@@ -46,10 +49,14 @@ public class LP_UserEnterField extends OutPacket<GameClient> {
         if (MapleJob.is神之子(chr.getJob())) {
             chr.getAvatarData().getZeroAvatarLook().encode(this);
         }
+
+        unkFunction(this);
+
+
         encodeInt(chr.getDriverID());
         encodeInt(chr.getPassengerID()); // dwPassenserID
 
-        // TODO
+        // TODO 妮娜的魔法阵 ?
         encodeInt(0);
         encodeInt(0);
         int size = 0;
@@ -58,12 +65,15 @@ public class LP_UserEnterField extends OutPacket<GameClient> {
             encodeInt(0);
             encodeInt(0);
         }
-        // TODO 
+
+        // TODO
         encodeInt(chr.getChocoCount());
         encodeInt(chr.getActiveEffectItemID());
         encodeInt(chr.getMonkeyEffectItemID());
         encodeInt(chr.getActiveNickItemID());
+
         encodeByte(false);
+
         encodeInt(chr.getDamageSkin());
         encodeInt(0); // ptPos.x?
         encodeInt(look.getDemonWingID());
@@ -103,10 +113,12 @@ public class LP_UserEnterField extends OutPacket<GameClient> {
             encodeInt(pet.getIdx());
             pet.encode(this);
         }
+        encodeByte(0);
         encodeByte(chr.getMechanicHue());
         encodeInt(chr.getTamingMobLevel());
         encodeInt(chr.getTamingMobExp());
         encodeInt(chr.getTamingMobFatigue());
+        encodeByte(false);
         byte miniRoomType = chr.getMiniRoom() != null ? chr.getMiniRoom().getType() : 0;
         encodeByte(miniRoomType);
         if (miniRoomType > 0) {
@@ -122,7 +134,7 @@ public class LP_UserEnterField extends OutPacket<GameClient> {
         if (chr.isInCouple()) {
             chr.getCouple().encodeForRemote(this);
         }
-        encodeByte(chr.hasFriendshipItem());
+        encodeByte(chr.getFriendshipRingRecord().size());
         if (chr.hasFriendshipItem()) {
             chr.getFriendshipRingRecord().forEach(record -> record.encode(this));
         }
@@ -130,22 +142,11 @@ public class LP_UserEnterField extends OutPacket<GameClient> {
         if (chr.isMarried()) {
             chr.getMarriageRecord().encodeForRemote(this);
         }
-        encodeByte(0); // some flag that shows uninteresting things for now
-//        int m_nDelayedEffectFlag = chr.getStat().Berserk ? 1 : 0;
-//        mplew.write(m_nDelayedEffectFlag);
-//        if ((m_nDelayedEffectFlag & 1) != 0) {
-//        }
-//        if ((m_nDelayedEffectFlag & 2) != 0) {
-//        }
-//        if ((m_nDelayedEffectFlag & 8) != 0) {
-//            mplew.writeInt(0); // m_tDelayedPvPEffectTime
-//        } else if ((m_nDelayedEffectFlag & 0x10) != 0) {
-//            mplew.writeInt(0); // m_tDelayedPvPEffectTime
-//        }
-//        if ((m_nDelayedEffectFlag & 0x20) != 0) {
-//            mplew.writeInt(0); // m_tHitPeriodRemain_Revive
-//        }
-//        mplew.writeInt(chr.getMount().getItemId()); // m_nEvanDragonGlide_Riding 骑宠id
+
+        encodeByte(0);
+        int m_nDelayedEffectFlag = 0;
+        encodeByte(m_nDelayedEffectFlag);
+
         encodeInt(chr.getEvanDragonGlide());
         if (MapleJob.is凱撒(chr.getJob())) {
             encodeInt(chr.getKaiserMorphRotateHueExtern());
@@ -154,7 +155,7 @@ public class LP_UserEnterField extends OutPacket<GameClient> {
         }
         encodeInt(chr.getMakingMeisterSkillEff());
         // chr.getFarmUserInfo().encodeForTown(this);
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 20; i += 4) {
             encodeByte(-1); // activeEventNameTag
         }
 
@@ -191,6 +192,7 @@ public class LP_UserEnterField extends OutPacket<GameClient> {
         encodeInt(0); // for CUser::DecodeTextEquipInfo
         chr.getFreezeHotEventInfo().encode(this);
         encodeInt(chr.getEventBestFriendAID()); // CUser::DecodeEventBestFriendInfo
+
         encodeByte(tsm.hasStat(CharacterTemporaryStat.KinesisPsychicEnergeShield));
         encodeByte(chr.isBeastFormWingOn());
         encodeInt(chr.getMesoChairCount());
@@ -205,5 +207,21 @@ public class LP_UserEnterField extends OutPacket<GameClient> {
 
         encodeInt(0);
 
+    }
+
+    private void unkFunction(OutPacket<GameClient> outPacket) {
+        int v7 = 2;
+        do {
+            outPacket.encodeInt(0);
+            while (true) {
+                int res = 255;
+                outPacket.encodeByte(res);
+                if (res == 255) {
+                    break;
+                }
+                outPacket.encodeInt(0);
+            }
+            v7 += 36;
+        } while (v7 < 74);
     }
 }

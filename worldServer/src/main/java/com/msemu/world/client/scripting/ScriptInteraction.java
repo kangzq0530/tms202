@@ -141,6 +141,71 @@ public class ScriptInteraction {
         getCharacter().addExp(deltaExp);
     }
 
+    public void setHp(int hp) {
+        getCharacter().setStat(Stat.HP, hp);
+    }
+
+    public void setMaxHp(int maxHp) {
+        getCharacter().setStat(Stat.MAX_HP, maxHp);
+    }
+
+    public void setMp(int mp) {
+        getCharacter().setStat(Stat.MP, mp);
+    }
+
+    public void setMaxMp(int maxMp) {
+        getCharacter().setStat(Stat.MAX_MP, maxMp);
+    }
+
+    public void setStr(int str) {
+        getCharacter().setStat(Stat.STR, str);
+    }
+
+    public void setDex(int dex) {
+        getCharacter().setStat(Stat.DEX, dex);
+    }
+
+    public void setInt(int _int) {
+        getCharacter().setStat(Stat.INT, _int);
+    }
+
+    public void setLuk(int luk) {
+        getCharacter().setStat(Stat.LUK, luk);
+    }
+
+    public int getHp() {
+        return getCharacter().getStat(Stat.HP);
+    }
+
+    public int getMp() {
+        return getCharacter().getStat(Stat.MP);
+    }
+
+    public int getMaxHp() {
+        return getCharacter().getStat(Stat.MAX_HP);
+    }
+
+    public int getMaxMp() {
+        return getCharacter().getStat(Stat.MAX_MP);
+    }
+
+    public int getStr() {
+        return getCharacter().getStat(Stat.STR);
+    }
+
+    public int getDex() {
+        return getCharacter().getStat(Stat.DEX);
+    }
+
+    public int getInt() {
+        return getCharacter().getStat(Stat.INT);
+    }
+
+    public int getLuk() {
+        return getCharacter().getStat(Stat.LUK);
+    }
+
+
     public void teachSkill(int skillID, int level) {
         Skill skill = SkillData.getInstance().getSkillById(skillID);
         skill.setCurrentLevel(level);
@@ -272,24 +337,22 @@ public class ScriptInteraction {
         spawnMob(id, 0, 0, respawnable);
     }
 
-    public void spawnMobOnChar(int id) {
+    public void spawnMobOnCharacter(int id) {
         spawnMob(id, getCharacter().getPosition().getX(), getCharacter().getPosition().getY(), false);
     }
 
-    public void spawnMobOnChar(int id, boolean respawnable) {
+    public void spawnMobOnCharacter(int id, boolean respawnable) {
         spawnMob(id, getCharacter().getPosition().getX(), getCharacter().getPosition().getY(), respawnable);
     }
 
-    public void spawnMob(int id, int x, int y, boolean isRespawn) {
+    public void spawnMob(int id, int x, int y, boolean respawnable) {
         Mob mob = MobData.getInstance().getMobFromTemplate(id);
+        Field field = getCharacter().getField();
         Position pos = new Position(x, y);
         mob.setPosition(pos.deepCopy());
         mob.setOldPosition(pos.deepCopy());
         mob.setPosition(pos.deepCopy());
-        Field field = getCharacter().getField();
-        if (mob.getField() == null) {
-            mob.setField(field);
-        }
+        mob.setField(field);
         field.spawnLife(mob);
     }
 

@@ -470,6 +470,8 @@ public class Character extends AbstractAnimatedFieldLife {
         }
 
         setJobHandler(JobManager.getJobHandler((short) job.getId(), this));
+
+        // 學習該職業的技能
         List<Skill> skills = SkillData.getInstance().getSkillsByJob((short) job.getId());
         skills.stream().filter(jobSkill -> !hasSkill(jobSkill.getSkillId()))
                 .forEach(this::addSkill);
@@ -727,7 +729,7 @@ public class Character extends AbstractAnimatedFieldLife {
     }
 
     /**
-     * Consumes a single {@link Item} from this Char's {@link Inventory}. Will remove the Item if it has a quantity of 1.
+     * Consumes a single {@link Item} from this Char's {@link Inventory}. Will removeParty the Item if it has a quantity of 1.
      *
      * @param item The Item to consume, which is currently in the Char's inventory.
      */

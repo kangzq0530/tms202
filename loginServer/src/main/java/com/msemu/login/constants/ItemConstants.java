@@ -1,4 +1,4 @@
-package com.msemu.world.constants;
+package com.msemu.login.constants;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

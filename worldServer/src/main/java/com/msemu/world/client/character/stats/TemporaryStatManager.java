@@ -8,7 +8,6 @@ import com.msemu.core.network.packets.outpacket.wvscontext.LP_TemporaryStatSet;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.skill.LarknessManager;
 import com.msemu.world.client.field.AffectedArea;
-import com.sun.istack.internal.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
@@ -88,7 +87,7 @@ public class TemporaryStatManager {
         }
     }
 
-    public TemporaryStatBase getTSBByTSIndex(@NotNull TSIndex tsi) {
+    public TemporaryStatBase getTSBByTSIndex(TSIndex tsi) {
         return getTwoStates().get(tsi.getIndex());
     }
 
@@ -3003,14 +3002,15 @@ public class TemporaryStatManager {
 
 
     public void encodeForRemote(OutPacket outPacket) {
-        for (int i = 0; i < CharacterTemporaryStat.SIZE; i++) {
+        int[] mask = getNewFlags();
+        for (int i = 0; i < getNewFlags().length; i++) {
             outPacket.encodeInt(0);
         }
         outPacket.encodeByte(getDefenseAtt());
         outPacket.encodeByte(getDefenseState());
         outPacket.encodeByte(getPvpDamage());
         new StopForceAtom().encode(outPacket);
-        outPacket.encodeInt(getViperEnergyCharge()); // viperEnergy
+        outPacket.encodeInt(getViperEnergyCharge());
     }
 
 }

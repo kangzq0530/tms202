@@ -44,6 +44,10 @@ public class Equip extends Item {
     @Getter
     @Setter
     private short ruc;
+    @Column(name = "tuc")
+    @Getter
+    @Setter
+    private short tuc;
     @Column(name = "cuc")
     @Getter
     @Setter

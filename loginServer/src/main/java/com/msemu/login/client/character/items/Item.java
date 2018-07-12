@@ -6,7 +6,7 @@ import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.utils.types.FileTime;
 import com.msemu.commons.data.enums.InvType;
 import com.msemu.core.network.LoginClient;
-import com.msemu.world.constants.ItemConstants;
+import com.msemu.login.constants.ItemConstants;
 import lombok.Getter;
 import lombok.Setter;
 

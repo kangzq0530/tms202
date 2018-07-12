@@ -3,7 +3,7 @@ package com.msemu.world.client.character.party.operations;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.utils.types.Tuple;
 import com.msemu.core.network.GameClient;
-import com.msemu.world.enums.PartyResultType;
+import com.msemu.world.enums.PartyOperation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +24,8 @@ public class PartyLoadStarGradeResult implements IPartyResult {
     }
 
     @Override
-    public PartyResultType getType() {
-        return PartyResultType.PartyRes_Load_StarGrade_Result;
+    public PartyOperation getType() {
+        return PartyOperation.PartyRes_Load_StarGrade_Result;
     }
 
     @Override

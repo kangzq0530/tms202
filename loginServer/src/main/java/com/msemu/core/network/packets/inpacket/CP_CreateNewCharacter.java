@@ -9,12 +9,12 @@ import com.msemu.login.client.character.Character;
 import com.msemu.login.client.character.CharacterStat;
 import com.msemu.login.client.character.FuncKeyMap;
 import com.msemu.login.client.character.items.Equip;
+import com.msemu.login.constants.ItemConstants;
 import com.msemu.login.data.ItemData;
 import com.msemu.login.data.StringData;
 import com.msemu.login.enums.CharCreateInfo;
 import com.msemu.login.enums.CharCreateItemFlag;
 import com.msemu.login.enums.LoginResultCode;
-import com.msemu.world.constants.ItemConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

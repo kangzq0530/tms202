@@ -4,8 +4,8 @@ package com.msemu.login.client.character;
 import com.msemu.commons.database.Schema;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.LoginClient;
+import com.msemu.login.constants.ItemConstants;
 import com.msemu.login.constants.MapleJob;
-import com.msemu.world.constants.ItemConstants;
 import lombok.Getter;
 import lombok.Setter;
 

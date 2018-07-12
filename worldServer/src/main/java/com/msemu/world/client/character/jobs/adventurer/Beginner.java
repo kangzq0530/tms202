@@ -26,7 +26,6 @@ public class Beginner extends JobHandler {
     @Override
     public boolean handleSkillUse(SkillUseInfo skillUseInfo) {
         return true;
-
     }
 
     @Override

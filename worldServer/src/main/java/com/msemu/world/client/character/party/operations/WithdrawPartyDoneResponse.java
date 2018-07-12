@@ -4,7 +4,8 @@ import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.party.Party;
-import com.msemu.world.enums.PartyResultType;
+import com.msemu.world.client.character.party.PartyMember;
+import com.msemu.world.enums.PartyOperation;
 
 /**
  * Created by Weber on 2018/5/4.
@@ -12,23 +13,29 @@ import com.msemu.world.enums.PartyResultType;
 public class WithdrawPartyDoneResponse implements IPartyResult {
 
     private Party party;
-    private Character character;
+    private PartyMember partyMember;
+    private boolean dispand;
 
-    public WithdrawPartyDoneResponse(Party party, Character character) {
+    public WithdrawPartyDoneResponse(Party party, PartyMember partyMember, boolean disband) {
         this.party = party;
-        this.character = character;
+        this.partyMember = partyMember;
+        this.dispand = disband;
     }
 
     @Override
-    public PartyResultType getType() {
+    public PartyOperation getType() {
         // 離開隊伍 || 驅逐隊伍 || 解散隊伍
-        return PartyResultType.PartyRes_WithdrawParty_Done;
+        return PartyOperation.PartyRes_WithdrawParty_Done;
     }
 
     @Override
     public void encode(OutPacket<GameClient> outPacket) {
         outPacket.encodeInt(party.getId());
-        outPacket.encodeInt(character.getId());
+        outPacket.encodeInt(partyMember.getCharacterID());
+        outPacket.encodeByte(!dispand);
+        outPacket.encodeByte(1);
+        outPacket.encodeString(partyMember.getCharacterName());
+        party.encode(outPacket, true );
 
     }
 }

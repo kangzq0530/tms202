@@ -2,15 +2,15 @@ package com.msemu.world.client.character.party.operations;
 
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;
-import com.msemu.world.enums.PartyResultType;
+import com.msemu.world.enums.PartyOperation;
 
 /**
  * Created by Weber on 2018/5/4.
  */
 public class PartyMemberInAnotherChanelBlockedUserResponse implements IPartyResult {
     @Override
-    public PartyResultType getType() {
-        return PartyResultType.PartyRes_InAnotherChanelBlockedUser;
+    public PartyOperation getType() {
+        return PartyOperation.PartyRes_InAnotherChanelBlockedUser;
     }
 
     @Override

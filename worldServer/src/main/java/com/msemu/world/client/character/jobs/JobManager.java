@@ -5,6 +5,8 @@ import com.msemu.world.client.character.jobs.adventurer.Archer;
 import com.msemu.world.client.character.jobs.adventurer.Beginner;
 import com.msemu.world.client.character.jobs.adventurer.Magician;
 import com.msemu.world.client.character.jobs.adventurer.Warrior;
+import lombok.AccessLevel;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,6 +19,7 @@ public class JobManager {
 
     private static final Logger log = LoggerFactory.getLogger(JobManager.class);
 
+    @Getter(AccessLevel.PRIVATE)
     private static final Class<?>[] jobClasses = new Class<?>[]{
             Archer.class,
             Beginner.class,
@@ -24,9 +27,10 @@ public class JobManager {
             Magician.class
     };
 
+    @SuppressWarnings("unchecked")
     public static JobHandler getJobHandler(short jobID, Character chr) {
         JobHandler job = null;
-        for (Class clazz : jobClasses) {
+        for (Class clazz : getJobClasses()) {
             try {
                 job = (JobHandler) clazz.getConstructor(Character.class).newInstance(chr);
             } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {

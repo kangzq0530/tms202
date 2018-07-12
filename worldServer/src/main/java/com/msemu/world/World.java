@@ -9,10 +9,11 @@ import com.msemu.core.startup.StartupComponent;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.party.Party;
 import com.msemu.world.client.guild.Guild;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
@@ -22,17 +23,28 @@ import java.util.stream.Collectors;
  */
 @StartupComponent("Network")
 public class World implements IReloadable {
-
     private static final AtomicReference<World> instance = new AtomicReference<>();
-    private final Map<Integer, Party> parties = new HashMap<>();
-    private final Map<Integer, Guild> guilds = new HashMap<>();
-    private int worldId;
-    private String name;
-    private int state;
-    private String worldEventDesc;
-    private int worldEventExpWSE = 100;
-    private int worldEventDropWSE = 100;
+    private final Map<Integer, Guild> guilds = new ConcurrentHashMap<>();
     private ConcurrentHashMap<Integer, Channel> channels;
+    @Getter
+    @Setter
+    private int worldId;
+    @Getter
+    @Setter
+    private String name;
+    @Getter
+    @Setter
+    private int state;
+    @Getter
+    @Setter
+    private String worldEventDesc;
+    @Getter
+    @Setter
+    private int worldEventExpWSE = 100;
+    @Getter
+    @Setter
+    private int worldEventDropWSE = 100;
+
 
     public World() {
         channels = new ConcurrentHashMap<>();
@@ -96,70 +108,16 @@ public class World implements IReloadable {
 
     }
 
-    public int getWorldId() {
-        return worldId;
+    public List<Channel> getChannels() {
+        return new ArrayList<>(channels.values());
     }
 
-    public void setWorldId(int worldId) {
-        this.worldId = worldId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getState() {
-        return state;
-    }
-
-    public void setState(int state) {
-        this.state = state;
-    }
-
-    public String getWorldEventDesc() {
-        return worldEventDesc;
-    }
-
-    public void setWorldEventDesc(String worldEventDesc) {
-        this.worldEventDesc = worldEventDesc;
-    }
-
-    public int getWorldEventExpWSE() {
-        return worldEventExpWSE;
-    }
-
-    public void setWorldEventExpWSE(int worldEventExpWSE) {
-        this.worldEventExpWSE = worldEventExpWSE;
-    }
-
-    public int getWorldEventDropWSE() {
-        return worldEventDropWSE;
-    }
-
-    public void setWorldEventDropWSE(int worldEventDropWSE) {
-        this.worldEventDropWSE = worldEventDropWSE;
-    }
-
-    public Map<Integer, Party> getParties() {
-        return parties;
-    }
-
-
-    public Map<Integer, Guild> getGuilds() {
-        return guilds;
+    public Map<Integer, Guild> getAllGuilds() {
+        return Collections.unmodifiableMap(guilds);
     }
 
     public Guild getGuildByID(int id) {
-        return getGuilds().get(id);
-    }
-
-
-    public List<Channel> getChannels() {
-        return channels.values().stream().collect(Collectors.toList());
+        return getAllGuilds().get(id);
     }
 
     public Character getCharacterByName(String charName) {

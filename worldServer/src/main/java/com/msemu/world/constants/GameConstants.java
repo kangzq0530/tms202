@@ -187,4 +187,5 @@ public class GameConstants {
         }
         return damage;
     }
+
 }

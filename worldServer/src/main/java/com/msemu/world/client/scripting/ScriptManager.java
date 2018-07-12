@@ -20,12 +20,14 @@ import java.util.concurrent.locks.ReentrantLock;
  * Created by Weber on 2018/4/13.
  */
 public class ScriptManager {
+    public static final Logger log = LoggerFactory.getLogger(ScriptManager.class);
+
     public static final String SCRIPT_ENGINE_EXTENSION = ".js";
     public static final String QUEST_START_SCRIPT_END_TAG = "s";
     public static final String QUEST_COMPLETE_SCRIPT_END_TAG = "e";
-    public static final Logger log = LoggerFactory.getLogger(ScriptManager.class);
     private static final String SCRIPT_ENGINE_NAME = "nashorn";
     private static final String DEFAULT_SCRIPT = "undefined";
+
     @Getter
     private static final ScriptEngineManager engineManager = new ScriptEngineManager();
     @Getter
@@ -40,38 +42,38 @@ public class ScriptManager {
         this.character = character;
     }
 
+
     public void startScript(int parentID, String scriptName, ScriptType scriptType) {
         startScript(parentID, scriptName, scriptType, "start");
     }
 
     public void startScript(int parentID, String scriptName, ScriptType scriptType, String functionName) {
-        getLock().lock();
-        try {
-            if (getScriptInfo() != null) {
-                getCharacter().chatMessage(String.format("執行腳本失敗 ID: %d 腳本名稱: %s 種類: %s ( 目前已經有腳本執行中 ID: %d 腳本名稱: %s 種類: %s )"
-                        , parentID, scriptName, scriptType.name()
-                        , getScriptInfo().getParentID(), getScriptInfo().getScriptName(), getScriptInfo().getScriptType().name()));
-                return;
+        withLock(() -> {
+            try {
+                if (getScriptInfo() != null) {
+                    getCharacter().chatMessage(String.format("執行腳本失敗 ID: %d 腳本名稱: %s 種類: %s ( 目前已經有腳本執行中 ID: %d 腳本名稱: %s 種類: %s )"
+                            , parentID, scriptName, scriptType.name()
+                            , getScriptInfo().getParentID(), getScriptInfo().getScriptName(), getScriptInfo().getScriptType().name()));
+                } else {
+                    getCharacter().chatMessage(String.format("開始執行腳本 ID: %d 腳本名稱: %s 種類: %s", parentID, scriptName, scriptType.name()));
+                    ScriptInfo scriptInfo = new ScriptInfo();
+                    scriptInfo.setParentID(parentID);
+                    scriptInfo.setScriptName(scriptName);
+                    scriptInfo.setScriptType(scriptType);
+                    scriptInfo.setInvocable(getInvocable(scriptName, scriptType));
+                    scriptInfo.setInteraction(new ScriptInteraction(scriptType, parentID, scriptName, getCharacter()));
+                    Invocable engine = scriptInfo.getInvocable();
+                    if (engine != null) {
+                        setScriptInfo(scriptInfo);
+                        ((ScriptEngine) engine).put("cm", scriptInfo.getInteraction());
+                        ((ScriptEngine) engine).put("parentID", scriptInfo.getParentID());
+                        engine.invokeFunction(functionName);
+                    }
+                }
+            } catch (NoSuchMethodException | ScriptException e) {
+                log.error("startScript error", e);
             }
-            getCharacter().chatMessage(String.format("開始執行腳本 ID: %d 腳本名稱: %s 種類: %s", parentID, scriptName, scriptType.name()));
-            ScriptInfo scriptInfo = new ScriptInfo();
-            scriptInfo.setParentID(parentID);
-            scriptInfo.setScriptName(scriptName);
-            scriptInfo.setScriptType(scriptType);
-            scriptInfo.setInvocable(getInvocable(scriptName, scriptType));
-            scriptInfo.setInteraction(new ScriptInteraction(scriptType, parentID, scriptName, getCharacter()));
-            Invocable engine = scriptInfo.getInvocable();
-            if (engine == null)
-                return;
-            setScriptInfo(scriptInfo);
-            ((ScriptEngine) engine).put("cm", scriptInfo.getInteraction());
-            ((ScriptEngine) engine).put("parentID", scriptInfo.getParentID());
-            engine.invokeFunction(functionName);
-        } catch (NoSuchMethodException | ScriptException e) {
-            e.printStackTrace();
-        } finally {
-            getLock().unlock();
-        }
+        });
     }
 
     public void stopScript() {
@@ -117,26 +119,32 @@ public class ScriptManager {
     }
 
     public void handleAction(NpcMessageType lastType, byte action, int selection) {
+        if (getScriptInfo() != null) {
+            withLock(() -> {
+                try {
+                    ScriptInteraction cm = getScriptInfo().getInteraction();
+                    if (lastType.getValue() != cm.getNpcScriptInfo().getLastMessageType().getValue()) {
+                        stopScriptWithoutLock();
+                    } else if (cm.getNpcScriptInfo().getLastMessageType() == NpcMessageType.NM_SAY && !cm.getNpcScriptInfo().isPrev()
+                            && !cm.getNpcScriptInfo().isNext()) {
+                        stopScriptWithoutLock();
+                    } else {
+                        if (getScriptInfo() != null) {
+                            getScriptInfo().getInvocable().invokeFunction("action", action, lastType.getValue(), selection);
+                        }
+                    }
+                } catch (NoSuchMethodException | ScriptException e) {
+                    log.error("Unable to execute script function \"action\"", e);
+                    stopScriptWithoutLock();
+                }
+            });
+        }
+    }
+
+    private void withLock(Runnable runnable) {
         getLock().lock();
         try {
-            if (getScriptInfo() == null)
-                return;
-            ScriptInteraction cm = getScriptInfo().getInteraction();
-            if (lastType.getValue() != cm.getNpcScriptInfo().getLastMessageType().getValue()) {
-                stopScriptWithoutLock();
-                return;
-            } else if (cm.getNpcScriptInfo().getLastMessageType() == NpcMessageType.NM_SAY && !cm.getNpcScriptInfo().isPrev()
-                    && !cm.getNpcScriptInfo().isNext()) {
-                stopScriptWithoutLock();
-                return;
-            }
-
-            if (getScriptInfo() != null) {
-                getScriptInfo().getInvocable().invokeFunction("action", action, lastType.getValue(), selection);
-            }
-        } catch (NoSuchMethodException | ScriptException e) {
-            log.error("Unable to execute script function \"action\"", e);
-            stopScriptWithoutLock();
+            runnable.run();
         } finally {
             getLock().unlock();
         }

@@ -38,7 +38,12 @@ public class TownPortal extends AbstractFieldObject {
         outPacket.encodeInt(isLeaving ? 999999999 : getFieldID());
         if (!isLeaving) {
             outPacket.encodeInt(getSkillID());
-            outPacket.encodePosition(getTownPosition());
+            outPacket.encodeInt(getTownPosition().getX());
+            outPacket.encodeInt(getTownPosition().getY());
+        } else {
+            outPacket.encodeInt(0);
+            outPacket.encodeInt(0);
+            outPacket.encodeInt(0);
         }
     }
 

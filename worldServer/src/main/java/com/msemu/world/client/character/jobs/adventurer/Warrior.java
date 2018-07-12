@@ -12,8 +12,8 @@ import com.msemu.core.network.packets.outpacket.wvscontext.LP_TemporaryStatSet;
 import com.msemu.world.client.character.*;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.jobs.JobHandler;
-import com.msemu.world.client.character.stats.Option;
 import com.msemu.world.client.character.skill.Skill;
+import com.msemu.world.client.character.stats.Option;
 import com.msemu.world.client.character.stats.TemporaryStatManager;
 import com.msemu.world.client.field.Field;
 import com.msemu.world.client.field.lifes.Mob;
@@ -723,21 +723,21 @@ public class Warrior extends JobHandler {
     @Override
     public int getFinalAttackSkill() {
         Character chr = getCharacter();
-        if (Rand.getChance(getFinalAttackProc())) {
-            int fas = 0;
+        if (Rand.getChance(getFinalAttackProp())) {
+            int skillID = 0;
             if (chr.hasSkill(FINAL_ATTACK_FIGHTER)) {
-                fas = FINAL_ATTACK_FIGHTER;
+                skillID = FINAL_ATTACK_FIGHTER;
             }
             if (chr.hasSkill(FINAL_ATTACK_PAGE)) {
-                fas = FINAL_ATTACK_PAGE;
+                skillID = FINAL_ATTACK_PAGE;
             }
             if (chr.hasSkill(FINAL_ATTACK_SPEARMAN)) {
-                fas = FINAL_ATTACK_SPEARMAN;
+                skillID = FINAL_ATTACK_SPEARMAN;
             }
             if (chr.hasSkill(進階終極攻擊_英雄)) {
-                fas = 進階終極攻擊_英雄;
+                skillID = 進階終極攻擊_英雄;
             }
-            return fas;
+            return skillID;
         } else {
             return 0;
         }
@@ -758,7 +758,6 @@ public class Warrior extends JobHandler {
             int shieldProp = si.getValue(SkillStat.prop, slv);       //TODO should be prop in WzFiles, but it's actually 0
             Option o1 = new Option();
             Option o2 = new Option();
-
             if (tsm.hasStat(BlessingArmor)) {
                 if (divShieldAmount < 10) {
                     divShieldAmount++;
@@ -858,8 +857,8 @@ public class Warrior extends JobHandler {
 
     private void handleCharges(int skillId) {
         TemporaryStatManager tsm = getCharacter().getTemporaryStatManager();
-        Option o = new Option();
-        SkillInfo chargeInfo = SkillData.getInstance().getSkillInfoById(1200014);
+        Option option = new Option();
+        SkillInfo chargeInfo = SkillData.getInstance().getSkillInfoById(元素衝擊);
         int amount = 1;
         if (tsm.hasStat(ElementalCharge)) {
             amount = tsm.getOption(ElementalCharge).mOption;
@@ -871,14 +870,14 @@ public class Warrior extends JobHandler {
             }
         }
         lastCharge = skillId;
-        o.nOption = 1;
-        o.rOption = 1200014;
-        o.tOption = (10 * chargeInfo.getValue(time, 1)); // elemental charge  // 10x actual duration
-        o.mOption = amount;
-        o.wOption = amount * chargeInfo.getValue(w, 1); // elemental charge
-        o.uOption = amount * chargeInfo.getValue(u, 1);
-        o.zOption = amount * chargeInfo.getValue(z, 1);
-        tsm.putCharacterStatValue(ElementalCharge, o);
+        option.nOption = 1;
+        option.rOption = 元素衝擊;
+        option.tOption = 10 * chargeInfo.getValue(time, 1); // elemental charge  // 10x actual duration
+        option.mOption = amount;
+        option.wOption = amount * chargeInfo.getValue(w, 1); // elemental charge
+        option.uOption = amount * chargeInfo.getValue(u, 1);
+        option.zOption = amount * chargeInfo.getValue(z, 1);
+        tsm.putCharacterStatValue(ElementalCharge, option);
         getClient().write(new LP_TemporaryStatSet(tsm));
     }
 
@@ -901,7 +900,7 @@ public class Warrior extends JobHandler {
         return skill;
     }
 
-    private int getFinalAttackProc() {
+    private int getFinalAttackProp() {
         Character chr = getCharacter();
         Skill skill = getFinalAtkSkill();
         SkillInfo si = SkillData.getInstance().getSkillInfoById(skill.getSkillId());

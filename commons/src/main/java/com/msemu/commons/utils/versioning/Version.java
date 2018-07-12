@@ -39,26 +39,26 @@ public class Version {
     }
 
     public void init(Class<?> c) {
-        File jarName = null;
-
-        try {
-            jarName = Locator.getClassSource(c);
-            if (StringUtils.endsWith(jarName.getName(), ".jar")) {
-                JarFile e = new JarFile(jarName);
-                Attributes attrs = e.getManifest().getMainAttributes();
-                this.setBuildJdk(attrs);
-                this.setBuildDate(attrs);
-                this.setVersionRevision(attrs);
-            } else {
-                this.versionRevision = "Dev";
-                this.buildDate = "N/A";
-                this.buildJdk = System.getProperty("java.version");
-            }
-        } catch (IOException var8) {
-            log.error("Unable to get soft information\nFile name \'" + jarName.getAbsolutePath() + "\' isn\'t a valid jar", var8);
-        } finally {
-            this.info();
-        }
+//        File jarName = null;
+//
+//        try {
+//            jarName = Locator.getClassSource(c);
+//            if (StringUtils.endsWith(jarName.getName(), ".jar")) {
+//                JarFile e = new JarFile(jarName);
+//                Attributes attrs = e.getManifest().getMainAttributes();
+//                this.setBuildJdk(attrs);
+//                this.setBuildDate(attrs);
+//                this.setVersionRevision(attrs);
+//            } else {
+//                this.versionRevision = "Dev";
+//                this.buildDate = "N/A";
+//                this.buildJdk = System.getProperty("java.version");
+//            }
+//        } catch (Exception var8) {
+//            log.error("Unable to get soft information\nFile name \'" + jarName.getAbsolutePath() + "\' isn\'t a valid jar", var8);
+//        } finally {
+//            this.info();
+//        }
 
     }
 
