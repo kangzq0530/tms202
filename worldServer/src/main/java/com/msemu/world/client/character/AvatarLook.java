@@ -91,7 +91,7 @@ public class AvatarLook {
         outPacket.encodeByte(isZeroBetaLook());
         outPacket.encodeInt(getHair());
 
-        for (int i = 1; i < getHairEquips().size(); i++) {
+        for (int i = 0; i < getHairEquips().size(); i++) {
             int itemId = getHairEquips().get(i);
             outPacket.encodeByte(ItemConstants.getBodyPartFromItem(itemId, getGender())); // body part
             outPacket.encodeInt(itemId); // item id

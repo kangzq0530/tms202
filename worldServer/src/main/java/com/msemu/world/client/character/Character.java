@@ -260,7 +260,7 @@ public class Character extends AbstractAnimatedFieldLife {
     @Transient
     @Getter
     @Setter
-    private short fieldSeatID;
+    private short fieldSeatID = -1;
     @Transient
     @Getter
     @Setter
@@ -276,7 +276,7 @@ public class Character extends AbstractAnimatedFieldLife {
     @Transient
     @Getter
     @Setter
-    private int tamingMobLevel;
+    private int tamingMobLevel = 1;
     @Transient
     @Getter
     @Setter

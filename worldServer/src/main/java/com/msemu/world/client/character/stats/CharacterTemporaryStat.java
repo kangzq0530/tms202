@@ -1008,25 +1008,25 @@ public enum CharacterTemporaryStat {
     // 更新BUFF用                 [猜測]
     AranBoostEndHunt(483),
     // 更新BUFF用                    [猜測]
-    HiddenHyperLinkMaximization(484),
+    HiddenHyperLinkMaximization(485),
     // 更新BUFF用                       [猜測]
-    RWCylinder(485),
+    RWCylinder(486),
 
-    RWCombination(486),
+    RWCombination(487),
     // 更新BUFF用                      [猜測]
-    RWMagnumBlow(487),
+    RWMagnumBlow(488),
     // 更新BUFF用                      [猜測]
-    RWBarrier(488),
+    RWBarrier(489),
     // 更新BUFF用                     [猜測]
-    RWBarrierHeal(489),
+    RWBarrierHeal(490),
     // 更新BUFF用                  [猜測]
-    RWMaximizeCannon(490),
+    RWMaximizeCannon(491),
     // 更新BUFF用                       [猜測]
-    RWOverHeat(491),
+    RWOverHeat(492),
     // 更新BUFF用                       [猜測]
-    UsingScouter(492),
+    UsingScouter(493),
     // 更新BUFF用                     [猜測]
-    RWMovingEvar(493),
+    RWMovingEvar(494),
     // 更新BUFF用                     [202]
     Stigma(495),
     // 更新BUFF用                     []
@@ -1034,7 +1034,7 @@ public enum CharacterTemporaryStat {
     // 更新BUFF用                     []
     IDA_BUFF_496(496),
     // 更新BUFF用                     []
-    IDA_BUFF_488(488),
+    IDA_BUFF_497(488),
     // 更新BUFF用                     []
     IDA_BUFF_489(489),
     // 更新BUFF用                     []

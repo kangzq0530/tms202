@@ -43,7 +43,8 @@ public class PartyBooster extends TwoStateTemporaryStat {
     @Override
     public void encode(OutPacket<GameClient> outPacket) {
         super.encode(outPacket);
-        outPacket.encodeTime(getCurrentTime());
+        outPacket.encodeByte(getNOption() ==0 ? 0 : 1);
+        outPacket.encodeInt(getCurrentTime());
         outPacket.encodeShort(getExpireTerm());
     }
 }

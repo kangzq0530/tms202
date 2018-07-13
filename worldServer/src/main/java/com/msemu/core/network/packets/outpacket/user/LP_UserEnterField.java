@@ -2,12 +2,12 @@ package com.msemu.core.network.packets.outpacket.user;
 
 import com.msemu.commons.enums.OutHeader;
 import com.msemu.commons.network.packets.OutPacket;
+import com.msemu.commons.utils.HexUtils;
 import com.msemu.core.network.GameClient;
 import com.msemu.world.client.character.AvatarLook;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.stats.CharacterStat;
 import com.msemu.world.client.character.stats.CharacterTemporaryStat;
-import com.msemu.world.client.character.stats.TSIndex;
 import com.msemu.world.client.character.stats.TemporaryStatManager;
 import com.msemu.world.client.field.lifes.Pet;
 import com.msemu.world.client.guild.Guild;
@@ -30,8 +30,6 @@ public class LP_UserEnterField extends OutPacket<GameClient> {
         // m_sParentName
         // 終極冒險加
         encodeString("");
-
-
         if (chr.getGuild() != null) {
             chr.getGuild().encodeForRemote(this);
         } else {
@@ -57,6 +55,13 @@ public class LP_UserEnterField extends OutPacket<GameClient> {
         encodeInt(chr.getPassengerID()); // dwPassenserID
 
         // TODO 妮娜的魔法阵 ?
+
+//        if(tsm.hasStat(CharacterTemporaryStat.RideVehicle) &&
+//                tsm.hasStat(CharacterTemporaryStat.Flying)) {
+//                addMountId(mplew, chr, buffSrc);
+//                mplew.writeInt(chr.getId());
+//                mplew.writeInt(0);
+//        } else {
         encodeInt(0);
         encodeInt(0);
         int size = 0;
@@ -65,15 +70,17 @@ public class LP_UserEnterField extends OutPacket<GameClient> {
             encodeInt(0);
             encodeInt(0);
         }
+//        }
+
 
         // TODO
         encodeInt(chr.getChocoCount());
         encodeInt(chr.getActiveEffectItemID());
         encodeInt(chr.getMonkeyEffectItemID());
         encodeInt(chr.getActiveNickItemID());
-
+///
         encodeByte(false);
-
+///
         encodeInt(chr.getDamageSkin());
         encodeInt(0); // ptPos.x?
         encodeInt(look.getDemonWingID());
@@ -87,23 +94,32 @@ public class LP_UserEnterField extends OutPacket<GameClient> {
         encodeShort(-1);
         encodeByte(false);
         encodeInt(chr.getPortableChairID());
+
+        // 椅子文字 m_sPortableChairMsg
         boolean hasPortableChairMsg = chr.getPortableChairMsg() != null;
-        encodeInt(hasPortableChairMsg ? 1 : 0); // why is this an int
+        encodeInt(hasPortableChairMsg ? 1 : 0);
         if (hasPortableChairMsg) {
             encodeString(chr.getPortableChairMsg());
         }
+
+        //
         int towerIDSize = 0;
         encodeInt(towerIDSize);
         for (int i = 0; i < towerIDSize; i++) {
             encodeInt(0); // towerChairID
         }
+
         // sub_81F990
         encodeByte(false);
+
+
         encodeInt(0);
         encodeInt(0);
         encodePosition(chr.getPosition());
         encodeByte(chr.getAction());
         encodeShort(chr.getFoothold());
+
+
         encodeByte(0);
         for (Pet pet : chr.getPets()) {
             if (pet.getId() == 0) {
@@ -115,15 +131,19 @@ public class LP_UserEnterField extends OutPacket<GameClient> {
         }
         encodeByte(0);
         encodeByte(chr.getMechanicHue());
+
+
         encodeInt(chr.getTamingMobLevel());
         encodeInt(chr.getTamingMobExp());
         encodeInt(chr.getTamingMobFatigue());
         encodeByte(false);
+
         byte miniRoomType = chr.getMiniRoom() != null ? chr.getMiniRoom().getType() : 0;
         encodeByte(miniRoomType);
         if (miniRoomType > 0) {
             chr.getMiniRoom().encode(this);
         }
+
         encodeByte(chr.getADBoardRemoteMsg() != null);
         if (chr.getADBoardRemoteMsg() != null) {
             encodeString(chr.getADBoardRemoteMsg());
@@ -143,18 +163,22 @@ public class LP_UserEnterField extends OutPacket<GameClient> {
             chr.getMarriageRecord().encodeForRemote(this);
         }
 
-        encodeByte(0);
+        encodeByte(0); // v65
+
         int m_nDelayedEffectFlag = 0;
         encodeByte(m_nDelayedEffectFlag);
 
         encodeInt(chr.getEvanDragonGlide());
+
+
         if (MapleJob.is凱撒(chr.getJob())) {
             encodeInt(chr.getKaiserMorphRotateHueExtern());
             encodeInt(chr.getKaiserMorphPrimiumBlack());
             encodeByte(chr.getKaiserMorphRotateHueInnner());
         }
         encodeInt(chr.getMakingMeisterSkillEff());
-        // chr.getFarmUserInfo().encodeForTown(this);
+
+
         for (int i = 0; i < 20; i += 4) {
             encodeByte(-1); // activeEventNameTag
         }
@@ -163,17 +187,23 @@ public class LP_UserEnterField extends OutPacket<GameClient> {
         if (chr.getCustomizeEffect() > 0) {
             encodeString(chr.getCustomizeEffectMsg());
         }
-        encodeByte(chr.getSoulEffect());
-        if (tsm.hasStat(CharacterTemporaryStat.RideVehicle)) {
-            int vehicleID = tsm.getTSBByTSIndex(TSIndex.RideVehicle).getNOption();
-            if (vehicleID == 1932249) { // is_mix_vehicle
-                size = 0;
-                encodeInt(size); // ???
-                for (int i = 0; i < size; i++) {
-                    encodeInt(0);
-                }
-            }
-        }
+
+
+        encodeByte(1);//encodeByte(chr.getSoulEffect());
+
+        // CUser::SetFlareBlink
+        // m_pFlameWizardHelper.p
+
+//        if (tsm.hasStat(CharacterTemporaryStat.RideVehicle)) {
+//            int vehicleID = tsm.getTSBByTSIndex(TSIndex.RideVehicle).getNOption();
+//            if (vehicleID == 1932249) { // is_mix_vehicle
+//                size = 0;
+//                encodeInt(size); // ???
+//                for (int i = 0; i < size; i++) {
+//                    encodeInt(0);
+//                }
+//            }
+//        }
         encodeByte(false); // Flashfire
 //        boolean v90 = false;
 //        mplew.write(v90);
@@ -195,7 +225,9 @@ public class LP_UserEnterField extends OutPacket<GameClient> {
 
         encodeByte(tsm.hasStat(CharacterTemporaryStat.KinesisPsychicEnergeShield));
         encodeByte(chr.isBeastFormWingOn());
+
         encodeInt(chr.getMesoChairCount());
+
         encodeInt(1051291);
 
         encodeInt(0);
