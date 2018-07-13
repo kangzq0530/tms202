@@ -1940,7 +1940,7 @@ public class Character extends AbstractAnimatedFieldLife {
 
     @Override
     public void enterScreen(GameClient client) {
-        write(new LP_UserEnterField(this));
+        client.write(new LP_UserEnterField(this));
         // EffectSwitch
         // dragon
         // haku

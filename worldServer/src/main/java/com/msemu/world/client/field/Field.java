@@ -300,7 +300,7 @@ public class Field {
     }
 
     public void broadcastPacket(OutPacket<GameClient> outPacket, Character exceptChr) {
-        getAllCharacters().stream().filter(chr -> !chr.equals(exceptChr)).forEach(
+        getAllCharacters().stream().filter(chr -> chr.getId() != exceptChr.getId()).forEach(
                 chr -> chr.write(outPacket)
         );
     }
