@@ -28,7 +28,12 @@ public class InventoryManipulator {
         if (destSlot <= 0 || srcEquip == null || srcSlot == -55
                 || (destEquip != null && srcSlot <= 0))
             return;
-
+        chr.chatMessage(String.format("[卸下裝備] 來源: %d 道具: %s(%d)",
+                srcSlot,
+                srcEquip.getTemplate().getName(),
+                srcEquip.getTemplate().getItemId()
+                )
+        );
         chr.getEquippedInventory().removeItem(srcEquip);
         chr.getEquipInventory().addItem(srcEquip);
         srcEquip.setBagIndex(destSlot);
@@ -50,13 +55,20 @@ public class InventoryManipulator {
 
     public static void equip(Character chr, short srcSlot, short destSlot) {
         AvatarLook al = chr.getAvatarData().getAvatarLook();
-        chr.chatMessage(String.format("[穿上裝備] 來源: %d 目標: %d", srcSlot, destSlot));
         List<InventoryOperationInfo> operates = new ArrayList<>();
         Equip srcEquip = (Equip) chr.getEquipInventory()
                 .getItemBySlot(srcSlot);
         Equip destEquip = (Equip) chr.getEquippedInventory()
                 .getItemBySlot(-destSlot);
         List<Integer> hairEquips = al.getHairEquips();
+        chr.chatMessage(String.format("[穿上裝備] 來源: %d 道具: %s(%d) 目標: %d 道具: %s(%d)",
+                srcSlot,
+                srcEquip != null ? srcEquip.getTemplate().getName() : "無",
+                srcEquip != null ? srcEquip.getTemplate().getItemId() : 0,
+                destSlot,
+                destEquip != null ? destEquip.getTemplate().getName() : "無",
+                destEquip != null ? destEquip.getTemplate().getItemId() : 0
+        ));
         if (srcEquip == null || ItemConstants.類型.isHarvesting(srcEquip.getItemId())) {
             chr.enableActions();
             return;
@@ -91,7 +103,7 @@ public class InventoryManipulator {
     public static void drop(Character chr, InvType invType, short srcSlot, short destSlot, short quantity) {
         Item srcItem = chr.getInventoryByType(invType).getItemBySlot(srcSlot);
         Drop drop;
-        chr.chatMessage(String.format("[丟棄裝備] 來源: %d 目標: %d", srcSlot, destSlot));
+
         List<InventoryOperationInfo> operates = new ArrayList<>();
         if (!srcItem.getInvType().isStackable() || quantity >= srcItem.getQuantity()) {
             chr.getInventoryByType(invType).removeItem(srcItem);
@@ -107,6 +119,11 @@ public class InventoryManipulator {
             operates.add(new InventoryOperationInfo(InventoryOperationType.UPDATE,
                     srcItem, srcSlot));
         }
+        chr.chatMessage(String.format("[丟棄裝備] 來源: %d 道具: %s(%d)",
+                srcSlot,
+                drop.getItem().getTemplate().getName(),
+                drop.getItem().getTemplate().getItemId()));
+
         chr.getField().drop(drop, chr.getPosition());
         chr.write(new LP_InventoryOperation(true, false, operates));
     }
@@ -114,7 +131,6 @@ public class InventoryManipulator {
     public static void move(Character chr, InvType invType, short srcSlot, short destSlot) {
         if (srcSlot < 0 || destSlot < 0 || srcSlot == destSlot || invType == InvType.EQUIPPED)
             return;
-        chr.chatMessage(String.format("[移動裝備] 來源: %d 目標: %d", srcSlot, destSlot));
         Item srcItem = chr.getInventoryByType(invType).getItemBySlot(srcSlot);
         Item destItem = chr.getInventoryByType(invType).getItemBySlot(destSlot);
         boolean bag = false, switchSrcDst = false, bothBag = false;
@@ -128,6 +144,15 @@ public class InventoryManipulator {
             chr.enableActions();
             return;
         }
+        chr.chatMessage(String.format("[移動裝備] 來源: %d 道具: %s(%d) 目標: %d 道具:  %s(%d)",
+                srcSlot,
+                srcItem != null ?  srcItem.getTemplate().getName() : "無",
+                srcItem != null ?  srcItem.getTemplate().getItemId() : 0,
+                destSlot,
+                destItem != null ?  destItem.getTemplate().getName() : "無",
+                destItem != null ?  destItem.getTemplate().getItemId() : 0
+        ));
+
         List<InventoryOperationInfo> operates = new ArrayList<>();
 
         if (destItem != null) {

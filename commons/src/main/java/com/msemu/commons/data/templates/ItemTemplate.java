@@ -19,7 +19,7 @@ import java.util.*;
 @Setter
 public class ItemTemplate implements DatSerializable {
     protected long serialNumber;
-    protected String name = "", path = "", noFlip = "", path4Top = "";
+    protected String name = "", desc = "", path = "", noFlip = "", path4Top = "";
     protected InvType invType;
     protected int itemId, price, slotMax, time, stateChangeItem;
     protected int rate, reqSkillLevel, masterLevel;
@@ -49,6 +49,7 @@ public class ItemTemplate implements DatSerializable {
     public void write(DataOutputStream dos) throws IOException {
         dos.writeLong(serialNumber);
         dos.writeUTF(name);
+        dos.writeUTF(desc);
         dos.writeUTF(path);
         dos.writeUTF(noFlip);
         dos.writeUTF(path4Top);
@@ -131,6 +132,7 @@ public class ItemTemplate implements DatSerializable {
     public DatSerializable load(DataInputStream dis) throws IOException {
         setSerialNumber(dis.readLong());
         setName(dis.readUTF());
+        setDesc(dis.readUTF());
         setPath(dis.readUTF());
         setNoFlip(dis.readUTF());
         setPath4Top(dis.readUTF());

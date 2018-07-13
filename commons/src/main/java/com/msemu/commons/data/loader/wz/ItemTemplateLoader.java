@@ -8,10 +8,12 @@ import com.msemu.commons.data.loader.dat.ItemTemplateDatLoader;
 import com.msemu.commons.data.templates.ItemTemplate;
 import com.msemu.commons.utils.StringUtils;
 import com.msemu.commons.utils.types.Tuple;
+import com.msemu.commons.wz.IPropertyContainer;
 import com.msemu.commons.wz.WzDirectory;
 import com.msemu.commons.wz.WzFile;
 import com.msemu.commons.wz.WzImage;
 import com.msemu.commons.wz.properties.WzIntProperty;
+import com.msemu.commons.wz.properties.WzStringProperty;
 import com.msemu.commons.wz.properties.WzSubProperty;
 import lombok.Getter;
 import org.slf4j.LoggerFactory;
@@ -376,6 +378,36 @@ public class ItemTemplateLoader extends WzDataLoader<Map<Integer, ItemTemplate>>
                 });
             });
         });
+
+        WzFile stringFile = getWzManager().getWz(WzManager.STRING);
+        WzImage etcImg = stringFile.getWzDirectory().getImage("Etc.img");
+        importString((WzSubProperty) etcImg.getFromPath("Etc"));
+        WzImage consumeImg = stringFile.getWzDirectory().getImage("Consume.img");
+        importString(consumeImg);
+        WzImage insImg = stringFile.getWzDirectory().getImage("Ins.img");
+        importString(insImg);
+        WzImage cashImg = stringFile.getWzDirectory().getImage("Cash.img");
+        importString(cashImg);
+    }
+
+    private void importString(IPropertyContainer sub) {
+        sub.getProperties().stream()
+                .map(prop -> (WzSubProperty) prop)
+                .forEach(itemProp -> {
+                    final int itemId = Integer.parseInt(itemProp.getName());
+                    if (data.containsKey(itemId)) {
+                        if(itemProp.getFromPath("name") != null) {
+                            WzStringProperty stringProperty =
+                                    (WzStringProperty) itemProp.getFromPath("name");
+                            data.get(itemId).setName(stringProperty.getString());
+                        }
+                        if(itemProp.getFromPath("desc") != null) {
+                            WzStringProperty stringProperty =
+                                    (WzStringProperty) itemProp.getFromPath("desc");
+                            data.get(itemId).setDesc(stringProperty.getString());
+                        }
+                    }
+                });
     }
 
     @Override

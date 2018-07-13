@@ -17,17 +17,16 @@ public class wzToDat {
         WzManager wzManager = new WzManager();
 //        new ForbiddenNameLoader(wzManager).saveToDat();
 //        new ItemOptionLoader(wzManager).saveToDat();
-//        new ItemTemplateLoader(wzManager).saveToDat();
-//        new EquipTemplateLoader(wzManager).saveToDat();
+        new ItemTemplateLoader(wzManager).saveToDat();
+        new EquipTemplateLoader(wzManager).saveToDat();
 //        new SetItemInfoLoader(wzManager).saveToDat();
 //        new MonsterBookLoader(wzManager).saveToDat();
 //        new FieldTemplateLoader(wzManager).saveToDat();
 //        new NpcTemplateLoader(wzManager).saveToDat();
 //
-        new SkillInfoLoader(wzManager).saveToDat();
-        new QuestInfoLoader(wzManager).saveToDat();
-        new MobTemplateLoader(wzManager).saveToDat();
+//        new SkillInfoLoader(wzManager).saveToDat();
+//        new QuestInfoLoader(wzManager).saveToDat();
+//        new MobTemplateLoader(wzManager).saveToDat();
         new FieldTemplateLoader(wzManager).saveToDat();
-
     }
 }
