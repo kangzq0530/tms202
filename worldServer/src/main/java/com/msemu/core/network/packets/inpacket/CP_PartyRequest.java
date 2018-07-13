@@ -17,7 +17,7 @@ import com.msemu.world.service.PartyService;
 public class CP_PartyRequest extends InPacket<GameClient> {
 
     private PartyOperation opcode = PartyOperation.NONE;
-    private boolean isPublic;
+    private boolean appliable;
     private boolean setAppliable;
     private String partyName;
     private String targetName;
@@ -33,7 +33,7 @@ public class CP_PartyRequest extends InPacket<GameClient> {
         this.opcode = PartyOperation.getByValue(decodeByte());
         switch (opcode) {
             case PartyReq_CreateNewParty:
-                isPublic = decodeByte() > 0;
+                appliable = decodeByte() > 0;
                 partyName = decodeString();
                 break;
             case PartyReq_WithdrawParty:
@@ -54,7 +54,7 @@ public class CP_PartyRequest extends InPacket<GameClient> {
                 setAppliable = decodeByte() > 0;
                 break;
             case PartyReq_PartySetting:
-                isPublic = decodeByte() == 0;
+                appliable = decodeByte() > 0;
                 partyName = decodeString();
                 break;
             case PartyReq_KickParty:
@@ -80,6 +80,7 @@ public class CP_PartyRequest extends InPacket<GameClient> {
                 } else {
                     party = new Party();
                     party.setName(partyName);
+                    party.setAppliable(appliable);
                     party.addPartyMember(chr);
                 }
                 break;
@@ -103,20 +104,20 @@ public class CP_PartyRequest extends InPacket<GameClient> {
                 break;
             case PartyReq_InviteParty:
                 party = chr.getParty();
-                Character inviteTarget = world.getCharacterByName(targetName);
-                if (inviteTarget != null && party != null) {
-                    if (partyService.hasInvitation(inviteTarget, party)) {
+                Character target = world.getCharacterByName(targetName);
+                if (target != null && party != null) {
+                    if (partyService.hasInvitation(target, party)) {
                         chr.write(new LP_PartyResult(new InvitePartyAlreadyInvitedResponse()));
                     } else if (party.isFull()) {
                         chr.write(new LP_PartyResult(new JoinPartyAlreadyFullResponse()));
-                    } else if (inviteTarget.getParty() != null) {
+                    } else if (target.getParty() != null) {
                         chr.write(new LP_PartyResult(new JoinPartyAlreadyJoinedResponse()));
-                    } else if (inviteTarget.getClient().getChannel() != getClient().getChannel()) {
+                    } else if (target.getClient().getChannel() != getClient().getChannel()) {
                         chr.write(new LP_PartyResult(new PartyMemberInAnotherChanelBlockedUserResponse()));
                     } else {
-                        partyService.addInvitation(inviteTarget, party);
+                        partyService.addInvitation(target, party);
                         chr.write(new LP_PartyResult(new InvitePartySentResponse(targetName)));
-                        inviteTarget.write(new LP_PartyResult(new InvitePartyRequest(chr.getParty(), chr)));
+                        target.write(new LP_PartyResult(new InvitePartyRequest(chr.getParty(), chr)));
                     }
                 }
                 break;
@@ -163,6 +164,12 @@ public class CP_PartyRequest extends InPacket<GameClient> {
                 } else {
                     leader.getCharacter().write(new LP_PartyResult(new ApplyPartyRequest(chr)));
                     chr.write(new LP_PartyResult(new ApplyPartySentResponse()));
+                }
+                break;
+            case PartyReq_PartySetting:
+                party = chr.getParty();
+                if( chr.getParty().getPartyLeaderId() == chr.getId()) {
+                    party.changeSetting(appliable, partyName);
                 }
                 break;
         }

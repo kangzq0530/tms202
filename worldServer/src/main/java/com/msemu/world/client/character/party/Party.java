@@ -184,7 +184,7 @@ public class Party {
                 emptyTownPortal.encodeForTown(outPacket, isLeaving);
             }
         }
-        outPacket.encodeByte(isAppliable() && !isFull());
+        outPacket.encodeByte(isAppliable() && isFull());
         outPacket.encodeByte(false);
         outPacket.encodeString(getName());
         //
@@ -264,8 +264,8 @@ public class Party {
     }
 
     public void withdrawParty(PartyMember member) {
-        removePartyMember(member);
         broadcastPacket(new LP_PartyResult(new WithdrawPartyDoneResponse(this, member, false, false)));
+        removePartyMember(member);
         updateFull();
     }
 
@@ -279,5 +279,11 @@ public class Party {
         getOnlineMembers().forEach(partyMember -> {
             partyMember.getCharacter().write(outPacket);
         });
+    }
+
+    public void changeSetting(boolean appliable, String partyName) {
+        this.name = partyName;
+        this.appliable = appliable;
+        broadcastPacket(new LP_PartyResult(new PartySettingDoneResponse(appliable, partyName)));
     }
 }

@@ -9,11 +9,11 @@ import com.msemu.world.enums.PartyOperation;
  */
 public class PartySettingDoneResponse implements IPartyResult {
 
-    private boolean appliable;
+    private boolean privateParty;
     private String partyName;
 
     public PartySettingDoneResponse(boolean appliable, String partyName) {
-        this.appliable = appliable;
+        this.privateParty = appliable;
         this.partyName = partyName;
     }
 
@@ -24,8 +24,7 @@ public class PartySettingDoneResponse implements IPartyResult {
 
     @Override
     public void encode(OutPacket<GameClient> outPacket) {
-
-        outPacket.encodeByte(appliable);
+        outPacket.encodeByte(privateParty);
         outPacket.encodeString(partyName);
 
     }
