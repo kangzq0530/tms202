@@ -8,7 +8,7 @@ import lombok.Setter;
 /**
  * Created by Weber on 2018/5/13.
  */
-public abstract class AbstractAnimatedFieldLife extends AbstractFieldObject {
+public abstract class AbstractAnimatedFieldLife extends Life {
 
     @Getter
     @Setter

@@ -16,7 +16,9 @@ import com.msemu.core.network.packets.outpacket.drops.LP_DropLeaveField;
 import com.msemu.core.network.packets.outpacket.field.LP_AffectedAreaCreated;
 import com.msemu.core.network.packets.outpacket.field.LP_FootHoldMove;
 import com.msemu.core.network.packets.outpacket.field.LP_SetQuickMoveInfo;
-import com.msemu.core.network.packets.outpacket.stage.LP_SetField;
+import com.msemu.core.network.packets.outpacket.mob.LP_MobEnterField;
+import com.msemu.core.network.packets.outpacket.npc.LP_NpcEnterField;
+import com.msemu.core.network.packets.outpacket.summon.LP_SummonEnterField;
 import com.msemu.core.network.packets.outpacket.user.LP_UserEnterField;
 import com.msemu.core.network.packets.outpacket.user.LP_UserLeaveField;
 import com.msemu.world.client.character.Character;
@@ -101,7 +103,8 @@ public class Field {
     }
 
     /**
-     *  Return the fieldData of this field.
+     * Return the fieldData of this field.
+     *
      * @return the field data
      */
     public FieldTemplate getFieldData() {
@@ -109,7 +112,8 @@ public class Field {
     }
 
     /**
-     *  Return the width of this field
+     * Return the width of this field
+     *
      * @return the width of this field
      */
     public int getWidth() {
@@ -118,6 +122,7 @@ public class Field {
 
     /**
      * Return the height of this field
+     *
      * @return the height of this field
      */
     public int getHeight() {
@@ -125,7 +130,8 @@ public class Field {
     }
 
     /**
-     *  Return the portals in this field
+     * Return the portals in this field
+     *
      * @return portals
      * @see Portal
      */
@@ -134,7 +140,8 @@ public class Field {
     }
 
     /**
-     *  Return the mobRate of this field
+     * Return the mobRate of this field
+     *
      * @return mobRate
      */
     public int getMobRate() {
@@ -142,7 +149,8 @@ public class Field {
     }
 
     /**
-     *  Return the onUsrEnter script name of this field
+     * Return the onUsrEnter script name of this field
+     *
      * @return script name of onUserEnter of this field
      */
     public String getOnUserEnter() {
@@ -150,7 +158,8 @@ public class Field {
     }
 
     /**
-     *  Return the OnFirstUserEnter script name of this field
+     * Return the OnFirstUserEnter script name of this field
+     *
      * @return cript name of OnFirstUserEnter of this field
      */
     public String getOnFirstUserEnter() {
@@ -158,7 +167,8 @@ public class Field {
     }
 
     /**
-     *  Returns weather if the onUserFirstEnter is exists
+     * Returns weather if the onUserFirstEnter is exists
+     *
      * @return weather if the onUserFirstEnter is exists
      */
     protected boolean hasUserFirstEnterScript() {
@@ -166,7 +176,8 @@ public class Field {
     }
 
     /**
-     *  Return the party bonus rate of this field
+     * Return the party bonus rate of this field
+     *
      * @return the party bonus rate
      */
     public int getPartyBonusRate() {
@@ -174,7 +185,8 @@ public class Field {
     }
 
     /**
-     *  Return the fixed mob capacity of this field
+     * Return the fixed mob capacity of this field
+     *
      * @return
      */
     public int getFixedMob() {
@@ -217,7 +229,8 @@ public class Field {
     }
 
     /**
-     *  Returns a Foothold object with a specified Id
+     * Returns a Foothold object with a specified Id
+     *
      * @param fh foothold Id
      * @return the specified foothold id
      */
@@ -227,10 +240,8 @@ public class Field {
 
     public void enter(Character chr, Portal portal, boolean characterData) {
         chr.setPosition(portal.getPosition());
-        chr.setField(this);
-        chr.getClient().write(new LP_SetField(chr, this, chr.getClient().getChannel(), false, portal.getId(), characterData, chr.hasBuffProtector(),
-                portal.getId(), false, 100, null, true, -1));
-        this.addCharacter(chr);
+        spawnLife(chr);
+        addCharacter(chr);
     }
 
 
@@ -281,11 +292,8 @@ public class Field {
             // 強化任意門剩餘次數
         }
         getAllMobs().forEach(this::updateMobController);
-        broadcastPacket(new LP_UserEnterField(chr), chr);
+
     }
-
-
-
 
 
     @Override
@@ -306,18 +314,22 @@ public class Field {
     }
 
     public void spawnLife(Life life) {
-        if ( life.getField() != null)
+        if (life.getField() != null)
             return;
         life.setField(this);
         this.addFieldObject(life);
         switch (life.getFieldObjectType()) {
             case MOB:
+                broadcastPacket(new LP_MobEnterField((Mob) life, false));
                 break;
             case SUMMON:
+                broadcastPacket(new LP_SummonEnterField((Summon) life));
                 break;
             case NPC:
+                broadcastPacket(new LP_NpcEnterField((Npc) life));
                 break;
             case CHARACTER:
+                broadcastPacket(new LP_UserEnterField((Character) life));
                 break;
         }
     }
@@ -417,7 +429,7 @@ public class Field {
         drop.setOwnerID(ownerID);
         if (itemID != 0) {
             item = ItemData.getInstance().createItem(itemID);
-            if( item.getType() == Item.Type.ITEM) {
+            if (item.getType() == Item.Type.ITEM) {
                 item.setQuantity(Rand.get(dropInfo.getMinQuantity(), dropInfo.getMaxQuantity()));
                 int slotMax = item.getTemplate().getSlotMax();
                 if (slotMax > 0)
@@ -434,8 +446,8 @@ public class Field {
      * Drops a Set of {@link DropInfo}s from a base Position.
      *
      * @param dropInfoList The Set of DropInfos.
-     * @param position  The Position the initial Drop comes from.
-     * @param ownerID   The owner's character ID.
+     * @param position     The Position the initial Drop comes from.
+     * @param ownerID      The owner's character ID.
      */
     public void drop(List<DropInfo> dropInfoList, Position position, int ownerID) {
         drop(dropInfoList, findFootHoldBelow(position), position, ownerID);
@@ -447,9 +459,9 @@ public class Field {
      * to the DropInfo's prop chance.
      *
      * @param dropInfoList The Set of DropInfos that should be dropped.
-     * @param fh        The Foothold this Set of DropInfos is bound to.
-     * @param position  The Position the Drops originate from.
-     * @param ownerID   The ID of the owner of all drops.
+     * @param fh           The Foothold this Set of DropInfos is bound to.
+     * @param position     The Position the Drops originate from.
+     * @param ownerID      The ID of the owner of all drops.
      */
     public void drop(List<DropInfo> dropInfoList, Foothold fh, Position position, int ownerID) {
         int x = position.getX();
@@ -552,7 +564,8 @@ public class Field {
     }
 
     /**
-     *  Returns a character that it has minimize number of controlled mob
+     * Returns a character that it has minimize number of controlled mob
+     *
      * @param mob Mob
      * @return new mob Controller
      */
@@ -698,16 +711,19 @@ public class Field {
     private void removeCharacter(Character chr) {
         removeFieldObject(chr);
         broadcastPacket(new LP_UserLeaveField(chr), chr);
-        chr.getControlledMobs().forEach(mob -> {
-            if (mob.getController().equals(chr)) {
+        getAllMobs().forEach(mob -> {
+
+            if (mob.getController() != null &&
+                    mob.getController().getId() == chr.getId()) {
                 mob.setController(null);
                 mob.setControllerLevel(1);
                 updateMobController(mob);
             }
         });
-        //removeParty follow
-        //removeParty Extractor
-        //removeParty summon
+
+        //unregisterParty follow
+        //unregisterParty Extractor
+        //unregisterParty summon
     }
 
     public void addFieldObject(AbstractFieldObject object) {

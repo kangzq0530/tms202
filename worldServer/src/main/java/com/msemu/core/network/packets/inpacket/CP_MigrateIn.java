@@ -7,12 +7,14 @@ import com.msemu.core.network.GameClient;
 import com.msemu.core.network.packets.outpacket.field.LP_SetQuestClear;
 import com.msemu.core.network.packets.outpacket.funckey.LP_FuncKeyMappedInit;
 import com.msemu.core.network.packets.outpacket.wvscontext.*;
-import com.msemu.world.World;
 import com.msemu.world.Channel;
+import com.msemu.world.World;
 import com.msemu.world.client.Account;
 import com.msemu.world.client.character.Character;
+import com.msemu.world.client.character.party.Party;
 import com.msemu.world.client.field.Field;
 import com.msemu.world.constants.MapleJob;
+import com.msemu.world.service.PartyService;
 
 /**
  * Created by Weber on 2018/4/22.
@@ -40,21 +42,21 @@ public class CP_MigrateIn extends InPacket<GameClient> {
 
         World world = World.getInstance();
         Channel channel = world.getChannels()
-                    .stream()
-                    .filter(ch -> ch.hasTransferByCharacterId(characterId))
-                    .findFirst().orElse(null);
+                .stream()
+                .filter(ch -> ch.hasTransferByCharacterId(characterId))
+                .findFirst().orElse(null);
 
-            if (worldId != world.getWorldId() || channel == null) {
-                getClient().close();
-                return;
-            }
+        if (worldId != world.getWorldId() || channel == null) {
+            getClient().close();
+            return;
+        }
 
-            // TODO 這邊可能有雙登問題
-            Character chr = channel.getTransferIdAndRemoveByCharacterId(characterId);
+        // TODO 這邊可能有雙登問題
+        Character chr = channel.getTransferIdAndRemoveByCharacterId(characterId);
 
-            if (chr == null) {
-                getClient().close();
-                return;
+        if (chr == null) {
+            getClient().close();
+            return;
         }
 
         //TODO 確認登入伺服器跟現在的IP一樣
@@ -70,11 +72,19 @@ public class CP_MigrateIn extends InPacket<GameClient> {
             getClient().getCharacter().setOnline(true);
             getClient().write(new LP_EventNameTagInfo());
             getClient().write(new LP_RequestEventList(true));
+
+
+
             chr.renewBulletIDForAttack();
             Field field = channel.getField(chr.getFieldID() <= 0 ? 100000000 : chr.getFieldID());
+
             chr.warp(field, true);
             chr.setJob(chr.getJob());
-             // TODO  c.announce(CCashShop.onAuthenCodeChanged()); // Enable CashShop
+            Party party = PartyService.getInstance().findParty(chr.getId());
+            if (party != null) {
+                party.backToParty(chr);
+            }
+            // TODO  c.announce(CCashShop.onAuthenCodeChanged()); // Enable CashShop
             getClient().write(new LP_SetQuestClear());
             getClient().write(new LP_HourChanged(DateUtils.getCurrentDayOfWeek()));
             getClient().write(new LP_SetTamingMobInfo(chr, false));

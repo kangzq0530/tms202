@@ -36,7 +36,7 @@ public class CP_FuncKeyMappedModified extends InPacket<GameClient> {
                 break;
             case 1:
             case 2:
-                // [int] ( > 0 itemID, < 0 removeParty )
+                // [int] ( > 0 itemID, < 0 unregisterParty )
                 // TODO type 1, 2
                 break;
         }

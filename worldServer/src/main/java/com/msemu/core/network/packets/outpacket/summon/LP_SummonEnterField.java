@@ -12,10 +12,9 @@ import com.msemu.world.client.field.lifes.Summon;
  */
 public class LP_SummonEnterField extends OutPacket<GameClient> {
 
-    public LP_SummonEnterField(int charID, Summon summon) {
+    public LP_SummonEnterField(Summon summon) {
         super(OutHeader.LP_SummonedEnterField);
-
-        encodeInt(charID);
+        encodeInt(summon.getCharID());
         encodeInt(summon.getObjectId());
         encodeInt(summon.getSkillID());
         encodeByte(summon.getCharLevel());

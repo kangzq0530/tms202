@@ -156,6 +156,7 @@ public class AttackInfo {
                     outPacket.encodeByte(mai.getByteIdk2());
                     outPacket.encodeByte(mai.getByteIdk3());
                     outPacket.encodeShort(mai.getByteIdk4());
+                    outPacket.encodeInt(0);
                     if (skillId == 42111002 || skillId == 80011050) {
                         // 紅玉咒印 || 紅玉咒印
                         outPacket.encodeByte(mai.getDamages().length);

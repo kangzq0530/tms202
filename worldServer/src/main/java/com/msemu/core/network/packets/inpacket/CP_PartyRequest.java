@@ -57,6 +57,9 @@ public class CP_PartyRequest extends InPacket<GameClient> {
                 isPublic = decodeByte() == 0;
                 partyName = decodeString();
                 break;
+            case PartyReq_KickParty:
+                memberId = decodeInt();
+                break;
             default:
                 break;
         }
@@ -75,7 +78,7 @@ public class CP_PartyRequest extends InPacket<GameClient> {
                 if (chr.getParty() != null) {
                     chr.write(new LP_PartyResult(new JoinPartyAlreadyJoinedResponse()));
                 } else {
-                    party = partyService.createNewParty();
+                    party = new Party();
                     party.setName(partyName);
                     party.addPartyMember(chr);
                 }
@@ -84,7 +87,7 @@ public class CP_PartyRequest extends InPacket<GameClient> {
                 party = chr.getParty();
                 if (party == null) {
                     chr.write(new LP_PartyResult(new WithDrawPartyNotJoinedResponse()));
-                } else if (party.getPartyLeaderID() != chr.getId()) {
+                } else if (party.getPartyLeaderId() != chr.getId()) {
                     // 不知道有沒有合適的回應
                     chr.write(new LP_PartyResult(new WithdrawPartyUnknownResponse()));
                 } else {
@@ -107,13 +110,16 @@ public class CP_PartyRequest extends InPacket<GameClient> {
                 party = chr.getParty();
                 Character inviteTarget = world.getCharacterByName(targetName);
                 if (inviteTarget != null && party != null) {
-                    if (party.isFull()) {
+                    if (partyService.hasInvitation(inviteTarget, party)) {
+                        chr.write(new LP_PartyResult(new InvitePartyAlreadyInvitedResponse()));
+                    } else if (party.isFull()) {
                         chr.write(new LP_PartyResult(new JoinPartyAlreadyFullResponse()));
                     } else if (inviteTarget.getParty() != null) {
                         chr.write(new LP_PartyResult(new JoinPartyAlreadyJoinedResponse()));
                     } else if (inviteTarget.getClient().getChannel() != getClient().getChannel()) {
                         chr.write(new LP_PartyResult(new PartyMemberInAnotherChanelBlockedUserResponse()));
                     } else {
+                        partyService.addInvitation(inviteTarget, party);
                         chr.write(new LP_PartyResult(new InvitePartySentResponse(targetName)));
                         inviteTarget.write(new LP_PartyResult(new InvitePartyRequest(chr.getParty(), chr)));
                     }
@@ -121,7 +127,7 @@ public class CP_PartyRequest extends InPacket<GameClient> {
                 break;
             case PartyReq_KickParty:
                 party = chr.getParty();
-                if (party == null || party.getPartyLeaderID() != chr.getId())
+                if (party == null || party.getPartyLeaderId() != chr.getId())
                     return;
                 PartyMember expelled = party.getMemberById(memberId);
                 if (expelled == null)
@@ -135,10 +141,10 @@ public class CP_PartyRequest extends InPacket<GameClient> {
                 break;
             case PartyReq_ChangePartyBoss:
                 party = chr.getParty();
-                if (party == null || party.getPartyLeaderID() != chr.getId())
+                if (party == null || party.getPartyLeaderId() != chr.getId())
                     return;
                 PartyMember newLeader = party.getMemberById(memberId);
-                if (newLeader == null || newLeader.getCharacterID() == party.getPartyLeaderID())
+                if (newLeader == null || newLeader.getCharacterID() == party.getPartyLeaderId())
                     return;
                 if (FieldLimit.ChangePartyBoss.isLimit(field.getFieldLimit())) {
                     chr.write(new LP_PartyResult(new ChangePartyBossKnownResponse()));
@@ -147,7 +153,7 @@ public class CP_PartyRequest extends InPacket<GameClient> {
                 } else if (newLeader.getFieldID() != field.getFieldId()) {
                     chr.write(new LP_PartyResult(new ChangePartyBossNotSameFieldResponse()));
                 } else {
-                    party.changeLeader(newLeader);
+                    party.changeLeader(newLeader, false);
                 }
                 break;
             case PartyReq_ApplyParty:

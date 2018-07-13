@@ -83,7 +83,7 @@ public class WorldServerRMI extends UnicastRemoteObject implements IWorldServerR
 
     @Override
     public boolean isAccountOnServer(int accountId) throws RemoteException {
-        return World.getInstance().getChannels().stream().filter(ch -> ch.isAccountOnChannel(accountId)).findFirst().isPresent();
+        return World.getInstance().getChannels().stream().anyMatch(ch -> ch.isAccountOnChannel(accountId));
     }
 
     @Override

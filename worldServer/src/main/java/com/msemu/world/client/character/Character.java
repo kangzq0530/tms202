@@ -9,6 +9,7 @@ import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.utils.types.FileTime;
 import com.msemu.core.network.GameClient;
 import com.msemu.core.network.packets.outpacket.mob.LP_MobChangeController;
+import com.msemu.core.network.packets.outpacket.stage.LP_SetField;
 import com.msemu.core.network.packets.outpacket.user.LP_UserEnterField;
 import com.msemu.core.network.packets.outpacket.user.LP_UserLeaveField;
 import com.msemu.core.network.packets.outpacket.user.local.LP_ChatMsg;
@@ -38,6 +39,7 @@ import com.msemu.world.client.field.AbstractFieldObject;
 import com.msemu.world.client.field.AffectedArea;
 import com.msemu.world.client.field.Field;
 import com.msemu.world.client.field.lifes.AbstractAnimatedFieldLife;
+import com.msemu.world.client.field.lifes.Life;
 import com.msemu.world.client.field.lifes.Mob;
 import com.msemu.world.client.field.lifes.Pet;
 import com.msemu.world.client.guild.Guild;
@@ -50,6 +52,7 @@ import com.msemu.world.data.FieldData;
 import com.msemu.world.data.ItemData;
 import com.msemu.world.data.SkillData;
 import com.msemu.world.enums.*;
+import com.msemu.world.service.PartyService;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.Session;
@@ -73,7 +76,7 @@ import static com.msemu.world.enums.InventoryOperationType.*;
 @Schema
 @Entity
 @Table(name = "characters")
-public class Character extends AbstractAnimatedFieldLife {
+public class Character extends Life {
 
     @Transient
     private transient final Set<Mob> controlledMobs = new HashSet<>();
@@ -729,7 +732,7 @@ public class Character extends AbstractAnimatedFieldLife {
     }
 
     /**
-     * Consumes a single {@link Item} from this Char's {@link Inventory}. Will removeParty the Item if it has a quantity of 1.
+     * Consumes a single {@link Item} from this Char's {@link Inventory}. Will unregisterParty the Item if it has a quantity of 1.
      *
      * @param item The Item to consume, which is currently in the Char's inventory.
      */
@@ -1004,6 +1007,8 @@ public class Character extends AbstractAnimatedFieldLife {
         }
         removeAllVisibleObjects();
         removeControlledMobs();
+        write(new LP_SetField(this, toField, client.getChannel(), false, portal.getId(), characterData, hasBuffProtector(),
+                portal.getId(), false, 100, null, true, -1));
         toField.enter(this, portal, true);
         if (characterData) {
             if (getGuild() != null) {
@@ -1855,6 +1860,11 @@ public class Character extends AbstractAnimatedFieldLife {
             getAvatarData().getCharacterStat().setPosMap((ft.getForcedReturn() > 0 && ft.getForcedReturn() != 999999999 ? ft.getForcedReturn() : getFieldID()));
             getField().leave(this);
         }
+        if(getParty() != null) {
+            getParty().updateFull();
+            setParty(null);
+        }
+        PartyService.getInstance().removeInvitation(this);
         DatabaseFactory.getInstance().saveToDB(this);
         getClient().getChannelInstance().removeCharacter(this);
     }

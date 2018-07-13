@@ -220,7 +220,7 @@ public class ScriptInteraction {
     }
 
     public boolean isPartyLeader() {
-        return getCharacter().getParty() != null & getCharacter().getParty().getPartyLeaderID() == getCharacter().getId();
+        return getCharacter().getParty() != null & getCharacter().getParty().getPartyLeaderId() == getCharacter().getId();
     }
 
     public void dropMessage(ChatMsgType msgType, String message) {
@@ -249,7 +249,7 @@ public class ScriptInteraction {
             return false;
         } else {
             int fieldID = leader.getFieldID();
-            for (PartyMember pm : getCharacter().getParty().getPartyMembers()) {
+            for (PartyMember pm : getCharacter().getParty().getAllMembers()) {
                 if (pm != null) {
                     res &= pm.getCharacter() != null && pm.isOnline() && pm.getFieldID() == fieldID;
                 }
@@ -263,7 +263,7 @@ public class ScriptInteraction {
     }
 
     public boolean checkPartyLevel(int minLevel, int maxLevel) {
-        return Arrays.stream(getParty().getPartyMembers())
+        return getParty().getAllMembers().stream()
                 .allMatch(member -> member.getCharacterLevel() >= minLevel &&
                         member.getCharacterLevel() <= maxLevel);
     }
@@ -317,7 +317,7 @@ public class ScriptInteraction {
             Field field = getCharacter().getOrCreateFieldByCurrentInstanceType(fieldID);
             getCharacter().warp(field);
         } else {
-            for (PartyMember pm : character.getParty().getPartyMembers()) {
+            for (PartyMember pm : character.getParty().getAllMembers()) {
                 if (pm != null && pm.getCharacter() != null) {
                     Character partyChr = pm.getCharacter();
                     partyChr.setFieldInstanceType(in ? FieldInstanceType.PARTY : FieldInstanceType.CHANNEL);
