@@ -85,13 +85,8 @@ public class CP_PartyRequest extends InPacket<GameClient> {
                 break;
             case PartyReq_WithdrawParty:
                 party = chr.getParty();
-                if (party == null) {
-                    chr.write(new LP_PartyResult(new WithDrawPartyNotJoinedResponse()));
-                } else if (party.getPartyLeaderId() != chr.getId()) {
-                    // 不知道有沒有合適的回應
-                    chr.write(new LP_PartyResult(new WithdrawPartyUnknownResponse()));
-                } else {
-                    party.withdrawParty();
+                if (party != null) {
+                    party.withdrawParty(party.getMemberById(chr.getId()));
                 }
                 break;
             case PartyReq_JoinParty:
@@ -135,7 +130,7 @@ public class CP_PartyRequest extends InPacket<GameClient> {
                 if (FieldLimit.ChangePartyBoss.isLimit(field.getFieldLimit())) {
                     chr.write(new LP_PartyResult(new KickPartyFieldLimitResponse()));
                 } /*還有個 function limit 不知道是三小*/ else {
-                    party.removePartyMember(expelled);
+                    party.kickPartyMember(expelled);
                     chr.write(new LP_PartyResult(new KickPartyDoneResponse()));
                 }
                 break;

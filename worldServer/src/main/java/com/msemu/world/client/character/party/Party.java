@@ -91,14 +91,14 @@ public class Party {
                     chr.setParty(this);
                 }
             }
-        }finally {
+        } finally {
             getLock().unlock();
         }
         updateFull();
     }
 
 
-    public void withdrawParty() {
+    public void disbandParty() {
         List<PartyMember> members = getOnlineMembers();
         PartyMember leader = getPartyLeader();
         getLock().lock();
@@ -112,7 +112,7 @@ public class Party {
         } finally {
             getLock().unlock();
         }
-        WithdrawPartyDoneResponse wpr = new WithdrawPartyDoneResponse(this, leader, true);
+        WithdrawPartyDoneResponse wpr = new WithdrawPartyDoneResponse(this, leader, true, false);
         members.forEach(partyMember -> partyMember.getCharacter().write(new LP_PartyResult(wpr)));
         PartyService.getInstance().unregisterParty(this);
     }
@@ -132,7 +132,7 @@ public class Party {
 
     public void updateFull() {
         if (isEmpty()) {
-            withdrawParty();
+            disbandParty();
         } else if (!getPartyLeader().isOnline()) {
             List<PartyMember> onlineMembers = getOnlineMembers();
             if (onlineMembers.size() > 0)
@@ -219,22 +219,21 @@ public class Party {
                 .findFirst().orElse(null);
     }
 
-    public void removePartyMember(PartyMember memberToKick) {
+    private void removePartyMember(PartyMember memberToKick) {
         getLock().lock();
         try {
             for (int i = 0; i < partyMembers.length; i++) {
                 if (partyMembers[i] != null && partyMembers[i] == memberToKick) {
                     partyMembers[i].getCharacter().setParty(null);
                     partyMembers[i] = null;
-                    memberToKick.getCharacter().write(new LP_PartyResult(new WithdrawPartyDoneResponse(this, memberToKick, false)));
                     break;
                 }
             }
         } finally {
             getLock().unlock();
         }
-        updateFull();
     }
+
 
     public void changeLeader(PartyMember newLeader, boolean dc) {
         getLock().lock();
@@ -247,11 +246,7 @@ public class Party {
                 }
             }
             PartyService.getInstance().updatePartyLeader(oldLeaderId, this);
-            getOnlineMembers().forEach(partyMember -> {
-                partyMember.getCharacter().write(
-                        new LP_PartyResult(new ChangePartyBossDoneResponse(getPartyLeaderId(), dc))
-                );
-            });
+            broadcastPacket(new LP_PartyResult(new ChangePartyBossDoneResponse(getPartyLeaderId(), dc)));
         } finally {
             getLock().unlock();
         }
@@ -268,4 +263,21 @@ public class Party {
         }
     }
 
+    public void withdrawParty(PartyMember member) {
+        removePartyMember(member);
+        broadcastPacket(new LP_PartyResult(new WithdrawPartyDoneResponse(this, member, false, false)));
+        updateFull();
+    }
+
+    public void kickPartyMember(PartyMember expelled) {
+        removePartyMember(expelled);
+        broadcastPacket(new LP_PartyResult(new WithdrawPartyDoneResponse(this, expelled, false, true)));
+        updateFull();
+    }
+
+    public void broadcastPacket(OutPacket<GameClient> outPacket) {
+        getOnlineMembers().forEach(partyMember -> {
+            partyMember.getCharacter().write(outPacket);
+        });
+    }
 }

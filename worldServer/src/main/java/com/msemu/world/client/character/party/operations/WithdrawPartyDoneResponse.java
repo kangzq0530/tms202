@@ -2,7 +2,6 @@ package com.msemu.world.client.character.party.operations;
 
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;
-import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.party.Party;
 import com.msemu.world.client.character.party.PartyMember;
 import com.msemu.world.enums.PartyOperation;
@@ -14,12 +13,14 @@ public class WithdrawPartyDoneResponse implements IPartyResult {
 
     private Party party;
     private PartyMember partyMember;
-    private boolean dispand;
+    private boolean disband;
+    private boolean forceLeaving;
 
-    public WithdrawPartyDoneResponse(Party party, PartyMember partyMember, boolean disband) {
+    public WithdrawPartyDoneResponse(Party party, PartyMember partyMember, boolean disband, boolean forceLeaving) {
         this.party = party;
         this.partyMember = partyMember;
-        this.dispand = disband;
+        this.disband = disband;
+        this.forceLeaving = forceLeaving;
     }
 
     @Override
@@ -32,8 +33,8 @@ public class WithdrawPartyDoneResponse implements IPartyResult {
     public void encode(OutPacket<GameClient> outPacket) {
         outPacket.encodeInt(party.getId());
         outPacket.encodeInt(partyMember.getCharacterID());
-        outPacket.encodeByte(!dispand);
-        outPacket.encodeByte(1);
+        outPacket.encodeByte(!disband);
+        outPacket.encodeByte(forceLeaving);
         outPacket.encodeString(partyMember.getCharacterName());
         party.encode(outPacket, true );
 
