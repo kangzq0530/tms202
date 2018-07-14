@@ -3,9 +3,11 @@ package com.msemu.core.network.packets.inpacket;
 import com.msemu.commons.network.packets.InPacket;
 import com.msemu.core.network.GameClient;
 import com.msemu.core.network.packets.outpacket.wvscontext.LP_GuildResult;
+import com.msemu.world.Channel;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.field.Field;
 import com.msemu.world.client.guild.Guild;
+import com.msemu.world.client.guild.GuildMember;
 import com.msemu.world.client.guild.operations.*;
 import com.msemu.world.enums.GuildResultType;
 import com.msemu.world.service.GuildService;
@@ -95,10 +97,13 @@ public class CP_GuildRequest extends InPacket<GameClient> {
     @Override
     public void runImpl() {
 
+        final Channel channel = getClient().getChannelInstance();
         final Character chr = getClient().getCharacter();
         final Field field = chr.getField();
         final GuildService guildService = GuildService.getInstance();
         final Guild guild;
+        final GuildMember guildMember;
+        final Character target;
 
         switch (opcode) {
             case ReqLoadGuild:
@@ -141,7 +146,38 @@ public class CP_GuildRequest extends InPacket<GameClient> {
                     chr.write(new LP_GuildResult(new CreateNewGuildDisagreeResponse()));
                 }
                 break;
+            case ReqInviteGuild:
+                guild = chr.getGuild();
+                if (guild == null)
+                    return;
+                guildMember = guild.getMemberByID(chr.getId());
+                if (guildMember.getGrade() > 2) {
+                    return;
+                }
+                target = channel.getCharacterByName(charName);
+                if (true || target == null) {
+                    chr.write(new LP_GuildResult(new JoinGuildUnknownUserResponse()));
+                } else if (target.getGuild() != null) {
+                    return;
+                } else {
 
+                }
+                break;
+            case ReqSetGradeName:
+                guild = chr.getGuild();
+                if (guild.getLeaderID() == chr.getId())
+                    guild.changeGradeNames(gradeName);
+                break;
+
+            case ReqSetMark:
+                guild = chr.getGuild();
+                if (guild.getLeaderID() == chr.getId()) {
+                    guild.chaneMark(newBG, newBGColor, newLogo, newLogoColor);
+                }
+
+            case ReqSearch:
+                // [1] [1] [1] [1] [string]
+                break;
         }
     }
 }

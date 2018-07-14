@@ -1,9 +1,13 @@
 package com.msemu.world.client.guild;
 
+import com.msemu.commons.database.DatabaseFactory;
 import com.msemu.commons.database.Schema;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;
+import com.msemu.core.network.packets.outpacket.wvscontext.LP_GuildResult;
 import com.msemu.world.client.character.Character;
+import com.msemu.world.client.guild.operations.SetGradeNameDoneResponse;
+import com.msemu.world.client.guild.operations.SetMarkDoneResponse;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -211,5 +215,20 @@ public class Guild {
 
     public void addGuildSkill(GuildSkill gs) {
         getSkills().put(gs.getSkillID(), gs);
+    }
+
+    public void changeGradeNames(String[] gradeName) {
+        setGradeNames(Arrays.asList(gradeName));
+        DatabaseFactory.getInstance().saveToDB(this);
+        broadcast(new LP_GuildResult(new SetGradeNameDoneResponse(this)));
+    }
+
+    public void chaneMark(int newBG, int newBGColor, int newLogo, int newLogoColor) {
+        this.setMarkBg(newBG);
+        this.setMarkBgColor(newBGColor);
+        this.setMark(newLogo);
+        this.setMarkColor(newLogoColor);
+        DatabaseFactory.getInstance().saveToDB(this);
+        broadcast(new LP_GuildResult(new SetMarkDoneResponse(this)));
     }
 }

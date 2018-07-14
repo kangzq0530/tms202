@@ -1,6 +1,8 @@
 package com.msemu.world.client.character.inventory;
 
 import com.msemu.commons.data.enums.InvType;
+import com.msemu.commons.data.templates.EquipTemplate;
+import com.msemu.commons.data.templates.ItemTemplate;
 import com.msemu.core.network.packets.outpacket.wvscontext.LP_InventoryOperation;
 import com.msemu.world.client.character.AvatarLook;
 import com.msemu.world.client.character.Character;
@@ -124,7 +126,12 @@ public class InventoryManipulator {
                 drop.getItem().getTemplate().getName(),
                 drop.getItem().getTemplate().getItemId()));
 
-        chr.getField().drop(drop, chr.getPosition());
+        ItemTemplate t = srcItem.getTemplate();
+        if (t.isTradeBlock()) {
+            chr.getField().dropFadeOut(drop, chr.getPosition());
+        } else {
+            chr.getField().drop(drop, chr.getPosition());
+        }
         chr.write(new LP_InventoryOperation(true, false, operates));
     }
 

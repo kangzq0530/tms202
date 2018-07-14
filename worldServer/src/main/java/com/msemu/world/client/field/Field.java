@@ -420,6 +420,21 @@ public class Field {
         addObjectSchedule(drop, sf);
     }
 
+    public void dropFadeOut(Drop drop, Position position) {
+        int x = position.getX();
+        Position posTo = new Position(x, findFootHoldBelow(position).getYFromX(x));
+        dropFadeOut(drop, position, posTo);
+    }
+
+    public void dropFadeOut(Drop drop, Position posFrom, Position posTo) {
+        ScheduledFuture sf = EventManager.getInstance().addEvent(() -> {
+            addFieldObject(drop);
+            removeFieldObject(drop);
+            broadcastPacket(new LP_DropEnterField(DropEnterType.FadingOut, drop, 100, 100, posTo, 0, posFrom, 0, false, (short) 0, false, false));
+        }, Rand.get(0, 200));
+        addObjectSchedule(drop, sf);
+    }
+
 
     public void drop(DropInfo dropInfo, Position posFrom, Position posTo, int ownerID) {
         int itemID = dropInfo.getItemID();

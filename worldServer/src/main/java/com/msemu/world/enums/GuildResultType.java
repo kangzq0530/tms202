@@ -56,22 +56,22 @@ public enum GuildResultType {
     ResLoadGuildDone(0x30),
     ResFindGuild_Done(0x31),
     ResCheckGuildName_Available(0x32),
-    ResCheckGuildName_AlreadyUsed(0x33),
+    ResCheckGuildName_AlreadyUsed(0x33),  // 這名稱已經有人使用！請您重新輸入…
     ResCheckGuildName_Unknown(0x34),
     ResCreateGuildAgree_Reply(0x35),
-    ResCreateGuildAgree_Unknown(0x36),
+    ResCreateGuildAgree_Unknown(0x36),    // 接收同意時發生問題！請您再試一次。
     ResCreateNewGuild_Done(0x37),
-    ResCreateNewGuild_AlreadyJoined(0x38),
+    ResCreateNewGuild_AlreadyJoined(0x38),  // 已是加入公會的狀態。
     ResCreateNewGuild_GuildNameAlreadyExist(0x39),
-    ResCreateNewGuild_Beginner(0x3A),
-    ResCreateNewGuild_Disagree(0x3B),
+    ResCreateNewGuild_Beginner(0x3A), // 等級不足！無法創立公會。
+    ResCreateNewGuild_Disagree(0x3B),   // 看來有人不同意公會的創立哦！建議您重新尋找與您志同道合的夥伴後，再來找我吧！需要所有人都同意，才能創立公會喔！
     ResCreateNewGuild_NotFullParty(0x3C),
     ResCreateNewGuild_Unknown(0x3D),
-    ResJoinGuild_Done(0x3E),
-    ResJoinGuild_AlreadyJoined(0x3F),
-    // 0x40 [+] BY 198
-    ResJoinGuild_AlreadyFull(0x41),
-    // 0x42 [+] BY 198
+    ResJoinGuild_Done(0x3E),    // 已加入公會！
+
+    ResJoinGuild_AlreadyJoined(0x3F), // 已是加入公會的狀態。
+    ResJoinGuild_AlreadyFull(0x41), // 您要加入的公會人數已達上限！無法再加入該公會。
+    ResJoinGuild_AlreadyFull2(0x42),
     ResJoinGuild_UnknownUser(0x43),
     ResJoinGuild_NonRequestFindUser(0x44),
     ResJoinGuild_Unknown(0x45),
