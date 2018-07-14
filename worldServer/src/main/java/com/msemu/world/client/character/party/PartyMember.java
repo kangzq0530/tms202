@@ -60,6 +60,14 @@ public class PartyMember {
         return character.getFieldID();
     }
 
+    public int getGuildID() {
+        return getCharacter().getGuild() != null ? getCharacter().getGuild().getId() : 0;
+    }
+
+    public int getGuildRank() {
+        return getCharacter().getGuild().getRank();
+    }
+
     @Override
     public boolean equals(Object obj) {
         return obj instanceof PartyMember && ((PartyMember) obj).getCharacter().equals(getCharacter());

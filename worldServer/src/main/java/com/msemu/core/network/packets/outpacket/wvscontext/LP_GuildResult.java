@@ -12,6 +12,7 @@ public class LP_GuildResult extends OutPacket<GameClient> {
 
     public LP_GuildResult(IGuildResultInfo gri) {
         super(OutHeader.LP_GuildResult);
+        encodeByte(gri.getType().getValue());
         gri.encode(this);
     }
 }

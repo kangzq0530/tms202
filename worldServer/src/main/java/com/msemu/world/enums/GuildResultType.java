@@ -137,7 +137,9 @@ public enum GuildResultType {
     ResGetData(0x81),
     ResRank_Reflash(0x82),
     ResFindGuild_Error(0x83),
-    ResChangeMaster_Pinkbean(0x84),;
+    ResChangeMaster_Pinkbean(0x84),
+
+    NONE(0xFF);
 
     private byte value;
 
@@ -147,5 +149,13 @@ public enum GuildResultType {
 
     public byte getValue() {
         return value;
+    }
+
+    public static GuildResultType getByBalue(int value) {
+        for (GuildResultType type : values()) {
+            if (type.value == value)
+                return type;
+        }
+        return NONE;
     }
 }

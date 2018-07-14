@@ -13,3 +13,4 @@ public interface IGuildResultInfo {
 
     void encode(OutPacket<GameClient> outPacket);
 }
+

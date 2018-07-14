@@ -56,8 +56,10 @@ public abstract class LazyDatMappingDataLoader<T extends DatSerializable> extend
 
     @Override
     public T getItem(Integer index) {
-        if (data.containsKey(index)) return data.get(index);
-        if (!headers.containsKey(index)) return null;
+        if (data.containsKey(index))
+            return data.get(index);
+        if (!headers.containsKey(index))
+            return null;
         final long position = dataPos + headers.get(index);
         try {
             try (FileChannel ch = FileChannel.open(Paths.get(CoreConfig.DAT_PATH + "/" + datFileName), StandardOpenOption.READ)) {

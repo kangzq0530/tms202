@@ -49,9 +49,8 @@ public class FieldData implements IReloadable {
     }
 
     public void load() {
-        WzManager wzManager = new WorldWzManager();
         getFieldTemplateDatLoader().load();
-        log.info("{} fieldTemplates loaded", getFieldTemplateDatLoader().getData().size());
+        log.info("{} fieldTemplates loaded", getFieldTemplateDatLoader().size());
     }
 
     public void clear() {

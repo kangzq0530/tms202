@@ -35,6 +35,8 @@ import com.msemu.world.client.field.effect.ObjectFieldEffect;
 import com.msemu.world.client.field.effect.ScreenDelayFieldEffect;
 import com.msemu.world.client.field.lifes.Mob;
 import com.msemu.world.client.field.lifes.Npc;
+import com.msemu.world.client.guild.Guild;
+import com.msemu.world.client.guild.GuildMember;
 import com.msemu.world.client.guild.operations.InputGuildName;
 import com.msemu.world.data.MobData;
 import com.msemu.world.data.NpcData;
@@ -44,7 +46,6 @@ import com.msemu.world.enums.*;
 import lombok.Getter;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -123,6 +124,38 @@ public class ScriptInteraction {
 
     public Party getParty() {
         return getCharacter().getParty();
+    }
+
+    public List<PartyMember> getPartyMembers() {
+        return getParty().getAllMembers();
+    }
+
+    public List<PartyMember> getOnlinePartyMembers() {
+        return getParty().getOnlineMembers();
+    }
+
+    public boolean isPartyLeader() {
+        return getCharacter().getParty() != null & getCharacter().getParty().getPartyLeaderId() == getCharacter().getId();
+    }
+
+    public Guild getGuild() {
+        return getCharacter().getGuild();
+    }
+
+    public boolean isGuildLeader() {
+        return getGuild() != null && getGuild().getLeaderID() == getCharacter().getId();
+    }
+
+    public List<GuildMember> getGuildMembers() {
+        return getGuild().getMembers();
+    }
+
+    public List<GuildMember> getOnlineGuildMembers() {
+        return getGuild().getOnlineMembers();
+    }
+
+    public int getGuildRank() {
+        return getGuild().getRank();
     }
 
     public void setPartyField() {
@@ -205,6 +238,18 @@ public class ScriptInteraction {
         return getCharacter().getStat(Stat.LUK);
     }
 
+    public int getLevel() {
+        return getCharacter().getLevel();
+    }
+
+    public long getMoney() {
+        return getCharacter().getMoney();
+    }
+
+    public void giveMoney(long amount) {
+        getCharacter().addMoney(amount, true);
+    }
+
 
     public void teachSkill(int skillID, int level) {
         Skill skill = SkillData.getInstance().getSkillById(skillID);
@@ -219,9 +264,7 @@ public class ScriptInteraction {
         getCharacter().teachSkill(skill);
     }
 
-    public boolean isPartyLeader() {
-        return getCharacter().getParty() != null & getCharacter().getParty().getPartyLeaderId() == getCharacter().getId();
-    }
+
 
     public void dropMessage(ChatMsgType msgType, String message) {
         getCharacter().dropMessage();
@@ -920,5 +963,13 @@ public class ScriptInteraction {
     public void showMobSkillHitEffect(int mobSkillID, int mobSkillSlv) {
         write(new LP_UserEffectLocal(new MobSkillHitUserEffect(mobSkillID, mobSkillSlv)));
     }
+
+    // Guild Operation
+
+    public void showInputGuildName() {
+        write(new LP_GuildResult(new InputGuildName()));
+    }
+
+
 
 }

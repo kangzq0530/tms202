@@ -8,6 +8,7 @@ import com.msemu.commons.data.templates.EquipTemplate;
 import com.msemu.commons.wz.WzDirectory;
 import com.msemu.commons.wz.WzFile;
 import com.msemu.commons.wz.WzImage;
+import com.msemu.commons.wz.WzImageProperty;
 import com.msemu.commons.wz.properties.WzStringProperty;
 import com.msemu.commons.wz.properties.WzSubProperty;
 import lombok.Getter;
@@ -185,7 +186,8 @@ public class EquipTemplateLoader extends WzDataLoader<Map<Integer, EquipTemplate
                 .forEach(dir -> importCates(dir).forEach(equip -> data.put(equip.getItemId(), equip)));
         WzFile stringFile = getWzManager().getWz(WzManager.STRING);
         WzImage eqpImg = stringFile.getWzDirectory().getImage("Eqp.img");
-        eqpImg.getProperties().stream()
+        WzSubProperty eqpSub = (WzSubProperty) eqpImg.getFromPath("Eqp");
+        eqpSub.getProperties().stream()
                 .map(prop -> (WzSubProperty) prop)
                 .forEach(cateProp -> {
                     cateProp.getProperties().stream()
@@ -193,9 +195,10 @@ public class EquipTemplateLoader extends WzDataLoader<Map<Integer, EquipTemplate
                             .forEach(itemProp -> {
                                 final int itemId = Integer.parseInt(itemProp.getName());
                                 if (data.containsKey(itemId)) {
-                                    WzStringProperty stringProperty =
-                                            (WzStringProperty) itemProp.getFromPath("name");
-                                    data.get(itemId).setName(stringProperty.getString());
+                                    WzImageProperty stringProperty =
+                                            itemProp.getFromPath("name");
+                                    if (stringProperty != null)
+                                        data.get(itemId).setName(stringProperty.getString());
                                 }
                             });
                 });
