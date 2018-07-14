@@ -112,6 +112,7 @@ public class ItemTemplate implements DatSerializable {
         dos.writeBoolean(removeBody);
         dos.writeBoolean(randstat);
         dos.writeBoolean(blackUpgrade);
+        dos.writeBoolean(quest);
         dos.writeInt(scrollStats.size());
         for (Map.Entry<ItemScrollStat, Integer> entry : scrollStats.entrySet()) {
             dos.writeUTF(entry.getKey().name());
@@ -196,6 +197,7 @@ public class ItemTemplate implements DatSerializable {
         setRemoveBody(dis.readBoolean());
         setRandstat(dis.readBoolean());
         setBlackUpgrade(dis.readBoolean());
+        setQuest(dis.readBoolean());
 
         int scrollStatSize = dis.readInt();
         for (int i = 0; i < scrollStatSize; i++) {

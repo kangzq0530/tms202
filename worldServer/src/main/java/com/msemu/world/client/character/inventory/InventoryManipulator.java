@@ -127,7 +127,7 @@ public class InventoryManipulator {
                 drop.getItem().getTemplate().getItemId()));
 
         ItemTemplate t = srcItem.getTemplate();
-        if (t.isTradeBlock()) {
+        if (t.isTradeBlock() || t.isQuest()) {
             chr.getField().dropFadeOut(drop, chr.getPosition());
         } else {
             chr.getField().drop(drop, chr.getPosition());
