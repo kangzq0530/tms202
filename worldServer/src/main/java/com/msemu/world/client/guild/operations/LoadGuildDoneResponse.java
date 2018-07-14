@@ -9,11 +9,11 @@ import lombok.Getter;
 /**
  * Created by Weber on 2018/4/14.
  */
-public class GuildUpdate implements IGuildResultInfo {
+public class LoadGuildDoneResponse implements IGuildResult {
     @Getter
     public Guild guild;
 
-    public GuildUpdate(Guild guild) {
+    public LoadGuildDoneResponse(Guild guild) {
         this.guild = guild;
     }
 

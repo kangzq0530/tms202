@@ -12,6 +12,9 @@ import org.hibernate.cfg.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -109,4 +112,15 @@ public class DatabaseFactory {
 
     public void closeSession(Session session) {
     }
+
+    public Object getObjFromDB(Class<?> clazz, int id) {
+        Object o;
+        try(Session session = getSession()) {
+            Transaction t = session.beginTransaction();
+            o = session.get(clazz, id);
+            t.commit();
+        }
+        return o;
+    }
+
 }

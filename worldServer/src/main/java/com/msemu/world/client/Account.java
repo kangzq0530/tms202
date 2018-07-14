@@ -13,7 +13,9 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Weber on 2018/4/11.
@@ -99,33 +101,14 @@ public class Account {
     @JoinColumn(name = "accId")
     @Cascade(org.hibernate.annotations.CascadeType.DELETE)
     @OrderBy(value = "characterPos ASC")
-    private List<Character> characters = new ArrayList<>();
+    private Set<Character> characters = new HashSet<>();
 
     public Account() {
 
     }
 
     public static Account findById(int id) {
-        Session session = DatabaseFactory.getInstance().getSession();
-        CriteriaBuilder builder = session.getCriteriaBuilder();
-        CriteriaQuery<Account> query = builder.createQuery(Account.class);
-        Root<Account> root = query.from(Account.class);
-        query.select(root).where(builder.equal(root.get("id"), id));
-        Account result = session.createQuery(query).getSingleResult();
-        session.clear();
-        return result;
-    }
-
-    public static Account findByUserName(String username) {
-        Session session = DatabaseFactory.getInstance().getSession();
-        CriteriaBuilder builder = session.getCriteriaBuilder();
-        CriteriaQuery<Account> query = builder.createQuery(Account.class);
-        Root<Account> root = query.from(Account.class);
-        query.select(root);
-        query.where(builder.equal(root.get("username"), username));
-        List<Account> result = session.createQuery(query).getResultList();
-        session.clear();
-        return !result.isEmpty() ? result.get(0) : null;
+        return (Account) DatabaseFactory.getInstance().getObjFromDB(Account.class, id);
     }
 
     public final String getSecureUserName() {
@@ -141,7 +124,7 @@ public class Account {
         return sb.toString();
     }
 
-    public List<Character> getCharacters() {
+    public Set<Character> getCharacters() {
         return characters;
     }
 

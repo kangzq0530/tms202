@@ -7,7 +7,7 @@ import com.msemu.world.enums.GuildResultType;
 /**
  * Created by Weber on 2018/4/14.
  */
-public interface IGuildResultInfo {
+public interface IGuildResult {
 
     GuildResultType getType();
 

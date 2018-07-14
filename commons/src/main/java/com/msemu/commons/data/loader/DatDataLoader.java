@@ -37,16 +37,12 @@ public abstract class DatDataLoader<T extends DatSerializable> implements IDataL
     }
 
     @Override
-    public T getData() {
-        return data;
-    }
-
-    @Override
     public void saveDat(T template) throws IOException {
         template.write(getDataOutputStream());
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void load() {
         try {
             this.data = (T) create().load(getDataInputStream());

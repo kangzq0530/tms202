@@ -105,12 +105,15 @@ public class Guild {
         outPacket.encodeString(getName());
         // 5 times total
         getGradeNames().forEach(outPacket::encodeString);
+        // memberData
         outPacket.encodeShort(getMembers().size());
         getMembers().forEach(gm -> outPacket.encodeInt(gm.getCharID()));
         getMembers().forEach(gm -> gm.encode(outPacket));
+
         outPacket.encodeShort(getRequestors().size());
         getRequestors().forEach(gm -> outPacket.encodeInt(gm.getCharID()));
         getRequestors().forEach(gm -> gm.encode(outPacket));
+
         outPacket.encodeInt(getMaxMembers());
         outPacket.encodeShort(getMarkBg());
         outPacket.encodeByte(getMarkBgColor());

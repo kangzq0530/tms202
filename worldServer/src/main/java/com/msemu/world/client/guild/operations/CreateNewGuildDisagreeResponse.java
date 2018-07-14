@@ -4,13 +4,10 @@ import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;
 import com.msemu.world.enums.GuildResultType;
 
-/**
- * Created by Weber on 2018/4/30.
- */
-public class InputGuildName implements IGuildResultInfo {
+public class CreateNewGuildDisagreeResponse implements IGuildResult {
     @Override
     public GuildResultType getType() {
-        return GuildResultType.ReqInputGuildName;
+        return GuildResultType.ResCreateNewGuild_Disagree;
     }
 
     @Override

@@ -82,7 +82,7 @@ public class Party {
         updateFull();
     }
 
-    public void backToParty(Character chr) {
+    public void updatePartyMemberInfo(Character chr) {
         getLock().lock();
         try {
             for (int i = 0; i < partyMembers.length; i++) {

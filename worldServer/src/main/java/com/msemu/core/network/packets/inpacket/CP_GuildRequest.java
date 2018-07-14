@@ -2,7 +2,13 @@ package com.msemu.core.network.packets.inpacket;
 
 import com.msemu.commons.network.packets.InPacket;
 import com.msemu.core.network.GameClient;
+import com.msemu.core.network.packets.outpacket.wvscontext.LP_GuildResult;
+import com.msemu.world.client.character.Character;
+import com.msemu.world.client.field.Field;
+import com.msemu.world.client.guild.Guild;
+import com.msemu.world.client.guild.operations.*;
 import com.msemu.world.enums.GuildResultType;
+import com.msemu.world.service.GuildService;
 
 public class CP_GuildRequest extends InPacket<GameClient> {
 
@@ -19,6 +25,7 @@ public class CP_GuildRequest extends InPacket<GameClient> {
     private int newLogo;
     private int newLogoColor;
     private int guildSkillID;
+    private boolean createAgreeReply = false;
 
     public CP_GuildRequest(short opcode) {
         super(opcode);
@@ -26,7 +33,7 @@ public class CP_GuildRequest extends InPacket<GameClient> {
 
     @Override
     public void read() {
-        opcode = GuildResultType.getByBalue(decodeByte());
+        opcode = GuildResultType.getByValue(decodeByte());
         switch (opcode) {
             case ReqLoadGuild:
                 break;
@@ -53,7 +60,7 @@ public class CP_GuildRequest extends InPacket<GameClient> {
                 guildNotice = decodeString();
                 break;
             case ReqSetGradeName:
-                for(int i = 0; i < 5; i++)
+                for (int i = 0; i < 5; i++)
                     gradeName[i] = decodeString();
                 break;
             case ReqSetMemberGrade:
@@ -80,6 +87,7 @@ public class CP_GuildRequest extends InPacket<GameClient> {
             case ReqSearch:
                 break;
             case ResCreateGuildAgree_Reply:
+                createAgreeReply = decodeByte() > 0;
                 break;
         }
     }
@@ -87,5 +95,53 @@ public class CP_GuildRequest extends InPacket<GameClient> {
     @Override
     public void runImpl() {
 
+        final Character chr = getClient().getCharacter();
+        final Field field = chr.getField();
+        final GuildService guildService = GuildService.getInstance();
+        final Guild guild;
+
+        switch (opcode) {
+            case ReqLoadGuild:
+                guild = chr.getGuild();
+                chr.write(new LP_GuildResult(new LoadGuildDoneResponse(guild)));
+                break;
+            case ReqFindGuildByCid:
+                break;
+            case ReqCheckGuildName:
+                boolean nameExists = guildService.isGuildNameExists(guildName);
+                boolean nameLeagal = guildService.isGuildNameLegal(guildName);
+                if (nameExists) {
+                    chr.write(new LP_GuildResult(new CheckGuildNameExistsResponse()));
+                } else if (!nameLeagal) {
+                    chr.write(new LP_GuildResult(new CheckGuildNameUnknownResponse()));
+                } else {
+                    guildService.addReservedGuildName(chr, guildName);
+                    chr.write(new LP_GuildResult(new CreateGuildAgreeRequest(guildName)));
+                }
+                break;
+            case ResCreateGuildAgree_Reply:
+                if (!guildService.hasReservedGuildName(chr))
+                    return;
+                guildName = guildService.getReservedGuildName(chr);
+                guildService.removeRerservedGuildName(chr);
+                if (createAgreeReply) {
+                    if (chr.getGuild() != null || chr.getFieldID() != 200000301) {
+                        chr.write(new LP_GuildResult(new CreateNewGuildAlreadyJoinedResponse()));
+                    } else if (chr.getLevel() < 100) {
+                        chr.write(new LP_GuildResult(new CreateNewGuildBeginnerResponse()));
+                    } else if (chr.getMoney() < 5000000) {
+                        // chr.write(new LP_GuildResult(new ));
+                    } else {
+                        chr.addMoney(-5000000, true);
+                        guild = guildService.createNewGuild(chr, guildName);
+                        chr.setGuild(guild);
+                        chr.write(new LP_GuildResult(new CreateNewGuildDoneResponse(chr.getGuild())));
+                    }
+                } else {
+                    chr.write(new LP_GuildResult(new CreateNewGuildDisagreeResponse()));
+                }
+                break;
+
+        }
     }
 }

@@ -8,21 +8,21 @@ import lombok.Getter;
 /**
  * Created by Weber on 2018/4/17.
  */
-public class GuildUpdateMemberLogin implements IGuildResultInfo {
+public class NotifyLoginOrLogoutResponse implements IGuildResult {
 
     @Getter
     private int guildID, charID;
     @Getter
     private boolean online, showBox;
 
-    public GuildUpdateMemberLogin(int guildID, int charID, boolean online) {
+    public NotifyLoginOrLogoutResponse(int guildID, int charID, boolean online) {
         this.guildID = guildID;
         this.charID = charID;
         this.online = online;
         this.showBox = true;
     }
 
-    public GuildUpdateMemberLogin(int guildID, int charID, boolean online, boolean showBox) {
+    public NotifyLoginOrLogoutResponse(int guildID, int charID, boolean online, boolean showBox) {
         this.guildID = guildID;
         this.charID = charID;
         this.online = online;

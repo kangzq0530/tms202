@@ -85,7 +85,7 @@ public class PartyService {
         }
     }
 
-    public Party findParty(int id) {
+    public Party findCharacterParty(int id) {
         return getAllParties().values()
                 .stream()
                 .filter(party -> party.getMemberById(id) != null)

@@ -61,8 +61,8 @@ public enum GuildResultType {
     ResCreateGuildAgree_Reply(0x35),
     ResCreateGuildAgree_Unknown(0x36),
     ResCreateNewGuild_Done(0x37),
-    ResCreateNewGuild_AlreayJoined(0x38),
-    ResCreateNewGuild_GuildNameAlreayExist(0x39),
+    ResCreateNewGuild_AlreadyJoined(0x38),
+    ResCreateNewGuild_GuildNameAlreadyExist(0x39),
     ResCreateNewGuild_Beginner(0x3A),
     ResCreateNewGuild_Disagree(0x3B),
     ResCreateNewGuild_NotFullParty(0x3C),
@@ -151,7 +151,7 @@ public enum GuildResultType {
         return value;
     }
 
-    public static GuildResultType getByBalue(int value) {
+    public static GuildResultType getByValue(int value) {
         for (GuildResultType type : values()) {
             if (type.value == value)
                 return type;

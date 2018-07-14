@@ -11,6 +11,7 @@ import com.msemu.login.client.Account;
 import com.msemu.login.client.character.Character;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Weber on 2018/3/31.
@@ -35,7 +36,7 @@ public class LP_SelectWorldResult extends OutPacket<LoginClient> {
             ft.encode(this);
         }
         encodeByte(false);
-        List<Character> chars = account.getCharacters();
+        Set<Character> chars = account.getCharacters();
         encodeInt(chars.size());
         chars.forEach(c -> encodeInt(c.getId()));
         encodeByte(chars.size());

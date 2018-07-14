@@ -46,6 +46,7 @@ public abstract class InPacket<TClient extends Client<TClient>> extends Packet<T
     }
 
 
+    @SuppressWarnings("unchecked")
     public InPacket<TClient> clonePacket() {
         try {
             return (InPacket<TClient>) super.clone();

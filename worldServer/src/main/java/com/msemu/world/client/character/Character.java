@@ -38,21 +38,22 @@ import com.msemu.world.client.character.stats.TemporaryStatManager;
 import com.msemu.world.client.field.AbstractFieldObject;
 import com.msemu.world.client.field.AffectedArea;
 import com.msemu.world.client.field.Field;
-import com.msemu.world.client.field.lifes.AbstractAnimatedFieldLife;
 import com.msemu.world.client.field.lifes.Life;
 import com.msemu.world.client.field.lifes.Mob;
 import com.msemu.world.client.field.lifes.Pet;
 import com.msemu.world.client.guild.Guild;
 import com.msemu.world.client.guild.GuildMember;
-import com.msemu.world.client.guild.operations.GuildUpdate;
-import com.msemu.world.client.guild.operations.GuildUpdateMemberLogin;
+import com.msemu.world.client.guild.operations.LoadGuildDoneResponse;
+import com.msemu.world.client.guild.operations.NotifyLoginOrLogoutResponse;
 import com.msemu.world.client.scripting.ScriptManager;
 import com.msemu.world.constants.*;
 import com.msemu.world.data.FieldData;
 import com.msemu.world.data.ItemData;
 import com.msemu.world.data.SkillData;
 import com.msemu.world.enums.*;
+import com.msemu.world.service.GuildService;
 import com.msemu.world.service.PartyService;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.Session;
@@ -76,6 +77,8 @@ import static com.msemu.world.enums.InventoryOperationType.*;
 @Schema
 @Entity
 @Table(name = "characters")
+@Getter
+@Setter
 public class Character extends Life {
 
     @Transient
@@ -83,331 +86,188 @@ public class Character extends Life {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    @Getter
-    @Setter
     private int id;
     @Column(name = "accId")
-    @Getter
-    @Setter
     private int accId;
     @JoinColumn(name = "questManager")
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @Setter
+    @Getter(value = AccessLevel.NONE)
     private QuestManager questManager;
     @JoinColumn(name = "equippedInventory")
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @Getter
-    @Setter
     private Inventory equippedInventory = new Inventory(EQUIPPED, 50);
     @JoinColumn(name = "equipInventory")
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @Getter
-    @Setter
     private Inventory equipInventory = new Inventory(EQUIP, 50);
     @JoinColumn(name = "consumeInventory")
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @Getter
-    @Setter
     private Inventory consumeInventory = new Inventory(InvType.CONSUME, 50);
     @JoinColumn(name = "etcInventory")
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @Getter
-    @Setter
     private Inventory etcInventory = new Inventory(InvType.ETC, 50);
     @JoinColumn(name = "installInventory")
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @Getter
-    @Setter
     private Inventory installInventory = new Inventory(InvType.INSTALL, 50);
     @JoinColumn(name = "cashInventory")
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @Getter
-    @Setter
     private Inventory cashInventory = new Inventory(InvType.CASH, 50);
     @JoinColumn(name = "avatarData")
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @Getter
-    @Setter
     private AvatarData avatarData;
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @Getter
-    @Setter
     private FuncKeyMap funcKeyMap;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "charId")
-    @Getter
-    @Setter
     private List<Skill> skills;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "charId")
-    @Getter
-    @Setter
     private List<VMatrixRecord> vMatrixRecords;
     @JoinColumn(name = "guild")
     @OneToOne(cascade = CascadeType.ALL)
-    @Getter
-    @Setter
+    @Setter(AccessLevel.NONE)
     private Guild guild;
     @Transient
-    @Getter
-    @Setter
     private GameClient client;
     @Transient
-    @Getter
-    @Setter
     private Ranking ranking;
     @Transient
-    @Getter
-    @Setter
     private int combatOrders;
     @Transient
-    @Getter
-    @Setter
     private List<Skill> stolenSkills;
     @Transient
-    @Getter
-    @Setter
     private List<Skill> chosenSkills;
     @Transient
-    @Getter
-    @Setter
     private List<ItemPot> itemPots;
     @Transient
-    @Getter
-    @Setter
     private List<Pet> pets;
     @Transient
-    @Getter
-    @Setter
     private List<FriendRecord> friendRecords;
     @Transient
-    @Getter
-    @Setter
     private List<ExpConsumeItem> expConsumeItems;
     @Transient
-    @Getter
-    @Setter
     private List<MonsterBattleMobInfo> monsterBattleMobInfos;
     @Transient
-    @Getter
-    @Setter
     private MonsterBattleLadder monsterBattleLadder;
     @Transient
-    @Getter
-    @Setter
     private MonsterBattleRankInfo monsterBattleRankInfo;
     @Transient
     private Field field;
     @Transient
-    @Getter
+    @Setter(AccessLevel.NONE)
     private TemporaryStatManager temporaryStatManager;
     @Transient
-    @Getter
+    @Setter(AccessLevel.NONE)
     private ForcedStatManager forcedStatManager;
     @Transient
-    @Getter
-    @Setter
     private JobHandler jobHandler;
     @Transient
-    @Getter
-    @Setter
     private MarriageRing marriageRecord;
     @Transient
-    @Getter
-    @Setter
     private WildHunterInfo wildHunterInfo;
     @Transient
-    @Getter
-    @Setter
     private ZeroInfo zeroInfo;
     @Transient
-    @Getter
-    @Setter
     private int damageSkin;
     @Transient
-    @Getter
-    @Setter
     private int premiumDamageSkin;
     @Transient
-    @Getter
-    @Setter
     private boolean partyInvitable;
     @Transient
-    @Getter
-    @Setter
     private ScriptManager scriptManager = new ScriptManager(this);
     @Transient
-    @Getter
-    @Setter
     private int driverID;
     @Transient
-    @Getter
-    @Setter
     private int passengerID;
     @Transient
-    @Getter
-    @Setter
     private int chocoCount;
     @Transient
-    @Getter
-    @Setter
     private int activeEffectItemID;
     @Transient
-    @Getter
-    @Setter
     private int monkeyEffectItemID;
     @Transient
-    @Getter
-    @Setter
     private int completedSetItemID;
     @Transient
-    @Getter
-    @Setter
     private short fieldSeatID = -1;
     @Transient
-    @Getter
-    @Setter
     private int portableChairID;
     @Transient
-    @Getter
-    @Setter
     private String portableChairMsg;
     @Transient
-    @Getter
-    @Setter
     private short foothold;
     @Transient
-    @Getter
-    @Setter
     private int tamingMobLevel = 1;
     @Transient
-    @Getter
-    @Setter
     private int tamingMobExp;
     @Transient
-    @Getter
-    @Setter
     private int tamingMobFatigue;
     @Transient
-    @Getter
-    @Setter
     private MiniRoom miniRoom;
     @Transient
-    @Getter
-    @Setter
     private String ADBoardRemoteMsg;
     @Transient
-    @Getter
-    @Setter
     private boolean inCouple;
     @Transient
-    @Getter
-    @Setter
     private CoupleRecord couple;
     @Transient
-    @Getter
-    @Setter
     private List<FriendshipRingRecord> friendshipRingRecord = new ArrayList<>();
     @Transient
-    @Getter
-    @Setter
     private int evanDragonGlide;
     @Transient
-    @Getter
-    @Setter
     private int kaiserMorphRotateHueExtern;
     @Transient
-    @Getter
-    @Setter
     private int kaiserMorphPrimiumBlack;
     @Transient
-    @Getter
-    @Setter
     private int kaiserMorphRotateHueInnner;
     @Transient
-    @Getter
-    @Setter
     private int makingMeisterSkillEff;
     @Transient
-    @Getter
-    @Setter
     private FarmUserInfo farmUserInfo;
     @Transient
-    @Getter
-    @Setter
     private int customizeEffect;
     @Transient
-    @Getter
-    @Setter
     private String customizeEffectMsg;
     @Transient
-    @Getter
-    @Setter
     private byte soulEffect;
     @Transient
-    @Getter
-    @Setter
     private FreezeHotEventInfo freezeHotEventInfo = new FreezeHotEventInfo();
     @Transient
-    @Getter
-    @Setter
     private int eventBestFriendAID;
     @Transient
-    @Getter
-    @Setter
     private int mesoChairCount;
     @Transient
-    @Getter
-    @Setter
     private boolean beastFormWingOn;
     @Transient
-    @Getter
-    @Setter
     private int activeNickItemID;
     @Transient
-    @Getter
-    @Setter
     private int mechanicHue;
     @Transient
+    @Setter(AccessLevel.NONE)
     private boolean online;
     @Transient
-    @Getter
-    @Setter
     private Party party;
     @Transient
-    @Getter
-    @Setter
     private FieldInstanceType fieldInstanceType;
     @Transient
-    @Getter
-    private Map<Integer, Field> fields = new HashMap<>();
+    private final Map<Integer, Field> fields = new HashMap<>();
     @Transient
-    @Getter
+    @Setter(AccessLevel.NONE)
     private int bulletIDForAttack;
     @Transient
-    @Getter
-    private CharacterLocalStat characterLocalStat;
+    private final CharacterLocalStat characterLocalStat;
     @Transient
-    @Getter
-    private FriendList friendList = new FriendList();
-    @Getter
+    private final FriendList friendList = new FriendList();
     @Transient
-    private transient ReentrantReadWriteLock controlledLock = new ReentrantReadWriteLock();
+    private final ReentrantReadWriteLock controlledLock = new ReentrantReadWriteLock();
     @Getter
     @Transient
-    private transient Set<AbstractFieldObject> visibleFieldObjects = new HashSet<>();
-    @Getter
+    private final Set<AbstractFieldObject> visibleFieldObjects = new HashSet<>();
     @Transient
-    private transient ReentrantReadWriteLock visibleMapObjectsLock = new ReentrantReadWriteLock();
-    @Getter
-    @Setter
+    private final ReentrantReadWriteLock visibleMapObjectsLock = new ReentrantReadWriteLock();
     @Transient
     LocalDateTime lastUseStatChangeItemTime = LocalDateTime.MIN;
     @Transient
-    private Android activedAndroid;
+    private Android activeAndroid;
     @Transient
-    @Getter
-    @Setter
     private int team;
 
 
@@ -1012,7 +872,7 @@ public class Character extends Life {
         toField.enter(this, portal, true);
         if (characterData) {
             if (getGuild() != null) {
-                write(new LP_GuildResult(new GuildUpdate(getGuild())));
+                write(new LP_GuildResult(new LoadGuildDoneResponse(getGuild())));
             }
         }
         renewCharacterStats();
@@ -1827,6 +1687,13 @@ public class Character extends Life {
 
     }
 
+    public void setGuild(Guild guild) {
+        // make sure sharing the same instance
+        if(guild != null)
+            guild = GuildService.getInstance().getGuildById(guild.getId());
+        this.guild = guild;
+    }
+
     public boolean isOnline() {
         return online;
     }
@@ -1838,7 +1705,10 @@ public class Character extends Life {
             gm.setOnline(online);
             gm.setCharacter(online ? this : null);
             getGuild().broadcast(new LP_GuildResult(
-                    new GuildUpdateMemberLogin(g.getId(), getId(), online, !this.online && online)), this);
+                    new NotifyLoginOrLogoutResponse(g.getId(), getId(), online, !this.online && online)), this);
+        }
+        if(getParty() != null) {
+            getParty().updatePartyMemberInfo(this);
         }
         this.online = online;
     }
@@ -1879,6 +1749,7 @@ public class Character extends Life {
     }
 
     public void renewCharacterStats() {
+        renewBulletIDForAttack();
         getCharacterLocalStat().reCalculateLocalStat();
     }
 

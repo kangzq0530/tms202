@@ -37,7 +37,7 @@ import com.msemu.world.client.field.lifes.Mob;
 import com.msemu.world.client.field.lifes.Npc;
 import com.msemu.world.client.guild.Guild;
 import com.msemu.world.client.guild.GuildMember;
-import com.msemu.world.client.guild.operations.InputGuildName;
+import com.msemu.world.client.guild.operations.InputGuildNameRequest;
 import com.msemu.world.data.MobData;
 import com.msemu.world.data.NpcData;
 import com.msemu.world.data.QuestData;
@@ -119,7 +119,7 @@ public class ScriptInteraction {
     }
 
     public void showGuildCreateWindow() {
-        getCharacter().write(new LP_GuildResult(new InputGuildName()));
+        getCharacter().write(new LP_GuildResult(new InputGuildNameRequest()));
     }
 
     public Party getParty() {
@@ -967,7 +967,7 @@ public class ScriptInteraction {
     // Guild Operation
 
     public void showInputGuildName() {
-        write(new LP_GuildResult(new InputGuildName()));
+        write(new LP_GuildResult(new InputGuildNameRequest()));
     }
 
 

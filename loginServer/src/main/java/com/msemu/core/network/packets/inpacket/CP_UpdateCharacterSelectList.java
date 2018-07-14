@@ -9,6 +9,7 @@ import org.hibernate.Session;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Weber on 2018/4/19.
@@ -47,13 +48,15 @@ public class CP_UpdateCharacterSelectList extends InPacket<LoginClient> {
             return;
         }
 
-        List<Character> characters = account.getCharacters();
+        Set<Character> characters = account.getCharacters();
 
 
         for(int i = 0; i < charPosArray.size(); i++) {
             int charId = charPosArray.get(i);
-            if (characters.get(i).getId() != charId) {
-                characters.get(i).setCharacterPos(i);
+            for (Character character : characters) {
+                if (character.getId() != charId) {
+                    character.setCharacterPos(i);
+                }
             }
         }
         DatabaseFactory.getInstance().saveToDB(characters);

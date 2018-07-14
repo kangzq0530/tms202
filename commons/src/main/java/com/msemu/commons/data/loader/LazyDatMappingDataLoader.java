@@ -55,6 +55,7 @@ public abstract class LazyDatMappingDataLoader<T extends DatSerializable> extend
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public T getItem(Integer index) {
         if (data.containsKey(index))
             return data.get(index);

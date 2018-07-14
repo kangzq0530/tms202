@@ -13,7 +13,9 @@ import com.msemu.world.client.Account;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.party.Party;
 import com.msemu.world.client.field.Field;
+import com.msemu.world.client.guild.Guild;
 import com.msemu.world.constants.MapleJob;
+import com.msemu.world.service.GuildService;
 import com.msemu.world.service.PartyService;
 
 /**
@@ -58,32 +60,30 @@ public class CP_MigrateIn extends InPacket<GameClient> {
             getClient().close();
             return;
         }
-
         //TODO 確認登入伺服器跟現在的IP一樣
 
         if (getClient().compareAndSetState(ClientState.CONNECTED, ClientState.ENTERED)) {
             channel.addCharacter(chr);
-            chr.setClient(getClient());
+
             Account account = Account.findById(chr.getAccId());
             getClient().setAccount(account);
             getClient().setChannel(channel);
             getClient().setCharacter(chr);
             getClient().getChannelInstance().addCharacter(chr);
-            getClient().getCharacter().setOnline(true);
             getClient().write(new LP_EventNameTagInfo());
             getClient().write(new LP_RequestEventList(true));
 
+            final Field field = channel.getField(chr.getFieldID() <= 0 ? 100000000 : chr.getFieldID());
+            final Party party = PartyService.getInstance().findCharacterParty(chr.getId());
 
-
-            chr.renewBulletIDForAttack();
-            Field field = channel.getField(chr.getFieldID() <= 0 ? 100000000 : chr.getFieldID());
+            chr.setClient(getClient());
 
             chr.warp(field, true);
+            chr.renewCharacterStats();
             chr.setJob(chr.getJob());
-            Party party = PartyService.getInstance().findParty(chr.getId());
-            if (party != null) {
-                party.backToParty(chr);
-            }
+            chr.setParty(party);
+            chr.setOnline(true);
+
             // TODO  c.announce(CCashShop.onAuthenCodeChanged()); // Enable CashShop
             getClient().write(new LP_SetQuestClear());
             getClient().write(new LP_HourChanged(DateUtils.getCurrentDayOfWeek()));
@@ -91,10 +91,8 @@ public class CP_MigrateIn extends InPacket<GameClient> {
             //0x020F:
             getClient().write(new LP_ChangeSkillRecordResult(chr.getSkills(), true,
                     false, false, false));
-
             // TODO update VSkillRecord
             getClient().write(new LP_ForcedStatReset());
-
             //TODO c.announce(CWvsContext.broadcastMsg(channelServer.getServerMessage(player.getWorld())));
             // GM hide
             /**
