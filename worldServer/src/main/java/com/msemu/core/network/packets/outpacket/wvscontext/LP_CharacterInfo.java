@@ -4,7 +4,12 @@ import com.msemu.commons.enums.OutHeader;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;
 import com.msemu.world.client.character.Character;
+import com.msemu.world.client.character.inventory.items.Item;
 import com.msemu.world.client.character.stats.CharacterStat;
+import com.msemu.world.constants.ItemConstants;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Weber on 2018/5/23.
@@ -26,18 +31,17 @@ public class LP_CharacterInfo extends OutPacket<GameClient> {
         if (hasMarriage) {
             chr.getMarriageRecord().encode(this);
         }
-        //TODO profression skill level
+        //TODO 專業技能
         encodeByte(0); // short for loop
         boolean hasGuild = chr.getGuild() != null;
-        if(hasGuild) {
+        if (hasGuild) {
             encodeString(chr.getGuild().getName());
-            encodeString(chr.getGuild().getName()); // TODO allaince Name
+            encodeString(""); // TODO allaince Name
         } else {
             encodeString("");
             encodeString("");
         }
-
-        encodeByte(self);
+        encodeByte(self ? -1 : 0);
         encodeByte(0);
         encodeString("");
         encodeByte(0);
@@ -46,6 +50,35 @@ public class LP_CharacterInfo extends OutPacket<GameClient> {
         encodeByte(0);
         encodeByte(0);
         encodeByte(0);
+
+        encodeByte(0); // pet
+
+        encodeByte(0); // wish list - int for loop
+
+        Item medal = chr.getEquippedInventory().getItemBySlot(46);
+        encodeInt(medal != null ? medal.getItemId() : 0);
+        encodeShort(0); // medal Quests
+
+        encodeByte(0); // damageSkin
+
+
+        encodeZeroBytes(6 * 4); // traits level
+
+        List<Item> chairs =  chr.getInstallInventory().getItems()
+                .stream()
+                .filter(item -> ItemConstants.類型.椅子(item.getItemId()))
+                .collect(Collectors.toList());
+
+        encodeInt(chairs.size());
+        chairs.forEach(item -> encodeInt(item.getItemId()));
+
+        List<Item> medals = chr.getEquipInventory().getItems()
+                .stream()
+                .filter(item -> item.getItemId() >= 1142000 && item.getItemId() < 1152000)
+                .collect(Collectors.toList());
+
+        encodeInt(medals.size());
+        medals.forEach(item -> encodeInt(item.getItemId()));
 
         //tODOQQ
 
