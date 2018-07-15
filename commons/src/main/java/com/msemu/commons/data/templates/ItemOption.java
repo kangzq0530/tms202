@@ -1,6 +1,7 @@
 package com.msemu.commons.data.templates;
 
 
+import com.msemu.commons.data.enums.ItemGrade;
 import com.msemu.commons.data.enums.ItemOptionStat;
 import com.msemu.commons.data.loader.dat.DatSerializable;
 import lombok.Getter;
@@ -21,8 +22,9 @@ public class ItemOption implements DatSerializable {
 
     private int optionType;
     private String string = "";
-    private int id;
     private int reqLevel;
+
+    private int level;
     private String face = "";
 
     private Map<ItemOptionStat, Integer> otherData = new HashMap<>();
@@ -33,7 +35,7 @@ public class ItemOption implements DatSerializable {
 
     @Override
     public String toString() {
-        return "id: " + getId() + ", optionType: " + getOptionType() + " : " + getString();
+        return "level: " + getLevel() + ", optionType: " + getOptionType() + " : " + getString();
     }
 
     public static ItemOptionStat[] getTypes() {
@@ -44,7 +46,7 @@ public class ItemOption implements DatSerializable {
     public void write(DataOutputStream dos) throws IOException {
         dos.writeInt(this.optionType);
         dos.writeUTF(this.string);
-        dos.writeInt(this.id);
+        dos.writeInt(this.level);
         dos.writeInt(this.reqLevel);
         dos.writeUTF(this.face);
         dos.writeInt(otherData.size());
@@ -58,7 +60,7 @@ public class ItemOption implements DatSerializable {
     public DatSerializable load(DataInputStream dis) throws IOException {
         this.setOptionType(dis.readInt());
         this.setString(dis.readUTF());
-        this.setId(dis.readInt());
+        this.setLevel(dis.readInt());
         this.setReqLevel(dis.readInt());
         this.setFace(dis.readUTF());
         int otherDataSize = dis.readInt();
@@ -70,4 +72,5 @@ public class ItemOption implements DatSerializable {
         }
         return this;
     }
+
 }

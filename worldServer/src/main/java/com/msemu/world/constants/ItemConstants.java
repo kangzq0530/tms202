@@ -2,12 +2,17 @@ package com.msemu.world.constants;
 
 
 import com.msemu.commons.data.enums.InvType;
+import com.msemu.commons.data.templates.ItemOption;
+import com.msemu.commons.data.templates.ItemOptionInfo;
+import com.msemu.world.client.character.inventory.items.Equip;
+import com.msemu.world.data.ItemData;
 import com.msemu.world.enums.WeaponType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Weber on 2018/3/31.
@@ -338,6 +343,94 @@ public class ItemConstants {
         return invType;
     }
 
+    public static List<ItemOptionInfo> getOptionsByEquip(Equip equip, boolean bonus) {
+        int id = equip.getItemId();
+        final List<ItemOptionInfo> data = ItemData.getInstance().getAllItemOptionInfos();
+
+        final List<ItemOptionInfo> res = data.stream()
+                .filter(optionInfo -> optionInfo.getOptionType() == 0
+                        && optionInfo.hasMatchingGrade(bonus ? equip.getBonusGrade() : equip.getBaseGrade()) && optionInfo.isBonus() == bonus)
+                .collect(Collectors.toList());
+
+
+        if (ItemConstants.類型.武器(id)) {
+            res.addAll(data.stream().filter(
+                    io -> io.getOptionType() == 10
+                            && io.hasMatchingGrade(bonus ? equip.getBonusGrade() : equip.getBaseGrade()) && io.isBonus() == bonus
+            ).collect(Collectors.toList()));
+        } else {
+            res.addAll(data.stream().filter(
+                    io -> io.getOptionType() == 11
+                            && io.hasMatchingGrade(bonus ? equip.getBonusGrade() : equip.getBaseGrade()) && io.isBonus() == bonus)
+                    .collect(Collectors.toList()));
+            if (ItemConstants.類型.飾品(id)) {
+                res.addAll(data.stream().filter(
+                        io -> io.getOptionType() == 40
+                                && io.hasMatchingGrade(bonus ? equip.getBonusGrade() : equip.getBaseGrade()) && io.isBonus() == bonus)
+                        .collect(Collectors.toList()));
+            } else {
+                res.addAll(data.stream().filter(
+                        io -> io.getOptionType() == 20
+                                && io.hasMatchingGrade(bonus ? equip.getBonusGrade() : equip.getBaseGrade()) && io.isBonus() == bonus)
+                        .collect(Collectors.toList()));
+                if (ItemConstants.類型.帽子(id)) {
+                    res.addAll(data.stream().filter(
+                            io -> io.getOptionType() == 51
+                                    && io.hasMatchingGrade(bonus ? equip.getBonusGrade() : equip.getBaseGrade()) && io.isBonus() == bonus)
+                            .collect(Collectors.toList()));
+                }
+                if (ItemConstants.類型.上衣(id)) {
+                    res.addAll(data.stream().filter(
+                            io -> io.getOptionType() == 52
+                                    && io.hasMatchingGrade(bonus ? equip.getBonusGrade() : equip.getBaseGrade()) && io.isBonus() == bonus)
+                            .collect(Collectors.toList()));
+                }
+                if (ItemConstants.類型.褲裙(id)) {
+                    res.addAll(data.stream().filter(
+                            io -> io.getOptionType() == 53
+                                    && io.hasMatchingGrade(bonus ? equip.getBonusGrade() : equip.getBaseGrade()) && io.isBonus() == bonus)
+                            .collect(Collectors.toList()));
+                }
+                if (ItemConstants.類型.套服(id)) {
+                    res.addAll(data.stream().filter(
+                            io -> io.getOptionType() == 52
+                                    && io.hasMatchingGrade(bonus ? equip.getBonusGrade() : equip.getBaseGrade()) && io.isBonus() == bonus)
+                            .collect(Collectors.toList()));
+                    res.addAll(data.stream().filter(
+                            io -> io.getOptionType() == 53
+                                    && io.hasMatchingGrade(bonus ? equip.getBonusGrade() : equip.getBaseGrade()) && io.isBonus() == bonus)
+                            .collect(Collectors.toList()));
+                }
+                if (ItemConstants.類型.手套(id)) {
+                    res.addAll(data.stream().filter(
+                            io -> io.getOptionType() == 54
+                                    && io.hasMatchingGrade(bonus ? equip.getBonusGrade() : equip.getBaseGrade()) && io.isBonus() == bonus)
+                            .collect(Collectors.toList()));
+                }
+                if (ItemConstants.類型.鞋子(id)) {
+                    res.addAll(data.stream().filter(
+                            io -> io.getOptionType() == 55
+                                    && io.hasMatchingGrade(bonus ? equip.getBonusGrade() : equip.getBaseGrade()) && io.isBonus() == bonus)
+                            .collect(Collectors.toList()));
+                }
+            }
+        }
+        return res.stream().filter(io -> io.getReqLevel() <= equip.getRLevel()).collect(Collectors.toList());
+    }
+
+    public static List<Integer> getWeightedOptionsByEquip(Equip equip, boolean bonus) {
+        List<ItemOptionInfo> data = getOptionsByEquip(equip, bonus);
+        ItemOptionInfo info = data.get(0);
+        data.clear();
+        data.add(info);
+        List<Integer> options = data.stream()
+                .map(ItemOptionInfo::getOptions)
+                .flatMap(List::stream)
+                .map(ItemOption::getLevel)
+                .collect(Collectors.toList());
+        return options;
+    }
+
     public static class 類型 {
 
         //<editor-fold defaultstate="collapsed" desc="道具一級分類">
@@ -621,8 +714,9 @@ public class ItemConstants {
             return id / 10000 == 500;
         }
 
-        public static boolean 重拳槍(int itemid) { return itemid / 10000 == 158;}
-
+        public static boolean 重拳槍(int itemid) {
+            return itemid / 10000 == 158;
+        }
 
 
         //</editor-fold>
@@ -633,6 +727,7 @@ public class ItemConstants {
         public static boolean 飾品(int itemid) {
             return 臉飾(itemid) || 眼飾(itemid) || 耳環(itemid) || 戒指(itemid) || 墜飾(itemid) || 腰帶(itemid) || 勳章(itemid) || 肩飾(itemid) || 口袋道具(itemid) || 胸章(itemid) || 能源(itemid) || 圖騰(itemid);
         }
+
         public static WeaponType 武器類型(final int itemID) {
             if (類型.閃亮克魯(itemID)) {
                 return WeaponType.閃亮克魯;

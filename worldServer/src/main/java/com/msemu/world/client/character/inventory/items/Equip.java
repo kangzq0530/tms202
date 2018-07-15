@@ -8,16 +8,14 @@ import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.utils.Rand;
 import com.msemu.commons.utils.types.FileTime;
 import com.msemu.core.network.GameClient;
+import com.msemu.world.constants.GameConstants;
 import com.msemu.world.constants.ItemConstants;
 import com.msemu.world.data.ItemData;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * Created on 11/23/2017.
@@ -948,12 +946,25 @@ public class Equip extends Item {
         return res;
     }
 
+    public int getOption(int num, boolean bonus) {
+        return bonus ? getOptionBonus(num) : getOptionBase(num);
+    }
+
     public int[] getOptionBase() {
         return new int[]{getOptions().get(0), getOptions().get(1), getOptions().get(2)};
     }
 
     public int getOptionBase(int num) {
         return getOptions().get(num);
+    }
+
+
+    public void setOption(int num, int val, boolean bonus) {
+        if (bonus) {
+            setOptionBonus(num, val);
+        } else {
+            setOptionBase(num, val);
+        }
     }
 
     public int setOptionBase(int num, int val) {
@@ -972,9 +983,11 @@ public class Equip extends Item {
         return getOptions().set(num + 3, val);
     }
 
+
+
     public int getRandomOption(boolean bonus) {
-        // TODO Random OPtion
-        return options.get(Rand.get(options.size() - 1));
+        List<Integer> data = ItemConstants.getWeightedOptionsByEquip(this, bonus);
+        return data.get(Rand.get(data.size() - 1));
     }
 
     public void setHiddenOptionBase(short val, int thirdLineChance) {
@@ -1004,7 +1017,11 @@ public class Equip extends Item {
     }
 
     public void releaseOptions(boolean bonus) {
-        // 重置潛能
+        for (int i = 0; i < 3; i++) {
+            if(getOption(i, bonus) < 0) {
+                setOption(i, getRandomOption(bonus), bonus);
+            }
+        }
     }
 
     public EquipTemplate getTemplate() {
@@ -1020,6 +1037,15 @@ public class Equip extends Item {
 
     public int getIMaxMpR() {
         return getTemplate().getIMaxMpR();
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////
+
+    private final short getRandStat(final short defaultValue, final int maxRange) {
+        if (defaultValue == 0)
+            return 0;
+        final int lMaxRange = (int) Math.min(Math.ceil(defaultValue * 0.1), maxRange);
+        return (short) ((defaultValue - lMaxRange) + Rand.get(lMaxRange * 2 + 1));
     }
 }
 

@@ -36,6 +36,7 @@ import com.msemu.world.data.SkillData;
 import com.msemu.world.enums.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -443,7 +444,11 @@ public class Field {
         drop.setPosition(posTo);
         drop.setOwnerID(ownerID);
         if (itemID != 0) {
-            item = ItemData.getInstance().createItem(itemID);
+            item = ItemData.getInstance().createItem(itemID, true);
+            if (item == null) {
+                LoggerFactory.getLogger(Field.class).error(String.format("Item: %d not found", itemID));
+                return;
+            }
             if (item.getType() == Item.Type.ITEM) {
                 item.setQuantity(Rand.get(dropInfo.getMinQuantity(), dropInfo.getMaxQuantity()));
                 int slotMax = item.getTemplate().getSlotMax();

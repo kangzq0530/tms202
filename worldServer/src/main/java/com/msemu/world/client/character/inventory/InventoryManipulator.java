@@ -1,7 +1,6 @@
 package com.msemu.world.client.character.inventory;
 
 import com.msemu.commons.data.enums.InvType;
-import com.msemu.commons.data.templates.EquipTemplate;
 import com.msemu.commons.data.templates.ItemTemplate;
 import com.msemu.core.network.packets.outpacket.wvscontext.LP_InventoryOperation;
 import com.msemu.world.client.character.AvatarLook;
@@ -153,11 +152,11 @@ public class InventoryManipulator {
         }
         chr.chatMessage(String.format("[移動裝備] 來源: %d 道具: %s(%d) 目標: %d 道具:  %s(%d)",
                 srcSlot,
-                srcItem != null ?  srcItem.getTemplate().getName() : "無",
-                srcItem != null ?  srcItem.getTemplate().getItemId() : 0,
+                srcItem != null ? srcItem.getTemplate().getName() : "無",
+                srcItem != null ? srcItem.getTemplate().getItemId() : 0,
                 destSlot,
-                destItem != null ?  destItem.getTemplate().getName() : "無",
-                destItem != null ?  destItem.getTemplate().getItemId() : 0
+                destItem != null ? destItem.getTemplate().getName() : "無",
+                destItem != null ? destItem.getTemplate().getItemId() : 0
         ));
 
         List<InventoryOperationInfo> operates = new ArrayList<>();
@@ -176,4 +175,12 @@ public class InventoryManipulator {
         chr.write(new LP_InventoryOperation(true, false, operates));
     }
 
+    public static void update(final Character chr, final InvType invType, final int pos) {
+        final Item item = chr.getInventoryByType(invType).getItemBySlot(pos);
+        if ( item == null)
+            return;
+        List<InventoryOperationInfo> operates = new ArrayList<>();
+        operates.add(new InventoryOperationInfo(InventoryOperationType.ADD, item, item.getBagIndex()));
+        chr.write(new LP_InventoryOperation(true, false, operates));
+    }
 }

@@ -11,6 +11,13 @@ public class GameConstants {
     public static final int MAX_BASIC_STAT = 32767;
     public static final int DROP_HEIGHT = 20;
     public static final int DROP_DIFF = 25;
+
+    // 潛能機率
+    public static final int RANDOM_EQUIP_UNIQUE_CHANCE = 1; // out of a 100
+    public static final int RANDOM_EQUIP_EPIC_CHANCE = 3; // out of a 100
+    public static final int RANDOM_EQUIP_RARE_CHANCE = 8; // out of a 100
+    public static final int THIRD_LINE_CHANCE = 50;
+
     public static long[] CHAR_EXP_TABLE = new long[251];
 
     // Quest Store

@@ -29,37 +29,46 @@ public class ItemOptionLoader extends WzDataLoader<Map<Integer, ItemOptionInfo>>
         WzImage itemOptImg = wzManager.getWz("Item.wz").getWzDirectory().getImage("ItemOption.img");
 
         itemOptImg.getProperties().forEach(prop -> {
-            ItemOptionInfo levelData = new ItemOptionInfo();
+            ItemOptionInfo itemOptionInfo = new ItemOptionInfo();
 
             WzSubProperty optProp = (WzSubProperty) prop;
-            WzSubProperty info = (WzSubProperty) optProp.getFromPath("info");
-            WzSubProperty level = (WzSubProperty) optProp.getFromPath("level");
+            WzSubProperty infoProp = (WzSubProperty) optProp.getFromPath("info");
+            WzSubProperty levelProp = (WzSubProperty) optProp.getFromPath("level");
 
-            level.getProperties().stream().map(p -> (WzSubProperty) p).forEach(p -> {
+            infoProp.getProperties().forEach(infoSub -> {
+                switch (infoSub.getName()) {
+                    case "optionType":
+                        itemOptionInfo.setOptionType(infoSub.getInt());
+                        break;
+                    case "reqLevel":
+                        itemOptionInfo.setReqLevel(infoSub.getInt());
+                        break;
+                    case "string":
+                        itemOptionInfo.setString(infoSub.getString());
+                }
+            });
+
+            itemOptionInfo.setId(Integer.parseInt(optProp.getName()));
+
+            levelProp.getProperties().stream().map(p -> (WzSubProperty) p).forEach(p -> {
                 ItemOption option = new ItemOption();
-                option.setId(optProp.getInt());
-                info.getProperties().forEach(infoSub -> {
-                    switch (infoSub.getName()) {
-                        case "optionType":
-                            option.setOptionType(infoSub.getInt());
-                            break;
-                        case "reqLevel":
-                            option.setReqLevel(infoSub.getInt());
-                            break;
-                    }
-                });
+                final int level = Integer.parseInt(p.getName());
+                option.setLevel(level);
+
                 WzStringProperty faceProp = (WzStringProperty) p.getFromPath("face");
                 if (faceProp != null)
                     option.setFace(faceProp.getString());
-
                 Arrays.stream(ItemOption.getTypes()).forEach(type -> {
                     WzImageProperty other = p.getFromPath(type.name());
                     if (other != null)
                         option.setLevelData(type, other.getInt());
                 });
-                levelData.getOptions().add(option);
+                option.setString(itemOptionInfo.getString());
+                option.setReqLevel(itemOptionInfo.getReqLevel());
+                option.setOptionType(itemOptionInfo.getOptionType());
+                itemOptionInfo.getOptions().add(option);
             });
-            data.put(optProp.getInt(), levelData);
+            data.put(itemOptionInfo.getId(), itemOptionInfo);
         });
     }
 

@@ -1,24 +1,31 @@
 package com.msemu.world.data;
 
+import com.msemu.commons.data.enums.EquipBaseStat;
+import com.msemu.commons.data.enums.ItemGrade;
 import com.msemu.commons.data.loader.dat.EquipTemplateDatLoader;
 import com.msemu.commons.data.loader.dat.ItemOptionDatLoader;
 import com.msemu.commons.data.loader.dat.ItemTemplateDatLoader;
 import com.msemu.commons.data.loader.dat.SetItemInfoDatLoader;
-import com.msemu.commons.data.templates.EquipTemplate;
-import com.msemu.commons.data.templates.ItemTemplate;
-import com.msemu.commons.data.templates.SetItemInfo;
+import com.msemu.commons.data.templates.*;
 import com.msemu.commons.reload.IReloadable;
 import com.msemu.commons.reload.Reloadable;
+import com.msemu.commons.utils.Rand;
 import com.msemu.core.startup.StartupComponent;
 import com.msemu.world.client.character.inventory.items.Equip;
 import com.msemu.world.client.character.inventory.items.Item;
+import com.msemu.world.constants.GameConstants;
 import com.msemu.world.constants.ItemConstants;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 /**
  * Created by Weber on 2018/4/12.
@@ -90,7 +97,7 @@ public class ItemData implements IReloadable {
      * @return A deep copy of the default values of the corresponding Equip, or null if there is no equip with itemId
      * <code>itemId</code>.
      */
-    public Equip getEquipFromTemplate(int itemId) {
+    private Equip getEquipFromTemplate(int itemId) {
         EquipTemplate template = getEquipTemplateDatLoader().getItem(itemId);
         if (template == null)
             return null;
@@ -99,7 +106,7 @@ public class ItemData implements IReloadable {
     }
 
 
-    public Item getItemFromTemplate(int itemId) {
+    private Item getItemFromTemplate(int itemId) {
         ItemTemplate template = getItemTemplateDatLoader().getItem(itemId);
         if (template == null)
             return null;
@@ -108,12 +115,44 @@ public class ItemData implements IReloadable {
     }
 
     public Item createItem(int itemId) {
+        return createItem(itemId, false);
+    }
+
+    public Item createItem(int itemId, boolean randomStats) {
         Item item;
         if (ItemConstants.isEquip(itemId)) {
             item = ItemData.getInstance().getEquipFromTemplate(itemId);
+            if (item != null) {
+                EquipBaseStat[] ebsStat = new EquipBaseStat[]{EquipBaseStat.iStr, EquipBaseStat.iInt, EquipBaseStat.iDex,
+                        EquipBaseStat.iLuk, EquipBaseStat.iPAD, EquipBaseStat.iMAD, EquipBaseStat.iMaxHP, EquipBaseStat.iMaxMP,
+                        EquipBaseStat.iPAD, EquipBaseStat.iMAD};
+                Equip equip = (Equip) item;
+                for (EquipBaseStat ebs : ebsStat) {
+                    int max = ebs == EquipBaseStat.iPAD || ebs == EquipBaseStat.iMAD ? 5 : 3; // Att +-5, the rest +-3
+                    if (equip.getBaseStat(ebs) > 0) {
+                        int rand = Rand.get(max);
+                        rand = Rand.nextBoolean() ? rand : -rand;
+                        int newStat = (int) Math.max(0, equip.getBaseStat(ebs) + rand);
+                        equip.setBaseStat(ebs, newStat);
+                    }
+                }
+                ItemGrade grade = ItemGrade.NONE;
+                if (Rand.getChance(GameConstants.RANDOM_EQUIP_UNIQUE_CHANCE) || true) {
+                    grade = ItemGrade.HIDDEN_UNIQUE;
+                } else if (Rand.getChance(GameConstants.RANDOM_EQUIP_EPIC_CHANCE)) {
+                    grade = ItemGrade.HIDDEN_EPIC;
+                } else if (Rand.getChance(GameConstants.RANDOM_EQUIP_RARE_CHANCE)) {
+                    grade = ItemGrade.HIDDEN_RARE;
+                }
+                if (grade != ItemGrade.NONE) {
+                    equip.setHiddenOptionBase(grade.getValue(), GameConstants.THIRD_LINE_CHANCE);
+                }
+            }
         } else {
             item = ItemData.getInstance().getItemFromTemplate(itemId);
-            item.setQuantity(itemId);
+            if (item != null) {
+                item.setQuantity(1);
+            }
         }
         return item;
     }
@@ -130,4 +169,8 @@ public class ItemData implements IReloadable {
         return getSetItemInfoDatLoader().getItem(setItemID);
     }
 
+
+    public List<ItemOptionInfo> getAllItemOptionInfos() {
+        return new ArrayList<>(getItemOptionsLoader().getData().values());
+    }
 }

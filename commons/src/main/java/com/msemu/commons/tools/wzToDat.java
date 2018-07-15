@@ -16,9 +16,9 @@ public class wzToDat {
         ConfigLoader.getInstance().reload();
         WzManager wzManager = new WzManager();
 //        new ForbiddenNameLoader(wzManager).saveToDat();
-//        new ItemOptionLoader(wzManager).saveToDat();
+        new ItemOptionLoader(wzManager).saveToDat();
 //        new ItemTemplateLoader(wzManager).saveToDat();
-        new EquipTemplateLoader(wzManager).saveToDat();
+//        new EquipTemplateLoader(wzManager).saveToDat();
 //        new SetItemInfoLoader(wzManager).saveToDat();
 //        new MonsterBookLoader(wzManager).saveToDat();
 //        new FieldTemplateLoader(wzManager).saveToDat();

@@ -264,7 +264,7 @@ public enum OutHeader implements IHeader {
     LP_UserItemUpgradeEffect,
     LP_SHOW_ENCHANTER_EFFECT,
     LP_SHOW_SOULSCROLL_EFFECT,
-    LP_SHOW_MAGNIFYING_EFFECT,
+    LP_ShowItemReleaseEffect,
     LP_SHOW_POTENTIAL_EXPANSION,
     LP_SHOW_POTENTIAL_RESET,
     LP_SHOW_BONUS_POTENTIAL_RESET,

@@ -32,7 +32,6 @@ public class LP_InventoryOperation extends OutPacket<GameClient> {
 
     public LP_InventoryOperation(boolean exclRequestSent, boolean notRemoveAddInfo, List<InventoryOperationInfo> operates) {
         super(OutHeader.LP_InventoryOperation);
-        final boolean[] nBeforeCount = {false};
         encodeByte(exclRequestSent);
         encodeByte(operates.size());
         encodeByte(notRemoveAddInfo);
