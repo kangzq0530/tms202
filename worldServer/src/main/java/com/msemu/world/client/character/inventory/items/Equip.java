@@ -42,7 +42,7 @@ public class Equip extends Item {
     @Getter
     @Setter
     private int prevBonusExpRate;
-    @Column(name = "tuc")
+    @Column(name = "ruc")
     @Getter
     @Setter
     private short ruc;
@@ -628,7 +628,9 @@ public class Equip extends Item {
         if (hasStat(EquipBaseStat.imdr)) {
             outPacket.encodeByte(getImdr()); // ied
         }
+
         outPacket.encodeInt(getStatMask(1)); // mask 2
+
         if (hasStat(EquipBaseStat.damR)) {
             outPacket.encodeByte(getDamR()); // td
         }
@@ -671,9 +673,9 @@ public class Equip extends Item {
         // nPrevBonusExpRate
         outPacket.encodeInt(-1);
         // GW_CashItemOption {
-        outPacket.encodeLong(getCashItemSerialNumber());
+        outPacket.encodeLong(0);
         // ftExpireDate
-        getDateExpire().encode(outPacket);
+        outPacket.encodeFT(FileTime.getFileTimeFromType(FileTime.Type.ZERO_TIME));
         outPacket.encodeInt(getGrade());
         // anOption
         for (int i = 0; i < 3; i++) {
@@ -696,6 +698,7 @@ public class Equip extends Item {
         FileTime.getFileTimeFromType(FileTime.Type.ZERO_TIME).encodeR(outPacket);
     }
 
+    // cuttable 一定要有，否則會變成無法交換的道具 (有夠奇怪)
     private boolean hasStat(EquipBaseStat ebs) {
         return getBaseStat(ebs) != 0;
     }
@@ -703,7 +706,7 @@ public class Equip extends Item {
     private int getStatMask(int pos) {
         int mask = 0;
         for (EquipBaseStat ebs : EquipBaseStat.values()) {
-            if (getBaseStat(ebs) != 0 && ebs.getPos() == pos) {
+            if (hasStat(ebs) && ebs.getPos() == pos) {
                 mask |= ebs.getVal();
             }
         }
@@ -958,7 +961,7 @@ public class Equip extends Item {
     }
 
     public int[] getOptionBonus() {
-        return new int[]{getOptions().get(3), getOptions().get(4), getOptions().get(5)};
+        return new int[]{ getOptions().get(3), getOptions().get(4), getOptions().get(5)};
     }
 
     public int getOptionBonus(int num) {

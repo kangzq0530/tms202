@@ -867,7 +867,7 @@ public class Character extends Life {
         }
         removeAllVisibleObjects();
         removeControlledMobs();
-        write(new LP_SetField(this, toField, client.getChannel(), false, portal.getId(), characterData, hasBuffProtector(),
+        write(new LP_SetField(this, toField, client.getChannel(), false, 0, characterData, hasBuffProtector(),
                 portal.getId(), false, 100, null, true, -1));
         toField.enter(this, portal, true);
         if (characterData) {
@@ -1689,7 +1689,7 @@ public class Character extends Life {
 
     public void setGuild(Guild guild) {
         // make sure sharing the same instance
-        if(guild != null)
+        if (guild != null)
             guild = GuildService.getInstance().getGuildById(guild.getId());
         this.guild = guild;
     }
@@ -1707,7 +1707,7 @@ public class Character extends Life {
             getGuild().broadcast(new LP_GuildResult(
                     new NotifyLoginOrLogoutResponse(g.getId(), getId(), online, !this.online && online)), this);
         }
-        if(getParty() != null) {
+        if (getParty() != null) {
             getParty().updatePartyMemberInfo(this);
         }
         this.online = online;
@@ -1730,7 +1730,7 @@ public class Character extends Life {
             getAvatarData().getCharacterStat().setPosMap((ft.getForcedReturn() > 0 && ft.getForcedReturn() != 999999999 ? ft.getForcedReturn() : getFieldID()));
             getField().leave(this);
         }
-        if(getParty() != null) {
+        if (getParty() != null) {
             getParty().updateFull();
             setParty(null);
         }

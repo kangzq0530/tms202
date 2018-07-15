@@ -46,7 +46,7 @@ public class CP_DirectGoToField extends InPacket<LoginClient> {
         try {
             worldInfo.getConnection().addTransfer(channelInfo.getChannel(), channelInfo.getWorldId(), characterId);
             InetAddress hostAddress = InetAddress.getByName(channelInfo.getHost());
-            getClient().write(new LP_SelectCharacterResult(LoginResultCode.LoginSuccess, new byte[]{(byte) 192, (byte) 168, (byte) 156, 1}, channelInfo.getPort(), 0));
+            getClient().write(new LP_SelectCharacterResult(LoginResultCode.LoginSuccess, hostAddress.getAddress(), channelInfo.getPort(), 0));
         } catch (UnknownHostException | RemoteException e) {
             getClient().write(new LP_SelectCharacterResult(LoginResultCode.DBFail, new byte[]{0, 0, 0, 0}, (short) 0, 0));
         }

@@ -59,6 +59,10 @@ public class ItemData implements IReloadable {
     }
 
     public void load() {
+        getItemTemplateDatLoader().load();
+        log.info("{} items loaded.", getItemTemplateDatLoader().size());
+        getEquipTemplateDatLoader().load();
+        log.info("{} equips loaded.", getEquipTemplateDatLoader().size());
         getItemOptionsLoader().load();
         log.info("{} ItemOptions loaded.", getItemOptionsLoader().getData().size());
         getSetItemInfoDatLoader().load();

@@ -3,6 +3,7 @@ package com.msemu.core.network.packets.outpacket.stage;
 import com.msemu.commons.enums.OutHeader;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.utils.HexUtils;
+import com.msemu.commons.utils.Rand;
 import com.msemu.commons.utils.types.FileTime;
 import com.msemu.core.network.GameClient;
 import com.msemu.world.client.character.Character;
@@ -22,7 +23,7 @@ public class LP_SetField extends OutPacket<GameClient> {
                        boolean setWhiteFadeInOut, int mobStatAdjustRate, FieldCustom fieldCustom,
                        boolean canNotifyAnnouncedQuest, int stackEventGauge) {
         super(OutHeader.LP_SetField);
-        encodeInt(channelId - 1); // Damn nexon, randomly switching between starting at 1 and 0...
+        encodeInt(channelId);
         encodeByte(dev);
         encodeInt(oldDriverID);
         encodeByte(characterData ? 1 : 2);
@@ -41,9 +42,9 @@ public class LP_SetField extends OutPacket<GameClient> {
         }
         if (characterData) {
             // CalcDamage setSeed
-            int s1 = 1;//Rand.nextInt();
-            int s2 = 1;//Rand.nextInt();
-            int s3 = 1;//Rand.nextInt();
+            int s1 = Rand.nextInt();
+            int s2 = Rand.nextInt();
+            int s3 = Rand.nextInt();
             chr.getCharacterLocalStat().getCalcDamage().setSeed(s1, s2, s3);
             encodeInt(s1);
             encodeInt(s2);
@@ -139,7 +140,7 @@ public class LP_SetField extends OutPacket<GameClient> {
         }
         // FreezeAndHotEventInfo::Decode
         encodeByte(0); // nAccountType
-        encodeInt(chr.getAccId());
+        encodeInt(0);
         // CUser::DecodeEventBestFriendInfo
         encodeInt(0); // dwEventBestFriendAID
 

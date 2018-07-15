@@ -22,7 +22,7 @@ public class EquipTemplate extends ItemTemplate {
     private short iPad, iMad, iPDD, iMDD, iAcc, iEva, iCraft, iSpeed, iJump, iuc;
     private short iMaxHpR, iMaxMpR;
     private short iPvpDamage, iReduceReq, specialAttribute, durabilityMax;
-    private short iIncReq, bdr, imdr, damR, statR, cuttable, exGradeOption;
+    private short iIncReq, bdr, imdr, damR, statR, cuttable = -1, exGradeOption;
     private short itemState, chuc;
     private short soulOptionId, soulSocketId, soulOption;
     private short rStr, rDex, rInt, rLuk, rLevel, rJob, rPop;

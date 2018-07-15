@@ -60,7 +60,7 @@ public class CP_SelectCharacter extends InPacket<LoginClient> {
         try {
             worldInfo.getConnection().addTransfer(channelInfo.getChannel(), account.getId(), characterID);
             InetAddress hostAddress = InetAddress.getByName(channelInfo.getHost());
-            getClient().write(new LP_SelectCharacterResult(LoginResultCode.LoginSuccess, new byte[]{(byte) 127, (byte) 0, (byte) 0, 1}, channelInfo.getPort(), characterID));
+            getClient().write(new LP_SelectCharacterResult(LoginResultCode.LoginSuccess, hostAddress.getAddress(), channelInfo.getPort(), characterID));
 
         } catch (UnknownHostException | RemoteException e) {
             LoggerFactory.getLogger(CP_SelectCharacter.class).error("QQ", e);
