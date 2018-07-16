@@ -1,9 +1,9 @@
 package com.msemu.commons.data.templates;
 
 
-import com.msemu.commons.data.enums.ItemGrade;
 import com.msemu.commons.data.enums.ItemOptionStat;
 import com.msemu.commons.data.loader.dat.DatSerializable;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,6 +21,7 @@ import java.util.Map;
 public class ItemOption implements DatSerializable {
 
     private int optionType;
+    @Getter(AccessLevel.NONE)
     private String string = "";
     private int reqLevel;
 
@@ -71,6 +72,14 @@ public class ItemOption implements DatSerializable {
             this.getOtherData().put(stat, value);
         }
         return this;
+    }
+
+    public String getString() {
+        final String[] ret = {this.string};
+        getOtherData().forEach((key, value) -> {
+            ret[0] = ret[0].replace("#" + key, value.toString());
+        });
+        return ret[0];
     }
 
 }

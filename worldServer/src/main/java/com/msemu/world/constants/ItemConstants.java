@@ -420,13 +420,8 @@ public class ItemConstants {
 
     public static List<Integer> getWeightedOptionsByEquip(Equip equip, boolean bonus) {
         List<ItemOptionInfo> data = getOptionsByEquip(equip, bonus);
-        ItemOptionInfo info = data.get(0);
-        data.clear();
-        data.add(info);
         List<Integer> options = data.stream()
-                .map(ItemOptionInfo::getOptions)
-                .flatMap(List::stream)
-                .map(ItemOption::getLevel)
+                .map(ItemOptionInfo::getId)
                 .collect(Collectors.toList());
         return options;
     }

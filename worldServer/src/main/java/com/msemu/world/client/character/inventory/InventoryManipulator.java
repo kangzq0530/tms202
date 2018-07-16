@@ -2,6 +2,7 @@ package com.msemu.world.client.character.inventory;
 
 import com.msemu.commons.data.enums.InvType;
 import com.msemu.commons.data.templates.ItemTemplate;
+import com.msemu.commons.database.DatabaseFactory;
 import com.msemu.core.network.packets.outpacket.wvscontext.LP_InventoryOperation;
 import com.msemu.world.client.character.AvatarLook;
 import com.msemu.world.client.character.Character;
@@ -116,6 +117,7 @@ public class InventoryManipulator {
             Item dropItem = ItemData.getInstance().createItem(srcItem.getItemId());
             dropItem.setQuantity(quantity);
             srcItem.removeQuantity(quantity);
+            srcItem.setInventoryId(0);
             drop = new Drop(-1, dropItem);
             operates.add(new InventoryOperationInfo(InventoryOperationType.UPDATE,
                     srcItem, srcSlot));
@@ -163,9 +165,9 @@ public class InventoryManipulator {
 
         if (destItem != null) {
             destItem.setBagIndex(srcSlot);
-            operates.add(new InventoryOperationInfo(InventoryOperationType.MOVE,
-                    destItem, destSlot));
         }
+
+
         srcItem.setBagIndex(destSlot);
 
         chr.getInventoryByType(invType).sortItemsByIndex();
@@ -177,7 +179,7 @@ public class InventoryManipulator {
 
     public static void update(final Character chr, final InvType invType, final int pos) {
         final Item item = chr.getInventoryByType(invType).getItemBySlot(pos);
-        if ( item == null)
+        if (item == null)
             return;
         List<InventoryOperationInfo> operates = new ArrayList<>();
         operates.add(new InventoryOperationInfo(InventoryOperationType.ADD, item, item.getBagIndex()));

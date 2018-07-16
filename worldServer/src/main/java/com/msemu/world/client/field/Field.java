@@ -414,6 +414,8 @@ public class Field {
     }
 
     public void drop(Drop drop, Position posFrom, Position posTo, int ownerId) {
+        drop.setPosition(posFrom);
+        drop.setOwnerID(ownerId);
         ScheduledFuture sf = EventManager.getInstance().addEvent(() -> {
             addFieldObject(drop);
             broadcastPacket(new LP_DropEnterField(drop, posFrom, posTo, ownerId));
@@ -441,8 +443,6 @@ public class Field {
         int itemID = dropInfo.getItemID();
         Item item;
         Drop drop = new Drop(-1);
-        drop.setPosition(posTo);
-        drop.setOwnerID(ownerID);
         if (itemID != 0) {
             item = ItemData.getInstance().createItem(itemID, true);
             if (item == null) {

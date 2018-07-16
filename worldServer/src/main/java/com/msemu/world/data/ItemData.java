@@ -137,9 +137,9 @@ public class ItemData implements IReloadable {
                     }
                 }
                 ItemGrade grade = ItemGrade.NONE;
-                if (Rand.getChance(GameConstants.RANDOM_EQUIP_UNIQUE_CHANCE) || true) {
+                if (Rand.getChance(GameConstants.RANDOM_EQUIP_UNIQUE_CHANCE)) {
                     grade = ItemGrade.HIDDEN_UNIQUE;
-                } else if (Rand.getChance(GameConstants.RANDOM_EQUIP_EPIC_CHANCE)) {
+                } else if (Rand.getChance(GameConstants.RANDOM_EQUIP_EPIC_CHANCE) || true) {
                     grade = ItemGrade.HIDDEN_EPIC;
                 } else if (Rand.getChance(GameConstants.RANDOM_EQUIP_RARE_CHANCE)) {
                     grade = ItemGrade.HIDDEN_RARE;

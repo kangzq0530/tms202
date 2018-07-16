@@ -99,7 +99,7 @@ public class AdminCommand {
             final Character chr = client.getCharacter();
             final int itemID = Integer.parseInt(args.get(1));
             final ItemData itemData = ItemData.getInstance();
-            final Item item = itemData.createItem(itemID);
+            final Item item = itemData.createItem(itemID, true);
             item.setQuantity(1);
             if (item == null) {
                 return true;

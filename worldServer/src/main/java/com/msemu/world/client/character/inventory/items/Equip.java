@@ -987,7 +987,7 @@ public class Equip extends Item {
 
     public int getRandomOption(boolean bonus) {
         List<Integer> data = ItemConstants.getWeightedOptionsByEquip(this, bonus);
-        return data.get(Rand.get(data.size() - 1));
+        return data.get(Rand.get(data.size()));
     }
 
     public void setHiddenOptionBase(short val, int thirdLineChance) {
