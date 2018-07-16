@@ -673,7 +673,7 @@ public class Equip extends Item {
         // GW_CashItemOption {
         outPacket.encodeLong(0);
         // ftExpireDate
-        outPacket.encodeFT(FileTime.getFileTimeFromType(FileTime.Type.ZERO_TIME));
+        getEquippedDate().encode(outPacket);
         outPacket.encodeInt(getGrade());
         // anOption
         for (int i = 0; i < 3; i++) {

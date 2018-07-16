@@ -1,6 +1,7 @@
 package com.msemu.world.client.character.commands;
 
 
+import com.msemu.commons.enums.FileTimeUnit;
 import com.msemu.commons.utils.StringUtils;
 import com.msemu.commons.utils.types.FileTime;
 import com.msemu.core.network.GameClient;
@@ -100,6 +101,7 @@ public class AdminCommand {
             final int itemID = Integer.parseInt(args.get(1));
             final ItemData itemData = ItemData.getInstance();
             final Item item = itemData.createItem(itemID, true);
+            item.setDateExpire(FileTime.now().plus(5, FileTimeUnit.DAY));
             item.setQuantity(1);
             if (item == null) {
                 return true;

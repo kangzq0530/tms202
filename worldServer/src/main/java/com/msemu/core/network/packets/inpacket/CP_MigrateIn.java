@@ -6,6 +6,7 @@ import com.msemu.commons.utils.DateUtils;
 import com.msemu.core.network.GameClient;
 import com.msemu.core.network.packets.outpacket.field.LP_SetQuestClear;
 import com.msemu.core.network.packets.outpacket.funckey.LP_FuncKeyMappedInit;
+import com.msemu.core.network.packets.outpacket.socket.LP_AuthenCodeChanged;
 import com.msemu.core.network.packets.outpacket.wvscontext.*;
 import com.msemu.world.Channel;
 import com.msemu.world.World;
@@ -13,9 +14,7 @@ import com.msemu.world.client.Account;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.party.Party;
 import com.msemu.world.client.field.Field;
-import com.msemu.world.client.guild.Guild;
 import com.msemu.world.constants.MapleJob;
-import com.msemu.world.service.GuildService;
 import com.msemu.world.service.PartyService;
 
 /**
@@ -83,8 +82,7 @@ public class CP_MigrateIn extends InPacket<GameClient> {
             chr.setJob(chr.getJob());
             chr.setParty(party);
             chr.setOnline(true);
-
-            // TODO  c.announce(CCashShop.onAuthenCodeChanged()); // Enable CashShop
+            getClient().write(new LP_AuthenCodeChanged());
             getClient().write(new LP_SetQuestClear());
             getClient().write(new LP_HourChanged(DateUtils.getCurrentDayOfWeek()));
             getClient().write(new LP_SetTamingMobInfo(chr, false));
@@ -108,6 +106,9 @@ public class CP_MigrateIn extends InPacket<GameClient> {
             } else {
                 getClient().write(new LP_FuncKeyMappedInit(chr.getFuncKeyMap()));
             }
+
+            getClient().write(new LP_MacroSysDataInit(chr.getSkillMacros()));
+
 
         }
 

@@ -26,7 +26,7 @@ public class FileTime implements Serializable {
     private int highDateTime;
 
     public long getLongValue() {
-        return getLowDateTime() + (long) getHighDateTime() << 32;
+        return (((long) getLowDateTime())) + (long) getHighDateTime() << 32;
     }
 
     public enum Type {
@@ -35,8 +35,7 @@ public class FileTime implements Serializable {
         ZERO_TIME(94354848000000000L),
         PERMANENT(150841440000000000L),
         FT_UT_OFFSET(116444592000000000L),
-        QUEST_TIME(27111908);
-        ;
+        QUEST_TIME(27111908);;
         private long val;
 
         Type(long val) {
@@ -143,24 +142,24 @@ public class FileTime implements Serializable {
     }
 
     public FileTime plus(int amount, FileTimeUnit unit) {
-        long timeValue = lowDateTime + (((long)highDateTime) << 32);
+        long timeValue = getLongValue();
         switch (unit) {
             case MILLIS:
-                timeValue += amount;
+                timeValue += amount * 10000;
                 break;
             case SEC:
-                timeValue += amount * 10000L;
+                timeValue += amount * 10000 * 1000L;
                 break;
             case MINUTE:
-                timeValue += amount * 10000L * 60L;
+                timeValue += amount * 10000L * 60* 1000L;
                 break;
             case HOUR:
-                timeValue += amount * 10000L * 3600L;
+                timeValue += (amount * 10000L * 60L * 60L* 1000);
                 break;
             case DAY:
-                timeValue += amount * 24 * 10000L * 3600L;
+                timeValue += (amount * 10000L * 60L * 60L * 24L* 1000);
         }
-        return new FileTime(timeValue);
+        return getTimeFromLong(timeValue);
     }
 }
 

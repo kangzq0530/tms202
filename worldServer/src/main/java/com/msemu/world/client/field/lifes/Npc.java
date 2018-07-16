@@ -7,6 +7,7 @@ import com.msemu.core.network.packets.outpacket.npc.LP_NpcChangeController;
 import com.msemu.core.network.packets.outpacket.npc.LP_NpcEnterField;
 import com.msemu.core.network.packets.outpacket.npc.LP_NpcLeaveField;
 import com.msemu.world.client.field.ScreenInfo;
+import com.msemu.world.data.NpcData;
 import com.msemu.world.enums.FieldObjectType;
 import lombok.Getter;
 import lombok.Setter;
@@ -91,13 +92,17 @@ public class Npc extends InternalLife {
 
     @Override
     public void enterScreen(GameClient client) {
-        client.write(new LP_NpcEnterField(this));
-        client.write(new LP_NpcChangeController(this, true));
+        if (isEnabled() && !isHide()) {
+            client.write(new LP_NpcEnterField(this));
+            client.write(new LP_NpcChangeController(this, true));
+        }
     }
 
     @Override
     public void outScreen(GameClient client) {
-        client.write(new LP_NpcLeaveField(this));
-        client.write(new LP_NpcChangeController(this, false));
+        if (isEnabled() && !isHide() && getAlpha() <= 0) {
+            client.write(new LP_NpcLeaveField(this));
+            client.write(new LP_NpcChangeController(this, false));
+        }
     }
 }

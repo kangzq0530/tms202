@@ -304,7 +304,7 @@ public enum InHeader implements IHeader {
     CP_SOLOMON,
     CP_GACH_EXP,
     CP_CHRONOSPHERE,
-    CP_USE_FLASH_CUBE,
+    CP_UIWindowTW,
     CP_SAVE_DAMAGE_SKIN,
     CP_CHANGE_DAMAGE_SKIN,
     CP_REMOVE_DAMAGE_SKIN,

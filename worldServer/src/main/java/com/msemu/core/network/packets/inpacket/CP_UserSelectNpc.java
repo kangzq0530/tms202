@@ -28,9 +28,11 @@ public class CP_UserSelectNpc extends InPacket<GameClient> {
         Npc npc = chr.getField().getNpcByObjectID(objectID);
         if (npc == null)
             return;
+        System.out.println("Npc: " + npc.getTemplate().toString());
         if(!npc.getScript().isEmpty()) {
-            System.out.println("Npc: " + npc.getTemplate().toString());
             chr.getScriptManager().startScript(npc.getTemplateId(), npc.getScript(), ScriptType.NPC);
+        } else {
+            chr.getScriptManager().startScript(npc.getTemplateId(), String.valueOf(npc.getTemplateId()), ScriptType.NPC);
         }
     }
 }

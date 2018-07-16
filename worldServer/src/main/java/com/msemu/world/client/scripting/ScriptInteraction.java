@@ -162,13 +162,22 @@ public class ScriptInteraction {
         getCharacter().setFieldInstanceType(FieldInstanceType.PARTY);
     }
 
+    public boolean haveItem(int itemID) {
+        return getCharacter().hasItem(itemID);
+    }
+
     public void giveItem(int itemID) {
         giveItem(itemID, 1);
     }
 
     public void giveItem(int itemID, int quantity) {
-        getCharacter().giveItem(itemID, quantity);
+        giveItem(itemID, quantity, 0);
     }
+
+    public void giveItem(int itemID, int quantity, int period) {
+        getCharacter().giveItem(itemID, quantity, period);
+    }
+
 
     public void giveExp(int deltaExp) {
         getCharacter().addExp(deltaExp);
@@ -263,7 +272,6 @@ public class ScriptInteraction {
         skill.setMasterLevel(masterLevel);
         getCharacter().teachSkill(skill);
     }
-
 
 
     public void dropMessage(ChatMsgType msgType, String message) {
@@ -498,36 +506,36 @@ public class ScriptInteraction {
         say(nSpeakerTemplateID, nSpeakerTemplateID, bParam, sMsg, prev, next);
     }
 
-    public void say(int nSpeakerTemplateID, int nAnotherSpeakerTemplateID, int bParam, String sMsg, boolean prev, boolean next) {
-        say(nSpeakerTemplateID, nAnotherSpeakerTemplateID, -1, bParam, sMsg, prev, next);
+    public void say(int nSpeakerTemplateID, int overrideSpeakerTemplateID, int bParam, String sMsg, boolean prev, boolean next) {
+        say(nSpeakerTemplateID, -1, overrideSpeakerTemplateID, bParam, sMsg, prev, next);
     }
 
     public void sayPrev(int nSpeakerTemplateID, int nAnotherSpeakerTemplateID, int bParam, String sMsg) {
         say(nSpeakerTemplateID, nAnotherSpeakerTemplateID, -1, bParam, sMsg, true, false);
     }
 
-    public void sayNext(int nSpeakerTemplateID, int nAnotherSpeakerTemplateID, int bParam, String sMsg) {
-        say(nSpeakerTemplateID, nAnotherSpeakerTemplateID, -1, bParam, sMsg, false, true);
+    public void sayNext(int nSpeakerTemplateID, int overrideSpeakerTemplateID, int bParam, String sMsg) {
+        say(nSpeakerTemplateID, -1, overrideSpeakerTemplateID, bParam, sMsg, false, true);
     }
 
-    public void sayPrevNext(int nSpeakerTemplateID, int nAnotherSpeakerTemplateID, int bParam, String sMsg) {
-        say(nSpeakerTemplateID, nAnotherSpeakerTemplateID, -1, bParam, sMsg, true, true);
+    public void sayPrevNext(int nSpeakerTemplateID, int overrideSpeakerTemplateID, int bParam, String sMsg) {
+        say(nSpeakerTemplateID, -1, overrideSpeakerTemplateID, bParam, sMsg, true, true);
     }
 
-    public void say(int nSpeakerTemplateID, int nAnotherSpeakerTemplateID, int nOtherSpeakerTemplateID, int bParam, String sMsg, boolean prev, boolean next) {
-        say(4, nSpeakerTemplateID, nAnotherSpeakerTemplateID, nOtherSpeakerTemplateID, bParam, 0, sMsg, prev, next, 0);
+    public void say(int nSpeakerTemplateID, int nAnotherSpeakerTemplateID, int overrideSpeakerTemplateID, int bParam, String sMsg, boolean prev, boolean next) {
+        say(4, nSpeakerTemplateID, nAnotherSpeakerTemplateID, overrideSpeakerTemplateID, bParam, 0, sMsg, prev, next, 0);
     }
 
-    public void sayPrev(int nSpeakerTemplateID, int nAnotherSpeakerTemplateID, int nOtherSpeakerTemplateID, int bParam, String sMsg) {
-        say(4, nSpeakerTemplateID, nAnotherSpeakerTemplateID, nOtherSpeakerTemplateID, bParam, 0, sMsg, true, false, 0);
+    public void sayPrev(int nSpeakerTemplateID, int nAnotherSpeakerTemplateID, int overrideSpeakerTemplateID, int bParam, String sMsg) {
+        say(4, nSpeakerTemplateID, nAnotherSpeakerTemplateID, overrideSpeakerTemplateID, bParam, 0, sMsg, true, false, 0);
     }
 
-    public void sayNext(int nSpeakerTemplateID, int nAnotherSpeakerTemplateID, int nOtherSpeakerTemplateID, int bParam, String sMsg) {
-        say(4, nSpeakerTemplateID, nAnotherSpeakerTemplateID, nOtherSpeakerTemplateID, bParam, 0, sMsg, false, true, 0);
+    public void sayNext(int nSpeakerTemplateID, int nAnotherSpeakerTemplateID, int overrideSpeakerTemplateID, int bParam, String sMsg) {
+        say(4, nSpeakerTemplateID, nAnotherSpeakerTemplateID, overrideSpeakerTemplateID, bParam, 0, sMsg, false, true, 0);
     }
 
-    public void sayPrevNext(int nSpeakerTemplateID, int nAnotherSpeakerTemplateID, int nOtherSpeakerTemplateID, int bParam, String sMsg) {
-        say(4, nSpeakerTemplateID, nAnotherSpeakerTemplateID, nOtherSpeakerTemplateID, bParam, 0, sMsg, true, true, 0);
+    public void sayPrevNext(int nSpeakerTemplateID, int nAnotherSpeakerTemplateID, int overrideSpeakerTemplateID, int bParam, String sMsg) {
+        say(4, nSpeakerTemplateID, nAnotherSpeakerTemplateID, overrideSpeakerTemplateID, bParam, 0, sMsg, true, true, 0);
     }
 
     public void say(int speakerTypeID, int speakerTemplateID, int anotherSpeakerTemplateID, int overrideSpeakerTemplateID, int bParam, int eColor, String sMsg, boolean prev, boolean next, int delay) {
@@ -969,7 +977,6 @@ public class ScriptInteraction {
     public void showInputGuildName() {
         write(new LP_GuildResult(new InputGuildNameRequest()));
     }
-
 
 
 }

@@ -5,6 +5,7 @@ import com.msemu.commons.data.templates.field.FieldTemplate;
 import com.msemu.commons.data.templates.field.Portal;
 import com.msemu.commons.database.DatabaseFactory;
 import com.msemu.commons.database.Schema;
+import com.msemu.commons.enums.FileTimeUnit;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.utils.types.FileTime;
 import com.msemu.core.network.GameClient;
@@ -30,6 +31,7 @@ import com.msemu.world.client.character.party.Party;
 import com.msemu.world.client.character.quest.Quest;
 import com.msemu.world.client.character.quest.QuestManager;
 import com.msemu.world.client.character.skill.Skill;
+import com.msemu.world.client.character.skill.SkillMacro;
 import com.msemu.world.client.character.skill.vcore.VMatrixRecord;
 import com.msemu.world.client.character.stats.CharacterLocalStat;
 import com.msemu.world.client.character.stats.CharacterStat;
@@ -269,6 +271,9 @@ public class Character extends Life {
     private Android activeAndroid;
     @Transient
     private int team;
+    @Transient
+    @Setter(AccessLevel.NONE)
+    private List<SkillMacro> skillMacros = new ArrayList<>();
 
 
     public Character() {
@@ -1803,9 +1808,13 @@ public class Character extends Life {
     }
 
 
-    public void giveItem(int itemID, int quantity) {
+    public void giveItem(int itemID, int quantity, int period) {
         double isEquip = Math.floor((itemID / 1000000));
         Item item = ItemData.getInstance().createItem(itemID);
+        if (item == null)
+            return;
+        if (period > 0)
+            item.setDateExpire(FileTime.now().plus(period, FileTimeUnit.DAY));
         if (item.getType() == Item.Type.EQUIP) {  //Equip
             addItemToInventory(item.getInvType(), item, false);
         } else {    //Item
