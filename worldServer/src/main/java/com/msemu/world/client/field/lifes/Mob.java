@@ -9,8 +9,11 @@ import com.msemu.core.network.packets.outpacket.field.LP_FieldEffect;
 import com.msemu.core.network.packets.outpacket.mob.LP_MobEnterField;
 import com.msemu.core.network.packets.outpacket.mob.LP_MobHpIndicator;
 import com.msemu.core.network.packets.outpacket.mob.LP_MobLeaveField;
+import com.msemu.core.network.packets.outpacket.user.local.effect.LP_UserEffectLocal;
+import com.msemu.core.network.packets.outpacket.wvscontext.LP_Message;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.ExpIncreaseInfo;
+import com.msemu.world.client.character.messages.ComboKillMessage;
 import com.msemu.world.client.field.Field;
 import com.msemu.world.client.field.ShootingMoveStat;
 import com.msemu.world.client.field.effect.MobHPTagFieldEffect;
@@ -167,8 +170,8 @@ public class Mob extends InternalLife {
         double hpPercentAfterDamage = ((double) newHp / maxHP);
         newHp = newHp > Integer.MAX_VALUE ? Integer.MAX_VALUE : newHp;
         if (newHp <= 0) {
-            die();
             getField().broadcastPacket(new LP_FieldEffect(new MobHPTagFieldEffect(this)));
+            die();
         } else if (isBoss()) {
             getField().broadcastPacket(new LP_FieldEffect(new MobHPTagFieldEffect(this)));
         } else {
@@ -330,7 +333,7 @@ public class Mob extends InternalLife {
 
 
     public void die() {
-        getField().removeMob(this);
+        getField().broadcastPacket(new LP_MobLeaveField(this));
         distributeExp();
         dropDrops(); // xd
         for (Character chr : getDamageDone().keySet()) {
@@ -341,7 +344,7 @@ public class Mob extends InternalLife {
             getMobListener().die();
             setMobListener(null);
         }
-        getField().broadcastPacket(new LP_MobLeaveField(this));
+        getField().removeMob(this);
     }
 
     @Override

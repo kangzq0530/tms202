@@ -4,6 +4,7 @@ import com.msemu.commons.data.enums.InvType;
 import com.msemu.commons.data.templates.ItemTemplate;
 import com.msemu.commons.data.templates.field.FieldTemplate;
 import com.msemu.commons.data.templates.field.Portal;
+import com.msemu.commons.data.templates.skill.SkillInfo;
 import com.msemu.commons.database.DatabaseFactory;
 import com.msemu.commons.database.Schema;
 import com.msemu.commons.enums.FileTimeUnit;
@@ -20,11 +21,13 @@ import com.msemu.core.network.packets.outpacket.user.remote.effect.LP_UserEffect
 import com.msemu.core.network.packets.outpacket.wvscontext.*;
 import com.msemu.world.Channel;
 import com.msemu.world.client.character.effect.LevelUpUserEffect;
+import com.msemu.world.client.character.effect.MultiKillMessage;
 import com.msemu.world.client.character.friends.FriendList;
 import com.msemu.world.client.character.inventory.items.Equip;
 import com.msemu.world.client.character.inventory.items.Item;
 import com.msemu.world.client.character.jobs.JobHandler;
 import com.msemu.world.client.character.jobs.JobManager;
+import com.msemu.world.client.character.messages.ComboKillMessage;
 import com.msemu.world.client.character.messages.IncExpMessage;
 import com.msemu.world.client.character.messages.IncMoneyMessage;
 import com.msemu.world.client.character.messages.MoneyDropPickUpMessage;
@@ -275,6 +278,8 @@ public class Character extends Life {
     @Transient
     @Setter(AccessLevel.NONE)
     private List<SkillMacro> skillMacros = new ArrayList<>();
+    @Transient
+    private int comboKill;
 
 
     public Character() {
@@ -446,7 +451,8 @@ public class Character extends Life {
         }
         cs.setExp(newExp);
         stats.put(Stat.EXP, newExp);
-        write(new LP_Message(new IncExpMessage(eii)));
+        if (eii != null)
+            write(new LP_Message(new IncExpMessage(eii)));
         getClient().write(new LP_StatChanged(stats));
         this.addSp(1, 30);
     }
@@ -1809,7 +1815,7 @@ public class Character extends Life {
     }
 
     public boolean canHold(final int itemID, final int quantity) {
-        if(ItemConstants.isEquip(itemID)) {
+        if (ItemConstants.isEquip(itemID)) {
             return getEquipInventory().getSlots() > getEquipInventory().getItems().size();
         } else {
             ItemTemplate template = ItemData.getInstance().getItemInfo(itemID);
@@ -1952,6 +1958,44 @@ public class Character extends Life {
             int sp = stats.getSp() + amount;
             Math.min(GameConstants.MAX_BASIC_STAT, sp);
             setStat(Stat.SP, sp);
+        }
+    }
+
+    public void attackMob(AttackInfo attackInfo) {
+        final List<Mob> killedMob = new ArrayList<>();
+        final Skill skill = this.getSkill(attackInfo.getSkillId());
+        final SkillInfo si = skill != null ? SkillData.getInstance().getSkillInfoById(attackInfo.getSkillId()) : null;
+        attackInfo.getMobAttackInfo().forEach(mai -> {
+            Mob mob = field.getMobByObjectId(mai.getObjectID());
+            if (mob != null) {
+                long totalDamage = Arrays.stream(mai.getDamages()).sum();
+                this.chatMessage(ChatMsgType.GAME_DESC, String.format("近距離攻擊: 技能: %s(%d) 怪物: %s(%d)  HP: (%d/%d) MP: (%d/%d) 總攻擊: %d 座標: %s",
+                        (si != null ? si.getName() : "普通攻擊"), attackInfo.getSkillId(), mob.getTemplate().getName(),
+                        mob.getTemplateId(), mob.getHp(), mob.getMaxHp(), mob.getMp(), mob.getMaxHp(), totalDamage, attackInfo.getPos().toString()));
+                mob.addDamage(this, totalDamage);
+                mob.damage(totalDamage);
+
+                // 處理 multikill & combo kill
+                if (!mob.isAlive()) {
+                    killedMob.add(mob);
+                    setComboKill(getComboKill() + 1);
+                    this.write(new LP_Message(new ComboKillMessage(getComboKill(), mob.getObjectId())));
+                }
+            }
+        });
+
+        final int multiKillCount = killedMob.size();
+        if (multiKillCount >= 3) {
+            final boolean bossKilled = killedMob.stream()
+                    .anyMatch(Mob::isBoss);
+            final long totalExp = killedMob
+                    .stream()
+                    .mapToLong(Mob::getExp)
+                    .sum();
+            final double multiKillExpRate = GameConstants.getMultiKillExpRate(multiKillCount, bossKilled);
+            final int bonusExp = (int) (multiKillExpRate * totalExp);
+            this.addExp(bonusExp, null);
+            this.write(new LP_Message(new MultiKillMessage(bonusExp, multiKillCount)));
         }
     }
 

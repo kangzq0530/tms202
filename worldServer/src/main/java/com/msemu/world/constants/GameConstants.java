@@ -195,4 +195,55 @@ public class GameConstants {
         return damage;
     }
 
+    public static double getMultiKillExpRate(int multiKillCount, boolean bossKilled) {
+        double x = 0;
+        switch (multiKillCount) {
+            case 3:
+                x = 0.030D;
+                break;
+            case 4:
+                x = 0.080D;
+                break;
+            case 5:
+                x = 0.1525D;
+                break;
+            case 6:
+                x = 0.198D;
+                break;
+            case 7:
+                x = 0.252D;
+                break;
+            case 8:
+                x = 0.312D;
+                break;
+            case 9:
+                x = 0.378D;
+                break;
+            case 10:
+                x = 0.45D;
+                break;
+            case 11:
+                x = 0.495D;
+                break;
+            case 12:
+                x = 54D;
+                break;
+            case 13:
+                x = 58.5D;
+                break;
+            case 14:
+                x = 0.63D;
+                break;
+            default:
+                if (multiKillCount >= 15) {
+                    x = 0.675D;
+                } else {
+                    x = 0.0D;
+                }
+                break;
+        }
+        if(bossKilled)
+            x /= multiKillCount;
+        return x;
+    }
 }

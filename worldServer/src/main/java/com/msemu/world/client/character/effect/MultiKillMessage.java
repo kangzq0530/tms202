@@ -1,20 +1,18 @@
-package com.msemu.world.client.character.messages;
+package com.msemu.world.client.character.effect;
 
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;
+import com.msemu.world.client.character.messages.IWvsMessage;
 import com.msemu.world.enums.WvsMessageType;
 
-/**
- * Created by Weber on 2018/5/5.
- */
-public class ComboKillMessage implements IWvsMessage {
+public class MultiKillMessage implements IWvsMessage {
 
-    private int count;
-    private int mobID;
+    private final int bonusExp;
+    private final int count;
 
-    public ComboKillMessage(int count, int mobID) {
+    public MultiKillMessage(int bonusExp, int count) {
+        this.bonusExp = bonusExp;
         this.count = count;
-        this.mobID = mobID;
     }
 
     @Override
@@ -24,10 +22,10 @@ public class ComboKillMessage implements IWvsMessage {
 
     @Override
     public void encode(OutPacket<GameClient> outPacket) {
-        outPacket.encodeByte(1);
+        outPacket.encodeByte(0);
+        outPacket.encodeLong(bonusExp);
         outPacket.encodeInt(count);
-        outPacket.encodeInt(mobID);
+        outPacket.encodeInt(count);
         outPacket.encodeInt(0);
-        outPacket.encodeInt(mobID);
     }
 }

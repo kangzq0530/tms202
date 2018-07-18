@@ -5,18 +5,23 @@ import com.msemu.commons.data.templates.skill.SkillInfo;
 import com.msemu.commons.network.packets.InPacket;
 import com.msemu.core.network.GameClient;
 import com.msemu.core.network.packets.outpacket.user.remote.LP_UserMeleeAttack;
+import com.msemu.core.network.packets.outpacket.wvscontext.LP_Message;
 import com.msemu.world.client.character.AttackInfo;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.MobAttackInfo;
+import com.msemu.world.client.character.effect.MultiKillMessage;
 import com.msemu.world.client.character.skill.Skill;
 import com.msemu.world.client.field.Field;
 import com.msemu.world.client.field.lifes.Mob;
+import com.msemu.world.constants.GameConstants;
 import com.msemu.world.constants.SkillConstants;
 import com.msemu.world.data.SkillData;
 import com.msemu.world.enums.ChatMsgType;
 import com.msemu.world.enums.Stat;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by Weber on 2018/5/4.
@@ -36,7 +41,7 @@ public class CP_UserMeleeAttack extends InPacket<GameClient> {
         ai.setFieldKey(decodeByte());
         Byte atkMask = decodeByte();
         ai.setHits((byte) (atkMask & 0xF));
-        ai.setMobCount((atkMask&0xF0) >> 4) ;
+        ai.setMobCount((atkMask & 0xF0) >> 4);
         ai.setSkillId(decodeInt());
         ai.setSlv(decodeByte());
         ai.setAddAttackProc(decodeByte());
@@ -191,13 +196,13 @@ public class CP_UserMeleeAttack extends InPacket<GameClient> {
 
     @Override
     public void runImpl() {
-        Character chr = getClient().getCharacter();
-        Field field = chr.getField();
+        final Character chr = getClient().getCharacter();
+        final Field field = chr.getField();
         final Skill skill = chr.getSkill(ai.getSkillId());
-        SkillInfo si = skill != null ? SkillData.getInstance().getSkillInfoById(ai.getSkillId()) : null;
-
+        final SkillInfo si = skill != null ? SkillData.getInstance().getSkillInfoById(ai.getSkillId()) : null;
+        final boolean attackSuccess = chr.getJobHandler().handleAttack(ai);
+        final List<Mob> killedMob = new ArrayList<>();
         chr.getCharacterLocalStat().getCalcDamage().PDamageForPvM(ai);
-        boolean attackSuccess = chr.getJobHandler().handleAttack(ai);
         field.broadcastPacket(new LP_UserMeleeAttack(chr, ai));
 
         if (attackSuccess) {
@@ -210,20 +215,10 @@ public class CP_UserMeleeAttack extends InPacket<GameClient> {
                 if (mpCon > 0)
                     chr.addStat(Stat.MP, -mpCon);
                 if (hpRCon > 0)
-                    chr.addStat(Stat.HP, (int) -(chr.getStat(Stat.HP) * (chr.getStat(Stat.HP) * (hpRCon /100.0))));
+                    chr.addStat(Stat.HP, (int) -(chr.getStat(Stat.HP) * (chr.getStat(Stat.HP) * (hpRCon / 100.0))));
             }
             chr.renewCharacterStats();
-            ai.getMobAttackInfo().forEach(mai -> {
-                Mob mob = field.getMobByObjectId(mai.getObjectID());
-                if (mob != null) {
-                    long totalDamage = Arrays.stream(mai.getDamages()).sum();
-                    chr.chatMessage(ChatMsgType.GAME_DESC, String.format("近距離攻擊: 技能: %s(%d) 怪物: %s(%d)  HP: (%d/%d) MP: (%d/%d) 總攻擊: %d 座標: %s",
-                            (si != null ? si.getName() : "普通攻擊"), ai.getSkillId(), mob.getTemplate().getName(),
-                            mob.getTemplateId(), mob.getHp(), mob.getMaxHp(), mob.getMp(), mob.getMaxHp(), totalDamage, ai.getPos().toString()));
-                    mob.addDamage(chr, totalDamage);
-                    mob.damage(totalDamage);
-                }
-            });
+            chr.attackMob(ai);
         }
     }
 }

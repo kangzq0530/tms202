@@ -15,6 +15,7 @@ public abstract class DropPickUpMessage implements IWvsMessage {
 
     @Override
     public void encode(OutPacket<GameClient> outPacket) {
+        outPacket.encodeInt(0);
         outPacket.encodeByte(getDropPickUpType().getValue());
     }
 }
