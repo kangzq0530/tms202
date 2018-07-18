@@ -2,12 +2,13 @@ package com.msemu.world.client.character.messages;
 
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;
+import com.msemu.world.enums.PickUpMessageType;
 import com.msemu.world.enums.WvsMessageType;
 
 /**
  * Created by Weber on 2018/5/11.
  */
-public class MoneyDropPickUpMessage implements IWvsMessage {
+public class MoneyDropPickUpMessage extends DropPickUpMessage {
 
     private long money;
 
@@ -16,14 +17,13 @@ public class MoneyDropPickUpMessage implements IWvsMessage {
     }
 
     @Override
-    public WvsMessageType getType() {
-        return WvsMessageType.DropPickUpMessage;
+    public PickUpMessageType getDropPickUpType() {
+        return PickUpMessageType.MESSO;
     }
 
     @Override
     public void encode(OutPacket<GameClient> outPacket) {
-        outPacket.encodeInt(0);
-        outPacket.encodeByte(1);
+        super.encode(outPacket);
         outPacket.encodeByte(0);
         outPacket.encodeLong(money);
         outPacket.encodeShort(0);

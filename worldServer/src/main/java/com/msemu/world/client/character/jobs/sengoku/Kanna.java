@@ -209,7 +209,7 @@ public class Kanna extends JobHandler {
         if (skill != null) {
             si = SkillData.getInstance().getSkillInfoById(skillID);
         }
-        chr.chatMessage(ChatMsgType.YELLOW, "SkillID: " + skillID);
+        chr.chatMessage(ChatMsgType.NOTICE, "SkillID: " + skillID);
         if (isBuff(skillID)) {
             handleBuff(skillUseInfo);
         } else {

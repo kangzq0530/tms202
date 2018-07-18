@@ -452,7 +452,7 @@ public class Aran extends JobHandler {
         if (si == null) {
             return false;
         }
-        chr.chatMessage(ChatMsgType.YELLOW, "SkillID: " + skillID);
+        chr.chatMessage(ChatMsgType.NOTICE, "SkillID: " + skillID);
         if (isBuff(skillID)) {
             handleBuff(skillUseInfo);
         } else {

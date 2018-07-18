@@ -8,7 +8,7 @@ import com.msemu.world.client.character.inventory.InventoryManipulator;
 import com.msemu.world.client.character.inventory.items.Equip;
 import com.msemu.world.client.character.inventory.items.Item;
 
-import static com.msemu.world.enums.ChatMsgType.YELLOW;
+import static com.msemu.world.enums.ChatMsgType.MOB;
 
 public class CP_UserItemReleaseRequest extends InPacket<GameClient> {
 
@@ -45,9 +45,9 @@ public class CP_UserItemReleaseRequest extends InPacket<GameClient> {
         } else {
             equip.releaseOptions(bonus);
         }
-        chr.chatMessage(YELLOW, "Grade = " + equip.getGrade());
+        chr.chatMessage(MOB, "Grade = " + equip.getGrade());
         for (int i = 0; i < 6; i++) {
-            chr.chatMessage(YELLOW, "Opt " + i + " = " + equip.getOptions().get(i));
+            chr.chatMessage(MOB, "Opt " + i + " = " + equip.getOptions().get(i));
         }
         chr.write(new LP_ShowItemReleaseEffect(chr, ePos, bonus));
         InventoryManipulator.update(chr, equip.getInvType(), equip.getBagIndex());

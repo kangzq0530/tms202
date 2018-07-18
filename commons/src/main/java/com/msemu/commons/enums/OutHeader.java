@@ -429,7 +429,7 @@ public enum OutHeader implements IHeader {
     LP_SETP_COIN,
     LP_KAISER_QUICK_KEY,
     LP_IMPERIAL_BODY_DESTORY,
-    LP_FLASH_CUBE_RESPONSE,
+    LP_UIWindowTW,
     LP_OpenBingo,
     LP_CameraSwitch,
     LP_UserSetFieldFloating,

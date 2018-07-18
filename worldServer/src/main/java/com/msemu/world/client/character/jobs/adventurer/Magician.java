@@ -351,7 +351,6 @@ public class Magician extends JobHandler {
         if (si == null) {
             return false;
         }
-        chr.chatMessage(ChatMsgType.YELLOW, "SkillID: " + skillID);
         if (isBuff(skillID)) {
             handleBuff(skillUseInfo);
         } else {

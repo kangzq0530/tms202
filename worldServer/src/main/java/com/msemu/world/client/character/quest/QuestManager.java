@@ -29,7 +29,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.msemu.world.enums.ChatMsgType.YELLOW;
+import static com.msemu.world.enums.ChatMsgType.MOB;
 import static com.msemu.world.enums.QuestStatus.*;
 
 /**
@@ -111,7 +111,7 @@ public class QuestManager {
         if (!getQuestsList().containsKey(quest.getQRKey())) {
             getQuestsList().put(quest.getQRKey(), quest);
             QuestInfo qi = QuestData.getInstance().getQuestInfoById(quest.getQRKey());
-            getCharacter().chatMessage(YELLOW, String.format("[任務資訊] 增加任務 : %s(%d) ", qi != null ? qi.getName() : "自定義任務", quest.getQRKey()));
+            getCharacter().chatMessage(MOB, String.format("[任務資訊] 增加任務 : %s(%d) ", qi != null ? qi.getName() : "自定義任務", quest.getQRKey()));
         }
     }
 
@@ -124,7 +124,7 @@ public class QuestManager {
         }
         quest.setStatus(STARTED);
         getCharacter().write(new LP_Message(new QuestRecordMessage(quest)));
-        getCharacter().chatMessage(YELLOW, String.format("[任務資訊] 已接受任務 : %s(%d) ", qi != null ? qi.getName() : "自定義任務", quest.getQRKey()));
+        getCharacter().chatMessage(MOB, String.format("[任務資訊] 已接受任務 : %s(%d) ", qi != null ? qi.getName() : "自定義任務", quest.getQRKey()));
         if (qi != null && qi.isAutoComplete())
             completeQuest(questID);
     }
@@ -172,7 +172,7 @@ public class QuestManager {
         }
         quest.setStatus(COMPLETE);
         quest.setCompletedTime(FileTime.now());
-        getCharacter().chatMessage(YELLOW, String.format("[任務資訊] 已完成任務 : %s(%d) ", qi.getName(), quest.getQRKey()));
+        getCharacter().chatMessage(MOB, String.format("[任務資訊] 已完成任務 : %s(%d) ", qi.getName(), quest.getQRKey()));
         getCharacter().write(new LP_Message(new QuestRecordMessage(quest)));
         getCharacter().write(new LP_UserEffectLocal(new QuestCompleteUserEffect()));
         getCharacter().getField().broadcastPacket(new LP_UserEffectRemote(getCharacter(), new QuestCompleteUserEffect()));

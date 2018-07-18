@@ -1,6 +1,7 @@
 package com.msemu.world.client.character;
 
 import com.msemu.commons.data.enums.InvType;
+import com.msemu.commons.data.templates.ItemTemplate;
 import com.msemu.commons.data.templates.field.FieldTemplate;
 import com.msemu.commons.data.templates.field.Portal;
 import com.msemu.commons.database.DatabaseFactory;
@@ -733,12 +734,12 @@ public class Character extends Life {
     }
 
     /**
-     * Sends a message to this Char with a default colour {@link ChatMsgType#YELLOW}.
+     * Sends a message to this Char with a default colour {@link ChatMsgType#MOB}.
      *
      * @param msg The message to display.
      */
     public void chatMessage(String msg) {
-        chatMessage(ChatMsgType.YELLOW, msg);
+        chatMessage(ChatMsgType.NOTICE, msg);
     }
 
     /**
@@ -1804,6 +1805,18 @@ public class Character extends Life {
                 else
                     warp(toField, toPortal);
             }
+        }
+    }
+
+    public boolean canHold(final int itemID, final int quantity) {
+        if(ItemConstants.isEquip(itemID)) {
+            return getEquipInventory().getSlots() > getEquipInventory().getItems().size();
+        } else {
+            ItemTemplate template = ItemData.getInstance().getItemInfo(itemID);
+            Inventory inv = getInventoryByType(template.getInvType());
+            Item existsItem = inv.getItemByItemID(itemID);
+            return (existsItem != null && existsItem.getQuantity() + 1 < template.getSlotMax())
+                    || inv.getSlots() > inv.getItems().size();
         }
     }
 

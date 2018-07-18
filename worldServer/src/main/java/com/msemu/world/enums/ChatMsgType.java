@@ -13,13 +13,20 @@ public enum ChatMsgType {
     GROUP_FRIEND(3),
     GROUP_GUILD(4),
     GROUP_ALLIANCE(5),
+    // 灰色
     GAME_DESC(6),
+    // 黃色
     TIP(7),
     NOTICE(8),
+    // 淡藍色
     NOTICE_2(9),
+    // 白底黑字
     ADMIN_CHAT(10),
+    // 粉紅
     SYSTEM(11),
+    // 淡藍底深藍字
     SPEAKER_CHANNEL(12),
+    // 粉紅底，有頻道
     SMEGA(13),
     SMEGA_2(14),
     ITEM_SMEGA(15),
@@ -27,10 +34,19 @@ public enum ChatMsgType {
     DARK_BLUE(16),
     ITEM_NOTICE(17),
     MEGA(18),
-    YELLOW(19),
+    // 黃色
+    MOB(19),
+    // 藍綠色
     CYAN(20),
     ITEM_NO_ITEM_SMEGA(21),
     SWEDEN(22),
+    LOTTERY_ITEM_SPEAKER(23),
+    LOTTERY_ITEM_SPEAKER_WORLD(24),
+    AVATAR_MEGAPHONE(25),
+    PICKUP_SPEAKER_WORLD(26),
+    WORLD_NAME(27),
+    BOSS_ARENA_NOTICE(28),
+    CLAIM(29),
     DARK_RED(30),
     GACHA_REWARD(31),
     GACHA_RED(32),
