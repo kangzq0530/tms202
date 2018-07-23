@@ -263,14 +263,14 @@ public class ScriptInteraction {
     public void teachSkill(int skillID, int level) {
         Skill skill = SkillData.getInstance().getSkillById(skillID);
         skill.setCurrentLevel(level);
-        getCharacter().teachSkill(skill);
+        getCharacter().addSkill(skill);
     }
 
     public void teachSkill(int skillID, int level, int masterLevel) {
         Skill skill = SkillData.getInstance().getSkillById(skillID);
         skill.setCurrentLevel(level);
         skill.setMasterLevel(masterLevel);
-        getCharacter().teachSkill(skill);
+        getCharacter().addSkill(skill);
     }
 
 
