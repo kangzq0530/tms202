@@ -241,7 +241,7 @@ public class LP_UserEnterField extends OutPacket<GameClient> {
 
     }
 
-    private void unkFunction(OutPacket<GameClient> outPacket) {
+    public static void unkFunction(OutPacket<GameClient> outPacket) {
         int v7 = 2;
         do {
             outPacket.encodeInt(0);

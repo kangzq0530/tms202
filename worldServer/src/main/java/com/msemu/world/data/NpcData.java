@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * Created by Weber on 2018/4/12.
  */
-@Reloadable(name = "requestNpcs", group = "all")
+@Reloadable(name = "requestNPC", group = "all")
 @StartupComponent("Data")
 public class NpcData implements IReloadable {
 

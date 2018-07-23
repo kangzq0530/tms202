@@ -3,6 +3,7 @@ package com.msemu.world.client.character;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;
 import com.msemu.core.network.packets.outpacket.user.android.LP_AndroidEnterField;
+import com.msemu.core.network.packets.outpacket.user.android.LP_AndroidLeaveField;
 import com.msemu.world.client.character.inventory.items.Equip;
 import com.msemu.world.client.character.inventory.items.Item;
 import com.msemu.world.client.field.lifes.AbstractAnimatedFieldLife;
@@ -39,6 +40,7 @@ public class Android extends AbstractAnimatedFieldLife {
 
     @Override
     public void outScreen(GameClient client) {
+        client.write(new LP_AndroidLeaveField(this));
     }
 
     public void encode(OutPacket<GameClient> outPacket) {

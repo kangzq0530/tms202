@@ -55,7 +55,7 @@ import java.util.Optional;
 public class ScriptInteraction {
 
     @Getter
-    public static final List<Npc> requestNpcs = new ArrayList<>();
+    public static final List<Npc> requestNPC = new ArrayList<>();
     @Getter
     protected Character character;
     @Getter
@@ -90,9 +90,7 @@ public class ScriptInteraction {
                         .filter(req -> req.getType().equals(QuestRequirementDataType.npc))
                         .map(req -> (QuestNpcReqData) req)
                         .findFirst();
-                if (rData.isPresent()) {
-                    speakerTemplateID = rData.get().getNpcId();
-                }
+                rData.ifPresent(questNpcReqData -> speakerTemplateID = questNpcReqData.getNpcId());
             }
         }
     }
@@ -728,7 +726,7 @@ public class ScriptInteraction {
     }
 
     public void onNpcDirectionEffect(int npcID, String data, int value, int x, int y) {
-        final Npc npc = getRequestNpcs().stream()
+        final Npc npc = getRequestNPC().stream()
                 .filter(e -> e.getTemplateId() == npcID).findFirst().orElse(null);
         if (npc != null) {
             executeInGameDirectionEvent(InGameDirectionEventOpcode.InGameDirectionEvent_EffectPlay.getValue(), data, new int[]{value, x, y, 1, 1, 0, npc.getObjectId(), 0});
@@ -777,7 +775,7 @@ public class ScriptInteraction {
     }
 
     public void spawnNPCRequestController(int npcID, int x, int y, int f) {
-        Npc npc = getRequestNpcs().stream()
+        Npc npc = getRequestNPC().stream()
                 .filter(e -> e.getTemplateId() == npcID).findFirst().orElse((createAndGetNpcRequestController(npcID)));
         npc.setPosition(new Position(x, y));
         npc.setCy(y);
@@ -793,22 +791,22 @@ public class ScriptInteraction {
 
     public Npc createAndGetNpcRequestController(int npcID) {
         Npc npc = NpcData.getInstance().getNpcFromTemplate(npcID);
-        getRequestNpcs().add(npc);
+        getRequestNPC().add(npc);
         return npc;
     }
 
     public void removeNPCRequestController(int npcID) {
-        final Npc oldNpc = getRequestNpcs().stream()
+        final Npc oldNpc = getRequestNPC().stream()
                 .filter(e -> e.getTemplateId() == npcID).findFirst().orElse(null);
         if (oldNpc != null) {
-            getRequestNpcs().remove(oldNpc);
+            getRequestNPC().remove(oldNpc);
             getClient().write(new LP_NpcChangeController(oldNpc, false));
             getClient().write(new LP_NpcLeaveField(oldNpc));
         }
     }
 
     public void updateNPCSpecialAction(int npcID, int value, int x, int y) {
-        final Npc oldNpc = getRequestNpcs().stream()
+        final Npc oldNpc = getRequestNPC().stream()
                 .filter(e -> e.getTemplateId() == npcID).findFirst().orElse(null);
         if (oldNpc != null) {
             getClient().write(new LP_NpcUpdateLimitedInfo(oldNpc, value, x, y));

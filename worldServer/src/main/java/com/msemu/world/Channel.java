@@ -99,12 +99,13 @@ public class Channel {
         Character chr = getTransferList().stream()
                 .filter(c -> c.getId() == characterId)
                 .findFirst().orElse(null);
-        getTransfers().remove(chr.getAccId());
+        if(chr != null)
+            getTransfers().remove(chr.getAccId());
         return chr;
     }
 
     public List<Character> getCharactersList() {
-        return characters.values().stream().collect(Collectors.toList());
+        return new ArrayList<>(characters.values());
     }
 
     @Synchronized

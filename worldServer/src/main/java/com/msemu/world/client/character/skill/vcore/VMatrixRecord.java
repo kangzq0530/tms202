@@ -24,30 +24,32 @@ public class VMatrixRecord {
     protected FileTime dateExpire = FileTime.getFileTimeFromType(FileTime.Type.PERMANENT);
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column
     private int id;
-    @Column(name = "charId")
+    @Column
     private int charId;
-    @Column(name = "coreId")
+    @Column
     private int coreId;
-    @Column(name = "connectSkill1")
+    @Column
     private int connectSkill1;
-    @Column(name = "connectSkill2")
+    @Column
     private int connectSkill2;
+    @Column
     private int connectSkill3;
     private int skillLv;
     private int masterLevel;
-    @Column(name = "coreState")
+    @Column
     private int coreState;
     @Transient
     private int row, exp;
     @Transient
     private long crc;
 
-    public VMatrixRecord(int iconID, int skillid1, int skillid2, int skillid3, int skillLv, int masterlv, int row, int exp, long crc) {
-        this.connectSkill1 = skillid1;
-        this.connectSkill2 = skillid2;
-        this.connectSkill3 = skillid3;
+
+    public VMatrixRecord(int iconID, int skillID1, int skillID2, int skillId3, int skillLv, int masterlv, int row, int exp, long crc) {
+        this.connectSkill1 = skillID1;
+        this.connectSkill2 = skillID2;
+        this.connectSkill3 = skillId3;
         this.skillLv = skillLv;
         this.masterLevel = masterlv;
         this.row = row;

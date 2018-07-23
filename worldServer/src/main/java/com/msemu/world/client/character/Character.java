@@ -970,24 +970,9 @@ public class Character extends Life {
             }
             // 終極冒險家 (捨棄了)
             outPacket.encodeByte(false); // ultimate explorer, deprecated
-
             outPacket.encodeFT(FileTime.now());
             outPacket.encodeFT(FileTime.getFileTimeFromType(FileTime.Type.ZERO_TIME));
-
-            //sub_510BF0
-            int v7 = 2;
-            do {
-                outPacket.encodeInt(0);
-                while (true) {
-                    int res = 255;
-                    outPacket.encodeByte(res);
-                    if (res == 255) {
-                        break;
-                    }
-                    outPacket.encodeInt(0);
-                }
-                v7 += 36;
-            } while (v7 < 74);
+            LP_UserEnterField.unkFunction(outPacket);
         }
         if (mask.isInMask(DBChar.MONEY)) {
             outPacket.encodeLong(getMoney());
