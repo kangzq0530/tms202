@@ -34,14 +34,18 @@ import com.msemu.world.data.FieldData;
 import com.msemu.world.data.ItemData;
 import com.msemu.world.data.SkillData;
 import com.msemu.world.enums.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.LoggerFactory;
 
+import java.awt.*;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.Lock;
@@ -84,6 +88,9 @@ public class Field {
     protected LocalDateTime lastSpawnEliteMobTime = LocalDateTime.MIN, lastSpawnTime = LocalDateTime.MIN;
     @Getter
     protected ForceAtomHandler forceAtomHandler = new ForceAtomHandler();
+    @Getter
+    protected final ScheduledFuture<?> runeStoneTimer;
+
 
     public Field(FieldTemplate fieldData) {
         this.fieldId = fieldData.getId();
@@ -101,6 +108,7 @@ public class Field {
         });
         this.fieldObjects = Collections.unmodifiableMap(objectsMap);
         this.fieldObjectLocks = Collections.unmodifiableMap(objectLockMap);
+        this.runeStoneTimer = EventManager.getInstance().addFixedRateEvent(this::spawnRuneStoneTask, GameConstants.RUNE_RESPAWN_TIME, GameConstants.RUNE_RESPAWN_TIME, TimeUnit.MINUTES);
     }
 
     /**
@@ -239,6 +247,11 @@ public class Field {
         return getFootholdTree().getFootholdById(fh);
     }
 
+    public Foothold getRandomFoothold() {
+        List<Foothold> footholds = getFootholdTree().getAllRelevants();
+        return footholds.get(Rand.get(footholds.size()));
+    }
+
     public void enter(Character chr, Portal portal, boolean characterData) {
         chr.setPosition(portal.getPosition());
         spawnLife(chr);
@@ -319,20 +332,9 @@ public class Field {
             return;
         life.setField(this);
         this.addFieldObject(life);
-        switch (life.getFieldObjectType()) {
-            case MOB:
-                broadcastPacket(new LP_MobEnterField((Mob) life, false));
-                break;
-            case SUMMON:
-                broadcastPacket(new LP_SummonEnterField((Summon) life));
-                break;
-            case NPC:
-                broadcastPacket(new LP_NpcEnterField((Npc) life));
-                break;
-            case CHARACTER:
-                broadcastPacket(new LP_UserEnterField((Character) life));
-                break;
-        }
+        this.getAllCharacters().stream()
+                .map(Character::getClient)
+                .forEach(life::enterScreen);
     }
 
     public void spawnAffectedArea(AffectedArea affectedArea) {
@@ -523,9 +525,7 @@ public class Field {
         chr.getScriptManager().startScript(getFieldId(), script, ScriptType.FIELD);
     }
 
-    public int getReturnMap() {
-        return getFieldData().getReturnMap();
-    }
+
 
     public void startTimeLimitTask(int time, Field toField) {
 
@@ -670,6 +670,14 @@ public class Field {
         }
     }
 
+    public List<RuneStone> getAllRuneStones() {
+        getFieldObjectReadLock(FieldObjectType.RUNE).lock();
+        try {
+            return getFieldObjects().get(FieldObjectType.RUNE).values().stream().map(o -> (RuneStone) o).collect(Collectors.toList());
+        } finally {
+            getFieldObjectReadLock(FieldObjectType.RUNE).unlock();
+        }
+    }
 
     public List<Character> getAllCharacters() {
         getFieldObjectReadLock(FieldObjectType.CHARACTER).lock();
@@ -861,19 +869,20 @@ public class Field {
         return closest;
     }
 
-    public int getFieldLimit() {
-        return getFieldData().getFieldLimit();
+    public void spawnRuneStoneTask()
+    {
+
+        if(getAllMobs().isEmpty() || getBossMobID() > 0)
+            return;
+        if(getAllRuneStones().size() >= GameConstants.MAX_RUNESTONE_PER_FIELD)
+            return;
+
+        RuneStone runeStone = new RuneStone(RuneStoneType.randomType(), getAllRuneStones().size());
+        runeStone.setFlip(false);
+
+        spawnLife(runeStone);
     }
 
-    public boolean checkFieldLimit(FieldLimit limits) {
-        return limits.isLimit(getFieldLimit());
-    }
-
-    public boolean checkFieldLimits(FieldLimit... limits) {
-        return Arrays.stream(limits).allMatch(
-                limit -> limit.isLimit(getFieldLimit())
-        );
-    }
 
     public int getConsumeItemCoolTime() {
         return getFieldData().getConsumeItemCoolTime();
@@ -893,5 +902,27 @@ public class Field {
 
     public boolean hasForceAtom(int count) {
         return getForceAtomHandler().getForceAtom(count) != null;
+    }
+
+    public int getReturnMap() {
+        return getFieldData().getReturnMap();
+    }
+
+    public int getFieldLimit() {
+        return getFieldData().getFieldLimit();
+    }
+
+    public boolean checkFieldLimit(FieldLimit limits) {
+        return limits.isLimit(getFieldLimit());
+    }
+
+    public boolean checkFieldLimits(FieldLimit... limits) {
+        return Arrays.stream(limits).allMatch(
+                limit -> limit.isLimit(getFieldLimit())
+        );
+    }
+
+    public int getBossMobID() {
+        return getFieldData().getBossMobID();
     }
 }

@@ -21,7 +21,7 @@ public class FieldTemplate implements DatSerializable {
     private String name = "", streetName = "";
     private int id, returnMap, forcedReturn, fieldLimit;
     private int mobRate, partyBonusR;
-    private int fixedMobCapacity, createMobInterval, timeOut, timeLimit, lvLimit, lvForceMove, consumeItemCoolTime, link;
+    private int fixedMobCapacity, createMobInterval, timeOut, timeLimit, lvLimit, lvForceMove, consumeItemCoolTime, link, bossMobID;
     private boolean town, swim, fly, isNeedSkillForFly, partyOnly, expeditionOnly, reactorShuffle;
     private String onFirstUserEnter = "", onUserEnter = "";
     private Set<Foothold> footholds = new HashSet<>();
@@ -97,6 +97,7 @@ public class FieldTemplate implements DatSerializable {
         dos.writeInt(lvForceMove);
         dos.writeInt(consumeItemCoolTime);
         dos.writeInt(link);
+        dos.writeInt(bossMobID);
         dos.writeBoolean(town);
         dos.writeBoolean(swim);
         dos.writeBoolean(fly);
@@ -160,6 +161,7 @@ public class FieldTemplate implements DatSerializable {
         setLvForceMove(dis.readInt());
         setConsumeItemCoolTime(dis.readInt());
         setLink(dis.readInt());
+        setBossMobID(dis.readInt());
         setTown(dis.readBoolean());
         setSwim(dis.readBoolean());
         setFly(dis.readBoolean());

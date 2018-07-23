@@ -3,11 +3,17 @@ package com.msemu.world.constants;
 import com.msemu.commons.data.templates.skill.SkillInfo;
 import com.msemu.world.data.SkillData;
 import com.msemu.world.enums.WeaponType;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by Weber on 2018/3/31.
  */
 public class SkillConstants {
+
+    public static final short LINK_SKILL_1_LEVEL = 70;
+    public static final short LINK_SKILL_2_LEVEL = 120;
+    public static final short LINK_SKILL_3_LEVEL = 210;
+
 
     public static boolean canMasteryApply(int skillID, WeaponType weaponType) {
         switch (skillID) {
@@ -690,6 +696,53 @@ public class SkillConstants {
         return skillId == 13111020 || skillId == 112111016; // 寒冰亂舞 || 旋風飛行
     }
 
+    public static int getLinkSkillLevelByCharLevel(int level) {
+        int res = 0;
+        if (level >= LINK_SKILL_3_LEVEL) {
+            res = 3;
+        } else if (level >= LINK_SKILL_2_LEVEL) {
+            res = 2;
+        } else if (level >= LINK_SKILL_1_LEVEL) {
+            res = 1;
+        }
+        return res;
+    }
+
+    public static int getLinkSkillByJob(short job) {
+        if (MapleJob.is重砲指揮官(job)) { // Pirate Blessing
+            return 80000000;
+        } else if (MapleJob.is皇家騎士團(job)) { // Cygnus Blessing
+            return 80000070;
+        } else if (MapleJob.is精靈遊俠(job)) { // Elven Blessing
+            return 80001040;
+        } else if (MapleJob.is惡魔殺手(job)) { // Fury Unleashed
+            return 80000001;
+        } else if (MapleJob.is惡魔復仇者(job)) { // Wild Rage
+            return 80000050;
+        } else if (MapleJob.is蒼龍俠客(job)) { // Core Aura
+            return 80001151;
+        } else if (MapleJob.is幻影俠盜(job)) { // Phantom Instinct
+            return 80000002;
+        } else if (MapleJob.is米哈逸(job)) { // Knight's Watch
+            return 80001140;
+        } else if (MapleJob.is夜光(job)) { // Light Wash
+            return 80000005;
+        } else if (MapleJob.is天使破壞者(job)) { // Terms and Conditions
+            return 80001155;
+        } else if (MapleJob.is劍豪(job)) { // Keen Edge
+            return 80000003;
+        } else if (MapleJob.is陰陽師(job)) { // Elementalism
+            return 80000004;
+        } else if (MapleJob.is凱撒(job)) { // Iron Will
+            return 80000006;
+        } else if (MapleJob.is傑諾(job)) { // Hybrid Logic
+            return 80000047;
+        } else if (MapleJob.is幻獸師(job)) { // Focus Spirit
+            return 80010006;
+        }
+        return 0;
+    }
+
     boolean isRpThreeCutSkill(int skillID) {
         boolean v1;
         if (skillID > 41111000) {
@@ -1184,4 +1237,92 @@ public class SkillConstants {
     public static boolean is混沌共鳴(int skillID) {
         return skillID == 400021041 || skillID > 400021048 && skillID <= 400021050;
     }
+
+    public static int getOriginalOfLinkedSkill(int skillID) {
+        int result = 0;
+        switch(skillID) {
+            case 80001040: // 精靈的祝福
+                result = 20021110;
+                break;
+            case 80001140: // 光之守護 [連結技能] 獲得聖殿騎士 米哈逸的守護，一定時間內受到敵人的攻擊也不會被擊退。
+                result = 50001214;
+                break;
+            case 80001155: // 靈魂契約
+                result = 60011219;
+                break;
+            case 80000378:
+                result = 30000077;
+                break;
+            case 80000334:
+                result = 30000075;
+                break;
+            case 80000335:
+                result = 30000076;
+                break;
+            case 80000369:
+                result = 20010294;
+                break;
+            case 80000370:
+                result = 20000297;
+                break;
+            case 80000333:
+                result = 30000074;
+                break;
+            case 80000000:
+                result = 110;
+                break;
+            case 80000001:
+                result = 30010112;
+                break;
+            case 80000002:
+                result = 20030204;
+                break;
+            case 80000005:
+                result = 20040218;
+                break;
+            case 80000006:
+                result = 60000222;
+                break;
+            case 80000047:
+                result = 30020233;
+                break;
+            case 80000050:
+                result = 30010241;
+                break;
+            case 80000066:
+                result = 10000255;
+                break;
+            case 80000067:
+                result = 10000256;
+                break;
+            case 80000068:
+                result = 10000257;
+                break;
+            case 80000069:
+                result = 10000258;
+                break;
+            case 80000070:
+                result = 10000259;
+                break;
+            case 80000110:
+                result = 100000271;
+                break;
+            case 80000169:
+                result = 20050286;
+                break;
+            case 80000188:
+                result = 140000292;
+                break;
+            case 80000004:
+                result = 40020002;
+                break;
+            case 0:
+                result = 0;
+                break;
+            default:
+                LoggerFactory.getLogger(SkillConstants.class).error("Unknown corresponding link skill for link skill id " + skillID);
+        }
+        return result;
+    }
+
 }

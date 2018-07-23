@@ -18,6 +18,13 @@ public class GameConstants {
     public static final int RANDOM_EQUIP_RARE_CHANCE = 8; // out of a 100
     public static final int THIRD_LINE_CHANCE = 50;
 
+    public static final int MAX_RUNESTONE_PER_FIELD = 2;
+    public static final int RUNE_RESPAWN_TIME = 5;
+    public static final int RUNE_COOLDOWN_TIME = 4; // minutes
+    public static final int THUNDER_RUNE_ATTACK_DELAY = 4; // seconds
+    public static final int DARKNESS_RUNE_NUMBER_OF_ELITE_MOBS_SPAWNED = 3; // number of elites spawned when activating Rune of Darkness
+
+
     public static long[] CHAR_EXP_TABLE = new long[251];
 
     // Quest Store

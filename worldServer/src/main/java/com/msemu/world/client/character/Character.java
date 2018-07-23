@@ -59,10 +59,12 @@ import com.msemu.world.data.SkillData;
 import com.msemu.world.enums.*;
 import com.msemu.world.service.GuildService;
 import com.msemu.world.service.PartyService;
+import jdk.internal.instrumentation.Logger;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.Session;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -353,7 +355,7 @@ public class Character extends Life {
         // 升級技能
         Skill beginnerSkill = SkillData.getInstance().getSkillById(80001770);
         beginnerSkill.setCurrentLevel(1);
-        teachSkill(beginnerSkill);
+        addSkill(beginnerSkill);
 
 
         getClient().write(new LP_ChangeSkillRecordResult(skills, true,
@@ -776,11 +778,23 @@ public class Character extends Life {
                 false, false, false));
     }
 
-    public void teachSkill(Skill skill) {
+    /**
+     * Adds a skill to this Char. If the Char already has this skill, just changes the levels.
+     * @param skillID the skill's id to add
+     * @param currentLevel the current level of the skill
+     * @param masterLevel the master level of the skill
+     */
+    public void addSkill(int skillID, int currentLevel, int masterLevel) {
+        Skill skill = SkillData.getInstance().getSkillById(skillID);
+        if (skill == null) {
+            LoggerFactory.getLogger(Character.class).error("No such skill found.");
+            return;
+        }
+        skill.setCurrentLevel(currentLevel);
+        skill.setMasterLevel(masterLevel);
         addSkill(skill);
-        write(new LP_ChangeSkillRecordResult(getSkills(), true,
-                false, false, false));
     }
+
 
     /**
      * Returns whether or not this Char has a {@link Skill} with a given id.
@@ -1943,6 +1957,11 @@ public class Character extends Life {
 
     public boolean isAlive() {
         return getStat(Stat.HP) > 0;
+    }
+
+
+    public void addSp(int amount) {
+        SkillConstants.getSkillJobLevel(getJob());
     }
 
     public void addSp(int jobLevel, int amount) {

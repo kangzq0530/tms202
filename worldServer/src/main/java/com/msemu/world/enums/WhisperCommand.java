@@ -9,7 +9,8 @@ public enum WhisperCommand {
 
     Find(0x5),
     Whisper(0x6),
-    FindFriend(0x44),;
+    FindFriend(0x44),
+    NONE(0xFF);
     @Getter
     private int value;
 
@@ -22,6 +23,6 @@ public enum WhisperCommand {
             if (cmd.getValue() == value)
                 return cmd;
         }
-        return null;
+        return NONE;
     }
 }

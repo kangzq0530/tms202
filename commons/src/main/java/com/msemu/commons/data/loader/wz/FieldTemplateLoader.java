@@ -105,6 +105,9 @@ public class FieldTemplateLoader extends WzDataLoader<Map<Integer, FieldTemplate
                         if (prop.hasProperty("link")) {
                             template.setLink(Integer.parseInt(prop.get("link").getString()));
                         }
+                        if (prop.hasProperty("bossMobID")) {
+                            template.setLink(Integer.parseInt(prop.get("bossMobID").getString()));
+                        }
                         if (prop.hasProperty("createMobInterval")) {
                             template.setCreateMobInterval(prop.get("createMobInterval").getInt());
                         }

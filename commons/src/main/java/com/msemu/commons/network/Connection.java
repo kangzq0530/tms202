@@ -11,6 +11,8 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.handler.timeout.IdleState;
+import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.handler.timeout.ReadTimeoutException;
 import lombok.Getter;
 import lombok.Setter;
@@ -70,6 +72,15 @@ public class Connection<TClient extends Client<TClient>> extends ChannelInboundH
     }
 
     @Override
+    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+        if (IdleStateEvent.class.isAssignableFrom(evt.getClass())) {
+            IdleStateEvent event = (IdleStateEvent) evt;
+            if (event.state() == IdleState.READER_IDLE)
+                this.client.onIdle();
+        }
+    }
+
+    @Override
     public void channelUnregistered(ChannelHandlerContext ctx) {
         this.close();
     }
@@ -124,16 +135,7 @@ public class Connection<TClient extends Client<TClient>> extends ChannelInboundH
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable except) {
-        if (!(except instanceof ReadTimeoutException) && !(except instanceof IOException)) {
-            log.error("An exception occured when reading a packet.", new Exception(except));
-            // this.close();
-        } else {
-            if (except instanceof ReadTimeoutException) {
-                log.error("User has been disconnected due ReadTimeoutException.");
-                client.onIdle();
-            }
-        }
-
+        ctx.close();
     }
 
     public void write(OutPacket<TClient> packet) {

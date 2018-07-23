@@ -1,17 +1,20 @@
 package com.msemu.core.network;
 
+import com.msemu.commons.network.Client;
 import com.msemu.commons.network.Connection;
 import com.msemu.commons.network.crypt.MapleCrypt;
 import com.msemu.commons.network.crypt.MapleExCrypt;
+import com.msemu.commons.thread.EventManager;
 import com.msemu.core.configs.CoreConfig;
 import com.msemu.core.network.packets.outpacket.LP_ConnectToClient;
 import com.msemu.world.Channel;
 import com.msemu.world.World;
 import com.msemu.world.client.Account;
 import com.msemu.world.client.character.Character;
-import com.msemu.commons.network.Client;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.concurrent.ScheduledFuture;
 
 
 /**
@@ -30,6 +33,9 @@ public class GameClient extends Client<GameClient> {
     @Getter
     private Channel channelInstance;
 
+    @Getter
+    private ScheduledFuture idleTask;
+
     public GameClient(Connection<GameClient> connection) {
         super(connection);
     }
@@ -44,6 +50,14 @@ public class GameClient extends Client<GameClient> {
         getConnection().setSendCipher(exCrypt);
         getConnection().setRecvCipher(crypt);
 
+    }
+
+    @Override
+    protected void onIdle() {
+        super.onIdle();
+        if (idleTask != null) {
+            idleTask = EventManager.getInstance().addEvent(this::close, 30 * 1000);
+        }
     }
 
     @Override
@@ -64,6 +78,7 @@ public class GameClient extends Client<GameClient> {
         }
     }
 
+
     public void setChannel(Channel channelInstance) {
         this.channelInstance = channelInstance;
     }
@@ -74,6 +89,13 @@ public class GameClient extends Client<GameClient> {
 
     public World getWorld() {
         return World.getInstance();
+    }
+
+    public void removeIdleTask() {
+        if (idleTask != null) {
+            idleTask.cancel(true);
+            idleTask = null;
+        }
     }
 
 }

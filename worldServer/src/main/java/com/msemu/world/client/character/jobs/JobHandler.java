@@ -3,13 +3,19 @@ package com.msemu.world.client.character.jobs;
 import com.msemu.commons.data.templates.skill.SkillInfo;
 import com.msemu.commons.network.packets.InPacket;
 import com.msemu.core.network.GameClient;
+import com.msemu.core.network.packets.outpacket.wvscontext.LP_StatChanged;
 import com.msemu.world.client.character.AttackInfo;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.HitInfo;
 import com.msemu.world.client.character.SkillUseInfo;
+import com.msemu.world.client.character.skill.Skill;
+import com.msemu.world.constants.SkillConstants;
 import com.msemu.world.data.SkillData;
 import com.msemu.world.enums.Stat;
 import lombok.Getter;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Weber on 2018/4/12.
@@ -26,7 +32,6 @@ public abstract class JobHandler {
     public GameClient getClient() {
         return this.character.getClient();
     }
-
 
     public abstract boolean handleAttack(AttackInfo attackInfo);
 
@@ -83,14 +88,36 @@ public abstract class JobHandler {
 //        getClient().write(wvscontext.statChanged(stats));
     }
 
-    public SkillInfo getSkillInfo(int skillID) {
+    protected SkillInfo getSkillInfo(int skillID) {
         return SkillData.getInstance().getSkillInfoById(skillID);
     }
 
     public void handleLevelUp() {
-        getCharacter().addStat(Stat.MAX_HP, 500);
-        getCharacter().addStat(Stat.MAX_MP, 500);
-        getCharacter().addStat(Stat.AP, 5);
+        final Character chr = getCharacter();
+        final int level = chr.getLevel();
+        chr.addStat(Stat.MAX_HP, 500);
+        chr.addStat(Stat.MAX_MP, 500);
+        chr.addStat(Stat.AP, 5);
+        int sp = 3;
+        if (level > 100 && (level % 10) % 3 == 0) {
+            sp = 6; // double sp on levels ending in 3/6/9
+        }
+        chr.addSp(sp);
+        Map<Stat, Object> stats = new HashMap<>();
+        stats.put(Stat.MAX_HP, chr.getStat(Stat.MAX_HP));
+        stats.put(Stat.MAX_MP, chr.getStat(Stat.MAX_MP));
+        stats.put(Stat.AP, (short) chr.getStat(Stat.AP));
+        stats.put(Stat.SP, chr.getAvatarData().getCharacterStat().getExtendSP());
+        chr.write(new LP_StatChanged(stats));
+        byte linkSkillLevel = (byte) SkillConstants.getLinkSkillLevelByCharLevel(level);
+        int linkSkillID = SkillConstants.getOriginalOfLinkedSkill(SkillConstants.getLinkSkillByJob(chr.getJob()));
+        if (linkSkillID != 0 && linkSkillLevel > 0) {
+            Skill skill = chr.getSkill(linkSkillID, true);
+            if (skill.getCurrentLevel() != linkSkillLevel) {
+                chr.addSkill(linkSkillID, linkSkillLevel, 3);
+            }
+        }
+
     }
 
 

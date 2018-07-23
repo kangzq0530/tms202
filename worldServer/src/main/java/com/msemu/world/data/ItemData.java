@@ -6,7 +6,10 @@ import com.msemu.commons.data.loader.dat.EquipTemplateDatLoader;
 import com.msemu.commons.data.loader.dat.ItemOptionDatLoader;
 import com.msemu.commons.data.loader.dat.ItemTemplateDatLoader;
 import com.msemu.commons.data.loader.dat.SetItemInfoDatLoader;
-import com.msemu.commons.data.templates.*;
+import com.msemu.commons.data.templates.EquipTemplate;
+import com.msemu.commons.data.templates.ItemOptionInfo;
+import com.msemu.commons.data.templates.ItemTemplate;
+import com.msemu.commons.data.templates.SetItemInfo;
 import com.msemu.commons.reload.IReloadable;
 import com.msemu.commons.reload.Reloadable;
 import com.msemu.commons.utils.Rand;
@@ -22,10 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 /**
  * Created by Weber on 2018/4/12.
@@ -139,7 +139,7 @@ public class ItemData implements IReloadable {
                 ItemGrade grade = ItemGrade.NONE;
                 if (Rand.getChance(GameConstants.RANDOM_EQUIP_UNIQUE_CHANCE)) {
                     grade = ItemGrade.HIDDEN_UNIQUE;
-                } else if (Rand.getChance(GameConstants.RANDOM_EQUIP_EPIC_CHANCE) || true) {
+                } else if (Rand.getChance(GameConstants.RANDOM_EQUIP_EPIC_CHANCE)) {
                     grade = ItemGrade.HIDDEN_EPIC;
                 } else if (Rand.getChance(GameConstants.RANDOM_EQUIP_RARE_CHANCE)) {
                     grade = ItemGrade.HIDDEN_RARE;

@@ -22,4 +22,7 @@ public class ChannelNetworkThread extends NetworkThread<GameClient> {
     public AbstractPacketHandlerFactory<GameClient> getPacketHandler() {
         return WorldPacketFactory.getInstance();
     }
+
+
+
 }
