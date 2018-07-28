@@ -1,3 +1,27 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2018 msemu
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package com.msemu.world.client.character.jobs.adventurer;
 
 import com.msemu.commons.data.enums.MobBuffStat;
@@ -21,7 +45,6 @@ import com.msemu.world.client.field.lifes.Summon;
 import com.msemu.world.client.field.lifes.skills.MobTemporaryStat;
 import com.msemu.world.constants.MapleJob;
 import com.msemu.world.data.SkillData;
-import com.msemu.world.enums.ChatMsgType;
 import com.msemu.world.enums.LeaveType;
 import com.msemu.world.enums.MoveAbility;
 import com.msemu.world.enums.Stat;
@@ -100,14 +123,6 @@ public class Warrior extends JobHandler {
     public static final int 神域護佑 = 1221054; //Lv150
     public static final int 黑暗飢渴 = 1321054; //Lv150
     public static final int 神之滅擊 = 1221052; //Lv170
-
-    private Summon evilEye;
-
-    private int[] addedSkills = new int[]{
-            回歸楓之谷,
-    };
-
-
     private final int[] buffs = new int[]{
             極速武器, // Weapon Booster - Fighter
             鬥氣集中, // Combo Attack
@@ -135,6 +150,10 @@ public class Warrior extends JobHandler {
             劍士意念,
             神域護佑,
             黑暗飢渴,
+    };
+    private Summon evilEye;
+    private int[] addedSkills = new int[]{
+            回歸楓之谷,
     };
     private long lastPanicHit = Long.MIN_VALUE;
     private long lastHpRecovery = Long.MIN_VALUE;

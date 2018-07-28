@@ -1,3 +1,27 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2018 msemu
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package com.msemu.world.constants;
 
 import com.msemu.commons.data.templates.skill.SkillInfo;
@@ -743,95 +767,6 @@ public class SkillConstants {
         return 0;
     }
 
-    boolean isRpThreeCutSkill(int skillID) {
-        boolean v1;
-        if (skillID > 41111000) {
-            if (skillID > 41121012) {
-                switch (skillID) {
-                    case 80011036:
-                    case 80011037:
-                    case 80011038:
-                    case 80011070:
-                    case 80011071:
-                    case 80011072:
-                        return true;
-                    default:
-                        return false;
-                }
-            }
-            if (skillID >= 41121011)
-                return true;
-            if (skillID < 41111011)
-                return false;
-            if (skillID <= 41111012)
-                return true;
-            v1 = skillID == 41121000;
-            return v1;
-        }
-        if (skillID == 41111000)
-            return true;
-        if (skillID > 41001005) {
-            return !(skillID != 41101000 && (skillID <= 41101007 || skillID > 41101009));
-        }
-        if (skillID < 41001004) {
-            if (skillID < 40011183)
-                return false;
-            if (skillID > 40011185) {
-                v1 = skillID == 41001000;
-                return v1;
-            }
-        }
-        return true;
-    }
-
-    public boolean isBmageSummonedDeathSkill(int skillID) {
-        boolean v1; // zf
-        if (skillID > 32110017) {
-            v1 = skillID == 32120019;
-        } else {
-            if (skillID == 32110017 || skillID == 32001014)
-                return true;
-            v1 = skillID == 32100010;
-        }
-        return v1;
-    }
-
-    public boolean isBmageAuraSkill(int nSkillID) {
-        if (nSkillID > 32111012) {
-            if (nSkillID < 32121017 || nSkillID > 32121018 && nSkillID != 400021006)
-                return false;
-        } else if (nSkillID != 32111012 && nSkillID != 32001016 && nSkillID != 32101009) {
-            return false;
-        }
-        return true;
-    }
-
-    public boolean isBackStepShotSkill(int nSkillID) {
-        boolean v1; // zf
-        if (nSkillID > 5311003) {
-            if (nSkillID == 36101009)
-                return true;
-            v1 = nSkillID == 112111002;
-        } else {
-            if (nSkillID == 5311003 || nSkillID == 3101008 || nSkillID == 5011002)
-                return true;
-            v1 = nSkillID == 5201006;
-        }
-        return v1;
-    }
-
-    public boolean isKinesisPsychicforceSKill(int nSkillID) {
-        if (nSkillID > 14499728) {
-            if (nSkillID == 80011045) {
-                return true;
-            }
-        } else if (nSkillID == 14499728
-                || nSkillID == 41001002 || nSkillID > 41001005 && nSkillID <= 41001008) {
-            return true;
-        }
-        return false;
-    }
-
     public static boolean isSetPoseSkill(int skillID) {
         return skillID == 11101022 || skillID == 11111022;
     }
@@ -1240,7 +1175,7 @@ public class SkillConstants {
 
     public static int getOriginalOfLinkedSkill(int skillID) {
         int result = 0;
-        switch(skillID) {
+        switch (skillID) {
             case 80001040: // 精靈的祝福
                 result = 20021110;
                 break;
@@ -1323,6 +1258,95 @@ public class SkillConstants {
                 LoggerFactory.getLogger(SkillConstants.class).error("Unknown corresponding link skill for link skill id " + skillID);
         }
         return result;
+    }
+
+    boolean isRpThreeCutSkill(int skillID) {
+        boolean v1;
+        if (skillID > 41111000) {
+            if (skillID > 41121012) {
+                switch (skillID) {
+                    case 80011036:
+                    case 80011037:
+                    case 80011038:
+                    case 80011070:
+                    case 80011071:
+                    case 80011072:
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+            if (skillID >= 41121011)
+                return true;
+            if (skillID < 41111011)
+                return false;
+            if (skillID <= 41111012)
+                return true;
+            v1 = skillID == 41121000;
+            return v1;
+        }
+        if (skillID == 41111000)
+            return true;
+        if (skillID > 41001005) {
+            return !(skillID != 41101000 && (skillID <= 41101007 || skillID > 41101009));
+        }
+        if (skillID < 41001004) {
+            if (skillID < 40011183)
+                return false;
+            if (skillID > 40011185) {
+                v1 = skillID == 41001000;
+                return v1;
+            }
+        }
+        return true;
+    }
+
+    public boolean isBmageSummonedDeathSkill(int skillID) {
+        boolean v1; // zf
+        if (skillID > 32110017) {
+            v1 = skillID == 32120019;
+        } else {
+            if (skillID == 32110017 || skillID == 32001014)
+                return true;
+            v1 = skillID == 32100010;
+        }
+        return v1;
+    }
+
+    public boolean isBmageAuraSkill(int nSkillID) {
+        if (nSkillID > 32111012) {
+            if (nSkillID < 32121017 || nSkillID > 32121018 && nSkillID != 400021006)
+                return false;
+        } else if (nSkillID != 32111012 && nSkillID != 32001016 && nSkillID != 32101009) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isBackStepShotSkill(int nSkillID) {
+        boolean v1; // zf
+        if (nSkillID > 5311003) {
+            if (nSkillID == 36101009)
+                return true;
+            v1 = nSkillID == 112111002;
+        } else {
+            if (nSkillID == 5311003 || nSkillID == 3101008 || nSkillID == 5011002)
+                return true;
+            v1 = nSkillID == 5201006;
+        }
+        return v1;
+    }
+
+    public boolean isKinesisPsychicforceSKill(int nSkillID) {
+        if (nSkillID > 14499728) {
+            if (nSkillID == 80011045) {
+                return true;
+            }
+        } else if (nSkillID == 14499728
+                || nSkillID == 41001002 || nSkillID > 41001005 && nSkillID <= 41001008) {
+            return true;
+        }
+        return false;
     }
 
 }

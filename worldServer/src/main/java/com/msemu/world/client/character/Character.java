@@ -1,3 +1,27 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2018 msemu
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package com.msemu.world.client.character;
 
 import com.msemu.commons.data.enums.InvType;
@@ -16,7 +40,6 @@ import com.msemu.core.network.packets.outpacket.stage.LP_SetField;
 import com.msemu.core.network.packets.outpacket.user.LP_UserEnterField;
 import com.msemu.core.network.packets.outpacket.user.LP_UserLeaveField;
 import com.msemu.core.network.packets.outpacket.user.local.LP_ChatMsg;
-import com.msemu.core.network.packets.outpacket.user.local.LP_UserChat;
 import com.msemu.core.network.packets.outpacket.user.remote.LP_UserAvatarModified;
 import com.msemu.core.network.packets.outpacket.user.remote.effect.LP_UserEffectRemote;
 import com.msemu.core.network.packets.outpacket.wvscontext.*;
@@ -91,6 +114,21 @@ public class Character extends Life {
 
     @Transient
     private transient final Set<Mob> controlledMobs = new HashSet<>();
+    @Transient
+    private final Map<Integer, Field> fields = new HashMap<>();
+    @Transient
+    private final CharacterLocalStat characterLocalStat;
+    @Transient
+    private final FriendList friendList = new FriendList();
+    @Transient
+    private final ReentrantReadWriteLock controlledLock = new ReentrantReadWriteLock();
+    @Getter
+    @Transient
+    private final Set<AbstractFieldObject> visibleFieldObjects = new HashSet<>();
+    @Transient
+    private final ReentrantReadWriteLock visibleMapObjectsLock = new ReentrantReadWriteLock();
+    @Transient
+    LocalDateTime lastUseStatChangeItemTime = LocalDateTime.MIN;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -256,23 +294,8 @@ public class Character extends Life {
     @Transient
     private FieldInstanceType fieldInstanceType;
     @Transient
-    private final Map<Integer, Field> fields = new HashMap<>();
-    @Transient
     @Setter(AccessLevel.NONE)
     private int bulletIDForAttack;
-    @Transient
-    private final CharacterLocalStat characterLocalStat;
-    @Transient
-    private final FriendList friendList = new FriendList();
-    @Transient
-    private final ReentrantReadWriteLock controlledLock = new ReentrantReadWriteLock();
-    @Getter
-    @Transient
-    private final Set<AbstractFieldObject> visibleFieldObjects = new HashSet<>();
-    @Transient
-    private final ReentrantReadWriteLock visibleMapObjectsLock = new ReentrantReadWriteLock();
-    @Transient
-    LocalDateTime lastUseStatChangeItemTime = LocalDateTime.MIN;
     @Transient
     private Android activeAndroid;
     @Transient
@@ -326,6 +349,10 @@ public class Character extends Life {
 
     public short getJob() {
         return (short) getAvatarData().getCharacterStat().getJob();
+    }
+
+    public void setJob(MapleJob job) {
+        setJob(job.getId());
     }
 
     public void setJob(int jobId) {
@@ -400,12 +427,12 @@ public class Character extends Life {
         return (int) getAvatarData().getCharacterStat().getPosMap();
     }
 
-    private void setFieldID(int fieldID) {
-        getAvatarData().getCharacterStat().setPosMap(fieldID);
-    }
-
     private void setFieldID(long fieldId) {
         setFieldID((int) fieldId);
+    }
+
+    private void setFieldID(int fieldID) {
+        getAvatarData().getCharacterStat().setPosMap(fieldID);
     }
 
     public QuestManager getQuestManager() {
@@ -552,10 +579,6 @@ public class Character extends Life {
         });
         notifyChanges();
         write(new LP_StatChanged(changedStats));
-    }
-
-    public void setJob(MapleJob job) {
-        setJob(job.getId());
     }
 
     private void notifyChanges() {

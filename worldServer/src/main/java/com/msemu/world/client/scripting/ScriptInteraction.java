@@ -1,3 +1,27 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2018 msemu
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package com.msemu.world.client.scripting;
 
 import com.msemu.commons.data.enums.QuestRequirementDataType;
@@ -181,68 +205,68 @@ public class ScriptInteraction {
         getCharacter().addExp(deltaExp);
     }
 
-    public void setHp(int hp) {
-        getCharacter().setStat(Stat.HP, hp);
-    }
-
-    public void setMaxHp(int maxHp) {
-        getCharacter().setStat(Stat.MAX_HP, maxHp);
-    }
-
-    public void setMp(int mp) {
-        getCharacter().setStat(Stat.MP, mp);
-    }
-
-    public void setMaxMp(int maxMp) {
-        getCharacter().setStat(Stat.MAX_MP, maxMp);
-    }
-
-    public void setStr(int str) {
-        getCharacter().setStat(Stat.STR, str);
-    }
-
-    public void setDex(int dex) {
-        getCharacter().setStat(Stat.DEX, dex);
-    }
-
-    public void setInt(int _int) {
-        getCharacter().setStat(Stat.INT, _int);
-    }
-
-    public void setLuk(int luk) {
-        getCharacter().setStat(Stat.LUK, luk);
-    }
-
     public int getHp() {
         return getCharacter().getStat(Stat.HP);
+    }
+
+    public void setHp(int hp) {
+        getCharacter().setStat(Stat.HP, hp);
     }
 
     public int getMp() {
         return getCharacter().getStat(Stat.MP);
     }
 
+    public void setMp(int mp) {
+        getCharacter().setStat(Stat.MP, mp);
+    }
+
     public int getMaxHp() {
         return getCharacter().getStat(Stat.MAX_HP);
+    }
+
+    public void setMaxHp(int maxHp) {
+        getCharacter().setStat(Stat.MAX_HP, maxHp);
     }
 
     public int getMaxMp() {
         return getCharacter().getStat(Stat.MAX_MP);
     }
 
+    public void setMaxMp(int maxMp) {
+        getCharacter().setStat(Stat.MAX_MP, maxMp);
+    }
+
     public int getStr() {
         return getCharacter().getStat(Stat.STR);
+    }
+
+    public void setStr(int str) {
+        getCharacter().setStat(Stat.STR, str);
     }
 
     public int getDex() {
         return getCharacter().getStat(Stat.DEX);
     }
 
+    public void setDex(int dex) {
+        getCharacter().setStat(Stat.DEX, dex);
+    }
+
     public int getInt() {
         return getCharacter().getStat(Stat.INT);
     }
 
+    public void setInt(int _int) {
+        getCharacter().setStat(Stat.INT, _int);
+    }
+
     public int getLuk() {
         return getCharacter().getStat(Stat.LUK);
+    }
+
+    public void setLuk(int luk) {
+        getCharacter().setStat(Stat.LUK, luk);
     }
 
     public int getLevel() {

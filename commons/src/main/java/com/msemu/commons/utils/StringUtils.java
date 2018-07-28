@@ -1,3 +1,27 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2018 msemu
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package com.msemu.commons.utils;
 
 /**
@@ -11,9 +35,8 @@ import java.nio.charset.Charset;
  * Provides a suite of utilities for manipulating strings.
  *
  * @author Frz
- * @since Revision 336
  * @version 1.0
- *
+ * @since Revision 336
  */
 public class StringUtils {
 
@@ -21,9 +44,9 @@ public class StringUtils {
      * Gets a string padded from the left to <code>length</code> by
      * <code>padchar</code>.
      *
-     * @param in The input string to be padded.
+     * @param in      The input string to be padded.
      * @param padchar The character to pad with.
-     * @param length The length to pad to.
+     * @param length  The length to pad to.
      * @return The padded string.
      */
     public static final String getLeftPaddedStr(final String in, final char padchar, final int length) {

@@ -1,3 +1,27 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2018 msemu
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package com.msemu.commons.data.templates;
 
 import com.msemu.commons.data.enums.Element;
@@ -17,7 +41,7 @@ import java.util.*;
  */
 @Getter
 @Setter
-public class MobTemplate implements DatSerializable{
+public class MobTemplate implements DatSerializable {
     private String name = "", banMsg = "", banMapPortalName = "";
     private int id;
     private long maxHP, finalmaxHP, exp;
@@ -117,15 +141,15 @@ public class MobTemplate implements DatSerializable{
         dos.writeBoolean(this.noDoom);
         dos.writeBoolean(this.publicReward);
         dos.writeInt(revive.size());
-        for(Integer value : revive)
+        for (Integer value : revive)
             dos.writeInt(value);
         dos.writeInt(skills.size());
-        for(Tuple<Integer, Integer> tuple : skills) {
+        for (Tuple<Integer, Integer> tuple : skills) {
             dos.writeInt(tuple.getLeft());
             dos.writeInt(tuple.getRight());
         }
         dos.writeInt(basicElemAttrs.size());
-        for(Map.Entry<Element, ElementalEffectiveness> entry: basicElemAttrs.entrySet()) {
+        for (Map.Entry<Element, ElementalEffectiveness> entry : basicElemAttrs.entrySet()) {
             dos.writeInt(entry.getKey().getValue());
             dos.writeInt(ElementalEffectiveness.getNumber(entry.getValue()));
         }
@@ -189,15 +213,15 @@ public class MobTemplate implements DatSerializable{
         setNoDoom(dis.readBoolean());
         setPublicReward(dis.readBoolean());
         int size = dis.readInt();
-        for(int i = 0 ; i < size;i++) {
+        for (int i = 0; i < size; i++) {
             revive.add(dis.readInt());
         }
         size = dis.readInt();
-        for(int i = 0 ; i < size;i++) {
+        for (int i = 0; i < size; i++) {
             skills.add(new Tuple<>(dis.readInt(), dis.readInt()));
         }
         size = dis.readInt();
-        for(int i = 0 ; i < size;i++) {
+        for (int i = 0; i < size; i++) {
             basicElemAttrs.put(Element.getFromId(dis.readInt()), ElementalEffectiveness.getByNumber(dis.readInt()));
         }
         return this;

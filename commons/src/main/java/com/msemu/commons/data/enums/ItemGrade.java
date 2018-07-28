@@ -1,3 +1,27 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2018 msemu
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package com.msemu.commons.data.enums;
 
 import java.util.Arrays;
@@ -19,17 +43,12 @@ public enum ItemGrade {
     // 罕見
     UNIQUE(19),
     // 傳說
-    LEGENDARY(20),
-    ;
+    LEGENDARY(20),;
 
     private int value;
 
     ItemGrade(int val) {
         this.value = val;
-    }
-
-    public short getValue() {
-        return (short) value;
     }
 
     public static ItemGrade getGradeByVal(int grade) {
@@ -38,19 +57,19 @@ public enum ItemGrade {
 
     public static ItemGrade getGradeByOption(int option) {
         ItemGrade itemGrade = NONE;
-        if(option < 0) {
-            itemGrade =  Arrays.stream(values()).filter(is -> is.getValue() == Math.abs(option)).findFirst().orElse(NONE);
+        if (option < 0) {
+            itemGrade = Arrays.stream(values()).filter(is -> is.getValue() == Math.abs(option)).findFirst().orElse(NONE);
         }
-        if(option > 0 && option < 20000) {
+        if (option > 0 && option < 20000) {
             itemGrade = RARE;
         }
-        if(option > 20000 && option < 30000) {
+        if (option > 20000 && option < 30000) {
             itemGrade = EPIC;
         }
-        if(option > 30000 && option < 40000) {
+        if (option > 30000 && option < 40000) {
             itemGrade = UNIQUE;
         }
-        if(option > 40000 && option < 60000) {
+        if (option > 40000 && option < 60000) {
             itemGrade = LEGENDARY;
         }
         return itemGrade;
@@ -59,7 +78,7 @@ public enum ItemGrade {
     public static boolean isMatching(short first, short second) {
         ItemGrade firstGrade = getGradeByVal(first);
         ItemGrade other = getGradeByVal(second);
-        switch(firstGrade) {
+        switch (firstGrade) {
             case NONE:
                 return other == NONE;
             case HIDDEN_RARE:
@@ -82,7 +101,7 @@ public enum ItemGrade {
     public static ItemGrade getHiddenGradeByValue(short value) {
         ItemGrade ig = NONE;
         ItemGrade arg = getGradeByVal(value);
-        switch(arg) {
+        switch (arg) {
             case RARE:
                 ig = HIDDEN_RARE;
                 break;
@@ -97,6 +116,10 @@ public enum ItemGrade {
                 break;
         }
         return ig;
+    }
+
+    public short getValue() {
+        return (short) value;
     }
 }
 

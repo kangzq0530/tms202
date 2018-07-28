@@ -1,3 +1,27 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2018 msemu
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package com.msemu.commons.utils;
 
 /**
@@ -30,12 +54,9 @@ public class XMLApi {
         this.root = root;
     }
 
-    public Node getRoot() {
-        return root;
-    }
-
     /**
      * Returns a list of Nodes containing all children of a given Node. Filters outpacket all text elements.
+     *
      * @param node The Node of which the children are requested.
      * @return The list of children nodes of <code>node</code>. An empty list if there are none.
      */
@@ -43,8 +64,8 @@ public class XMLApi {
         List<Node> result = new ArrayList<>();
 
         Node childNode = node.getFirstChild();
-        while(childNode != null) {
-            if(!childNode.getNodeName().contains("#text")) {
+        while (childNode != null) {
+            if (!childNode.getNodeName().contains("#text")) {
                 result.add(childNode);
             }
             childNode = childNode.getNextSibling();
@@ -55,13 +76,14 @@ public class XMLApi {
 
     /**
      * Gets all attributes in a String, String map.
+     *
      * @param node The Node the attributes are requested for.
      * @return The attributes corresponding to <code>node</code>.
      */
     public static Map<String, String> getAttributes(Node node) {
         Map<String, String> result = new HashMap<>();
         NamedNodeMap namedNodeMap = node.getAttributes();
-        for(int i = 0; i < namedNodeMap.getLength(); i++) {
+        for (int i = 0; i < namedNodeMap.getLength(); i++) {
             Node n = namedNodeMap.item(i);
             result.put(n.getNodeName(), n.getNodeValue());
         }
@@ -70,6 +92,7 @@ public class XMLApi {
 
     /**
      * Generates a parsed Document, given an XML file.
+     *
      * @param file The file to parse.
      * @return The parsed Document.
      */
@@ -93,22 +116,23 @@ public class XMLApi {
 
     /**
      * Breadth first search for a child node of a given Node.
+     *
      * @param node The node to search in.
      * @param name The name of the child.
      * @return The first occurrence of the name in the children of node, or null if there is none.
      */
     public static Node getFirstChildByNameBF(Node node, String name) {
         List<Node> nodes = getAllChildren(node);
-        for(Node n : nodes) {
+        for (Node n : nodes) {
             Map<String, String> attrs = getAttributes(n);
             String nodeName = attrs.get("name");
-            if(name.equals(nodeName)) {
+            if (name.equals(nodeName)) {
                 return n;
             }
         }
-        for(Node n : nodes) {
+        for (Node n : nodes) {
             Node child = getFirstChildByNameBF(n, name);
-            if(child != null) {
+            if (child != null) {
                 return child;
             }
         }
@@ -117,21 +141,22 @@ public class XMLApi {
 
     /**
      * Depth first search for a child node of a given Node.
+     *
      * @param node The node to search in.
      * @param name The name of the child.
      * @return The first occurrence of the name in the children of node, or null if there is none.
      */
     public static Node getFirstChildByNameDF(Node node, String name) {
         List<Node> nodes = getAllChildren(node);
-        for(Node n : nodes) {
+        for (Node n : nodes) {
             Map<String, String> attrs = getAttributes(n);
             String nodeName = attrs.get("name");
-            if(name.equals(nodeName)) {
+            if (name.equals(nodeName)) {
                 return n;
             }
-            for(Node n2 : getAllChildren(n)) {
+            for (Node n2 : getAllChildren(n)) {
                 Node child = getFirstChildByNameDF(n2, name);
-                if(child != null) {
+                if (child != null) {
                     return child;
                 }
             }
@@ -141,5 +166,9 @@ public class XMLApi {
 
     public static String getNamedAttribute(Node node, String name) {
         return getAttributes(node).get(name);
+    }
+
+    public Node getRoot() {
+        return root;
     }
 }

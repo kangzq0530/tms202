@@ -1,3 +1,27 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2018 msemu
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package com.msemu.world.client.character.inventory.items;
 
 
@@ -8,14 +32,16 @@ import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.utils.Rand;
 import com.msemu.commons.utils.types.FileTime;
 import com.msemu.core.network.GameClient;
-import com.msemu.world.constants.GameConstants;
 import com.msemu.world.constants.ItemConstants;
 import com.msemu.world.data.ItemData;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.TreeMap;
 
 /**
  * Created on 11/23/2017.
@@ -972,7 +998,7 @@ public class Equip extends Item {
     }
 
     public int[] getOptionBonus() {
-        return new int[]{ getOptions().get(3), getOptions().get(4), getOptions().get(5)};
+        return new int[]{getOptions().get(3), getOptions().get(4), getOptions().get(5)};
     }
 
     public int getOptionBonus(int num) {
@@ -982,7 +1008,6 @@ public class Equip extends Item {
     public int setOptionBonus(int num, int val) {
         return getOptions().set(num + 3, val);
     }
-
 
 
     public int getRandomOption(boolean bonus) {
@@ -1018,7 +1043,7 @@ public class Equip extends Item {
 
     public void releaseOptions(boolean bonus) {
         for (int i = 0; i < 3; i++) {
-            if(getOption(i, bonus) < 0) {
+            if (getOption(i, bonus) < 0) {
                 setOption(i, getRandomOption(bonus), bonus);
             }
         }

@@ -1,16 +1,36 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2018 msemu
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package com.msemu.commons.network;
 
 import com.msemu.commons.enums.ClientState;
-import com.msemu.commons.network.crypt.ICipher;
 import com.msemu.commons.network.handler.AbstractPacketHandlerFactory;
 import com.msemu.commons.network.packets.OutPacket;
-import com.msemu.commons.network.packets.Packet;
 import com.msemu.commons.utils.Rand;
-import io.netty.channel.Channel;
 import io.netty.util.AttributeKey;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.Synchronized;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,13 +40,27 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public abstract class Client<TClient extends Client<TClient>> {
 
-    private static final Logger log = LoggerFactory.getLogger("Network");
-
     /**
      * Attribute key for this Client object.
      */
     public static final AttributeKey<Client> CLIENT_KEY = AttributeKey.valueOf("C");
-
+    private static final Logger log = LoggerFactory.getLogger("Network");
+    /**
+     * ChannelInfo object associated with this specific client. Used for all
+     * I/O response regarding a MapleStory game session.
+     */
+    @Getter
+    protected final Connection<TClient> connection;
+    /**
+     * Lock regarding the encoding of packets to be sent to remote
+     * sessions.
+     */
+    @Getter
+    private final ReentrantLock lock;
+    /**
+     * Empty constructor for child class implementation.
+     */
+    private final AtomicReference<ClientState> state;
     /**
      * Send seed or IV for one of the cryptography stages.
      */
@@ -48,30 +82,12 @@ public abstract class Client<TClient extends Client<TClient>> {
     @Getter
     @Setter
     private int storedLength = -1;
-    /**
-     * ChannelInfo object associated with this specific client. Used for all
-     * I/O response regarding a MapleStory game session.
-     */
-    @Getter
-    protected final Connection<TClient> connection;
-
-    /**
-     * Lock regarding the encoding of packets to be sent to remote
-     * sessions.
-     */
-    @Getter
-    private final ReentrantLock lock;
-
-    /**
-     * Empty constructor for child class implementation.
-     */
-    private final AtomicReference<ClientState> state;
 
     /**
      * Construct a new Client with the corresponding ChannelInfo that
      * will be used to write to as well as the send and recv seeds or IVs.
      *
-     * @param connection   the channel object associated with this client session.
+     * @param connection the channel object associated with this client session.
      */
     public Client(Connection<TClient> connection) {
         this.connection = connection;
@@ -106,7 +122,7 @@ public abstract class Client<TClient extends Client<TClient>> {
      * @return the remote IP address.
      */
     public String getIP() {
-        if(getConnection().getSocketAddress() == null)
+        if (getConnection().getSocketAddress() == null)
             return "0.0.0.0";
         return getConnection().getSocketAddress().toString().split(":")[0].substring(1);
     }
@@ -129,14 +145,14 @@ public abstract class Client<TClient extends Client<TClient>> {
     }
 
     protected void onOpen() {
-        if(this.state.compareAndSet(ClientState.NULL, ClientState.CONNECTED)) {
+        if (this.state.compareAndSet(ClientState.NULL, ClientState.CONNECTED)) {
             log.info("Client [{}] connected.", this);
         }
 
     }
 
     protected void onClose() {
-        if(this.state.compareAndSet(ClientState.CONNECTED, ClientState.DISCONNECTED)
+        if (this.state.compareAndSet(ClientState.CONNECTED, ClientState.DISCONNECTED)
                 || this.state.compareAndSet(ClientState.AUTHED_GG, ClientState.DISCONNECTED)
                 || this.state.compareAndSet(ClientState.AUTHED, ClientState.DISCONNECTED)
                 || this.state.compareAndSet(ClientState.ENTERED, ClientState.DISCONNECTED)) {
@@ -166,7 +182,7 @@ public abstract class Client<TClient extends Client<TClient>> {
     }
 
     public String getHostAddress() {
-        return this.isConnected()?this.getConnection().getSocketAddress().getAddress().getHostAddress():"not connected";
+        return this.isConnected() ? this.getConnection().getSocketAddress().getAddress().getHostAddress() : "not connected";
     }
 
     public AbstractPacketHandlerFactory<TClient> getPacketHandler() {

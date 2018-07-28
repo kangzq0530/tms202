@@ -1,3 +1,27 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2018 msemu
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package com.msemu.core.network.packets.outpacket.script;
 
 import com.msemu.commons.enums.OutHeader;
@@ -14,6 +38,303 @@ import java.util.Arrays;
  * Created by Weber on 2018/4/28.
  */
 public class LP_ScriptMessage extends OutPacket<GameClient> {
+
+    public LP_ScriptMessage(NpcMessageType nmt, int nSpeakerTypeID, int nSpeakerTemplateID, int nAnotherSpeakerTemplateID, int nOtherSpeakerTemplateID, int bParam, int eColor, String[] msg, int[] value, int[][] values, Pet[] pets) {
+        super(OutHeader.LP_ScriptMessage);
+        encodeByte(nSpeakerTypeID);
+        encodeInt(nSpeakerTemplateID);
+
+        encodeByte(nAnotherSpeakerTemplateID > -1);
+        if (nAnotherSpeakerTemplateID > -1) {
+            encodeInt(nAnotherSpeakerTemplateID);
+        }
+        encodeByte(nmt.getValue());
+
+        if (nOtherSpeakerTemplateID > -1) {
+            bParam = bParam | 0x4;
+        }
+        encodeShort(bParam);
+        encodeByte(eColor);
+        switch (nmt) {
+            case NM_SAY:
+                OnSay(msg[0], nOtherSpeakerTemplateID, (short) bParam, value[0] > 0, value[1] > 0, value[2]);
+                break;
+            case NM_UNK_1:
+                encodeString(msg[0]);
+                encodeByte(value[0]);
+                encodeByte(value[1]);
+                encodeInt(value[2]);
+                break;
+            case NM_SAY_IMAGE:
+                OnSayImage(msg);
+                break;
+            case NM_ASK_YES_NO:
+                OnAskYesNo(msg[0], nOtherSpeakerTemplateID, (short) bParam);
+                break;
+            case NM_ASK_ACCEPT:
+                OnAskYesNo(msg[0], nOtherSpeakerTemplateID, (short) bParam);
+                break;
+            case NM_UNK_18:
+                encodeInt(value[0]);
+                encodeString(msg[0]);
+                break;
+            case NM_ASK_TEXT:
+                OnAskText(msg[0], msg[1], nOtherSpeakerTemplateID, (short) bParam, (short) value[0], (short) value[1]);
+                break;
+            case NM_ASK_BOX_TEXT:
+                OnAskBoxText(msg[0], msg[1], nOtherSpeakerTemplateID, (short) bParam, (short) value[0], (short) value[1]);
+                break;
+            case NM_ASK_BOX_TEXT_BGIMG:
+                OnAskBoxTextBackgrounImg((short) value[0], msg[0], msg[1], (short) value[1], (short) value[2], (short) value[3], (short) value[4]);
+                break;
+            case NM_ASK_NUMBER:
+                OnAskNumber(msg[0], value[0], value[1], value[2]);
+                break;
+            case NM_ASK_MENU:
+                OnAskMenu(msg[0], nOtherSpeakerTemplateID, (short) bParam);
+                break;
+            case NM_UNK_7:
+                if ((bParam & 0x4) != 0) {
+                    encodeInt(value[0]);
+                }
+                encodeString(msg[0]);
+                encodeInt(value[1]);
+                break;
+            case NM_ASK_AVATAR_EX:
+                OnAskAvatar(value[0] > 0, value[1] > 0, msg[0], values[0], value[2]);
+                break;
+            case NM_ASK_AVATAR_EX_ZERO:
+                OnAskAvatarZero(msg[0], value[0], values[0], value[1], values[1], value[2]);
+                break;
+            case NM_ASK_MIX_HAIR:
+                OnAskMixHair(value[0] > 0, value[1] > 0, (byte) value[2], msg[0], values[0], value[3]);
+                break;
+            case NM_ASK_MIX_HAIR_EX_ZERO:
+                OnAskMixHairExZero((byte) value[0], msg[0], values[0], value[1], value[2]);
+                break;
+            case NM_ASK_CUSTOM_MIX_HAIR:
+                OnAskCustomMixHair(value[0] > 0, value[1], value[2], msg[0]);
+                break;
+            case NM_ASK_CUSTOM_MIX_HAIR_AND_PROB:
+                OnAskCustomMixHairAndProb(value[0] > 0, value[1], value[2], msg[0]);
+                break;
+            case NM_ASK_MIX_HAIR_NEW:
+                OnAskMixHairNew(value[0] > 0, value[1] > 0, (byte) value[2], msg[0], (byte) value[3], value[4], value[5], value[6], value[7], value[8], value[9]);
+                break;
+            case NM_ASK_MIX_HAIR_NEW_EX_ZERO:
+                OnAskMixHairNewExZero((byte) value[0], msg[0], (byte) value[1], value[2], value[3], value[4], value[5], value[6], value[7], value[8], value[9]);
+                break;
+            case NM_ASK_ANDROID:
+                OnAskAndroid(msg[0], values[0], value[0]);
+                break;
+            case NM_ASK_PET:
+                OnAskPet(msg[0], pets);
+                break;
+            case NM_ASK_PET_ALL:
+                OnAskPetAll(msg[0], pets, value[0] > 0);
+                break;
+            case NM_ASK_ACTION_PET_EVOLUTION:
+                OnAskActionPetEvolution(msg[0], pets);
+                break;
+            case NM_ASK_QUIZ:
+                OnInitialQuiz(value[0] > 0, msg[0], msg[1], msg[2], value[1], value[2], value[3]);
+                break;
+            case NM_ASK_SPEED_QUIZ:
+                OnInitialSpeedQuiz(value[0] > 0, value[1], value[2], value[3], value[4], value[5]);
+                break;
+            case NM_ASK_ICQ_QUIZ:
+                OnICQuiz(value[0] > 0, msg[0], msg[1], value[1]);
+                break;
+            case NM_ASK_SLIDE_MENU:
+                OnAskSlideMenu(value[0], value[1], msg[0]);
+                break;
+            case NM_ASK_SELECT_MENU:
+                OnAskSelectMenu(value[0]);
+                break;
+            case NM_ASK_ANGELIC_BUSTER:
+                OnAskAngelicBuster();
+                break;
+            case NM_SAY_ILLUSTRATION:
+                OnSayIllustration(nOtherSpeakerTemplateID, (short) bParam, msg[0], value[0] > 0, value[1] > 0, value[2], value[3], value[4], value[5], false);
+                break;
+            case NM_SAY_DUAL_ILLUSTRATION:
+                OnSayIllustration(nOtherSpeakerTemplateID, (short) bParam, msg[0], value[0] > 0, value[1] > 0, value[2], value[3], value[4], value[5], true);
+                break;
+            case NM_ASK_YES_NO_ILLUSTRATION:
+                OnAskYesNoIllustration(nOtherSpeakerTemplateID, (short) bParam, msg[0], value[0], value[1], value[2], value[3], false, false, false);
+                break;
+            case NM_ASK_ACCEPT_ILLUSTRATION:
+                OnAskYesNoIllustration(nOtherSpeakerTemplateID, (short) bParam, msg[0], value[0], value[1], value[2], value[3], false, true, false);
+                break;
+            case NM_ASK_MENU_ILLUSTRATION:
+                OnAskMenuIllustration(msg[0], value[0], value[1], value[2], value[3], false);
+                break;
+            case NM_ASK_YES_NO_DUAL_ILLUSTRATION:
+                OnAskYesNoIllustration(nOtherSpeakerTemplateID, (short) bParam, msg[0], value[0], value[1], value[2], value[3], false, false, true);
+                break;
+            case NM_ASK_ACCEPT_DUAL_ILLUSTRATION:
+                OnAskYesNoIllustration(nOtherSpeakerTemplateID, (short) bParam, msg[0], value[0], value[1], value[2], value[3], false, true, true);
+                break;
+            case NM_ASK_MENU_DUAL_ILLUSTRATION:
+                OnAskMenuIllustration(msg[0], value[0], value[1], value[2], value[3], true);
+                break;
+            case NM_ASK_WEAPON_BOX:
+                OnAskWeaponBox(msg[0], value[0], values[0]);
+                break;
+            case NM_ASK_USER_SURVEY:
+                OnAskUserSurvey(value[0], value[1] > 0, msg[0]);
+                break;
+            case NM_ASK_SCREEN_SHINING_START_MSG:
+                OnAskScreenShinningStarMsg();
+                break;
+            case NM_ASK_NUMBER_KEYPAD:
+                OnAskNumberUseKeyPad(value[0]);
+                break;
+            case NM_ASK_SPIN_OFF_GUITAR_RHYTHM_GAME:
+                OnSpinOffGuitarRhythmGame(value[0], value[1], value[2], value[1], msg[0]);
+                break;
+            case NM_ASK_GHOST_PARTK_ENTER_UI:
+                OnGhostParkEnter();
+                break;
+            case NM_UNK_25:
+                encodeByte(value[0]);
+                if (value[0] == 0) {
+                    encodeString(msg[0]);
+                    encodeInt(value[1]);
+                    encodeInt(value[2]);
+                    encodeInt(value[3]);
+                    encodeInt(value[4]);
+                    encodeInt(value[5]);
+                }
+                break;
+            case NM_UNK_26:
+                encodeString(msg[0]);
+                encodeInt(value[0]);
+                break;
+            case NM_UNK_61:
+            case NM_UNK_62:
+                int a6;
+                if ((bParam & 0x4) != 0) {
+                    encodeInt(0);
+                }
+                if (nmt == NpcMessageType.NM_UNK_61) {
+                    a6 = 0;
+                } else {
+                    a6 = 1;
+                }
+                encodeString(msg[0]);
+                encodeByte(value[1]);
+                encodeByte(value[2]);
+                encodeInt(value[3]);
+                encodeInt(value[4]);
+                if (a6 == 1) {
+                    encodeInt(value[5]);
+                    encodeInt(value[6]);
+                } else {
+                    encodeByte(value[5]);
+                }
+                break;
+            case NM_UNK_69:
+                encodeString(msg[0]);
+                encodeInt(value[0]);
+                break;
+            case NM_UNK_70:
+                encodeString(msg[0]);
+                encodeByte(value[0]);
+                encodeByte(value[1]);
+                encodeByte(value[2]);
+                encodeByte(value[3]);
+                encodeInt(value[4]);
+                break;
+            default:
+                break;
+        }
+    }
+
+    public LP_ScriptMessage(NpcScriptInfo nsi) {
+        super(OutHeader.LP_ScriptMessage);
+        encodeByte(nsi.getSpeakerType());
+        encodeInt(nsi.getSpeakerTemplateID());
+        int overrideTemplateID = nsi.getOverrideSpeakerTemplateID();
+        encodeByte(overrideTemplateID > -1);
+        if (overrideTemplateID > -1) {
+            encodeInt(overrideTemplateID);
+        }
+        encodeByte(nsi.getLastMessageType().getValue());
+        encodeShort(nsi.getParam());
+        encodeByte(nsi.getColor());
+        switch (nsi.getLastMessageType()) {
+            case NM_SAY:
+                OnSay(nsi.getText(), nsi.getOverrideSpeakerTemplateID(), nsi.getParam(), nsi.isPrev(), nsi.isNext(), nsi.getDelay());
+                break;
+            case NM_ASK_MENU:
+                OnAskMenu(nsi.getText(), nsi.getOverrideSpeakerTemplateID(), nsi.getParam());
+                break;
+            case NM_ASK_YES_NO:
+            case NM_ASK_ACCEPT:
+                OnAskYesNo(nsi.getText(), nsi.getOverrideSpeakerTemplateID(), nsi.getParam());
+                break;
+            case NM_SAY_IMAGE:
+                OnSayImage(nsi.getImages());
+                break;
+            case NM_ASK_TEXT:
+                OnAskText(nsi.getText(), nsi.getDefaultText(), nsi.getOverrideSpeakerTemplateID()
+                        , nsi.getParam(), (short) nsi.getMin(), (short) nsi.getMax());
+                break;
+            case NM_ASK_NUMBER:
+                OnAskNumber(nsi.getText(), nsi.getDefaultNumber(), nsi.getMin(), nsi.getMax());
+                break;
+
+            case NM_ASK_NUMBER_KEYPAD:
+                encodeInt(nsi.getResult());
+                break;
+            case NM_ASK_ICQ_QUIZ:
+                encodeByte(nsi.getType());
+                if (nsi.getType() != 1) {
+                    encodeString(nsi.getText());
+                    encodeString(nsi.getHintText());
+                    encodeInt(nsi.getTime()); // in seconds
+                }
+                break;
+            case NM_ASK_QUIZ:
+                encodeByte(nsi.getType());
+                if (nsi.getType() != 1) {
+                    encodeString(nsi.getTitle());
+                    encodeString(nsi.getProblemText());
+                    encodeString(nsi.getHintText());
+                    encodeInt(nsi.getMin());
+                    encodeInt(nsi.getMax());
+                    encodeInt(nsi.getTime()); // in seconds
+                }
+                break;
+            case NM_ASK_SPEED_QUIZ:
+                encodeByte(nsi.getType());
+                if (nsi.getType() != 1) {
+                    encodeInt(nsi.getQuizType());
+                    encodeInt(nsi.getAnswer());
+                    encodeInt(nsi.getCorrectAnswers());
+                    encodeInt(nsi.getRemaining());
+                    encodeInt(nsi.getTime()); // in seconds
+                }
+                break;
+            case NM_ASK_BOX_TEXT:
+                OnAskBoxText(nsi.getText()
+                        , nsi.getDefaultText(), nsi.getOverrideSpeakerTemplateID(),
+                        nsi.getParam(), nsi.getCol(), nsi.getLine());
+                break;
+            case NM_ASK_BOX_TEXT_BGIMG:
+                OnAskBoxTextBackgrounImg(nsi.getBackgroundID(),
+                        nsi.getText(), nsi.getDefaultText(),
+                        nsi.getCol(), nsi.getLine(),
+                        nsi.getFontSize(), nsi.getFontTopMargin());
+                break;
+            case NM_ASK_AVATAR_EX:
+            case NM_ASK_AVATAR_EX_ZERO:
+                throw new NotImplementedException();
+            default:
+                break;
+        }
+    }
 
     private void OnSay(String text, int overrideTemplateID, int param, boolean prev, boolean next, int delay) {
         if ((param & 4) != 0) {
@@ -353,303 +674,6 @@ public class LP_ScriptMessage extends OutPacket<GameClient> {
             encodeInt(0);
             encodeInt(0); // nIncRate
             encodeInt(0); // nBonusRate
-        }
-    }
-
-    public LP_ScriptMessage(NpcMessageType nmt, int nSpeakerTypeID, int nSpeakerTemplateID, int nAnotherSpeakerTemplateID, int nOtherSpeakerTemplateID, int bParam, int eColor, String[] msg, int[] value, int[][] values, Pet[] pets) {
-        super(OutHeader.LP_ScriptMessage);
-        encodeByte(nSpeakerTypeID);
-        encodeInt(nSpeakerTemplateID);
-
-        encodeByte(nAnotherSpeakerTemplateID > -1);
-        if (nAnotherSpeakerTemplateID > -1) {
-            encodeInt(nAnotherSpeakerTemplateID);
-        }
-        encodeByte(nmt.getValue());
-
-        if (nOtherSpeakerTemplateID > -1) {
-            bParam = bParam | 0x4;
-        }
-        encodeShort(bParam);
-        encodeByte(eColor);
-        switch (nmt) {
-            case NM_SAY:
-                OnSay(msg[0], nOtherSpeakerTemplateID, (short) bParam, value[0] > 0, value[1] > 0, value[2]);
-                break;
-            case NM_UNK_1:
-                encodeString(msg[0]);
-                encodeByte(value[0]);
-                encodeByte(value[1]);
-                encodeInt(value[2]);
-                break;
-            case NM_SAY_IMAGE:
-                OnSayImage(msg);
-                break;
-            case NM_ASK_YES_NO:
-                OnAskYesNo(msg[0], nOtherSpeakerTemplateID, (short) bParam);
-                break;
-            case NM_ASK_ACCEPT:
-                OnAskYesNo(msg[0], nOtherSpeakerTemplateID, (short) bParam);
-                break;
-            case NM_UNK_18:
-                encodeInt(value[0]);
-                encodeString(msg[0]);
-                break;
-            case NM_ASK_TEXT:
-                OnAskText(msg[0], msg[1], nOtherSpeakerTemplateID, (short) bParam, (short) value[0], (short) value[1]);
-                break;
-            case NM_ASK_BOX_TEXT:
-                OnAskBoxText(msg[0], msg[1], nOtherSpeakerTemplateID, (short) bParam, (short) value[0], (short) value[1]);
-                break;
-            case NM_ASK_BOX_TEXT_BGIMG:
-                OnAskBoxTextBackgrounImg((short) value[0], msg[0], msg[1], (short) value[1], (short) value[2], (short) value[3], (short) value[4]);
-                break;
-            case NM_ASK_NUMBER:
-                OnAskNumber(msg[0], value[0], value[1], value[2]);
-                break;
-            case NM_ASK_MENU:
-                OnAskMenu(msg[0], nOtherSpeakerTemplateID, (short) bParam);
-                break;
-            case NM_UNK_7:
-                if ((bParam & 0x4) != 0) {
-                    encodeInt(value[0]);
-                }
-                encodeString(msg[0]);
-                encodeInt(value[1]);
-                break;
-            case NM_ASK_AVATAR_EX:
-                OnAskAvatar(value[0] > 0, value[1] > 0, msg[0], values[0], value[2]);
-                break;
-            case NM_ASK_AVATAR_EX_ZERO:
-                OnAskAvatarZero(msg[0], value[0], values[0], value[1], values[1], value[2]);
-                break;
-            case NM_ASK_MIX_HAIR:
-                OnAskMixHair(value[0] > 0, value[1] > 0, (byte) value[2], msg[0], values[0], value[3]);
-                break;
-            case NM_ASK_MIX_HAIR_EX_ZERO:
-                OnAskMixHairExZero((byte) value[0], msg[0], values[0], value[1], value[2]);
-                break;
-            case NM_ASK_CUSTOM_MIX_HAIR:
-                OnAskCustomMixHair(value[0] > 0, value[1], value[2], msg[0]);
-                break;
-            case NM_ASK_CUSTOM_MIX_HAIR_AND_PROB:
-                OnAskCustomMixHairAndProb(value[0] > 0, value[1], value[2], msg[0]);
-                break;
-            case NM_ASK_MIX_HAIR_NEW:
-                OnAskMixHairNew(value[0] > 0, value[1] > 0, (byte) value[2], msg[0], (byte) value[3], value[4], value[5], value[6], value[7], value[8], value[9]);
-                break;
-            case NM_ASK_MIX_HAIR_NEW_EX_ZERO:
-                OnAskMixHairNewExZero((byte) value[0], msg[0], (byte) value[1], value[2], value[3], value[4], value[5], value[6], value[7], value[8], value[9]);
-                break;
-            case NM_ASK_ANDROID:
-                OnAskAndroid(msg[0], values[0], value[0]);
-                break;
-            case NM_ASK_PET:
-                OnAskPet(msg[0], pets);
-                break;
-            case NM_ASK_PET_ALL:
-                OnAskPetAll(msg[0], pets, value[0] > 0);
-                break;
-            case NM_ASK_ACTION_PET_EVOLUTION:
-                OnAskActionPetEvolution(msg[0], pets);
-                break;
-            case NM_ASK_QUIZ:
-                OnInitialQuiz(value[0] > 0, msg[0], msg[1], msg[2], value[1], value[2], value[3]);
-                break;
-            case NM_ASK_SPEED_QUIZ:
-                OnInitialSpeedQuiz(value[0] > 0, value[1], value[2], value[3], value[4], value[5]);
-                break;
-            case NM_ASK_ICQ_QUIZ:
-                OnICQuiz(value[0] > 0, msg[0], msg[1], value[1]);
-                break;
-            case NM_ASK_SLIDE_MENU:
-                OnAskSlideMenu(value[0], value[1], msg[0]);
-                break;
-            case NM_ASK_SELECT_MENU:
-                OnAskSelectMenu(value[0]);
-                break;
-            case NM_ASK_ANGELIC_BUSTER:
-                OnAskAngelicBuster();
-                break;
-            case NM_SAY_ILLUSTRATION:
-                OnSayIllustration(nOtherSpeakerTemplateID, (short) bParam, msg[0], value[0] > 0, value[1] > 0, value[2], value[3], value[4], value[5], false);
-                break;
-            case NM_SAY_DUAL_ILLUSTRATION:
-                OnSayIllustration(nOtherSpeakerTemplateID, (short) bParam, msg[0], value[0] > 0, value[1] > 0, value[2], value[3], value[4], value[5], true);
-                break;
-            case NM_ASK_YES_NO_ILLUSTRATION:
-                OnAskYesNoIllustration(nOtherSpeakerTemplateID, (short) bParam, msg[0], value[0], value[1], value[2], value[3], false, false, false);
-                break;
-            case NM_ASK_ACCEPT_ILLUSTRATION:
-                OnAskYesNoIllustration(nOtherSpeakerTemplateID, (short) bParam, msg[0], value[0], value[1], value[2], value[3], false, true, false);
-                break;
-            case NM_ASK_MENU_ILLUSTRATION:
-                OnAskMenuIllustration(msg[0], value[0], value[1], value[2], value[3], false);
-                break;
-            case NM_ASK_YES_NO_DUAL_ILLUSTRATION:
-                OnAskYesNoIllustration(nOtherSpeakerTemplateID, (short) bParam, msg[0], value[0], value[1], value[2], value[3], false, false, true);
-                break;
-            case NM_ASK_ACCEPT_DUAL_ILLUSTRATION:
-                OnAskYesNoIllustration(nOtherSpeakerTemplateID, (short) bParam, msg[0], value[0], value[1], value[2], value[3], false, true, true);
-                break;
-            case NM_ASK_MENU_DUAL_ILLUSTRATION:
-                OnAskMenuIllustration(msg[0], value[0], value[1], value[2], value[3], true);
-                break;
-            case NM_ASK_WEAPON_BOX:
-                OnAskWeaponBox(msg[0], value[0], values[0]);
-                break;
-            case NM_ASK_USER_SURVEY:
-                OnAskUserSurvey(value[0], value[1] > 0, msg[0]);
-                break;
-            case NM_ASK_SCREEN_SHINING_START_MSG:
-                OnAskScreenShinningStarMsg();
-                break;
-            case NM_ASK_NUMBER_KEYPAD:
-                OnAskNumberUseKeyPad(value[0]);
-                break;
-            case NM_ASK_SPIN_OFF_GUITAR_RHYTHM_GAME:
-                OnSpinOffGuitarRhythmGame(value[0], value[1], value[2], value[1], msg[0]);
-                break;
-            case NM_ASK_GHOST_PARTK_ENTER_UI:
-                OnGhostParkEnter();
-                break;
-            case NM_UNK_25:
-                encodeByte(value[0]);
-                if (value[0] == 0) {
-                    encodeString(msg[0]);
-                    encodeInt(value[1]);
-                    encodeInt(value[2]);
-                    encodeInt(value[3]);
-                    encodeInt(value[4]);
-                    encodeInt(value[5]);
-                }
-                break;
-            case NM_UNK_26:
-                encodeString(msg[0]);
-                encodeInt(value[0]);
-                break;
-            case NM_UNK_61:
-            case NM_UNK_62:
-                int a6;
-                if ((bParam & 0x4) != 0) {
-                    encodeInt(0);
-                }
-                if (nmt == NpcMessageType.NM_UNK_61) {
-                    a6 = 0;
-                } else {
-                    a6 = 1;
-                }
-                encodeString(msg[0]);
-                encodeByte(value[1]);
-                encodeByte(value[2]);
-                encodeInt(value[3]);
-                encodeInt(value[4]);
-                if (a6 == 1) {
-                    encodeInt(value[5]);
-                    encodeInt(value[6]);
-                } else {
-                    encodeByte(value[5]);
-                }
-                break;
-            case NM_UNK_69:
-                encodeString(msg[0]);
-                encodeInt(value[0]);
-                break;
-            case NM_UNK_70:
-                encodeString(msg[0]);
-                encodeByte(value[0]);
-                encodeByte(value[1]);
-                encodeByte(value[2]);
-                encodeByte(value[3]);
-                encodeInt(value[4]);
-                break;
-            default:
-                break;
-        }
-    }
-
-    public LP_ScriptMessage(NpcScriptInfo nsi) {
-        super(OutHeader.LP_ScriptMessage);
-        encodeByte(nsi.getSpeakerType());
-        encodeInt(nsi.getSpeakerTemplateID());
-        int overrideTemplateID = nsi.getOverrideSpeakerTemplateID();
-        encodeByte(overrideTemplateID > -1);
-        if (overrideTemplateID > -1) {
-            encodeInt(overrideTemplateID);
-        }
-        encodeByte(nsi.getLastMessageType().getValue());
-        encodeShort(nsi.getParam());
-        encodeByte(nsi.getColor());
-        switch (nsi.getLastMessageType()) {
-            case NM_SAY:
-                OnSay(nsi.getText(), nsi.getOverrideSpeakerTemplateID(), nsi.getParam(), nsi.isPrev(), nsi.isNext(), nsi.getDelay());
-                break;
-            case NM_ASK_MENU:
-                OnAskMenu(nsi.getText(), nsi.getOverrideSpeakerTemplateID(), nsi.getParam());
-                break;
-            case NM_ASK_YES_NO:
-            case NM_ASK_ACCEPT:
-                OnAskYesNo(nsi.getText(), nsi.getOverrideSpeakerTemplateID(), nsi.getParam());
-                break;
-            case NM_SAY_IMAGE:
-                OnSayImage(nsi.getImages());
-                break;
-            case NM_ASK_TEXT:
-                OnAskText(nsi.getText(), nsi.getDefaultText(), nsi.getOverrideSpeakerTemplateID()
-                        , nsi.getParam(), (short) nsi.getMin(), (short) nsi.getMax());
-                break;
-            case NM_ASK_NUMBER:
-                OnAskNumber(nsi.getText(), nsi.getDefaultNumber(), nsi.getMin(), nsi.getMax());
-                break;
-
-            case NM_ASK_NUMBER_KEYPAD:
-                encodeInt(nsi.getResult());
-                break;
-            case NM_ASK_ICQ_QUIZ:
-                encodeByte(nsi.getType());
-                if (nsi.getType() != 1) {
-                    encodeString(nsi.getText());
-                    encodeString(nsi.getHintText());
-                    encodeInt(nsi.getTime()); // in seconds
-                }
-                break;
-            case NM_ASK_QUIZ:
-                encodeByte(nsi.getType());
-                if (nsi.getType() != 1) {
-                    encodeString(nsi.getTitle());
-                    encodeString(nsi.getProblemText());
-                    encodeString(nsi.getHintText());
-                    encodeInt(nsi.getMin());
-                    encodeInt(nsi.getMax());
-                    encodeInt(nsi.getTime()); // in seconds
-                }
-                break;
-            case NM_ASK_SPEED_QUIZ:
-                encodeByte(nsi.getType());
-                if (nsi.getType() != 1) {
-                    encodeInt(nsi.getQuizType());
-                    encodeInt(nsi.getAnswer());
-                    encodeInt(nsi.getCorrectAnswers());
-                    encodeInt(nsi.getRemaining());
-                    encodeInt(nsi.getTime()); // in seconds
-                }
-                break;
-            case NM_ASK_BOX_TEXT:
-                OnAskBoxText(nsi.getText()
-                        , nsi.getDefaultText(), nsi.getOverrideSpeakerTemplateID(),
-                        nsi.getParam(), nsi.getCol(), nsi.getLine());
-                break;
-            case NM_ASK_BOX_TEXT_BGIMG:
-                OnAskBoxTextBackgrounImg(nsi.getBackgroundID(),
-                        nsi.getText(), nsi.getDefaultText(),
-                        nsi.getCol(), nsi.getLine(),
-                        nsi.getFontSize(), nsi.getFontTopMargin());
-                break;
-            case NM_ASK_AVATAR_EX:
-            case NM_ASK_AVATAR_EX_ZERO:
-                throw new NotImplementedException();
-            default:
-                break;
         }
     }
 }

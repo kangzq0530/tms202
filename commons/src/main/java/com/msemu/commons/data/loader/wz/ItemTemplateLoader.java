@@ -1,3 +1,27 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2018 msemu
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package com.msemu.commons.data.loader.wz;
 
 import com.msemu.commons.data.enums.InvType;
@@ -133,7 +157,7 @@ public class ItemTemplateLoader extends WzDataLoader<Map<Integer, ItemTemplate>>
                             int x = 1;
                         }
                     } else {
-                        if(tmp.contains(p.getName()))
+                        if (tmp.contains(p.getName()))
                             return;
                         tmp.add(p.getName());
                         LoggerFactory.getLogger(ItemTemplateLoader.class).info(String.format("ItemSpec: %s (%d) not loaded", p.getName(), item.getItemId()));
@@ -396,12 +420,12 @@ public class ItemTemplateLoader extends WzDataLoader<Map<Integer, ItemTemplate>>
                 .forEach(itemProp -> {
                     final int itemId = Integer.parseInt(itemProp.getName());
                     if (data.containsKey(itemId)) {
-                        if(itemProp.getFromPath("name") != null) {
+                        if (itemProp.getFromPath("name") != null) {
                             WzStringProperty stringProperty =
                                     (WzStringProperty) itemProp.getFromPath("name");
                             data.get(itemId).setName(stringProperty.getString());
                         }
-                        if(itemProp.getFromPath("desc") != null) {
+                        if (itemProp.getFromPath("desc") != null) {
                             WzStringProperty stringProperty =
                                     (WzStringProperty) itemProp.getFromPath("desc");
                             data.get(itemId).setDesc(stringProperty.getString());
@@ -412,7 +436,7 @@ public class ItemTemplateLoader extends WzDataLoader<Map<Integer, ItemTemplate>>
 
     @Override
     public void saveToDat() throws IOException {
-        if(getData().isEmpty()) {
+        if (getData().isEmpty()) {
             load();
         }
         new ItemTemplateDatLoader().saveDat(getData());

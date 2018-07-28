@@ -1,3 +1,27 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2018 msemu
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package com.msemu.commons.network;
 
 import com.msemu.commons.network.filters.AlwaysAcceptFilter;
@@ -13,7 +37,6 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.timeout.IdleStateHandler;
-import io.netty.handler.timeout.ReadTimeoutHandler;
 import lombok.Getter;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -30,21 +53,21 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by Weber on 2018/4/18.
  */
-public abstract class NetworkThread<TClient extends Client<TClient>>{
+public abstract class NetworkThread<TClient extends Client<TClient>> {
     private static final Logger log = LoggerFactory.getLogger(NetworkThread.class);
     private final ServerBootstrap bootstrap = new ServerBootstrap();
     private final EventLoopGroup mainLoopGroup;
     private final EventLoopGroup workerLoopGroup;
+    private final AcceptHandler<TClient> acceptHandler;
+    @Getter
+    private final IAcceptFilter acceptFilter;
+    @Getter
+    protected AsynchronousServerSocketChannel serverSocketChannel;
     private ChannelFuture future;
     private InetSocketAddress bindAddress;
     private Pair<SocketOption, Object>[] clientSocketOptions;
     private Pair<SocketOption, Object>[] serverSocketOptions;
-    private final AcceptHandler<TClient> acceptHandler;
-    @Getter
-    private final IAcceptFilter acceptFilter;
     private AsynchronousChannelGroup channelGroup;
-    @Getter
-    protected AsynchronousServerSocketChannel serverSocketChannel;
     @Getter
     private volatile boolean isShutdown;
     private String host;
@@ -67,7 +90,7 @@ public abstract class NetworkThread<TClient extends Client<TClient>>{
                     protected void initChannel(SocketChannel channel) throws Exception {
                         channel.config().setPerformancePreferences(0, 2, 1);
                         ChannelPipeline pipeline = channel.pipeline();
-                        pipeline.addLast("readTimeoutHandler",new IdleStateHandler(10, 0, 0, TimeUnit.MINUTES));
+                        pipeline.addLast("readTimeoutHandler", new IdleStateHandler(10, 0, 0, TimeUnit.MINUTES));
                         pipeline.addLast("packetDecoder", new PacketDecoder());
                         pipeline.addLast("packetEncoder", new PacketEncoder());
                         pipeline.addLast(new Connection<>(NetworkThread.this));
@@ -85,8 +108,8 @@ public abstract class NetworkThread<TClient extends Client<TClient>>{
     public abstract AbstractPacketHandlerFactory<TClient> getPacketHandler();
 
     private InetSocketAddress getBindAddress() {
-        if(this.bindAddress == null) {
-            if(host.isEmpty() || host.equals("*")) {
+        if (this.bindAddress == null) {
+            if (host.isEmpty() || host.equals("*")) {
                 this.bindAddress = new InetSocketAddress(port);
             }
             this.bindAddress = new InetSocketAddress(host, port);
@@ -111,7 +134,7 @@ public abstract class NetworkThread<TClient extends Client<TClient>>{
     @Override
     public String toString() {
         try {
-            InetSocketAddress address = (InetSocketAddress)this.getServerSocketChannel().getLocalAddress();
+            InetSocketAddress address = (InetSocketAddress) this.getServerSocketChannel().getLocalAddress();
             return "{NetworkThread listening at " + address.getHostName() + ":" + address.getPort() + "}";
         } catch (Exception var2) {
             return "{NetworkThread}";

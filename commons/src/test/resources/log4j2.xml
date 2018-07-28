@@ -1,5 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
+  ~ MIT License
+  ~
+  ~ Copyright (c) 2018 msemu
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  ~ SOFTWARE.
+  -->
+
+<!--
   ~ This file is part of bdo-emu <http://bdo-emu.com/>.
   ~
   ~ bdo-emu is free software: you can redistribute it and/or modify
@@ -21,41 +45,46 @@
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level - %msg%xEx%n"/>
         </Console>
-        <RollingFile name="ConsoleToFile" fileName="log/java/console.log" filePattern="log/java/console-%d{MM-dd-yyyy}.log.gz" append = "false">
+        <RollingFile name="ConsoleToFile" fileName="log/java/console.log"
+                     filePattern="log/java/console-%d{MM-dd-yyyy}.log.gz" append="false">
             <PatternLayout pattern="%d %-5level %logger{36} %L %M - %msg%n"/>
             <Policies>
-                <OnStartupTriggeringPolicy />
-                <TimeBasedTriggeringPolicy />
+                <OnStartupTriggeringPolicy/>
+                <TimeBasedTriggeringPolicy/>
                 <SizeBasedTriggeringPolicy size="250 MB"/>
             </Policies>
         </RollingFile>
-        <RollingFile name="ErrorToFile" fileName="log/error/error.log" filePattern="log/error/error-%d{MM-dd-yyyy}.log.gz" append = "false">
+        <RollingFile name="ErrorToFile" fileName="log/error/error.log"
+                     filePattern="log/error/error-%d{MM-dd-yyyy}.log.gz" append="false">
             <PatternLayout pattern="%d %-5level %logger{36} %L %M - %msg%xEx%n"/>
             <Policies>
-                <OnStartupTriggeringPolicy />
-                <TimeBasedTriggeringPolicy />
+                <OnStartupTriggeringPolicy/>
+                <TimeBasedTriggeringPolicy/>
                 <SizeBasedTriggeringPolicy size="250 MB"/>
             </Policies>
         </RollingFile>
-        <RollingFile name="DebugToFile" fileName="log/debug/debug.log" filePattern="log/debug/debug-%d{MM-dd-yyyy}.log.gz">
+        <RollingFile name="DebugToFile" fileName="log/debug/debug.log"
+                     filePattern="log/debug/debug-%d{MM-dd-yyyy}.log.gz">
             <PatternLayout pattern="%d - %msg%n"/>
             <Policies>
                 <SizeBasedTriggeringPolicy size="250 MB"/>
             </Policies>
             <Filters>
-                <ThresholdFilter level="warn"  onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="warn" onMatch="DENY" onMismatch="NEUTRAL"/>
                 <ThresholdFilter level="error" onMatch="DENY" onMismatch="NEUTRAL"/>
                 <ThresholdFilter level="fatal" onMatch="DENY" onMismatch="NEUTRAL"/>
-                <ThresholdFilter level="info"  onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="info" onMatch="DENY" onMismatch="NEUTRAL"/>
             </Filters>
         </RollingFile>
-        <RollingFile name="Authentication" fileName="log/authentication/authentication.log" filePattern="log/authentication/authentication-%d{MM-dd-yyyy}.log.gz">
+        <RollingFile name="Authentication" fileName="log/authentication/authentication.log"
+                     filePattern="log/authentication/authentication-%d{MM-dd-yyyy}.log.gz">
             <PatternLayout pattern="%d - %msg%n"/>
             <Policies>
                 <SizeBasedTriggeringPolicy size="250 MB"/>
             </Policies>
         </RollingFile>
-        <RollingFile name="Network" fileName="log/network/network.log" filePattern="log/network/network-%d{MM-dd-yyyy}.log.gz">
+        <RollingFile name="Network" fileName="log/network/network.log"
+                     filePattern="log/network/network-%d{MM-dd-yyyy}.log.gz">
             <PatternLayout pattern="%d - %msg%n"/>
             <Policies>
                 <SizeBasedTriggeringPolicy size="250 MB"/>

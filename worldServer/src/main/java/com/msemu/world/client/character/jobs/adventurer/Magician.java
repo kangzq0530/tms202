@@ -1,3 +1,27 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2018 msemu
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package com.msemu.world.client.character.jobs.adventurer;
 
 import com.msemu.commons.data.enums.MobBuffStat;
@@ -10,8 +34,8 @@ import com.msemu.core.network.packets.outpacket.wvscontext.LP_TemporaryStatSet;
 import com.msemu.world.client.character.*;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.jobs.JobHandler;
-import com.msemu.world.client.character.stats.Option;
 import com.msemu.world.client.character.skill.Skill;
+import com.msemu.world.client.character.stats.Option;
 import com.msemu.world.client.character.stats.TemporaryStatManager;
 import com.msemu.world.client.field.AffectedArea;
 import com.msemu.world.client.field.Field;
@@ -20,7 +44,6 @@ import com.msemu.world.client.field.lifes.Summon;
 import com.msemu.world.client.field.lifes.skills.MobTemporaryStat;
 import com.msemu.world.constants.MapleJob;
 import com.msemu.world.data.SkillData;
-import com.msemu.world.enums.ChatMsgType;
 import com.msemu.world.enums.MoveAbility;
 import com.msemu.world.enums.Stat;
 
@@ -100,12 +123,6 @@ public class Magician extends JobHandler {
     public static final int HEAVENS_DOOR = 2321055;
     public static final int MEGIDDO_FLAME = 2121052;
     public static final int MEGIDDO_FLAME_ATOM = 2121055;
-
-
-    private int[] addedSkills = new int[]{
-            MAPLE_RETURN,
-    };
-
     private final int[] buffs = new int[]{
             MAGIC_GUARD,
             IGNITE,
@@ -146,6 +163,9 @@ public class Magician extends JobHandler {
             INFERNO_AURA,
             RIGHTEOUSLY_INDIGNANT,
     };
+    private int[] addedSkills = new int[]{
+            MAPLE_RETURN,
+    };
 
     public Magician(Character character) {
         super(character);
@@ -184,7 +204,7 @@ public class Magician extends JobHandler {
             handleMegiddoFlameReCreation(skillID, (byte) slv, attackInfo);
         }
 
-        if (chr.getJob() >= MapleJob.巫師_火毒.getId() && chr.getJob() <=  MapleJob.大魔導士_火毒.getId()) {
+        if (chr.getJob() >= MapleJob.巫師_火毒.getId() && chr.getJob() <= MapleJob.大魔導士_火毒.getId()) {
             if (hasHitMobs) {
                 //Ignite
                 handleIgnite(attackInfo);
@@ -194,14 +214,14 @@ public class Magician extends JobHandler {
             }
         }
 
-        if (chr.getJob() >= MapleJob.巫師_冰雷.getId() && chr.getJob() <=  MapleJob.大魔導士_冰雷.getId()) {
+        if (chr.getJob() >= MapleJob.巫師_冰雷.getId() && chr.getJob() <= MapleJob.大魔導士_冰雷.getId()) {
             if (hasHitMobs) {
                 //Freezing Crush / Frozen Clutch
                 handleFreezingCrush(attackInfo, (byte) slv);
             }
         }
 
-        if (chr.getJob() >= MapleJob.僧侶.getId() && chr.getJob() <=  MapleJob.主教.getId()) {
+        if (chr.getJob() >= MapleJob.僧侶.getId() && chr.getJob() <= MapleJob.主教.getId()) {
             if (hasHitMobs) {
 
             }

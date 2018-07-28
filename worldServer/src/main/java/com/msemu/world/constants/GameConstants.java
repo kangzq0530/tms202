@@ -1,3 +1,27 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2018 msemu
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package com.msemu.world.constants;
 
 /**
@@ -24,13 +48,9 @@ public class GameConstants {
     public static final int RUNE_COOLDOWN_TIME = 4; // minutes
     public static final int THUNDER_RUNE_ATTACK_DELAY = 4; // seconds
     public static final int DARKNESS_RUNE_NUMBER_OF_ELITE_MOBS_SPAWNED = 3; // number of elites spawned when activating Rune of Darkness
-
-
-    public static long[] CHAR_EXP_TABLE = new long[251];
-
     // Quest Store
     public static final int QUESTID_QUICK_SLOT = 123000;
-
+    public static long[] CHAR_EXP_TABLE = new long[251];
 
     static {
         initCharExp();
@@ -250,7 +270,7 @@ public class GameConstants {
                 }
                 break;
         }
-        if(bossKilled)
+        if (bossKilled)
             x /= multiKillCount;
         return x;
     }

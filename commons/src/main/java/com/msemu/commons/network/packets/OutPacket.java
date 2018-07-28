@@ -1,3 +1,27 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2018 msemu
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package com.msemu.commons.network.packets;
 
 import com.msemu.commons.enums.OutHeader;
@@ -19,6 +43,7 @@ import java.util.Arrays;
  * Created by Weber on 2018/3/29.
  */
 public class OutPacket<TClient extends Client<TClient>> extends Packet<TClient> {
+    private static final Logger log = LogManager.getRootLogger();
     @Getter
     @Setter
     private TClient client;
@@ -26,7 +51,6 @@ public class OutPacket<TClient extends Client<TClient>> extends Packet<TClient> 
     private boolean loopback = false;
     private boolean encryptedByShanda = false;
     private short opcode;
-    private static final Logger log = LogManager.getRootLogger();
 
     /**
      * Creates a new OutPacket with a given opcode. Immediately encodes the opcode.
@@ -200,7 +224,7 @@ public class OutPacket<TClient extends Client<TClient>> extends Packet<TClient> 
      * @param str The String to encode.
      */
     public void encodeString(String str) {
-        byte[] data = str != null ? str.getBytes(CoreConfig.GAME_SERVICE_TYPE.getCharset()) : new byte[] {};
+        byte[] data = str != null ? str.getBytes(CoreConfig.GAME_SERVICE_TYPE.getCharset()) : new byte[]{};
         if (data.length > Short.MAX_VALUE) {
             log.error("Tried to encode a string that is too big.");
             return;
@@ -232,15 +256,15 @@ public class OutPacket<TClient extends Client<TClient>> extends Packet<TClient> 
     }
 
     @Override
+    public byte[] getData() {
+        return baos.toByteArray();
+    }
+
+    @Override
     public void setData(byte[] data) {
         super.setData(data);
         baos.reset();
         encodeArr(data);
-    }
-
-    @Override
-    public byte[] getData() {
-        return baos.toByteArray();
     }
 
     /**

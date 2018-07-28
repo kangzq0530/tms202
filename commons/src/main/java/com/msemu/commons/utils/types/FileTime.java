@@ -1,3 +1,27 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2018 msemu
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package com.msemu.commons.utils.types;
 
 import com.msemu.commons.database.Schema;
@@ -25,45 +49,6 @@ public class FileTime implements Serializable {
     @Column(name = "highDateTime")
     private int highDateTime;
 
-    public long getLongValue() {
-        return (((long) getLowDateTime())) + (long) getHighDateTime() << 32;
-    }
-
-    public enum Type {
-        // Mushy
-        MAX_TIME(150842304000000000L),
-        ZERO_TIME(94354848000000000L),
-        PERMANENT(150841440000000000L),
-        FT_UT_OFFSET(116444592000000000L),
-        QUEST_TIME(27111908);;
-        private long val;
-
-        Type(long val) {
-            this.val = val;
-        }
-
-        public long getVal() {
-            return val;
-        }
-    }
-
-    public enum FileTimeType {
-        DATE_19000101_444(-35635200, 21968699),
-        DATE_20790101_424(-1157267456, 35120710),;
-
-        private int low;
-        private int high;
-
-        FileTimeType(int low, int high) {
-            this.low = low;
-            this.high = high;
-        }
-
-        public FileTime getVal() {
-            return new FileTime(low, high);
-        }
-    }
-
     public FileTime(int lowDateTime, int highDateTime) {
         this.lowDateTime = lowDateTime;
         this.highDateTime = highDateTime;
@@ -73,26 +58,13 @@ public class FileTime implements Serializable {
 
     }
 
-    public FileTime deepCopy() {
-        return new FileTime(getLowDateTime(), getHighDateTime());
-    }
-
-    public static FileTime getFileTimeFromType(Type type) {
-        return new FileTime(type.getVal());
-    }
-
     public FileTime(long time) {
         lowDateTime = (int) time;
         highDateTime = (int) (time >> 32);
     }
 
-
-    public int getLowDateTime() {
-        return lowDateTime;
-    }
-
-    public int getHighDateTime() {
-        return highDateTime;
+    public static FileTime getFileTimeFromType(Type type) {
+        return new FileTime(type.getVal());
     }
 
     public static FileTime now() {
@@ -109,6 +81,22 @@ public class FileTime implements Serializable {
 
     public static FileTime getFTFromLong(long value) {
         return new FileTime((int) value, (int) (value >> 32));
+    }
+
+    public long getLongValue() {
+        return (((long) getLowDateTime())) + (long) getHighDateTime() << 32;
+    }
+
+    public FileTime deepCopy() {
+        return new FileTime(getLowDateTime(), getHighDateTime());
+    }
+
+    public int getLowDateTime() {
+        return lowDateTime;
+    }
+
+    public int getHighDateTime() {
+        return highDateTime;
     }
 
     public void encodeR(OutPacket outPacket) {
@@ -151,15 +139,50 @@ public class FileTime implements Serializable {
                 timeValue += amount * 10000 * 1000L;
                 break;
             case MINUTE:
-                timeValue += amount * 10000L * 60* 1000L;
+                timeValue += amount * 10000L * 60 * 1000L;
                 break;
             case HOUR:
-                timeValue += (amount * 10000L * 60L * 60L* 1000);
+                timeValue += (amount * 10000L * 60L * 60L * 1000);
                 break;
             case DAY:
-                timeValue += (amount * 10000L * 60L * 60L * 24L* 1000);
+                timeValue += (amount * 10000L * 60L * 60L * 24L * 1000);
         }
         return getTimeFromLong(timeValue);
+    }
+
+    public enum Type {
+        // Mushy
+        MAX_TIME(150842304000000000L),
+        ZERO_TIME(94354848000000000L),
+        PERMANENT(150841440000000000L),
+        FT_UT_OFFSET(116444592000000000L),
+        QUEST_TIME(27111908);;
+        private long val;
+
+        Type(long val) {
+            this.val = val;
+        }
+
+        public long getVal() {
+            return val;
+        }
+    }
+
+    public enum FileTimeType {
+        DATE_19000101_444(-35635200, 21968699),
+        DATE_20790101_424(-1157267456, 35120710),;
+
+        private int low;
+        private int high;
+
+        FileTimeType(int low, int high) {
+            this.low = low;
+            this.high = high;
+        }
+
+        public FileTime getVal() {
+            return new FileTime(low, high);
+        }
     }
 }
 

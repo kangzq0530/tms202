@@ -1,3 +1,27 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2018 msemu
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package com.msemu.core.network.packets.inpacket;
 
 import com.msemu.commons.network.packets.InPacket;
@@ -8,9 +32,9 @@ import com.msemu.core.network.packets.outpacket.mob.LP_MobMove;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.field.Field;
 import com.msemu.world.client.field.lifes.Mob;
-import com.msemu.world.client.field.lifes.skills.MobSkillAttackInfo;
 import com.msemu.world.client.field.lifes.movement.IMovement;
 import com.msemu.world.client.field.lifes.movement.MovementBase;
+import com.msemu.world.client.field.lifes.skills.MobSkillAttackInfo;
 
 import java.util.List;
 
@@ -19,23 +43,19 @@ import java.util.List;
  */
 public class CP_MobMove extends InPacket<GameClient> {
 
+    Position mPos, oPos;
+    List<IMovement> movements;
     private int mobObjectID;
     private short moveId;
     private boolean useSkill;
     private byte moveAction;
     private int mobSkillData;
-
     private int mobSkillID;
     private int mobSkillLevel;
     private int mobSkillDelay;
     private MobSkillAttackInfo msai = new MobSkillAttackInfo();
-
     private int crc0, crc1, crc2;
-
     private int encodedGatherDuration;
-    Position mPos, oPos;
-    List<IMovement> movements;
-
     private Mob mob;
 
     public CP_MobMove(short opcode) {
@@ -46,7 +66,7 @@ public class CP_MobMove extends InPacket<GameClient> {
     public void read() {
         mobObjectID = decodeInt();
         mob = getClient().getCharacter().getField().getMobByObjectId(mobObjectID);
-        if(mob == null)
+        if (mob == null)
             return;
         moveId = decodeShort();
         useSkill = decodeByte() > 0;
@@ -99,7 +119,7 @@ public class CP_MobMove extends InPacket<GameClient> {
 
     @Override
     public void runImpl() {
-        if(mob == null)
+        if (mob == null)
             return;
         Character chr = getClient().getCharacter();
         Field field = chr.getField();
@@ -112,11 +132,11 @@ public class CP_MobMove extends InPacket<GameClient> {
                 mob.setFh(movement.getFh());
             }
 
-            if(!movements.isEmpty()) {
+            if (!movements.isEmpty()) {
                 getClient().write(new LP_MobCtrlAck(mob, true, moveId, mobSkillID, (byte) mobSkillLevel, 0));
                 field.broadcastPacket(new LP_MobMove(mob, msai, movements), controller);
             }
-        } else if ( controller == null) {
+        } else if (controller == null) {
             mob.setController(chr);
             mob.setControllerLevel(2);
         }
