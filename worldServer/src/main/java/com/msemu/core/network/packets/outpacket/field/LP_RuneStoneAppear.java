@@ -10,7 +10,7 @@ public class LP_RuneStoneAppear extends OutPacket<GameClient> {
     public LP_RuneStoneAppear(RuneStone runeStone) {
         super(OutHeader.LP_RuneStoneAppear);
         encodeInt(runeStone.getIndex());
-        encodeInt(0);
+        encodeInt(1);
         runeStone.encode(this);
     }
 

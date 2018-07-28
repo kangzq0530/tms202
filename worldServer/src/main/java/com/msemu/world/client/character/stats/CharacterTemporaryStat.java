@@ -1095,7 +1095,7 @@ public enum CharacterTemporaryStat {
     // 更新BUFF用                     []
     IDA_BUFF_526(526),      // 無法跳躍
     // 更新BUFF用                     []
-    IDA_BUFF_527(527),
+    IDA_BUFF_527(527),      // 卡片收藏者的標誌
     // 更新BUFF用                     []
     IDA_BUFF_528(528),
     // 更新BUFF用                     []

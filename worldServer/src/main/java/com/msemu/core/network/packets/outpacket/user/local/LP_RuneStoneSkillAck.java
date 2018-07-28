@@ -9,6 +9,6 @@ import com.msemu.world.enums.RuneStoneType;
 public class LP_RuneStoneSkillAck extends OutPacket<GameClient> {
     public LP_RuneStoneSkillAck(RuneStone runeStone) {
         super(OutHeader.LP_RuneStoneSkillAck);
-        encodeInt(runeStone.getIndex());
+        encodeInt(runeStone.getType().getValue());
     }
 }

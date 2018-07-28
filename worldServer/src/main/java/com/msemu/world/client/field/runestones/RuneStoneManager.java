@@ -5,16 +5,20 @@ import com.msemu.commons.data.templates.field.Foothold;
 import com.msemu.commons.data.templates.skill.SkillInfo;
 import com.msemu.commons.thread.EventManager;
 import com.msemu.commons.utils.Rand;
+import com.msemu.commons.utils.Utils;
 import com.msemu.commons.utils.types.Position;
+import com.msemu.core.network.packets.outpacket.field.LP_RuneStoneAppear;
 import com.msemu.core.network.packets.outpacket.field.LP_RuneStoneClearAndAllRegister;
 import com.msemu.core.network.packets.outpacket.field.LP_RuneStoneDisappear;
 import com.msemu.core.network.packets.outpacket.user.local.LP_RuneStoneSkillAck;
 import com.msemu.core.network.packets.outpacket.user.local.LP_RuneStoneUseAck;
+import com.msemu.core.network.packets.outpacket.user.local.LP_UserRandAreaAttackRequest;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.stats.CharacterTemporaryStat;
 import com.msemu.world.client.character.stats.Option;
 import com.msemu.world.client.character.stats.TemporaryStatManager;
 import com.msemu.world.client.field.Field;
+import com.msemu.world.client.field.lifes.Mob;
 import com.msemu.world.client.field.runestones.results.CantUseRuneStoneResult;
 import com.msemu.world.client.field.runestones.results.UseRuneStoneSuccessResult;
 import com.msemu.world.client.field.runestones.results.WaitToUseRuneStoneResult;
@@ -41,6 +45,8 @@ public class RuneStoneManager {
     private final ScheduledFuture<?> runeStoneTimer;
     @Getter
     private final Field field;
+    @Getter
+    private ScheduledFuture thunderTimer;
 
     public RuneStoneManager(Field field) {
         this.field = field;
@@ -48,8 +54,7 @@ public class RuneStoneManager {
     }
 
     public void registerAll() {
-        if (!getRuneStones().isEmpty())
-            getField().broadcastPacket(new LP_RuneStoneClearAndAllRegister(getRuneStones()));
+        getField().broadcastPacket(new LP_RuneStoneClearAndAllRegister(getRuneStones()));
     }
 
     public void spawnTask() {
@@ -75,7 +80,7 @@ public class RuneStoneManager {
             toSpawn.setPosition(new Position(fh.getX1(), fh.getYFromX(fh.getX1())));
             toSpawn.setFlip(false);
             getRuneStones().add(toSpawn);
-            registerAll();
+            getField().broadcastPacket(new LP_RuneStoneAppear(toSpawn));
         }
     }
 
@@ -125,6 +130,7 @@ public class RuneStoneManager {
         if (runeStone != null) {
             getReqRuneStoneRecords().remove(chr.getId());
             getReqRuneStoneTimestamps().remove(chr.getId());
+            getRuneStones().remove(runeStone);
             activateRuneStoneEffect(chr, type);
             getField().broadcastPacket(new LP_RuneStoneSkillAck(runeStone));
             getField().broadcastPacket(new LP_RuneStoneDisappear(runeStone, chr, true));
@@ -164,11 +170,55 @@ public class RuneStoneManager {
                 tsm.putCharacterStatValue(CharacterTemporaryStat.IndieJump, o2);
                 tsm.putCharacterStatValue(CharacterTemporaryStat.IndieSpeed, o3);
                 break;
+            case RST_UPGRADE_DEFENCE:
+                skillId = 80001428;
+                si = SkillData.getInstance().getSkillInfoById(skillId);
+                o1.rOption = skillId;
+                o1.nOption = si.getValue(SkillStat.ignoreMobDamR, 1);
+                o1.tOption = si.getValue(SkillStat.time, 1);
+                o2.nReason = skillId;
+                o2.nValue = si.getValue(SkillStat.indieAsrR, 1);
+                o2.tStart = ((Long) System.currentTimeMillis()).intValue();
+                o2.tTerm = si.getValue(SkillStat.time, 1);
+                o3.nReason = skillId;
+                o3.nValue = si.getValue(SkillStat.indieTerR, 1);
+                o3.tStart = ((Long) System.currentTimeMillis()).intValue();
+                o3.tTerm = si.getValue(SkillStat.time, 1);
+                tsm.putCharacterStatValue(CharacterTemporaryStat.IgnoreMobDamR, o1);
+                tsm.putCharacterStatValue(CharacterTemporaryStat.IndieAsrR, o2);
+                tsm.putCharacterStatValue(CharacterTemporaryStat.IndieTerR, o3);
+                tsm.sendSetStatPacket();
+                break;
+            case RST_DOT_ATTACK:
+                break;
+            case RST_THUNDER:
+                skillId = 80001756;
+                si = SkillData.getInstance().getSkillInfoById(skillId);
+                o1.rOption = skillId;
+                o1.nOption = si.getValue(SkillStat.x, 1);
+                o1.tOption = si.getValue(SkillStat.time, 1);
+                tsm.putCharacterStatValue(CharacterTemporaryStat.RandAreaAttack, o1);
+                tsm.sendSetStatPacket();
+                int fieldID = chr.getFieldID();
+                randAreaAttack(fieldID, tsm, chr);
+                break;
+            case RST_EARTHQUAKE:
+                skillId = 80001757;
+                si = SkillData.getInstance().getSkillInfoById(skillId);
+                o1.rOption = skillId;
+                o1.nOption = si.getValue(SkillStat.x, 1);
+                o1.tOption = si.getValue(SkillStat.time, 1);
+                tsm.putCharacterStatValue(CharacterTemporaryStat.Inflation, o1);
+                break;
             case RST_SUMMON_ELITE_MOB:
-
+                Field field = chr.getField();
+                int numberOfEliteMobsSpawned = GameConstants.DARKNESS_RUNE_NUMBER_OF_ELITE_MOBS_SPAWNED;
+                for (int i = 0; i < numberOfEliteMobsSpawned; i++) {
+                    Mob mob = Utils.getRandomFromList(field.getAllMobs());
+                    //  mob.spawnEliteMobRuneOfDarkness(); TODO
+                }
                 break;
         }
-        tsm.sendSetStatPacket();
         skillId = 80002280; // 解放的輪之力
         si = SkillData.getInstance().getSkillInfoById(skillId);
         o4.nReason = skillId;
@@ -182,9 +232,21 @@ public class RuneStoneManager {
         o5.rOption = 80002282;
         o5.nOption = 1;
         o5.tOption = 15 * 60;
-        tsm.putCharacterStatValue(CharacterTemporaryStat.IDA_BUFF_537, o5);
+        tsm.putCharacterStatValue(CharacterTemporaryStat.IDA_BUFF_536, o5);
         tsm.sendSetStatPacket();
-
         // 80002303 BUFF
+    }
+
+
+    private void randAreaAttack(int fieldID, TemporaryStatManager tsm, Character chr) {
+        if ((tsm.getOptByCTSAndSkill(CharacterTemporaryStat.RandAreaAttack, 80001762) == null) || fieldID != chr.getFieldID()) {
+            return;
+        }
+        Mob randomMob = Utils.getRandomFromList(chr.getField().getAllMobs());
+        chr.write(new LP_UserRandAreaAttackRequest(Collections.singletonList(randomMob), 80001762));
+        if (thunderTimer != null && !thunderTimer.isDone()) {
+            thunderTimer.cancel(true);
+        }
+        thunderTimer = EventManager.getInstance().addEvent(() -> randAreaAttack(fieldID, tsm, chr), GameConstants.THUNDER_RUNE_ATTACK_DELAY, TimeUnit.SECONDS);
     }
 }
