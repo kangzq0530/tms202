@@ -1,15 +1,14 @@
-package com.msemu.world.client.field.lifes;
+package com.msemu.world.client.field.runestones;
 
 import com.msemu.commons.network.packets.OutPacket;
+import com.msemu.commons.utils.types.Position;
 import com.msemu.core.network.GameClient;
-import com.msemu.core.network.packets.outpacket.field.LP_RuneStoneAppear;
-import com.msemu.core.network.packets.outpacket.field.LP_RuneStoneDisappear;
-import com.msemu.world.enums.FieldObjectType;
+import com.msemu.world.client.character.Character;
 import com.msemu.world.enums.RuneStoneType;
 import lombok.Getter;
 import lombok.Setter;
 
-public class RuneStone extends Life {
+public class RuneStone {
 
     @Getter
     private final RuneStoneType type;
@@ -19,6 +18,10 @@ public class RuneStone extends Life {
     private boolean flip;
 
     @Getter
+    @Setter
+    private Position position = new Position(0, 0);
+
+    @Getter
     private final int index;
 
     public RuneStone(final RuneStoneType type, final  int index) {
@@ -26,20 +29,6 @@ public class RuneStone extends Life {
         this.index = index;
     }
 
-    @Override
-    public FieldObjectType getFieldObjectType() {
-        return FieldObjectType.RUNE;
-    }
-
-    @Override
-    public void enterScreen(GameClient client) {
-        client.write(new LP_RuneStoneAppear(this));
-    }
-
-    @Override
-    public void outScreen(GameClient client) {
-        client.write(new LP_RuneStoneDisappear(this, null, true));
-    }
 
     public void encode(OutPacket<GameClient> outPacket)
     {

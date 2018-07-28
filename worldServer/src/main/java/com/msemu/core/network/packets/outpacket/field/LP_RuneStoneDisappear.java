@@ -4,7 +4,7 @@ import com.msemu.commons.enums.OutHeader;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;
 import com.msemu.world.client.character.Character;
-import com.msemu.world.client.field.lifes.RuneStone;
+import com.msemu.world.client.field.runestones.RuneStone;
 
 public class LP_RuneStoneDisappear extends OutPacket<GameClient> {
     public LP_RuneStoneDisappear(RuneStone runeStone, Character chr, boolean destroyed) {

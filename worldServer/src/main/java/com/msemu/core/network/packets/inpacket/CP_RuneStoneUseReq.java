@@ -5,33 +5,32 @@ import com.msemu.core.network.GameClient;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.field.Field;
 import com.msemu.world.client.field.runestones.RuneStoneManager;
+import com.msemu.world.enums.RuneStoneType;
 
-public class CP_RuneStoneSkillReq extends InPacket<GameClient> {
+public class CP_RuneStoneUseReq extends InPacket<GameClient> {
 
-    private boolean result;
-    private int unk1;
-    private int unk2;
+    private int updateTick;
+    private int typeValue;
+    private RuneStoneType type;
 
-    public CP_RuneStoneSkillReq(short opcode) {
+    public CP_RuneStoneUseReq(short opcode) {
         super(opcode);
     }
 
     @Override
     public void read() {
-        result = decodeByte() > 0;
-        if(result) {
-            unk1 = decodeInt();
-            unk2 = decodeInt();
-        }
+        updateTick = decodeInt();
+        typeValue = decodeInt();
+        type = RuneStoneType.getByValue(typeValue);
     }
 
     @Override
     public void runImpl() {
+
         final Character chr = getClient().getCharacter();
         final Field field = chr.getField();
         final RuneStoneManager rsm = field.getRuneStoneManager();
-        if (result) {
-            rsm.useRuneStone(chr);
-        }
+        // TODO  確認BUFF冷卻時間
+        rsm.requestRuneStone(chr, type);
     }
 }

@@ -141,7 +141,7 @@ public class SkillConstants {
         }
 
         if (JobConstants.isSeparatedSp(job)) {
-            return MapleJob.getJobGrade(job) - 1;
+            return MapleJob.getJobGrade(job);
         }
 
         return 0;

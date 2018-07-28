@@ -157,81 +157,81 @@ public class Warrior extends JobHandler {
     }
 
     public void handleBuff(SkillUseInfo skillUseInfo) {
-        final int skillID = skillUseInfo.getSkillID();
+        final int skillId = skillUseInfo.getSkillID();
         final byte slv = skillUseInfo.getSlv();
         final Character chr = getCharacter();
         final TemporaryStatManager tsm = chr.getTemporaryStatManager();
-        final SkillInfo si = getSkillInfo(skillID);
+        final SkillInfo si = getSkillInfo(skillId);
         Option o1 = new Option();
         Option o2 = new Option();
         Option o3 = new Option();
         Option o4 = new Option();
-        switch (skillID) {
+        switch (skillId) {
             case 極速武器:
             case 極速武器_見習騎士:
             case 極速武器_槍騎士:
                 o1.nOption = si.getValue(x, slv);
-                o1.rOption = skillID;
+                o1.rOption = skillId;
                 o1.tOption = si.getValue(time, slv);
                 tsm.putCharacterStatValue(Booster, o1);
                 break;
             case 激勵:
-                o1.nReason = skillID;
+                o1.nReason = skillId;
                 o1.nValue = si.getValue(indiePad, slv);
                 o1.tStart = (int) System.currentTimeMillis();
                 o1.tTerm = si.getValue(time, slv);
                 tsm.putCharacterStatValue(IndiePAD, o1);
                 o2.nOption = si.getValue(y, slv);
-                o2.rOption = skillID;
+                o2.rOption = skillId;
                 o2.tOption = si.getValue(time, slv);
                 tsm.putCharacterStatValue(PowerGuard, o2);
                 break;
             case 鬥氣集中:
                 o1.nOption = 1;
-                o1.rOption = skillID;
+                o1.rOption = skillId;
                 o1.tOption = 0;
                 tsm.putCharacterStatValue(ComboCounter, o1);
                 break;
             case 鬥氣爆發:
                 removeCombo(1);
                 o1.nOption = 1;
-                o1.rOption = skillID;
+                o1.rOption = skillId;
                 tsm.putCharacterStatValue(Enrage, o1); // max mobs hit
                 o2.nOption = si.getValue(y, slv);
-                o2.rOption = skillID;
+                o2.rOption = skillId;
                 tsm.putCharacterStatValue(EnrageCrDamMin, o2);
                 o3.nOption = si.getValue(x, slv);
-                o2.rOption = skillID;
+                o2.rOption = skillId;
                 tsm.putCharacterStatValue(EnrageCr, o3);
                 break;
             case 戰鬥命令:
                 o1.nOption = si.getValue(x, slv);
-                o1.rOption = skillID;
+                o1.rOption = skillId;
                 o1.tOption = si.getValue(time, slv);
                 tsm.putCharacterStatValue(CombatOrders, o1);
                 break;
             case 超衝擊防禦:
-                o1.nReason = skillID;
+                o1.nReason = skillId;
                 o1.nValue = si.getValue(indiePad, slv);
                 o1.tStart = (int) System.currentTimeMillis();
                 o1.tTerm = si.getValue(time, slv);
                 tsm.putCharacterStatValue(IndiePAD, o1);
-                o2.nReason = skillID;
+                o2.nReason = skillId;
                 o2.nValue = si.getValue(indiePddR, slv);
                 o2.tStart = (int) System.currentTimeMillis();
                 o2.tTerm = si.getValue(time, slv);
                 tsm.putCharacterStatValue(IndiePDDR, o1);
                 o3.nOption = si.getValue(z, slv);
-                o3.rOption = skillID;
+                o3.rOption = skillId;
                 o3.tOption = si.getValue(time, slv);
                 tsm.putCharacterStatValue(Guard, o3);
                 o4.nOption = 1;
-                o4.rOption = skillID;
+                o4.rOption = skillId;
                 o4.tOption = 0;
                 tsm.putCharacterStatValue(KnightsAura, o4);
                 break;
             case 自然之力:
-                o1.nReason = skillID;
+                o1.nReason = skillId;
                 o1.nValue = si.getValue(indieDamR, slv);
                 o1.tStart = (int) System.currentTimeMillis();
                 o1.tTerm = si.getValue(time, slv);
@@ -239,23 +239,23 @@ public class Warrior extends JobHandler {
                 break;
             case 守護者精神:
                 o1.nOption = 1;
-                o1.rOption = skillID;
+                o1.rOption = skillId;
                 o1.tOption = si.getValue(time, slv);
                 tsm.putCharacterStatValue(NotDamaged, o1);
                 break;
             case 禦魔陣:
                 o1.nOption = si.getValue(pdd, slv);
-                o1.rOption = skillID;
+                o1.rOption = skillId;
                 o1.tOption = si.getValue(time, slv);
                 tsm.putCharacterStatValue(PDD, o1);
                 break;
             case 神聖之火:
                 o1.nOption = si.getValue(x, slv);
-                o1.rOption = skillID;
+                o1.rOption = skillId;
                 o1.tOption = si.getValue(time, slv);
                 tsm.putCharacterStatValue(MaxHP, o1);
                 o2.nOption = si.getValue(y, slv);
-                o2.rOption = skillID;
+                o2.rOption = skillId;
                 o2.tOption = si.getValue(time, slv);
                 tsm.putCharacterStatValue(MaxMP, o2);
                 break;
@@ -263,37 +263,37 @@ public class Warrior extends JobHandler {
                 int total = chr.getStat(Stat.MAX_HP);
                 int current = chr.getStat(Stat.HP);
                 o1.nOption = (int) ((si.getValue(x, slv) * ((double) current) / total) * 100);
-                o1.rOption = skillID;
+                o1.rOption = skillId;
                 o1.tOption = si.getValue(time, slv);
                 tsm.putCharacterStatValue(DamR, o1);
                 o2.nOption = (int) Math.min((0.08 * total - current), si.getValue(z, slv));
-                o2.rOption = skillID;
+                o2.rOption = skillId;
                 o2.tOption = si.getValue(time, slv);
                 tsm.putCharacterStatValue(PDD, o2);
                 break;
             case 追隨者:
-                spawnEvilEye(skillID, slv);
+                spawnEvilEye(skillId, slv);
                 o2.nOption = si.getValue(x, slv);
-                o2.rOption = skillID;
+                o2.rOption = skillId;
                 o2.tOption = si.getValue(time, slv);
                 tsm.putCharacterStatValue(PDD, o2);
                 o3.nOption = 1;
-                o3.rOption = skillID;
+                o3.rOption = skillId;
                 o3.tOption = si.getValue(time, slv);
                 tsm.putCharacterStatValue(Beholder, o1);
                 break;
             case 暗之獻祭:
                 if (tsm.hasStat(Beholder)) {
                     o1.nOption = si.getValue(y, slv);
-                    o1.rOption = skillID;
+                    o1.rOption = skillId;
                     o1.tOption = si.getValue(time, slv);
                     tsm.putCharacterStatValue(Restoration, o1);
                     o2.nOption = si.getValue(x, slv);
-                    o2.rOption = skillID;
+                    o2.rOption = skillId;
                     o2.tOption = si.getValue(time, slv);
                     tsm.putCharacterStatValue(IgnoreMobpdpR, o2);
                     o3.nOption = si.getValue(indieBDR, slv);
-                    o3.rOption = skillID;
+                    o3.rOption = skillId;
                     o3.tOption = si.getValue(time, slv);
                     tsm.putCharacterStatValue(IndieBDR, o3);
                     removeEvilEye();
@@ -303,21 +303,21 @@ public class Warrior extends JobHandler {
             case 楓葉祝福_聖騎士:
             case 楓葉祝福_黑騎士:
                 o1.nOption = si.getValue(x, slv);
-                o1.rOption = skillID;
+                o1.rOption = skillId;
                 o1.tOption = si.getValue(time, slv);
                 tsm.putCharacterStatValue(BasicStatUp, o1);
                 break;
             case 騎士衝擊波:
                 o1.nOption = si.getValue(cr, slv);
-                o1.rOption = skillID;
+                o1.rOption = skillId;
                 o1.tOption = si.getValue(time, slv);
                 tsm.putCharacterStatValue(CriticalBuff, o1);
                 o2.nOption = si.getValue(damR, slv);
-                o2.rOption = skillID;
+                o2.rOption = skillId;
                 o2.tOption = si.getValue(time, slv);
                 tsm.putCharacterStatValue(DamR, o2);
                 o3.nOption = si.getValue(ignoreMobpdpR, slv);
-                o3.rOption = skillID;
+                o3.rOption = skillId;
                 o3.tOption = si.getValue(time, slv);
                 tsm.putCharacterStatValue(IgnoreMobpdpR, o3);
                 break;
@@ -326,12 +326,12 @@ public class Warrior extends JobHandler {
             case 傳說冒險_英雄:
             case 傳說冒險_聖騎士:
             case 傳說冒險_黑騎士:
-                o1.nReason = skillID;
+                o1.nReason = skillId;
                 o1.nValue = si.getValue(indieDamR, slv);
                 o1.tStart = (int) System.currentTimeMillis();
                 o1.tTerm = si.getValue(time, slv);
                 tsm.putCharacterStatValue(IndieDamR, o1);
-                o2.nReason = skillID;
+                o2.nReason = skillId;
                 o2.nValue = si.getValue(indieMaxDamageOverR, slv);
                 o2.tStart = (int) System.currentTimeMillis();
                 o2.tTerm = si.getValue(time, slv);
@@ -339,30 +339,30 @@ public class Warrior extends JobHandler {
                 break;
             case 神域護佑:
                 o1.nOption = 1;
-                o1.rOption = skillID;
+                o1.rOption = skillId;
                 o1.tOption = si.getValue(time, slv);
                 tsm.putCharacterStatValue(NotDamaged, o1);
                 break;
             case 劍士意念:
-                o1.nReason = skillID;
+                o1.nReason = skillId;
                 o1.nValue = si.getValue(indieCr, slv);
                 o1.tStart = (int) System.currentTimeMillis();
                 o1.tTerm = si.getValue(time, slv);
                 tsm.putCharacterStatValue(IndieCr, o1);
                 o2.nOption = si.getValue(x, slv);
-                o2.rOption = skillID;
+                o2.rOption = skillId;
                 o2.tOption = si.getValue(time, slv);
                 tsm.putCharacterStatValue(AsrR, o2);
                 tsm.putCharacterStatValue(TerR, o2);
                 break;
             case 黑暗飢渴:
-                o1.nReason = skillID;
+                o1.nReason = skillId;
                 o1.nValue = si.getValue(indiePad, slv);
                 o1.tStart = (int) System.currentTimeMillis();
                 o1.tTerm = si.getValue(time, slv);
                 tsm.putCharacterStatValue(IndiePAD, o1);
                 o2.nOption = si.getValue(x, slv);
-                o2.rOption = skillID;
+                o2.rOption = skillId;
                 o2.tOption = si.getValue(time, slv);
                 tsm.putCharacterStatValue(DotHealHPPerSecond, o2); //TODO   ?  unsure about TempStat
                 break;
@@ -929,7 +929,7 @@ public class Warrior extends JobHandler {
         getClient().write(new LP_TemporaryStatReset(tsm, false));
         getClient().write(new LP_SummonLeaveField(evilEye, LeaveType.ANIMATION));
         Field field = getCharacter().getField();
-        field.removeSummon(evilEye);
+        field.removeLife(evilEye);
     }
 
 }

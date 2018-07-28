@@ -34,7 +34,7 @@ import static com.msemu.world.client.character.stats.CharacterTemporaryStat.*;
 /**
  * Created by Weber on 2018/4/14.
  */
-public class Archer extends JobHandler {
+public class Archer extends Beginner {
     public static final int 回歸楓之谷 = 1281;
     public static final int 無形之箭_弓 = 3101004;
     public static final int 無形之箭_弩 = 3201004;

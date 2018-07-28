@@ -42,7 +42,7 @@ public class CP_UserChat extends InPacket<GameClient> {
         chr.addStat(Stat.MP, 50);
 
         if (text.charAt(0) == '!') {
-            List<String> args = Arrays.stream(text.split(" ")).collect(Collectors.toList());
+            List<String> args = Arrays.stream(text.toLowerCase().split(" ")).collect(Collectors.toList());
             if(CommandProcessor.getCommands().containsKey(args.get(0).substring(1))) {
                 try {
                     CommandProcessor.getCommands().get(args.get(0).substring(1)).newInstance().execute(getClient(), args);
@@ -55,7 +55,5 @@ public class CP_UserChat extends InPacket<GameClient> {
         chr.getScriptManager().stopScript();
         OutPacket<GameClient> chatPacket = new LP_UserChat(chr.getId(), text, onlyBallon);
         chr.getField().broadcastPacket(chatPacket);
-
-        chr.getField().broadcastPacket(new LP_ChatMsg(ChatMsgType.CYAN, "測試 Test"));
     }
 }

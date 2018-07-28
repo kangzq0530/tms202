@@ -27,7 +27,7 @@ public class SkillInfo implements DatSerializable {
     private int rootId, skillId;
     private int maxLevel, currentLevel, masterLevel, fixLevel;
     private int skillType = -1, eventTamingMob = 0, vehicleID = 0, hyper = 0, hyperStat = 0, reqLev = 0, setItemReason = 0, setItemPartsCount = 0;
-    private boolean massSpell, invisible = false, notRemoved = false, timeLimited = false, combatOrders = false, psd = false, vSkill = false, petPassive = false;
+    private boolean finalAttack, massSpell, invisible = false, notRemoved = false, timeLimited = false, combatOrders = false, psd = false, vSkill = false, petPassive = false;
     // info prop
     private boolean pvp = true, magicDamage, casterMove, pushTarget, pullTarget;
     private boolean keyDownSkill, summonSkill;
@@ -37,11 +37,16 @@ public class SkillInfo implements DatSerializable {
     private List<Rect> rects = new ArrayList<>();
     private Map<Integer, Map<SkillStat, String>> skillStatInfo = new HashMap<>();
     private Map<Integer, Map<SkillStat, Integer>> psdWT = new HashMap<>();
+    private List<Integer> finalAttackSkills = new ArrayList<>();
 
     public void addSkillStatInfo(int slv,  SkillStat sc, String value) {
         if(!getSkillStatInfo().containsKey(slv))
             getSkillStatInfo().put(slv, new HashMap<>());
         getSkillStatInfo().get(slv).put(sc, value);
+    }
+
+    public Collection<SkillStat> getStats(int slv) {
+        return getSkillStatInfo().getOrDefault(slv, new HashMap<>()).keySet();
     }
 
     public int getValue(SkillStat skillStat, int slv) {
@@ -105,7 +110,7 @@ public class SkillInfo implements DatSerializable {
     }
 
     @Override
-    public void write(DataOutputStream dos) throws IOException {
+    public void write(final DataOutputStream dos) throws IOException {
         dos.writeUTF(this.name);
         dos.writeUTF(this.desc);
         dos.writeInt(this.rootId);
@@ -137,6 +142,7 @@ public class SkillInfo implements DatSerializable {
         dos.writeBoolean(this.pullTarget);
         dos.writeBoolean(this.keyDownSkill);
         dos.writeBoolean(this.summonSkill);
+        dos.writeBoolean(this.finalAttack);
         dos.writeInt(reqSkill.size());
         for (ReqSkill req : reqSkill) {
             req.write(dos);
@@ -170,6 +176,10 @@ public class SkillInfo implements DatSerializable {
                 dos.writeUTF(subEntry.getKey().name());
                 dos.writeInt(subEntry.getValue());
             }
+        }
+        dos.writeInt(finalAttackSkills.size());
+        for(Integer skillId : finalAttackSkills) {
+            dos.writeInt(skillId);
         }
     }
 
@@ -206,6 +216,7 @@ public class SkillInfo implements DatSerializable {
         setPullTarget(dis.readBoolean());
         setKeyDownSkill(dis.readBoolean());
         setSummonSkill(dis.readBoolean());
+        setFinalAttack(dis.readBoolean());
         int reqSkilSize = dis.readInt();
         for (int i = 0; i < reqSkilSize; i++) {
             getReqSkill().add((ReqSkill) new ReqSkill().load(dis));
@@ -236,6 +247,9 @@ public class SkillInfo implements DatSerializable {
                 getPsdWT().get(wt).put(SkillStat.valueOf(dis.readUTF()), dis.readInt());
             }
         }
+        int finalSkillIdSize = dis.readInt();
+        for(int i = 0 ; i < finalSkillIdSize; i++)
+            getFinalAttackSkills().add(dis.readInt());
         return this;
     }
 }

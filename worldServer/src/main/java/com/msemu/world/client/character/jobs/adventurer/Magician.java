@@ -314,10 +314,11 @@ public class Magician extends JobHandler {
                 }
                 break;
             case MIST_ERUPTION:
-                for (int objectId : attackInfo.mists) {
-                    Field field = chr.getField();
-                    field.removeMistByObjectId(objectId);
-                }
+//                for (int objectId : attackInfo.mists) {
+//                    Field field = chr.getField();
+//
+//                    field.removeLife(objectId);
+//                }
                 break;
             case BAHAMUT:
                 for (MobAttackInfo mai : attackInfo.mobAttackInfo) {

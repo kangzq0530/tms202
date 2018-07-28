@@ -20,6 +20,7 @@ public class GameConstants {
 
     public static final int MAX_RUNESTONE_PER_FIELD = 2;
     public static final int RUNE_RESPAWN_TIME = 5;
+    public static final int RUNE_STONE_REQUEST_COOLTIME = 5000; // 5000 miles
     public static final int RUNE_COOLDOWN_TIME = 4; // minutes
     public static final int THUNDER_RUNE_ATTACK_DELAY = 4; // seconds
     public static final int DARKNESS_RUNE_NUMBER_OF_ELITE_MOBS_SPAWNED = 3; // number of elites spawned when activating Rune of Darkness

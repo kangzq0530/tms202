@@ -2401,7 +2401,29 @@ public class TemporaryStatManager {
             outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_533).rOption);
             outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_533).tOption);
         }
+        if (hasNewStat(CharacterTemporaryStat.IDA_BUFF_534)) {
+            outPacket.encodeShort(getOption(CharacterTemporaryStat.IDA_BUFF_534).nOption);
+            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_534).rOption);
+            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_534).tOption);
+        }
 
+        if (hasNewStat(CharacterTemporaryStat.IDA_BUFF_538)) {
+            outPacket.encodeShort(getOption(CharacterTemporaryStat.IDA_BUFF_538).nOption);
+            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_538).rOption);
+            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_538).tOption);
+        }
+
+        if (hasNewStat(CharacterTemporaryStat.FireBarrier)) {
+            outPacket.encodeShort(getOption(CharacterTemporaryStat.FireBarrier).nOption);
+            outPacket.encodeInt(getOption(CharacterTemporaryStat.FireBarrier).rOption);
+            outPacket.encodeInt(getOption(CharacterTemporaryStat.FireBarrier).tOption);
+        }
+
+        if (hasNewStat(CharacterTemporaryStat.ChangeFoxMan)) {
+            outPacket.encodeShort(getOption(CharacterTemporaryStat.ChangeFoxMan).nOption);
+            outPacket.encodeInt(getOption(CharacterTemporaryStat.ChangeFoxMan).rOption);
+            outPacket.encodeInt(getOption(CharacterTemporaryStat.ChangeFoxMan).tOption);
+        }
 
         if (hasNewStat(CharacterTemporaryStat.FixCoolTime)) {
             outPacket.encodeShort(getOption(CharacterTemporaryStat.FixCoolTime).nOption);
@@ -2448,6 +2470,11 @@ public class TemporaryStatManager {
             outPacket.encodeInt(getOption(CharacterTemporaryStat.RWCombination).rOption);
             outPacket.encodeInt(getOption(CharacterTemporaryStat.RWCombination).tOption);
         }
+        if (hasNewStat(CharacterTemporaryStat.IDA_BUFF_487)) {
+            outPacket.encodeShort(getOption(CharacterTemporaryStat.IDA_BUFF_487).nOption);
+            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_487).rOption);
+            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_487).tOption);
+        }
         if (hasNewStat(CharacterTemporaryStat.RWMagnumBlow)) {
             outPacket.encodeShort(getOption(CharacterTemporaryStat.RWMagnumBlow).nOption);
             outPacket.encodeInt(getOption(CharacterTemporaryStat.RWMagnumBlow).rOption);
@@ -2484,13 +2511,6 @@ public class TemporaryStatManager {
             outPacket.encodeInt(getOption(CharacterTemporaryStat.Stigma).tOption);
         }
 
-        if (hasNewStat(CharacterTemporaryStat.IDA_BUFF_495)) {
-            outPacket.encodeShort(getOption(CharacterTemporaryStat.IDA_BUFF_495).nOption);
-            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_495).rOption);
-            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_495).tOption);
-        }
-
-
         if (hasNewStat(CharacterTemporaryStat.IDA_BUFF_496)) {
             outPacket.encodeShort(getOption(CharacterTemporaryStat.IDA_BUFF_496).nOption);
             outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_496).rOption);
@@ -2504,17 +2524,31 @@ public class TemporaryStatManager {
             outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_497).tOption);
         }
 
-        if (hasNewStat(CharacterTemporaryStat.IDA_BUFF_489)) {
-            outPacket.encodeShort(getOption(CharacterTemporaryStat.IDA_BUFF_489).nOption);
-            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_489).rOption);
-            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_489).tOption);
+        if (hasNewStat(CharacterTemporaryStat.IDA_BUFF_498)) {
+            outPacket.encodeShort(getOption(CharacterTemporaryStat.IDA_BUFF_498).nOption);
+            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_498).rOption);
+            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_498).tOption);
         }
 
-        if (hasNewStat(CharacterTemporaryStat.IDA_BUFF_491)) {
-            outPacket.encodeShort(getOption(CharacterTemporaryStat.IDA_BUFF_491).nOption);
-            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_491).rOption);
-            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_491).tOption);
+        if (hasNewStat(CharacterTemporaryStat.IDA_BUFF_499)) {
+            outPacket.encodeShort(getOption(CharacterTemporaryStat.IDA_BUFF_499).nOption);
+            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_499).rOption);
+            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_499).tOption);
         }
+
+        if (hasNewStat(CharacterTemporaryStat.IDA_BUFF_500)) {
+            outPacket.encodeShort(getOption(CharacterTemporaryStat.IDA_BUFF_500).nOption);
+            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_500).rOption);
+            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_500).tOption);
+        }
+
+
+        if (hasNewStat(CharacterTemporaryStat.IDA_BUFF_501)) {
+            outPacket.encodeShort(getOption(CharacterTemporaryStat.IDA_BUFF_501).nOption);
+            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_501).rOption);
+            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_501).tOption);
+        }
+
 
         if (hasNewStat(CharacterTemporaryStat.元氣覺醒)) {
             outPacket.encodeShort(getOption(CharacterTemporaryStat.元氣覺醒).nOption);
@@ -2534,10 +2568,10 @@ public class TemporaryStatManager {
             outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_504).tOption);
         }
 
-        if (hasNewStat(CharacterTemporaryStat.IDA_BUFF_505)) {
-            outPacket.encodeShort(getOption(CharacterTemporaryStat.IDA_BUFF_505).nOption);
-            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_505).rOption);
-            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_505).tOption);
+        if (hasNewStat(CharacterTemporaryStat.槍彈盛宴)) {
+            outPacket.encodeShort(getOption(CharacterTemporaryStat.槍彈盛宴).nOption);
+            outPacket.encodeInt(getOption(CharacterTemporaryStat.槍彈盛宴).rOption);
+            outPacket.encodeInt(getOption(CharacterTemporaryStat.槍彈盛宴).tOption);
         }
 
         if (hasNewStat(CharacterTemporaryStat.IDA_BUFF_506)) {
@@ -2634,36 +2668,69 @@ public class TemporaryStatManager {
             outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_521).rOption);
             outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_521).tOption);
         }
-        if (hasNewStat(CharacterTemporaryStat.IDA_BUFF_534)) {
-            outPacket.encodeShort(getOption(CharacterTemporaryStat.IDA_BUFF_534).nOption);
-            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_534).rOption);
-            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_534).tOption);
+        if (hasNewStat(CharacterTemporaryStat.IDA_BUFF_539)) {
+            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_539).nOption);
+            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_539).rOption);
+            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_539).tOption);
         }
-        if (hasNewStat(CharacterTemporaryStat.IDA_BUFF_535)) {
-            outPacket.encodeShort(getOption(CharacterTemporaryStat.IDA_BUFF_535).nOption);
-            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_535).rOption);
-            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_535).tOption);
+        if (hasNewStat(CharacterTemporaryStat.IDA_BUFF_540)) {
+            outPacket.encodeShort(getOption(CharacterTemporaryStat.IDA_BUFF_540).nOption);
+            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_540).rOption);
+            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_540).tOption);
         }
+        if (hasNewStat(CharacterTemporaryStat.IDA_BUFF_541)) {
+            outPacket.encodeShort(getOption(CharacterTemporaryStat.IDA_BUFF_541).nOption);
+            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_541).rOption);
+            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_541).tOption);
+        }
+        if (hasNewStat(CharacterTemporaryStat.IDA_BUFF_542)) {
+            outPacket.encodeShort(getOption(CharacterTemporaryStat.IDA_BUFF_542).nOption);
+            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_542).rOption);
+            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_542).tOption);
+        }
+
+        if (hasNewStat(CharacterTemporaryStat.IDA_BUFF_541)) {
+            outPacket.encodeShort(getOption(CharacterTemporaryStat.IDA_BUFF_541).nOption);
+            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_541).rOption);
+            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_541).tOption);
+        }
+
+        if (hasNewStat(CharacterTemporaryStat.IDA_BUFF_544)) {
+            outPacket.encodeShort(getOption(CharacterTemporaryStat.IDA_BUFF_544).nOption);
+            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_544).rOption);
+            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_544).tOption);
+        }
+
+        if (hasNewStat(CharacterTemporaryStat.IDA_BUFF_543)) {
+            outPacket.encodeShort(getOption(CharacterTemporaryStat.IDA_BUFF_543).nOption);
+            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_543).rOption);
+            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_543).tOption);
+        }
+
+        if (hasNewStat(CharacterTemporaryStat.IDA_BUFF_157)) {
+            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_157).nOption);
+            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_157).rOption);
+            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_157).tOption);
+        }
+
+        if (hasNewStat(CharacterTemporaryStat.IDA_BUFF_545)) {
+            outPacket.encodeShort(getOption(CharacterTemporaryStat.IDA_BUFF_545).nOption);
+            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_545).rOption);
+            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_545).tOption);
+        }
+
         if (hasNewStat(CharacterTemporaryStat.IDA_BUFF_536)) {
             outPacket.encodeShort(getOption(CharacterTemporaryStat.IDA_BUFF_536).nOption);
             outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_536).rOption);
             outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_536).tOption);
         }
+
         if (hasNewStat(CharacterTemporaryStat.IDA_BUFF_537)) {
             outPacket.encodeShort(getOption(CharacterTemporaryStat.IDA_BUFF_537).nOption);
             outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_537).rOption);
             outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_537).tOption);
         }
-        if (hasNewStat(CharacterTemporaryStat.IDA_BUFF_441)) {
-            outPacket.encodeShort(getOption(CharacterTemporaryStat.IDA_BUFF_441).nOption);
-            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_441).rOption);
-            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_441).tOption);
-        }
-        if (hasNewStat(CharacterTemporaryStat.IDA_BUFF_442)) {
-            outPacket.encodeShort(getOption(CharacterTemporaryStat.IDA_BUFF_442).nOption);
-            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_442).rOption);
-            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_442).tOption);
-        }
+
 
         if (hasNewStat(CharacterTemporaryStat.SoulMP)) {
             outPacket.encodeInt(getOption(CharacterTemporaryStat.SoulMP).xOption);
@@ -2860,8 +2927,8 @@ public class TemporaryStatManager {
             outPacket.encodeInt(getOption(CharacterTemporaryStat.DarkSight).cOption);
             outPacket.encodeInt(0);
         }
-        if (hasNewStat(CharacterTemporaryStat.IDA_BUFF_505)) {
-            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_505).bOption);
+        if (hasNewStat(CharacterTemporaryStat.槍彈盛宴)) {
+            outPacket.encodeInt(getOption(CharacterTemporaryStat.槍彈盛宴).bOption);
         }
         if (hasNewStat(CharacterTemporaryStat.IDA_BUFF_250)) {
             outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_250).bOption);
@@ -2885,8 +2952,8 @@ public class TemporaryStatManager {
         if (hasNewStat(CharacterTemporaryStat.IDA_BUFF_414)) {
             outPacket.encodeShort(getOption(CharacterTemporaryStat.IDA_BUFF_414).bOption);
         }
-        if (hasNewStat(CharacterTemporaryStat.IDA_BUFF_523)) {
-            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_523).bOption);
+        if (hasNewStat(CharacterTemporaryStat.IDA_BUFF_513)) {
+            outPacket.encodeInt(getOption(CharacterTemporaryStat.IDA_BUFF_513).bOption);
             outPacket.encodeInt(0);
             outPacket.encodeInt(0);
             outPacket.encodeInt(0);
@@ -2902,40 +2969,40 @@ public class TemporaryStatManager {
             }
         }
         encodeCurrentAllIndieTempStat(outPacket);
-//        if (hasNewStat(UsingScouter)) {
-//            outPacket.encodeInt(getOption(UsingScouter).nOption);
-//            outPacket.encodeInt(getOption(UsingScouter).xOption);
-//        }
 
-        if (hasNewStat(CharacterTemporaryStat.NewFlying)) {
-            outPacket.encodeInt(getOption(CharacterTemporaryStat.NewFlying).xOption);
+        if (hasNewStat(CharacterTemporaryStat.UsingScouter)) {
+            outPacket.encodeInt(0);
+            outPacket.encodeInt(0);
         }
 
-        if (hasNewStat(CharacterTemporaryStat.RideVehicleExpire)) {
-            outPacket.encodeByte(1);
-            outPacket.encodeByte(1);
+        if (hasNewStat(CharacterTemporaryStat.IDA_BUFF_544)) {
+            outPacket.encodeInt(0);
         }
 
-        if (hasNewStat(CharacterTemporaryStat.COUNT_PLUS1)) {
+        if (hasNewStat(CharacterTemporaryStat.IDA_BUFF_545)) {
+            outPacket.encodeInt(0);
             outPacket.encodeByte(0);
-            outPacket.encodeByte(1);
-        }
-
-        if (hasNewStat(CharacterTemporaryStat.IDA_BUFF_525)) {
-            outPacket.encodeByte(1);
-        }
-
-        if (hasNewStat(CharacterTemporaryStat.IDA_BUFF_155)) {
+            outPacket.encodeInt(0);
+            outPacket.encodeInt(0);
+            outPacket.encodeInt(0);
             outPacket.encodeInt(0);
             outPacket.encodeInt(0);
         }
 
-        if (hasNewStat(CharacterTemporaryStat.IDA_BUFF_533)) {
+        if (hasNewStat(CharacterTemporaryStat.IDA_BUFF_536)) {
             outPacket.encodeInt(0);
             outPacket.encodeInt(0);
             outPacket.encodeInt(0);
         }
-        if (hasNewStat(CharacterTemporaryStat.COUNT_PLUS1)) {
+
+        if (hasNewStat(CharacterTemporaryStat.IDA_BUFF_537)) {
+            outPacket.encodeInt(0);
+            outPacket.encodeInt(0);
+            outPacket.encodeInt(0);
+        }
+
+        if (hasNewStat(CharacterTemporaryStat.IDA_BUFF_538)) {
+            outPacket.encodeInt(0);
             outPacket.encodeInt(0);
             outPacket.encodeInt(0);
             outPacket.encodeInt(0);
@@ -2949,7 +3016,7 @@ public class TemporaryStatManager {
         for (Option option : options) {
             outPacket.encodeInt(option.nReason);
             outPacket.encodeInt(option.nValue);
-            outPacket.encodeInt(option.nKey); // nKey
+            outPacket.encodeInt(option.nKey);
             outPacket.encodeInt(curTime - option.tStart);
             outPacket.encodeInt(option.tTerm); // tTerm
             int idk = 0;
@@ -3812,10 +3879,10 @@ public class TemporaryStatManager {
             uFlagData.add(new Tuple<>(getOption(CharacterTemporaryStat.IDA_BUFF_504).nOption, 2));
             uFlagData.add(new Tuple<>(getOption(CharacterTemporaryStat.IDA_BUFF_504).rOption, 4));
         }
-        if (hasStat(CharacterTemporaryStat.IDA_BUFF_505) || aDefaultFlags.contains(CharacterTemporaryStat.IDA_BUFF_505)) {
-            uFlagTemp[CharacterTemporaryStat.IDA_BUFF_505.getPosition()] |= CharacterTemporaryStat.IDA_BUFF_505.getValue();
-            uFlagData.add(new Tuple<>(getOption(CharacterTemporaryStat.IDA_BUFF_505).nOption, 2));
-            uFlagData.add(new Tuple<>(getOption(CharacterTemporaryStat.IDA_BUFF_505).rOption, 4));
+        if (hasStat(CharacterTemporaryStat.槍彈盛宴) || aDefaultFlags.contains(CharacterTemporaryStat.槍彈盛宴)) {
+            uFlagTemp[CharacterTemporaryStat.槍彈盛宴.getPosition()] |= CharacterTemporaryStat.槍彈盛宴.getValue();
+            uFlagData.add(new Tuple<>(getOption(CharacterTemporaryStat.槍彈盛宴).nOption, 2));
+            uFlagData.add(new Tuple<>(getOption(CharacterTemporaryStat.槍彈盛宴).rOption, 4));
         }
         if (hasStat(CharacterTemporaryStat.IDA_BUFF_506) || aDefaultFlags.contains(CharacterTemporaryStat.IDA_BUFF_506)) {
             uFlagTemp[CharacterTemporaryStat.IDA_BUFF_506.getPosition()] |= CharacterTemporaryStat.IDA_BUFF_506.getValue();

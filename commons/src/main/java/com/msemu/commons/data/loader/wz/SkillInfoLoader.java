@@ -109,7 +109,14 @@ public class SkillInfoLoader extends WzDataLoader<Map<Integer, SkillInfo>> {
                 skillInfo.setReqLev(prop.getInt());
             else if (propName.equalsIgnoreCase("vSkill"))
                 skillInfo.setVSkill(prop.getInt() > 0);
-            else if (propName.equalsIgnoreCase("petPassive"))
+            else if (propName.equalsIgnoreCase("finalAttack")) {
+                if ( prop instanceof WzSubProperty) {
+                    WzSubProperty subProp = (WzSubProperty) prop;
+                    subProp.getProperties().forEach(pp -> {
+                        skillInfo.getFinalAttackSkills().add(Integer.parseInt(pp.getName()));
+                    });
+                }
+            } else if (propName.equalsIgnoreCase("petPassive"))
                 skillInfo.setPetPassive(prop.getInt() > 0);
             else if (propName.equalsIgnoreCase("setItemReason"))
                 skillInfo.setSetItemReason(prop.getInt());
@@ -126,6 +133,8 @@ public class SkillInfoLoader extends WzDataLoader<Map<Integer, SkillInfo>> {
                     skillInfo.setPushTarget(prop.getFromPath("pushTarget").getInt() > 0);
                 if (prop.hasProperty("pullTarget"))
                     skillInfo.setPullTarget(prop.getFromPath("pullTarget").getInt() > 0);
+                if (prop.hasProperty("finalAttack"))
+                    skillInfo.setFinalAttack(prop.getFromPath("finalAttack").getInt() > 0);
             } else if (propName.equalsIgnoreCase("effect")) {
                 // TODO 儲存skill delay
             } else if (propName.equalsIgnoreCase("common")) {
@@ -157,8 +166,8 @@ public class SkillInfoLoader extends WzDataLoader<Map<Integer, SkillInfo>> {
                     skillInfo.getSkillStatInfo().put(i, skillStatInfo);
                 }
             } else if (propName.equalsIgnoreCase("psdWT")) {
-                ((WzSubProperty)prop).getProperties().stream()
-                        .map(p -> (WzSubProperty)p).forEach(wtProp -> {
+                ((WzSubProperty) prop).getProperties().stream()
+                        .map(p -> (WzSubProperty) p).forEach(wtProp -> {
 
                     Map<SkillStat, Integer> stats = new EnumMap<>(SkillStat.class);
 
@@ -210,7 +219,7 @@ public class SkillInfoLoader extends WzDataLoader<Map<Integer, SkillInfo>> {
 
     @Override
     public void saveToDat() throws IOException {
-        if(getData().isEmpty())
+        if (getData().isEmpty())
             load();
         new SkillInfoDatLoader().saveDat(getData());
     }

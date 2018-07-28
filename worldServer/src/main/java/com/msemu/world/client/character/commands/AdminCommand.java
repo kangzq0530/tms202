@@ -13,6 +13,7 @@ import com.msemu.world.client.character.stats.CharacterLocalStat;
 import com.msemu.world.client.character.stats.CharacterStat;
 import com.msemu.world.client.field.Field;
 import com.msemu.world.client.field.lifes.Drop;
+import com.msemu.world.constants.GameConstants;
 import com.msemu.world.constants.MapleJob;
 import com.msemu.world.data.ItemData;
 import com.msemu.world.enums.ChatMsgType;
@@ -29,6 +30,25 @@ import java.util.List;
 public class AdminCommand {
 
     private static final Logger log = LoggerFactory.getLogger("AdminCommands");
+
+
+    public static class spawnRuneStone extends CommandExecute {
+
+        @Override
+        public boolean execute(GameClient client, List<String> args) {
+
+            Character chr = client.getCharacter();
+
+            chr.getField().getRuneStoneManager().spawnTask();
+
+            return false;
+        }
+
+        @Override
+        public String getHelpMessage() {
+            return "!spawnRuneStone <TYPE> - 叫出符文輪";
+        }
+    }
 
     public static class warp extends CommandExecute {
 
@@ -176,6 +196,21 @@ public class AdminCommand {
         @Override
         public String getHelpMessage() {
             return "!drop <ItemID> : drop an Item to field";
+        }
+    }
+
+    public static class levelUp extends CommandExecute {
+
+        @Override
+        public boolean execute(GameClient client, List<String> args) {
+            final Character chr = client.getCharacter();
+            chr.addExp(GameConstants.CHAR_EXP_TABLE[chr.getLevel()] - chr.getExp());
+            return true;
+        }
+
+        @Override
+        public String getHelpMessage() {
+            return "!levelup - 角色升級";
         }
     }
 

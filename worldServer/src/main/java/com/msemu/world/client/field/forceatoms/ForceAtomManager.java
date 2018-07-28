@@ -1,6 +1,7 @@
 package com.msemu.world.client.field.forceatoms;
 
 import com.msemu.commons.utils.types.FileTime;
+import com.msemu.world.client.field.Field;
 import com.msemu.world.client.field.forceatoms.types.ForceAtomInfo;
 import lombok.Getter;
 
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
 /**
  * Created by Weber on 2018/5/12.
  */
-public class ForceAtomHandler {
+public class ForceAtomManager {
 
     @Getter
     private List<ForceAtomInfo> forceAtomInfos;
@@ -22,8 +23,11 @@ public class ForceAtomHandler {
     private AtomicInteger count = new AtomicInteger(1);
     @Getter
     private final Lock lock;
+    @Getter
+    private final Field field;
 
-    public ForceAtomHandler() {
+    public ForceAtomManager(Field field) {
+        this.field = field;
         this.forceAtomInfos = new LinkedList<>();
         this.lock = new ReentrantLock();
     }

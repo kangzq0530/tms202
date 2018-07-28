@@ -95,20 +95,19 @@ public abstract class JobHandler {
     public void handleLevelUp() {
         final Character chr = getCharacter();
         final int level = chr.getLevel();
-        chr.addStat(Stat.MAX_HP, 500);
-        chr.addStat(Stat.MAX_MP, 500);
-        chr.addStat(Stat.AP, 5);
         int sp = 3;
         if (level > 100 && (level % 10) % 3 == 0) {
             sp = 6; // double sp on levels ending in 3/6/9
         }
         chr.addSp(sp);
-        Map<Stat, Object> stats = new HashMap<>();
-        stats.put(Stat.MAX_HP, chr.getStat(Stat.MAX_HP));
-        stats.put(Stat.MAX_MP, chr.getStat(Stat.MAX_MP));
-        stats.put(Stat.AP, (short) chr.getStat(Stat.AP));
-        stats.put(Stat.SP, chr.getAvatarData().getCharacterStat().getExtendSP());
-        chr.write(new LP_StatChanged(stats));
+        Map<Stat, Integer> stats = new HashMap<>();
+        stats.put(Stat.MAX_HP, 500);
+        stats.put(Stat.MAX_MP, 500);
+        chr.renewCharacterStats();
+        stats.put(Stat.HP, chr.getCurrentMaxHp());
+        stats.put(Stat.MP, chr.getCurrentMaxMp());
+        stats.put(Stat.AP, 5);
+        chr.addStat(stats);
         byte linkSkillLevel = (byte) SkillConstants.getLinkSkillLevelByCharLevel(level);
         int linkSkillID = SkillConstants.getOriginalOfLinkedSkill(SkillConstants.getLinkSkillByJob(chr.getJob()));
         if (linkSkillID != 0 && linkSkillLevel > 0) {

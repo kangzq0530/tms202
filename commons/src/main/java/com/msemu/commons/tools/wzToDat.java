@@ -24,9 +24,9 @@ public class wzToDat {
 //        new FieldTemplateLoader(wzManager).saveToDat();
 //        new NpcTemplateLoader(wzManager).saveToDat();
 //
-//        new SkillInfoLoader(wzManager).saveToDat();
+        new SkillInfoLoader(wzManager).saveToDat();
 //        new QuestInfoLoader(wzManager).saveToDat();
 //        new MobTemplateLoader(wzManager).saveToDat();
-        new FieldTemplateLoader(wzManager).saveToDat();
+//        new FieldTemplateLoader(wzManager).saveToDat();
     }
 }

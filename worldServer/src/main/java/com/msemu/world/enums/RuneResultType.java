@@ -1,0 +1,35 @@
+package com.msemu.world.enums;
+
+import lombok.Getter;
+
+import java.util.Arrays;
+
+public enum RuneResultType {
+    RRT_DATA_MISS_MATCH(0x0),
+    RRT_PREOCCUPIED(0x1),
+    // 還領取不到效果. (剩餘時間: %d秒)
+    RRT_WAIT_TO_USE_RUNE(0x2),
+    RRT_WAIT_TO_USE_RUNE2(0x3),
+    // 因為輪的力量太強,再目前等級無法使用.
+    RRT_UNDER_REQUIRED_LEVEL(0x5),
+    // 魚餌的力量太強所以無法使用魚餌。
+    RRT_UNDER_REQUIRED_LEVEL2(0x6),
+    // 目前無法發動符文。
+    RRT_CAN_NOT_USE(0x7),
+    RRT_SUCCESS(0x8),
+    RRT_UNKNOWN(0xFF);
+    ;
+    @Getter
+    private final int value;
+
+    RuneResultType(int value) {
+        this.value = value;
+    }
+
+    public static RuneResultType getByValue(final int value) {
+        return Arrays.stream(values())
+                .filter(type->type.getValue() == value)
+                .findFirst().orElse(RRT_UNKNOWN);
+    }
+    
+}

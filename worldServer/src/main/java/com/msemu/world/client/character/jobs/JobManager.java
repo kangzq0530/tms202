@@ -5,6 +5,9 @@ import com.msemu.world.client.character.jobs.adventurer.Archer;
 import com.msemu.world.client.character.jobs.adventurer.Beginner;
 import com.msemu.world.client.character.jobs.adventurer.Magician;
 import com.msemu.world.client.character.jobs.adventurer.Warrior;
+import com.msemu.world.client.character.jobs.legend.Aran;
+import com.msemu.world.client.character.jobs.legend.Evan;
+import com.msemu.world.client.character.jobs.sengoku.Kanna;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.slf4j.Logger;
@@ -24,7 +27,10 @@ public class JobManager {
             Archer.class,
             Beginner.class,
             Warrior.class,
-            Magician.class
+            Magician.class,
+            Aran.class,
+            Evan.class,
+            Kanna.class
     };
 
     @SuppressWarnings("unchecked")

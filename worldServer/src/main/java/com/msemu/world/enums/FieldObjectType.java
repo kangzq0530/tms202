@@ -19,7 +19,6 @@ public enum FieldObjectType {
     EXTRACTOR,
     FAMILIAR,
     HIRED_MERCHANT,
-    RUNE,
     ANDROID,
     KITE
 }

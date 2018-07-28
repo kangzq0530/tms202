@@ -333,7 +333,8 @@ public class Mob extends InternalLife {
 
 
     public void die() {
-        getField().broadcastPacket(new LP_MobLeaveField(this));
+        final Field field = getField();
+        field.broadcastPacket(new LP_MobLeaveField(this));
         distributeExp();
         dropDrops(); // xd
         for (Character chr : getDamageDone().keySet()) {
@@ -344,7 +345,7 @@ public class Mob extends InternalLife {
             getMobListener().die();
             setMobListener(null);
         }
-        getField().removeMob(this);
+        field.removeLife(this);
     }
 
     @Override

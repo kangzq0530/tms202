@@ -1008,11 +1008,14 @@ public enum CharacterTemporaryStat {
     // 更新BUFF用                 [猜測]
     AranBoostEndHunt(483),
     // 更新BUFF用                    [猜測]
-    HiddenHyperLinkMaximization(485),
+    HiddenHyperLinkMaximization(484),
     // 更新BUFF用                       [猜測]
-    RWCylinder(486),
+    RWCylinder(485),
 
-    RWCombination(487),
+    RWCombination(486),
+
+    IDA_BUFF_487(487),
+
     // 更新BUFF用                      [猜測]
     RWMagnumBlow(488),
     // 更新BUFF用                      [猜測]
@@ -1029,18 +1032,18 @@ public enum CharacterTemporaryStat {
     RWMovingEvar(494),
     // 更新BUFF用                     [202]
     Stigma(495),
+    // 更新BUFF用
+    IDA_BUFF_496(496),               // 被揍時有瑪哈之疾效果
     // 更新BUFF用                     []
-    IDA_BUFF_495(495),
+    IDA_BUFF_497(497),
     // 更新BUFF用                     []
-    IDA_BUFF_496(496),
+    IDA_BUFF_498(498),
     // 更新BUFF用                     []
-    IDA_BUFF_497(488),
+    IDA_BUFF_499(499),
     // 更新BUFF用                     []
-    IDA_BUFF_489(489),
+    IDA_BUFF_500(500),
     // 更新BUFF用                     []
-    IDA_BUFF_490(490),
-    // 更新BUFF用                     []
-    IDA_BUFF_491(491),
+    IDA_BUFF_501(501),
     // 更新BUFF用                     []
     元氣覺醒(502),
     // 更新BUFF用                     []
@@ -1048,7 +1051,7 @@ public enum CharacterTemporaryStat {
     // 更新BUFF用                     []
     IDA_BUFF_504(504),
     // 更新BUFF用                     []
-    IDA_BUFF_505(505),
+    槍彈盛宴(505),
     // 更新BUFF用                     []
     IDA_BUFF_506(506),
     // 更新BUFF用                     []
@@ -1090,19 +1093,19 @@ public enum CharacterTemporaryStat {
     // 更新BUFF用                     []
     IDA_BUFF_525(525),
     // 更新BUFF用                     []
-    IDA_BUFF_526(526),
+    IDA_BUFF_526(526),      // 無法跳躍
     // 更新BUFF用                     []
     IDA_BUFF_527(527),
     // 更新BUFF用                     []
     IDA_BUFF_528(528),
     // 更新BUFF用                     []
-    IDA_BUFF_529(529),
+    IDA_BUFF_529(529),      // 某種 combo
     // 更新BUFF用                     []
     IDA_BUFF_530(530),
     // 更新BUFF用                     []
     IDA_BUFF_531(531),
     // 更新BUFF用                     []
-    IDA_BUFF_532(532),
+    IDA_BUFF_532(532),      // 停止不動
     // 更新BUFF用                     []
     IDA_BUFF_533(533),
     // 更新BUFF用                     []

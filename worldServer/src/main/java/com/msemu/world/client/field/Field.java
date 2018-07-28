@@ -16,17 +16,14 @@ import com.msemu.core.network.packets.outpacket.drops.LP_DropLeaveField;
 import com.msemu.core.network.packets.outpacket.field.LP_AffectedAreaCreated;
 import com.msemu.core.network.packets.outpacket.field.LP_FootHoldMove;
 import com.msemu.core.network.packets.outpacket.field.LP_SetQuickMoveInfo;
-import com.msemu.core.network.packets.outpacket.mob.LP_MobEnterField;
-import com.msemu.core.network.packets.outpacket.npc.LP_NpcEnterField;
-import com.msemu.core.network.packets.outpacket.summon.LP_SummonEnterField;
-import com.msemu.core.network.packets.outpacket.user.LP_UserEnterField;
 import com.msemu.core.network.packets.outpacket.user.LP_UserLeaveField;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.inventory.items.Item;
 import com.msemu.world.client.character.stats.TemporaryStatManager;
-import com.msemu.world.client.field.forceatoms.ForceAtomHandler;
+import com.msemu.world.client.field.forceatoms.ForceAtomManager;
 import com.msemu.world.client.field.forceatoms.types.ForceAtomInfo;
 import com.msemu.world.client.field.lifes.*;
+import com.msemu.world.client.field.runestones.RuneStoneManager;
 import com.msemu.world.client.field.spawns.AbstractSpawnPoint;
 import com.msemu.world.client.field.spawns.NpcSpawnPoint;
 import com.msemu.world.constants.GameConstants;
@@ -34,18 +31,14 @@ import com.msemu.world.data.FieldData;
 import com.msemu.world.data.ItemData;
 import com.msemu.world.data.SkillData;
 import com.msemu.world.enums.*;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.LoggerFactory;
 
-import java.awt.*;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.List;
 import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.Lock;
@@ -87,18 +80,20 @@ public class Field {
     @Setter
     protected LocalDateTime lastSpawnEliteMobTime = LocalDateTime.MIN, lastSpawnTime = LocalDateTime.MIN;
     @Getter
-    protected ForceAtomHandler forceAtomHandler = new ForceAtomHandler();
+    protected ForceAtomManager forceAtomManager;
     @Getter
-    protected final ScheduledFuture<?> runeStoneTimer;
-
+    protected final RuneStoneManager runeStoneManager;
 
     public Field(FieldTemplate fieldData) {
         this.fieldId = fieldData.getId();
         this.objects = new ArrayList<>();
         this.objectSchedules = new HashMap<>();
+
         Position lBound = new Position(fieldData.getRect().getLeft(), fieldData.getRect().getTop());
         Position rBound = new Position(fieldData.getRect().getRight(), fieldData.getRect().getBottom());
         this.footholdTree = new FootholdTree(lBound, rBound);
+
+
         fieldData.getFootholds().forEach(this.footholdTree::insertFoothold);
         EnumMap<FieldObjectType, LinkedHashMap<Integer, AbstractFieldObject>> objectsMap = new EnumMap<>(FieldObjectType.class);
         EnumMap<FieldObjectType, ReentrantReadWriteLock> objectLockMap = new EnumMap<>(FieldObjectType.class);
@@ -108,7 +103,8 @@ public class Field {
         });
         this.fieldObjects = Collections.unmodifiableMap(objectsMap);
         this.fieldObjectLocks = Collections.unmodifiableMap(objectLockMap);
-        this.runeStoneTimer = EventManager.getInstance().addFixedRateEvent(this::spawnRuneStoneTask, GameConstants.RUNE_RESPAWN_TIME, GameConstants.RUNE_RESPAWN_TIME, TimeUnit.MINUTES);
+        this.forceAtomManager = new ForceAtomManager(this);
+        this.runeStoneManager = new RuneStoneManager(this);
     }
 
     /**
@@ -260,51 +256,60 @@ public class Field {
 
 
     public void leave(Character chr) {
-        removeCharacter(chr);
-        chr.setField(null);
+        removeLife(chr);
+        broadcastPacket(new LP_UserLeaveField(chr), chr);
+        getAllMobs().forEach(mob -> {
+            if (mob.getController() != null &&
+                    mob.getController().getId() == chr.getId()) {
+                mob.setController(null);
+                mob.setControllerLevel(1);
+                updateMobController(mob);
+            }
+        });
+        //unregisterParty follow
+        //unregisterParty Extractor
+        //unregisterParty summon
     }
 
     private void addCharacter(Character chr) {
         updateCharacterPosition(chr);
-        if (!getAllCharacters().contains(chr)) {
-            addFieldObject(chr);
-            if (!isUserFirstEnter() && hasUserFirstEnterScript()) {
-                chr.getScriptManager().startScript(getFieldId(), getOnFirstUserEnter(), ScriptType.FIELD);
-            }
-            if (chr.getParty() != null) {
-                chr.getParty().updateFull();
-            }
-            List<QuickMoveNpcInfo> quickMoveNpcInfos = QuickMoveInfo.getVisibleQuickMoveNpcs(getFieldId());
-            chr.write(new LP_SetQuickMoveInfo(quickMoveNpcInfos));
-            // TODO LP_IncJudgementStack
-
-            // TODO mapEffect (song , broadcast)
-
-            FieldTemplate ft = getFieldData();
-            EventManager em = EventManager.getInstance();
-            if (ft.getTimeLimit() > 0 && ft.getReturnMap() > 0) {
-                //TODO 計時回地圖
-            } else if (ft.getTimeLimit() > 0 && ft.getForcedReturn() > 0) {
-                //TODO 計時回地圖
-            }
-
-            // LP_BlowWeather
-
-            List<FieldObj> movingPlatforms = getObjects().stream()
-                    .filter(FieldObj::isMove).collect(Collectors.toList());
-            if (!movingPlatforms.isEmpty()) {
-                chr.write(new LP_FootHoldMove(movingPlatforms));
-            }
-
-
-            //TODO  處理事件腳本
-
-            chr.getForcedStatManager().onEnterField(getFieldId());
-
-            //叫出花狐 龍
-
-            // 強化任意門剩餘次數
+        if (!isUserFirstEnter() && hasUserFirstEnterScript()) {
+            chr.getScriptManager().startScript(getFieldId(), getOnFirstUserEnter(), ScriptType.FIELD);
         }
+        if (chr.getParty() != null) {
+            chr.getParty().updateFull();
+        }
+        List<QuickMoveNpcInfo> quickMoveNpcInfos = QuickMoveInfo.getVisibleQuickMoveNpcs(getFieldId());
+        chr.write(new LP_SetQuickMoveInfo(quickMoveNpcInfos));
+        // TODO LP_IncJudgementStack
+
+        // TODO mapEffect (song , broadcast)
+
+        FieldTemplate ft = getFieldData();
+        EventManager em = EventManager.getInstance();
+        if (ft.getTimeLimit() > 0 && ft.getReturnMap() > 0) {
+            //TODO 計時回地圖
+        } else if (ft.getTimeLimit() > 0 && ft.getForcedReturn() > 0) {
+            //TODO 計時回地圖
+        }
+
+        // LP_BlowWeather
+
+        List<FieldObj> movingPlatforms = getObjects().stream()
+                .filter(FieldObj::isMove).collect(Collectors.toList());
+        if (!movingPlatforms.isEmpty()) {
+            chr.write(new LP_FootHoldMove(movingPlatforms));
+        }
+
+
+        //TODO  處理事件腳本
+
+        chr.getForcedStatManager().onEnterField(getFieldId());
+
+        //叫出花狐 龍
+
+        // 強化任意門剩餘次數
+        getRuneStoneManager().registerAll();
         getAllMobs().forEach(this::updateMobController);
 
     }
@@ -526,7 +531,6 @@ public class Field {
     }
 
 
-
     public void startTimeLimitTask(int time, Field toField) {
 
 
@@ -555,7 +559,8 @@ public class Field {
         int mobSpawnCount = (int) getSpawnPoints()
                 .stream()
                 .filter(spawnPoint -> !(spawnPoint instanceof NpcSpawnPoint)).count();
-        int maxSpawned = (mobSpawnCount >= 20 || getPartyBonusRate() > 0) ? Math.round(mobSpawnCount / getMobRate())
+        int mobRate = getMobRate() > 0 ? getMobRate() : 1;
+        int maxSpawned = (mobSpawnCount >= 20 || getPartyBonusRate() > 0) ? Math.round(mobSpawnCount / mobRate)
                 : (int) Math.ceil(mobSpawnCount * getMobRate());
 
         if (getFixedMob() > 0)
@@ -670,15 +675,6 @@ public class Field {
         }
     }
 
-    public List<RuneStone> getAllRuneStones() {
-        getFieldObjectReadLock(FieldObjectType.RUNE).lock();
-        try {
-            return getFieldObjects().get(FieldObjectType.RUNE).values().stream().map(o -> (RuneStone) o).collect(Collectors.toList());
-        } finally {
-            getFieldObjectReadLock(FieldObjectType.RUNE).unlock();
-        }
-    }
-
     public List<Character> getAllCharacters() {
         getFieldObjectReadLock(FieldObjectType.CHARACTER).lock();
         try {
@@ -736,23 +732,6 @@ public class Field {
         return getAllMobs().stream().filter(mob -> rect.contains(mob.getPosition())).collect(Collectors.toList());
     }
 
-    private void removeCharacter(Character chr) {
-        removeFieldObject(chr);
-        broadcastPacket(new LP_UserLeaveField(chr), chr);
-        getAllMobs().forEach(mob -> {
-
-            if (mob.getController() != null &&
-                    mob.getController().getId() == chr.getId()) {
-                mob.setController(null);
-                mob.setControllerLevel(1);
-                updateMobController(mob);
-            }
-        });
-
-        //unregisterParty follow
-        //unregisterParty Extractor
-        //unregisterParty summon
-    }
 
     public void addFieldObject(AbstractFieldObject object) {
         object.setObjectId(getNewObjectID());
@@ -837,24 +816,19 @@ public class Field {
         });
     }
 
-    public void removeMob(Mob mob) {
-        removeFieldObject(mob);
+    public void removeLifeByObjectId(int objectId) {
+
+    }
+
+    public void removeLife(Life life) {
+        removeFieldObject(life);
         getAllCharacters().forEach(chr -> {
-            chr.removeVisibleFieldObject(mob);
+            chr.removeVisibleFieldObject(life);
+            life.outScreen(chr.getClient());
         });
+        life.setField(null);
     }
 
-
-    public void removeSummon(Summon evilEye) {
-        removeFieldObject(evilEye);
-        evilEye.setField(null);
-    }
-
-
-    public void removeMistByObjectId(int objectId) {
-        AbstractFieldObject mist = getFieldObjectsByKey(FieldObjectType.MIST, objectId);
-        removeFieldObject(mist);
-    }
 
     public Portal findClosestPortal(Position position) {
         Portal closest = getPortalByID(0);
@@ -869,39 +843,25 @@ public class Field {
         return closest;
     }
 
-    public void spawnRuneStoneTask()
-    {
-
-        if(getAllMobs().isEmpty() || getBossMobID() > 0)
-            return;
-        if(getAllRuneStones().size() >= GameConstants.MAX_RUNESTONE_PER_FIELD)
-            return;
-
-        RuneStone runeStone = new RuneStone(RuneStoneType.randomType(), getAllRuneStones().size());
-        runeStone.setFlip(false);
-
-        spawnLife(runeStone);
-    }
-
 
     public int getConsumeItemCoolTime() {
         return getFieldData().getConsumeItemCoolTime();
     }
 
     public void addForceAtom(ForceAtomInfo atomInfo) {
-        getForceAtomHandler().addForceAtom(atomInfo);
+        getForceAtomManager().addForceAtom(atomInfo);
     }
 
     public void removeForceAtomByCount(int count) {
-        getForceAtomHandler().removeAtom(count);
+        getForceAtomManager().removeAtom(count);
     }
 
     public ForceAtomInfo getForceAtomByCount(int count) {
-        return getForceAtomHandler().getForceAtom(count);
+        return getForceAtomManager().getForceAtom(count);
     }
 
     public boolean hasForceAtom(int count) {
-        return getForceAtomHandler().getForceAtom(count) != null;
+        return getForceAtomManager().getForceAtom(count) != null;
     }
 
     public int getReturnMap() {
@@ -925,4 +885,6 @@ public class Field {
     public int getBossMobID() {
         return getFieldData().getBossMobID();
     }
+
+
 }

@@ -16,6 +16,7 @@ import com.msemu.core.network.packets.outpacket.stage.LP_SetField;
 import com.msemu.core.network.packets.outpacket.user.LP_UserEnterField;
 import com.msemu.core.network.packets.outpacket.user.LP_UserLeaveField;
 import com.msemu.core.network.packets.outpacket.user.local.LP_ChatMsg;
+import com.msemu.core.network.packets.outpacket.user.local.LP_UserChat;
 import com.msemu.core.network.packets.outpacket.user.remote.LP_UserAvatarModified;
 import com.msemu.core.network.packets.outpacket.user.remote.effect.LP_UserEffectRemote;
 import com.msemu.core.network.packets.outpacket.wvscontext.*;
@@ -59,7 +60,6 @@ import com.msemu.world.data.SkillData;
 import com.msemu.world.enums.*;
 import com.msemu.world.service.GuildService;
 import com.msemu.world.service.PartyService;
-import jdk.internal.instrumentation.Logger;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -283,6 +283,7 @@ public class Character extends Life {
     @Transient
     private int comboKill;
 
+    // timestamps ??
 
     public Character() {
         avatarData = new AvatarData();
@@ -444,7 +445,7 @@ public class Character extends Life {
         Map<Stat, Object> stats = new HashMap<>();
         if (level == 250)
             newExp = 0;
-        while (newExp > GameConstants.CHAR_EXP_TABLE[level]) {
+        while (newExp >= GameConstants.CHAR_EXP_TABLE[level]) {
             newExp -= GameConstants.CHAR_EXP_TABLE[level];
             addStat(Stat.LEVEL, 1);
             getJobHandler().handleLevelUp();
@@ -564,6 +565,7 @@ public class Character extends Life {
         if (getGuild() != null) {
             // TODO
         }
+        renewCharacterStats();
     }
 
     public boolean isMarried() {
@@ -780,9 +782,10 @@ public class Character extends Life {
 
     /**
      * Adds a skill to this Char. If the Char already has this skill, just changes the levels.
-     * @param skillID the skill's id to add
+     *
+     * @param skillID      the skill's id to add
      * @param currentLevel the current level of the skill
-     * @param masterLevel the master level of the skill
+     * @param masterLevel  the master level of the skill
      */
     public void addSkill(int skillID, int currentLevel, int masterLevel) {
         Skill skill = SkillData.getInstance().getSkillById(skillID);
@@ -1946,22 +1949,24 @@ public class Character extends Life {
 
 
     public void addSp(int amount) {
-        SkillConstants.getSkillJobLevel(getJob());
+        addSp(SkillConstants.getSkillJobLevel(getJob()), amount);
     }
 
     public void addSp(int jobLevel, int amount) {
         final CharacterStat stats = getAvatarData().getCharacterStat();
         if (JobConstants.isSeparatedSp(getJob())) {
             int sp = stats.getExtendSP().getSpByJobLevel((byte) jobLevel) + amount;
-            Math.min(GameConstants.MAX_BASIC_STAT, sp);
+            sp = Math.min(GameConstants.MAX_BASIC_STAT, sp);
             stats.getExtendSP().setSpToJobLevel(jobLevel, sp);
             Map<Stat, Object> newStats = new EnumMap<>(Stat.class);
             newStats.put(Stat.SP, stats.getExtendSP());
             write(new LP_StatChanged(newStats));
         } else {
             int sp = stats.getSp() + amount;
-            Math.min(GameConstants.MAX_BASIC_STAT, sp);
-            setStat(Stat.SP, sp);
+            sp = Math.min(GameConstants.MAX_BASIC_STAT, sp);
+            Map<Stat, Object> newStats = new EnumMap<>(Stat.class);
+            newStats.put(Stat.SP, sp);
+            write(new LP_StatChanged(newStats));
         }
     }
 
@@ -2001,6 +2006,11 @@ public class Character extends Life {
             this.addExp(bonusExp, null);
             this.write(new LP_Message(new MultiKillMessage(bonusExp, multiKillCount)));
         }
+    }
+
+    public void showDebugMessage(String caption, ChatMsgType type, String text) {
+        //TODO 判斷debug狀態
+        this.write(new LP_ChatMsg(type, "[" + caption + "] " + text));
     }
 
 }
