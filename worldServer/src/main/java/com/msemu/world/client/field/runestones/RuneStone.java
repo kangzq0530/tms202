@@ -43,10 +43,14 @@ public class RuneStone {
     @Getter
     @Setter
     private Position position = new Position(0, 0);
+    @Getter
+    @Setter
+    private boolean enable;
 
     public RuneStone(final RuneStoneType type, final int index) {
         this.type = type;
         this.index = index;
+        this.enable = false;
     }
 
 

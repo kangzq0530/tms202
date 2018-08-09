@@ -81,36 +81,56 @@ public class RuneStoneManager {
         getField().broadcastPacket(new LP_RuneStoneClearAndAllRegister(getRuneStones()));
     }
 
-    public void spawnTask() {
+    public void showAll() {
+        getRuneStones().forEach(runeStone -> {
+            getField().broadcastPacket(new LP_RuneStoneAppear(runeStone));
+        });
+    }
 
-        if (getField().getAllMobs().isEmpty() || getField().getBossMobID() > 0)
-            return;
-
-        if (getRuneStones().size() >= GameConstants.MAX_RUNESTONE_PER_FIELD)
-            return;
-
-        final RuneStone toSpawn;
-
+    public void renewRuneStones() {
+        getRuneStones().clear();
         List<RuneStoneType> typesCanSpawn = Arrays.stream(RuneStoneType.values())
                 .filter(type -> !getRuneStones().stream()
                         .map(RuneStone::getType)
                         .collect(Collectors.toList())
                         .contains(type) && type != RuneStoneType.RST_NONE)
                 .collect(Collectors.toList());
-        Foothold fh = getField().getRandomFoothold();
-        Collections.shuffle(typesCanSpawn);
-        if (!typesCanSpawn.isEmpty() && fh != null) {
-            RuneStoneType type = typesCanSpawn.get(0);
-            toSpawn = new RuneStone(type, getRuneStones().size() + 1);
-            toSpawn.setPosition(new Position(fh.getX1(), fh.getYFromX(fh.getX1())));
-            toSpawn.setFlip(false);
-            getRuneStones().add(toSpawn);
-            registerAll();
+        for (int i = 0; i < GameConstants.MAX_RUNESTONE_PER_FIELD; i++) {
+            Foothold fh = getField().getRandomFoothold();
+            Collections.shuffle(typesCanSpawn);
+            if (!typesCanSpawn.isEmpty() && fh != null) {
+                RuneStoneType type = RuneStoneType.RST_THUNDER;//typesCanSpawn.get(0);
+                RuneStone toSpawn = new RuneStone(type, getRuneStones().size() + 1);
+                toSpawn.setPosition(new Position(fh.getX1(), fh.getYFromX(fh.getX1())));
+                toSpawn.setFlip(false);
+                getRuneStones().add(toSpawn);
+            }
+        }
+        registerAll();
+    }
+
+    public void spawnTask() {
+
+        if (getField().getAllMobs().isEmpty() || getField().getBossMobID() > 0)
+            return;
+
+        boolean allEnable = getRuneStones().stream().allMatch(RuneStone::isEnable);
+
+        if (allEnable)
+            renewRuneStones();
+
+        final RuneStone toSpawn = getRuneStones().stream().filter(runeStone -> !runeStone.isEnable())
+                .findAny().orElse(null);
+
+        if (toSpawn != null) {
+            toSpawn.setEnable(true);
             getField().broadcastPacket(new LP_RuneStoneAppear(toSpawn));
         }
+
     }
 
     public void requestRuneStone(Character chr, RuneStoneType type) {
+        final TemporaryStatManager tsm = chr.getTemporaryStatManager();
         List<RuneStone> runeStones = getRuneStones();
         long currentTime = System.currentTimeMillis();
         long lastReqTime = getReqRuneStoneTimestamps().getOrDefault(chr.getId(), 0L);
@@ -127,7 +147,7 @@ public class RuneStoneManager {
                 .filter(item -> item.getType() == type)
                 .findFirst().orElse(null);
 
-        if (runeStone != null) {  // TODO check buff time
+        if (runeStone != null && !tsm.hasStat(CharacterTemporaryStat.IDA_BUFF_536)) {  // TODO check buff time
             getReqRuneStoneTimestamps().put(chr.getId(), currentTime);
             getReqRuneStoneRecords().put(chr.getId(), type);
             chr.write(new LP_RuneStoneUseAck(new UseRuneStoneSuccessResult()));
@@ -194,9 +214,7 @@ public class RuneStoneManager {
                 o3.tStart = ((Long) System.currentTimeMillis()).intValue();
                 o3.tTerm = si.getValue(SkillStat.time, 1);
                 tsm.putCharacterStatValue(CharacterTemporaryStat.IndieBooster, o1);
-                tsm.sendSetStatPacket();
                 tsm.putCharacterStatValue(CharacterTemporaryStat.IndieJump, o2);
-                tsm.sendSetStatPacket();
                 tsm.putCharacterStatValue(CharacterTemporaryStat.IndieSpeed, o3);
                 tsm.sendSetStatPacket();
                 break;
@@ -224,7 +242,7 @@ public class RuneStoneManager {
             case RST_THUNDER:
                 skillId = 80001756;
                 si = SkillData.getInstance().getSkillInfoById(skillId);
-                o1.rOption = skillId;
+                o1.rOption = 80001762;
                 o1.nOption = si.getValue(SkillStat.x, 1);
                 o1.tOption = si.getValue(SkillStat.time, 1);
                 tsm.putCharacterStatValue(CharacterTemporaryStat.RandAreaAttack, o1);
@@ -269,7 +287,7 @@ public class RuneStoneManager {
 
 
     private void randAreaAttack(int fieldID, TemporaryStatManager tsm, Character chr) {
-        if ((tsm.getOptByCTSAndSkill(CharacterTemporaryStat.RandAreaAttack, 80001762) == null) || fieldID != chr.getFieldID()) {
+        if ((tsm.getOptByCTSAndSkill(CharacterTemporaryStat.RandAreaAttack, 80001762) == null) || fieldID != chr.getFieldID() || !chr.isOnline()) {
             return;
         }
         Mob randomMob = Utils.getRandomFromList(chr.getField().getAllMobs());

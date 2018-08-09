@@ -523,7 +523,6 @@ public class ScriptInteraction {
         say(nSpeakerTemplateID, -1, bParam, sMsg, true, true);
     }
 
-
     public void say(int nSpeakerTemplateID, int bParam, String sMsg, boolean prev, boolean next) {
         say(nSpeakerTemplateID, nSpeakerTemplateID, bParam, sMsg, prev, next);
     }
@@ -532,8 +531,8 @@ public class ScriptInteraction {
         say(nSpeakerTemplateID, -1, overrideSpeakerTemplateID, bParam, sMsg, prev, next);
     }
 
-    public void sayPrev(int nSpeakerTemplateID, int nAnotherSpeakerTemplateID, int bParam, String sMsg) {
-        say(nSpeakerTemplateID, nAnotherSpeakerTemplateID, -1, bParam, sMsg, true, false);
+    public void sayPrev(int nSpeakerTemplateID, int overrideSpeakerTemplateID, int bParam, String sMsg) {
+        say(nSpeakerTemplateID, -1, overrideSpeakerTemplateID, bParam, sMsg, true, false);
     }
 
     public void sayNext(int nSpeakerTemplateID, int overrideSpeakerTemplateID, int bParam, String sMsg) {
