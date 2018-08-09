@@ -31,8 +31,7 @@ import lombok.Getter;
  */
 public enum WorldStatus {
     伺服器人數較多(1),
-    伺服器人數已滿(2),
-    ;
+    伺服器人數已滿(2),;
     @Getter
     private byte value;
 

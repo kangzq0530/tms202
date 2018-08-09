@@ -34,7 +34,6 @@ import com.msemu.core.network.LoginClient;
 import com.msemu.login.client.Account;
 import com.msemu.login.client.character.Character;
 
-import java.util.List;
 import java.util.Set;
 
 /**

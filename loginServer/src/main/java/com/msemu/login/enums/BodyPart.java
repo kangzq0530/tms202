@@ -66,7 +66,6 @@ public enum BodyPart {
     BITS(1400), // 1400~1424
 
 
-
     ;
 
     private int val;

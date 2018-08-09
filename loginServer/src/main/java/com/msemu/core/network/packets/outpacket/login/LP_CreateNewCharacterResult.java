@@ -38,7 +38,7 @@ public class LP_CreateNewCharacterResult extends OutPacket<LoginClient> {
     public LP_CreateNewCharacterResult(LoginResultCode type, Character character) {
         super(OutHeader.LP_CreateNewCharacterResult);
         encodeByte(type.getValue());
-        if(type == LoginResultCode.LoginSuccess) {
+        if (type == LoginResultCode.LoginSuccess) {
             character.getAvatarData().encode(this);
         }
     }

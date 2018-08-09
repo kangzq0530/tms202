@@ -29,7 +29,6 @@ import com.msemu.commons.network.packets.InPacket;
 import com.msemu.core.network.LoginClient;
 import com.msemu.login.client.Account;
 import com.msemu.login.client.character.Character;
-import org.hibernate.Session;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +55,7 @@ public class CP_UpdateCharacterSelectList extends InPacket<LoginClient> {
         decodeByte();
 
         changedCount = decodeInt();
-        for(int i = 0 ; i < changedCount; i++) {
+        for (int i = 0; i < changedCount; i++) {
             charPosArray.add(decodeInt());
         }
     }
@@ -68,14 +67,14 @@ public class CP_UpdateCharacterSelectList extends InPacket<LoginClient> {
 
         int realCharCount = account.getCharacters().size();
 
-        if(realCharCount != changedCount) {
+        if (realCharCount != changedCount) {
             return;
         }
 
         Set<Character> characters = account.getCharacters();
 
 
-        for(int i = 0; i < charPosArray.size(); i++) {
+        for (int i = 0; i < charPosArray.size(); i++) {
             int charId = charPosArray.get(i);
             for (Character character : characters) {
                 if (character.getId() != charId) {

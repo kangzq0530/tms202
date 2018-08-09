@@ -66,9 +66,9 @@ public class CP_SelectWorld extends InPacket<LoginClient> {
     @Override
     public void runImpl() {
 
-        if(mode != 0) {
+        if (mode != 0) {
             ReLoginInfo info = LoginCookieService.getInstance().getReLoginInfoByToken(token);
-            if(info == null) {
+            if (info == null) {
                 getClient().close();
                 return;
             }

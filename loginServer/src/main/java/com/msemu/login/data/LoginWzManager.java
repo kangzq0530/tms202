@@ -38,6 +38,11 @@ public class LoginWzManager extends WzManager {
     private static final AtomicReference<LoginWzManager> instance = new AtomicReference<>();
 
 
+    public LoginWzManager() {
+        super();
+        //super(WzManager.ETC, WzManager.ITEM, WzManager.CHARACTER);
+    }
+
     public static LoginWzManager getInstance() {
         LoginWzManager value = instance.get();
         if (value == null) {
@@ -50,11 +55,6 @@ public class LoginWzManager extends WzManager {
             }
         }
         return value;
-    }
-
-    public LoginWzManager() {
-        super();
-        //super(WzManager.ETC, WzManager.ITEM, WzManager.CHARACTER);
     }
 
 }

@@ -50,12 +50,12 @@ public class CP_ClientDumpLog extends InPacket<LoginClient> {
 
     @Override
     public void read() {
-        if(getLength() < 8) {
+        if (getLength() < 8) {
             log.error("ClientDump", HexUtils.byteArraytoHex(getData()));
         }
         logType = decodeShort();
         errorType = decodeInt();
-        dataSize =decodeShort();
+        dataSize = decodeShort();
         decodeInt();
         opcode = decodeShort();
         packet = decodeBytes(available());
@@ -84,11 +84,11 @@ public class CP_ClientDumpLog extends InPacket<LoginClient> {
         StringBuilder sb = new StringBuilder();
 
         sb.append("帳號:").append(client.getAccount() != null ? client.getAccount().getUsername() : "null")
-        .append("\n");
+                .append("\n");
         sb.append("錯誤類型:").append(typeStr).append("(").append(errorType).append(")\n").append(")\n");
         sb.append("[Opcode]:").append(OutHeader.getOutHeaderByOp(opcode).name())
-            .append("(0x").append(StringUtils.getLeftPaddedStr(Integer.toHexString(opcode), '0', 4)).append(")")
-                .append("[").append(dataSize-4).append("字元]\n\n");
+                .append("(0x").append(StringUtils.getLeftPaddedStr(Integer.toHexString(opcode), '0', 4)).append(")")
+                .append("[").append(dataSize - 4).append("字元]\n\n");
         sb.append(packet.length < 1 ? "" : HexUtils.byteArraytoHex(packet)).append("\n");
         sb.append(packet.length < 1 ? "" : HexUtils.toAscii(packet)).append("\n").append("\n");
 

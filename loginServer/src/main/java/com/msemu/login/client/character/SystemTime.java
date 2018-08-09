@@ -53,7 +53,8 @@ public class SystemTime {
     @Column(name = "month")
     private int month;
 
-    public SystemTime(){}
+    public SystemTime() {
+    }
 
     public SystemTime(int year, int month) {
         this.year = year;

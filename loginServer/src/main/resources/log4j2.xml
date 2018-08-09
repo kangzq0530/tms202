@@ -45,41 +45,46 @@
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level - %msg%xEx%n"/>
         </Console>
-        <RollingFile name="ConsoleToFile" fileName="log/java/console.log" filePattern="log/java/console-%d{MM-dd-yyyy}.log.gz" append = "false">
+        <RollingFile name="ConsoleToFile" fileName="log/java/console.log"
+                     filePattern="log/java/console-%d{MM-dd-yyyy}.log.gz" append="false">
             <PatternLayout pattern="%d %-5level %logger{36} %L %M - %msg%n"/>
             <Policies>
-                <OnStartupTriggeringPolicy />
-                <TimeBasedTriggeringPolicy />
+                <OnStartupTriggeringPolicy/>
+                <TimeBasedTriggeringPolicy/>
                 <SizeBasedTriggeringPolicy size="250 MB"/>
             </Policies>
         </RollingFile>
-        <RollingFile name="ErrorToFile" fileName="log/error/error.log" filePattern="log/error/error-%d{MM-dd-yyyy}.log.gz" append = "false">
+        <RollingFile name="ErrorToFile" fileName="log/error/error.log"
+                     filePattern="log/error/error-%d{MM-dd-yyyy}.log.gz" append="false">
             <PatternLayout pattern="%d %-5level %logger{36} %L %M - %msg%xEx%n"/>
             <Policies>
-                <OnStartupTriggeringPolicy />
-                <TimeBasedTriggeringPolicy />
+                <OnStartupTriggeringPolicy/>
+                <TimeBasedTriggeringPolicy/>
                 <SizeBasedTriggeringPolicy size="250 MB"/>
             </Policies>
         </RollingFile>
-        <RollingFile name="DebugToFile" fileName="log/debug/debug.log" filePattern="log/debug/debug-%d{MM-dd-yyyy}.log.gz">
+        <RollingFile name="DebugToFile" fileName="log/debug/debug.log"
+                     filePattern="log/debug/debug-%d{MM-dd-yyyy}.log.gz">
             <PatternLayout pattern="%d - %msg%n"/>
             <Policies>
                 <SizeBasedTriggeringPolicy size="250 MB"/>
             </Policies>
             <Filters>
-                <ThresholdFilter level="warn"  onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="warn" onMatch="DENY" onMismatch="NEUTRAL"/>
                 <ThresholdFilter level="error" onMatch="DENY" onMismatch="NEUTRAL"/>
                 <ThresholdFilter level="fatal" onMatch="DENY" onMismatch="NEUTRAL"/>
-                <ThresholdFilter level="info"  onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="info" onMatch="DENY" onMismatch="NEUTRAL"/>
             </Filters>
         </RollingFile>
-        <RollingFile name="Authentication" fileName="log/authentication/authentication.log" filePattern="log/authentication/authentication-%d{MM-dd-yyyy}.log.gz">
+        <RollingFile name="Authentication" fileName="log/authentication/authentication.log"
+                     filePattern="log/authentication/authentication-%d{MM-dd-yyyy}.log.gz">
             <PatternLayout pattern="%d - %msg%n"/>
             <Policies>
                 <SizeBasedTriggeringPolicy size="250 MB"/>
             </Policies>
         </RollingFile>
-        <RollingFile name="Network" fileName="log/network/network.log" filePattern="log/network/network-%d{MM-dd-yyyy}.log.gz">
+        <RollingFile name="Network" fileName="log/network/network.log"
+                     filePattern="log/network/network-%d{MM-dd-yyyy}.log.gz">
             <PatternLayout pattern="%d - %msg%n"/>
             <Policies>
                 <SizeBasedTriggeringPolicy size="250 MB"/>

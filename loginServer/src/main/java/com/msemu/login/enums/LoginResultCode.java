@@ -86,8 +86,7 @@ public enum LoginResultCode {
     IPNotInRange(0x2B),
     PleaseLoginFromBeanfun(0x2C),
     PleaseUpgradeAccount(0x2D),
-    VerifyWithCaptcha(0x45),
-            ;
+    VerifyWithCaptcha(0x45),;
 
     private byte value;
 

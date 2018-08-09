@@ -61,7 +61,7 @@ public class LP_CheckPasswordResult extends OutPacket<LoginClient> {
             encodeByte(JobConstants.enableJobs);
             if (JobConstants.enableJobs) {
                 encodeByte(JobConstants.jobOrder);
-                for(CharCreateInfo job : CharCreateInfo.values()) {
+                for (CharCreateInfo job : CharCreateInfo.values()) {
                     encodeByte(job.enableCreate());
                     encodeShort(1);
                 }

@@ -30,5 +30,4 @@ package com.msemu.core.network.packets.outpacket.wvscontext.broadcastMsg;
 public interface IBroadcastMsg {
 
 
-
 }

@@ -66,7 +66,7 @@ public class LoginCookieService {
     }
 
     public void removeReLoginInfoByToken(String token) {
-        if(getTokens().containsKey(token)) {
+        if (getTokens().containsKey(token)) {
             getTokens().remove(token);
         }
     }

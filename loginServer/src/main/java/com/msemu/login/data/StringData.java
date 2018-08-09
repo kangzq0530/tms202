@@ -25,8 +25,6 @@
 package com.msemu.login.data;
 
 import com.msemu.commons.data.loader.dat.ForbiddenNameDatLoader;
-import com.msemu.commons.data.loader.wz.ForbiddenNameLoader;
-import com.msemu.commons.data.loader.wz.WzManager;
 import com.msemu.commons.data.templates.ForbiddenName;
 import com.msemu.commons.reload.IReloadable;
 import com.msemu.commons.reload.Reloadable;
@@ -35,7 +33,6 @@ import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.activation.MimeTypeParameterList;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -45,12 +42,14 @@ import java.util.concurrent.atomic.AtomicReference;
 @StartupComponent("Data")
 public class StringData implements IReloadable {
     private static final Logger log = LoggerFactory.getLogger(StringData.class);
-
+    private static final AtomicReference<StringData> instance = new AtomicReference<>();
     @Getter
     private ForbiddenNameDatLoader forbiddenNameDatLoader = new ForbiddenNameDatLoader();
 
-    private static final AtomicReference<StringData> instance = new AtomicReference<>();
 
+    public StringData() {
+        reload();
+    }
 
     public static StringData getInstance() {
         StringData value = instance.get();
@@ -64,10 +63,6 @@ public class StringData implements IReloadable {
             }
         }
         return value;
-    }
-
-    public StringData() {
-        reload();
     }
 
     private void clear() {

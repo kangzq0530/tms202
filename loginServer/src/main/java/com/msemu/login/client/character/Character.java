@@ -24,9 +24,9 @@
 
 package com.msemu.login.client.character;
 
+import com.msemu.commons.data.enums.InvType;
 import com.msemu.commons.database.DatabaseFactory;
 import com.msemu.commons.database.Schema;
-import com.msemu.commons.data.enums.InvType;
 import com.msemu.login.client.character.items.Equip;
 import com.msemu.login.client.character.items.Item;
 import com.msemu.login.client.character.quest.QuestManager;
@@ -137,48 +137,12 @@ public class Character {
     @Setter
     private Ranking ranking = null;
 
-    public Inventory getInventoryByType(InvType invType) {
-        switch (invType) {
-            case EQUIPPED:
-                return getEquippedInventory();
-            case EQUIP:
-                return getEquipInventory();
-            case CONSUME:
-                return getConsumeInventory();
-            case ETC:
-                return getEtcInventory();
-            case INSTALL:
-                return getInstallInventory();
-            case CASH:
-                return getCashInventory();
-            default:
-                return null;
-        }
-    }
+    public Character() {
+        avatarData = new AvatarData();
+        avatarData.setAvatarLook(new AvatarLook());
+        questManager = new QuestManager(this);
 
-    public void addItemToInventory(InvType type, Item item, boolean hasCorrectBagIndex) {
-        Inventory inventory = getInventoryByType(type);
-        if (inventory != null) {
-            Item existingItem = inventory.getItemByItemID(item.getItemId());
-            if (existingItem != null && existingItem.getInvType().isStackable()) {
-                existingItem.addQuantity(item.getQuantity());
-            } else {
-                item.setInventoryId(inventory.getId());
-                if (!hasCorrectBagIndex) {
-                    item.setBagIndex(inventory.getFirstOpenSlot());
-                }
-                inventory.addItem(item);
-                if (item.getId() == 0) {
-                    DatabaseFactory.getInstance().saveToDB(item);
-                }
-            }
-        }
     }
-
-    public void addItemToInventory(Item item) {
-        addItemToInventory(item.getInvType(), item, false);
-    }
-
 
     public static Character getDefault(int accId, String charName, int keyMapType, int eventNewCharSaleJob, int jobId, int subJob, long posMap, byte gender, byte skin, Map<CharCreateItemFlag, Integer> creatData) {
         Character newChar = new Character();
@@ -253,13 +217,6 @@ public class Character {
         return newChar;
     }
 
-    public Character() {
-        avatarData = new AvatarData();
-        avatarData.setAvatarLook(new AvatarLook());
-        questManager = new QuestManager(this);
-
-    }
-
     public static boolean isNameExists(String charName) {
         Session session = DatabaseFactory.getInstance().getSession();
         CriteriaBuilder builder = session.getCriteriaBuilder();
@@ -282,5 +239,47 @@ public class Character {
         transaction.commit();
         session.close();
         return chr;
+    }
+
+    public Inventory getInventoryByType(InvType invType) {
+        switch (invType) {
+            case EQUIPPED:
+                return getEquippedInventory();
+            case EQUIP:
+                return getEquipInventory();
+            case CONSUME:
+                return getConsumeInventory();
+            case ETC:
+                return getEtcInventory();
+            case INSTALL:
+                return getInstallInventory();
+            case CASH:
+                return getCashInventory();
+            default:
+                return null;
+        }
+    }
+
+    public void addItemToInventory(InvType type, Item item, boolean hasCorrectBagIndex) {
+        Inventory inventory = getInventoryByType(type);
+        if (inventory != null) {
+            Item existingItem = inventory.getItemByItemID(item.getItemId());
+            if (existingItem != null && existingItem.getInvType().isStackable()) {
+                existingItem.addQuantity(item.getQuantity());
+            } else {
+                item.setInventoryId(inventory.getId());
+                if (!hasCorrectBagIndex) {
+                    item.setBagIndex(inventory.getFirstOpenSlot());
+                }
+                inventory.addItem(item);
+                if (item.getId() == 0) {
+                    DatabaseFactory.getInstance().saveToDB(item);
+                }
+            }
+        }
+    }
+
+    public void addItemToInventory(Item item) {
+        addItemToInventory(item.getInvType(), item, false);
     }
 }

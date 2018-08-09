@@ -39,11 +39,11 @@ import com.msemu.login.service.relogin.ReLoginInfo;
  * Created by Weber on 2018/5/2.
  */
 public class CP_LogoutWorld extends InPacket<LoginClient> {
+    private String token;
+
     public CP_LogoutWorld(short opcode) {
         super(opcode);
     }
-
-    private String token;
 
     @Override
     public void read() {

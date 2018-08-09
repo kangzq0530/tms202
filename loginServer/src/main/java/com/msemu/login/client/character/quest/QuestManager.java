@@ -30,8 +30,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by Weber on 2018/4/21.

@@ -44,16 +44,6 @@ public class LoginNetworkThread extends NetworkThread<LoginClient> {
         super(NetworkConfig.HOST, NetworkConfig.PORT);
     }
 
-    @Override
-    public IClientFactory<LoginClient> getClientFactory() {
-        return LoginClientFactory.getInstance();
-    }
-
-    @Override
-    public AbstractPacketHandlerFactory<LoginClient> getPacketHandler() {
-        return LoginPacketFactory.getInstance();
-    }
-
     public static LoginNetworkThread getInstance() {
         Object value = instance.get();
         if (value == null) {
@@ -66,5 +56,15 @@ public class LoginNetworkThread extends NetworkThread<LoginClient> {
             }
         }
         return (LoginNetworkThread) ((value == LoginNetworkThread.instance) ? null : value);
+    }
+
+    @Override
+    public IClientFactory<LoginClient> getClientFactory() {
+        return LoginClientFactory.getInstance();
+    }
+
+    @Override
+    public AbstractPacketHandlerFactory<LoginClient> getPacketHandler() {
+        return LoginPacketFactory.getInstance();
     }
 }

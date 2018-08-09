@@ -24,11 +24,10 @@
 
 package com.msemu.login.client.character.items;
 
-import com.msemu.commons.data.templates.ItemTemplate;
+import com.msemu.commons.data.enums.InvType;
 import com.msemu.commons.database.Schema;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.utils.types.FileTime;
-import com.msemu.commons.data.enums.InvType;
 import com.msemu.core.network.LoginClient;
 import com.msemu.login.constants.ItemConstants;
 import lombok.Getter;
@@ -47,12 +46,6 @@ import java.util.Arrays;
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Item implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    @Getter
-    @Setter
-    private long id;
     @Column(name = "inventoryId")
     @Getter
     @Setter
@@ -92,6 +85,12 @@ public class Item implements Serializable {
     @Getter
     @Setter
     protected int quantity;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    @Getter
+    @Setter
+    private long id;
     @Column(name = "owner")
     @Getter
     @Setter
@@ -199,12 +198,12 @@ public class Item implements Serializable {
             this((byte) val);
         }
 
-        public byte getValue() {
-            return value;
-        }
-
         public static Type getTypeById(int id) {
             return Arrays.stream(Type.values()).filter(type -> type.getValue() == id).findFirst().orElse(null);
+        }
+
+        public byte getValue() {
+            return value;
         }
     }
 

@@ -55,7 +55,7 @@ public class CP_CheckSPWOnCreateNewCharacter extends InPacket<LoginClient> {
         boolean checkSPW = BCryptUtils.checkPassword(secondPassword, account.getPic());
 
         client.setLoginResult(LoginResultCode.LoginSuccess);
-        if (checkSPW||true) {
+        if (checkSPW || true) {
             client.write(new LP_CheckSPWOnCreateNewCharacterResult(getClient().getLoginResult()));
         } else {
             getClient().setLoginResult(LoginResultCode.IncorrectSPW);

@@ -42,7 +42,8 @@ import java.util.List;
 @Table(name = "extendsp")
 public class ExtendSP {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     @Getter
     @Setter
@@ -59,7 +60,7 @@ public class ExtendSP {
 
     public ExtendSP(int subJobs) {
         spSet = new ArrayList<>();
-        for(int i = 1; i <= subJobs; i++) {
+        for (int i = 1; i <= subJobs; i++) {
             spSet.add(new SPSet((byte) i, 0));
         }
     }
@@ -71,7 +72,7 @@ public class ExtendSP {
 
     public void encode(OutPacket<LoginClient> outPacket) {
         outPacket.encodeByte(getSpSet().size());
-        for(SPSet spSet : getSpSet()) {
+        for (SPSet spSet : getSpSet()) {
             outPacket.encodeByte(spSet.getJobLevel());
             outPacket.encodeInt(spSet.getSp());
         }
@@ -80,14 +81,14 @@ public class ExtendSP {
 
     public void setSpToJobLevel(int jobLevel, int sp) {
         SPSet spSet = getSpSet().stream().filter(sps -> sps.getJobLevel() == jobLevel).findFirst().orElse(null);
-        if(spSet != null) {
+        if (spSet != null) {
             spSet.setSp(sp);
         }
     }
 
     public int getSpByJobLevel(byte jobLevel) {
         SPSet spSet = getSpSet().stream().filter(sps -> sps.getJobLevel() == jobLevel).findFirst().orElse(null);
-        if(spSet != null) {
+        if (spSet != null) {
             return spSet.getSp();
         }
         return -1;

@@ -226,10 +226,6 @@ public enum MapleJob {
         this.jobid = id;
     }
 
-    public int getId() {
-        return this.jobid;
-    }
-
     public static String getName(MapleJob mjob) {
         return mjob.name();
     }
@@ -708,5 +704,9 @@ public enum MapleJob {
         } else {
             return job % 10 + 2;
         }
+    }
+
+    public int getId() {
+        return this.jobid;
     }
 }

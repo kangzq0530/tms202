@@ -27,8 +27,6 @@ package com.msemu.core.network.packets.inpacket;
 import com.msemu.commons.database.DatabaseFactory;
 import com.msemu.commons.network.packets.InPacket;
 import com.msemu.commons.utils.BCryptUtils;
-import com.msemu.core.configs.CoreConfig;
-import com.msemu.core.configs.LoginConfig;
 import com.msemu.core.network.LoginClient;
 import com.msemu.core.network.packets.outpacket.login.LP_DeleteCharacterResult;
 import com.msemu.login.client.Account;
@@ -58,7 +56,7 @@ public class CP_DeleteCharacter extends InPacket<LoginClient> {
     public void runImpl() {
         Account account = getClient().getAccount();
 
-        if(!BCryptUtils.checkPassword(secondPassowrd, account.getPic()) && false) {
+        if (!BCryptUtils.checkPassword(secondPassowrd, account.getPic()) && false) {
             getClient().write(new LP_DeleteCharacterResult(0, LoginResultCode.IncorrectSPW));
             return;
         }

@@ -35,7 +35,6 @@ import com.msemu.login.enums.PicStatus;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
@@ -134,6 +133,23 @@ public class Account {
 
     }
 
+    public static Account findById(int id) {
+        return (Account) DatabaseFactory.getInstance().getObjFromDB(Account.class, id);
+    }
+
+    public static Account findByUserName(String username) {
+        List<Account> result;
+        try (Session session = DatabaseFactory.getInstance().getSession()) {
+            CriteriaBuilder builder = session.getCriteriaBuilder();
+            CriteriaQuery<Account> query = builder.createQuery(Account.class);
+            Root<Account> root = query.from(Account.class);
+            query.select(root);
+            query.where(builder.equal(root.get("username"), username));
+            result = session.createQuery(query).getResultList();
+        }
+        return result != null && result.size() > 0 ? result.get(0) : null;
+    }
+
     public final String getSecureUserName() {
         StringBuilder sb = new StringBuilder(username);
         if (sb.length() >= 4) {
@@ -154,24 +170,6 @@ public class Account {
     public void addCharacter(Character character) {
         getCharacters().add(character);
     }
-
-    public static Account findById(int id) {
-        return (Account) DatabaseFactory.getInstance().getObjFromDB(Account.class, id);
-    }
-
-    public static Account findByUserName(String username) {
-        List<Account> result;
-        try (Session session = DatabaseFactory.getInstance().getSession()) {
-            CriteriaBuilder builder = session.getCriteriaBuilder();
-            CriteriaQuery<Account> query = builder.createQuery(Account.class);
-            Root<Account> root = query.from(Account.class);
-            query.select(root);
-            query.where(builder.equal(root.get("username"), username));
-            result = session.createQuery(query).getResultList();
-        }
-        return result != null && result.size() > 0 ? result.get(0) : null;
-    }
-
 
     public PicStatus getPicStatus() {
         PicStatus picStatus;

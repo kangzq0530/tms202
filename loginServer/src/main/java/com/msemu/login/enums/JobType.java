@@ -27,7 +27,7 @@ package com.msemu.login.enums;
 /**
  * Created by Weber on 2018/4/19.
  */
-public enum  JobType {
+public enum JobType {
 
     末日反抗軍(0),
 
@@ -73,8 +73,7 @@ public enum  JobType {
 
     陰陽師(21),
 
-    幻獸師(22),
-    ;
+    幻獸師(22),;
     int jobType;
 
     JobType(int jobType) {

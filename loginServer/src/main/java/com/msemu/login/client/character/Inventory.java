@@ -24,8 +24,8 @@
 
 package com.msemu.login.client.character;
 
-import com.msemu.commons.database.Schema;
 import com.msemu.commons.data.enums.InvType;
+import com.msemu.commons.database.Schema;
 import com.msemu.login.client.character.items.Item;
 import com.msemu.login.enums.BodyPart;
 import org.hibernate.annotations.Cascade;
@@ -83,14 +83,15 @@ public class Inventory {
     }
 
     public void addItem(Item item) {
-        if(getItems().size() <= getSlots()) {
+        if (getItems().size() <= getSlots()) {
             getItems().add(item);
             item.setInvType(getType());
             sortItemsByIndex();
         }
     }
+
     public void removeItem(Item item) {
-        if(getItems().contains(item)) {
+        if (getItems().contains(item)) {
             getItems().remove(item);
             sortItemsByIndex();
         }
@@ -98,7 +99,7 @@ public class Inventory {
 
     public int getFirstOpenSlot() {
         for (int i = 1; i <= getSlots(); i++) {
-            if(getItemBySlot(i) == null) {
+            if (getItemBySlot(i) == null) {
                 return i;
             }
         }
@@ -118,12 +119,12 @@ public class Inventory {
         return items;
     }
 
-    public void sortItemsByIndex() {
-        getItems().sort(Comparator.comparingInt(Item::getBagIndex));
-    }
-
     public void setItems(List<Item> items) {
         this.items = items;
+    }
+
+    public void sortItemsByIndex() {
+        getItems().sort(Comparator.comparingInt(Item::getBagIndex));
     }
 
     public InvType getType() {
