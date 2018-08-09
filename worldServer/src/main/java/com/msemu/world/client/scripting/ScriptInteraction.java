@@ -56,7 +56,7 @@ import com.msemu.world.client.character.skill.Skill;
 import com.msemu.world.client.field.Field;
 import com.msemu.world.client.field.effect.MobHPTagFieldEffect;
 import com.msemu.world.client.field.effect.ObjectFieldEffect;
-import com.msemu.world.client.field.effect.ScreenDelayFieldEffect;
+import com.msemu.world.client.field.effect.ScreenDelayedFieldEffect;
 import com.msemu.world.client.field.lifes.Mob;
 import com.msemu.world.client.field.lifes.Npc;
 import com.msemu.world.client.guild.Guild;
@@ -776,7 +776,7 @@ public class ScriptInteraction {
 
 
     public void onScreenDelayedFieldEffect(boolean broadcast, String effect, int delay) {
-        write(broadcast, new LP_FieldEffect(new ScreenDelayFieldEffect(effect, delay)));
+        write(broadcast, new LP_FieldEffect(new ScreenDelayedFieldEffect(effect, delay)));
     }
 
     public void onScreenDelayedFieldEffect(String effect, int delay) {

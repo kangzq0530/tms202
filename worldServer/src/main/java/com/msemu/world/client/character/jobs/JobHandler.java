@@ -123,10 +123,9 @@ public abstract class JobHandler {
             sp = 6; // double sp on levels ending in 3/6/9
         }
         chr.addSp(sp);
+        chr.addStat(Stat.MAX_HP, 100);
+        chr.addStat(Stat.MAX_MP, 100);
         Map<Stat, Integer> stats = new HashMap<>();
-        stats.put(Stat.MAX_HP, 500);
-        stats.put(Stat.MAX_MP, 500);
-        chr.renewCharacterStats();
         stats.put(Stat.HP, chr.getCurrentMaxHp());
         stats.put(Stat.MP, chr.getCurrentMaxMp());
         stats.put(Stat.AP, 5);

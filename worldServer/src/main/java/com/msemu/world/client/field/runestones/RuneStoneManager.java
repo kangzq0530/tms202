@@ -85,6 +85,7 @@ public class RuneStoneManager {
 
         if (getField().getAllMobs().isEmpty() || getField().getBossMobID() > 0)
             return;
+
         if (getRuneStones().size() >= GameConstants.MAX_RUNESTONE_PER_FIELD)
             return;
 
@@ -104,6 +105,7 @@ public class RuneStoneManager {
             toSpawn.setPosition(new Position(fh.getX1(), fh.getYFromX(fh.getX1())));
             toSpawn.setFlip(false);
             getRuneStones().add(toSpawn);
+            registerAll();
             getField().broadcastPacket(new LP_RuneStoneAppear(toSpawn));
         }
     }
@@ -158,6 +160,7 @@ public class RuneStoneManager {
             activateRuneStoneEffect(chr, type);
             getField().broadcastPacket(new LP_RuneStoneDisappear(runeStone, chr, true));
             getField().broadcastPacket(new LP_RuneStoneSkillAck(runeStone));
+            registerAll();
             chr.showDebugMessage("符文輪系統", ChatMsgType.GAME_DESC, String.format("使用成功 (%s)", type));
         }
     }
@@ -191,8 +194,11 @@ public class RuneStoneManager {
                 o3.tStart = ((Long) System.currentTimeMillis()).intValue();
                 o3.tTerm = si.getValue(SkillStat.time, 1);
                 tsm.putCharacterStatValue(CharacterTemporaryStat.IndieBooster, o1);
+                tsm.sendSetStatPacket();
                 tsm.putCharacterStatValue(CharacterTemporaryStat.IndieJump, o2);
+                tsm.sendSetStatPacket();
                 tsm.putCharacterStatValue(CharacterTemporaryStat.IndieSpeed, o3);
+                tsm.sendSetStatPacket();
                 break;
             case RST_UPGRADE_DEFENCE:
                 skillId = 80001428;

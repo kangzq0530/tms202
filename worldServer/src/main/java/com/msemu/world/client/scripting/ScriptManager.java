@@ -46,21 +46,22 @@ import java.util.concurrent.locks.ReentrantLock;
 public class ScriptManager {
     public static final Logger log = LoggerFactory.getLogger(ScriptManager.class);
 
-    public static final String SCRIPT_ENGINE_EXTENSION = ".js";
+    public static final String SCRIPT_ENGINE_EXTENSION = ".py";
     public static final String QUEST_START_SCRIPT_END_TAG = "s";
     public static final String QUEST_COMPLETE_SCRIPT_END_TAG = "e";
-    private static final String SCRIPT_ENGINE_NAME = "nashorn";
+    private static final String SCRIPT_ENGINE_NAME = "python";
     private static final String DEFAULT_SCRIPT = "undefined";
 
     @Getter
     private static final ScriptEngineManager engineManager = new ScriptEngineManager();
     @Getter
+    private final ReentrantLock lock = new ReentrantLock();
+    @Getter
     private final Character character;
     @Getter
     @Setter
     private ScriptInfo scriptInfo;
-    @Getter
-    private ReentrantLock lock = new ReentrantLock();
+
 
     public ScriptManager(Character character) {
         this.character = character;

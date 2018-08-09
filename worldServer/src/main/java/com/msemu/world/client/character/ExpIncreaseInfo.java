@@ -68,6 +68,16 @@ public class ExpIncreaseInfo {
     private int fieldValueBonusExp;
     private int mobKillBonusExp;
     private int liveEventBonusExp;
+    private int internetCafeBestFriendBonusExp;
+    private int frozenFieldBonusExp;
+    private int partyBonusExp2;
+    private int cakePieBonusExp;
+    private int pvpBonusExp;
+    private int petTrainingBonusExp;
+    private int combinationItemBonusExp;
+    private int combinationItemPartyBonusExp;
+    private int serverExtraBonusExp;
+
 
     public long getMask() {
         long mask = 0;
@@ -132,7 +142,7 @@ public class ExpIncreaseInfo {
             mask |= FreezeHotEventBonusExp.getValue();
         }
         if (getRestFieldBonusExp() > 0 || getRestFieldExpRate() > 0) {
-            mask |= RestField.getValue();
+            mask |= RestFieldExpRate.getValue();
         }
         if (getUserHPRateBonusExp() > 0) {
             mask |= UserHPRateBonusExp.getValue();
@@ -147,6 +157,33 @@ public class ExpIncreaseInfo {
             mask |= LiveEventBonusExp.getValue();
         }
 
+        if (getInternetCafeBestFriendBonusExp() > 0) {
+            mask |= InternetCafeBestFriendBonusExp.getValue();
+        }
+        if (getFrozenFieldBonusExp() > 0) {
+            mask |= FrozenFieldBonusExp.getValue();
+        }
+        if (getPartyBonusExp2() > 0) {
+            mask |= PartyBonusExp2.getValue();
+        }
+        if (getCakePieBonusExp() > 0) {
+            mask |= CakePieBonusExp.getValue();
+        }
+        if (getPvpBonusExp() > 0) {
+            mask |= PVPBonusExp.getValue();
+        }
+        if (getPetTrainingBonusExp() > 0) {
+            mask |= PetTrainingBounsExp.getValue();
+        }
+        if (getCombinationItemBonusExp() > 0) {
+            mask |= CombinationItemBonusExp.getValue();
+        }
+        if (getCombinationItemPartyBonusExp() > 0) {
+            mask |= CombinationItemPartyBonusExp.getValue();
+        }
+        if (getServerExtraBonusExp() > 0) {
+            mask |= ServerBonusExp.getValue();
+        }
         return mask;
     }
 
@@ -159,7 +196,7 @@ public class ExpIncreaseInfo {
             outPacket.encodeInt(getSelectedMobBonusExp());
         }
         if (getPartyBonusPercentage() > 0) {
-            outPacket.encodeInt(getPartyBonusPercentage());
+            outPacket.encodeByte(getPartyBonusPercentage());
         }
         if (isOnQuest()) {
             outPacket.encodeByte(getQuestBonusRate());
@@ -168,75 +205,101 @@ public class ExpIncreaseInfo {
             outPacket.encodeByte(getQuestBonusRemainCount());
         }
         if (getWeddingBonusExp() > 0) {
-            outPacket.encodeByte(getWeddingBonusExp());
+            outPacket.encodeInt(getWeddingBonusExp());
         }
         if (getPartyBonusExp() > 0) {
-            outPacket.encodeByte(getPartyBonusExp());
+            outPacket.encodeInt(getPartyBonusExp());
         }
         if (getItemBonusExp() > 0) {
-            outPacket.encodeByte(getItemBonusExp());
+            outPacket.encodeInt(getItemBonusExp());
         }
         if (getPremiumIPBonusExp() > 0) {
-            outPacket.encodeByte(getPremiumIPBonusExp());
+            outPacket.encodeInt(getPremiumIPBonusExp());
         }
         if (getRainbowWeekEventBonusExp() > 0) {
-            outPacket.encodeByte(getRainbowWeekEventBonusExp());
+            outPacket.encodeInt(getRainbowWeekEventBonusExp());
         }
         if (getBoomupEventBonusExp() > 0) {
-            outPacket.encodeByte(getBoomupEventBonusExp());
+            outPacket.encodeInt(getBoomupEventBonusExp());
         }
         if (getPlusExpBuffBonusExp() > 0) {
-            outPacket.encodeByte(getPlusExpBuffBonusExp());
+            outPacket.encodeInt(getPlusExpBuffBonusExp());
         }
         if (getPsdBonusExpRate() > 0) {
-            outPacket.encodeByte(getPsdBonusExpRate());
+            outPacket.encodeInt(getPsdBonusExpRate());
         }
         if (getIndieBonusExp() > 0) {
-            outPacket.encodeByte(getIndieBonusExp());
+            outPacket.encodeInt(getIndieBonusExp());
         }
         if (getRelaxBonusExp() > 0) {
-            outPacket.encodeByte(getRelaxBonusExp());
+            outPacket.encodeInt(getRelaxBonusExp());
         }
         if (getInstallItemBonusExp() > 0) {
-            outPacket.encodeByte(getInstallItemBonusExp());
+            outPacket.encodeInt(getInstallItemBonusExp());
         }
 //        if(getAswanWinnerBonusExp() > 0) {
 //            outPacket.encodeByte(getAswanWinnerBonusExp());
 //        }
         if (getExpByIncExpR() > 0) {
-            outPacket.encodeByte(getExpByIncExpR());
+            outPacket.encodeInt(getExpByIncExpR());
         }
         if (getValuePackBonusExp() > 0) {
-            outPacket.encodeByte(getValuePackBonusExp());
+            outPacket.encodeInt(getValuePackBonusExp());
         }
         if (getExpByIncPQExpR() > 0) {
-            outPacket.encodeByte(getExpByIncPQExpR());
+            outPacket.encodeInt(getExpByIncPQExpR());
         }
         if (getBaseAddExp() > 0) {
-            outPacket.encodeByte(getBaseAddExp());
+            outPacket.encodeInt(getBaseAddExp());
         }
         if (getBloodAllianceBonusExp() > 0) {
-            outPacket.encodeByte(getBloodAllianceBonusExp());
+            outPacket.encodeInt(getBloodAllianceBonusExp());
         }
         if (getFreezeHotEventBonusExp() > 0) {
-            outPacket.encodeByte(getFreezeHotEventBonusExp());
+            outPacket.encodeInt(getFreezeHotEventBonusExp());
         }
         if (getRestFieldBonusExp() > 0 || getRestFieldExpRate() > 0) {
-            outPacket.encodeByte(getRestFieldBonusExp());
-            outPacket.encodeByte(getRestFieldExpRate());
+            outPacket.encodeInt(getRestFieldBonusExp());
+            outPacket.encodeInt(getRestFieldExpRate());
         }
         if (getUserHPRateBonusExp() > 0) {
-            outPacket.encodeByte(getUserHPRateBonusExp());
+            outPacket.encodeInt(getUserHPRateBonusExp());
         }
         if (getFieldValueBonusExp() > 0) {
-            outPacket.encodeByte(getFieldValueBonusExp());
+            outPacket.encodeInt(getFieldValueBonusExp());
         }
         if (getMobKillBonusExp() > 0) {
-            outPacket.encodeByte(getMobKillBonusExp());
+            outPacket.encodeInt(getMobKillBonusExp());
         }
         if (getLiveEventBonusExp() > 0) {
-            outPacket.encodeByte(getLiveEventBonusExp());
+            outPacket.encodeInt(getLiveEventBonusExp());
         }
-        // TODO 有幾個沒處理
+        if (getInternetCafeBestFriendBonusExp() > 0) {
+            outPacket.encodeInt(getInternetCafeBestFriendBonusExp());
+        }
+        if (getFrozenFieldBonusExp() > 0) {
+            outPacket.encodeInt(getFrozenFieldBonusExp());
+        }
+        if (getPartyBonusExp2() > 0) {
+            outPacket.encodeInt(getPartyBonusExp2());
+        }
+        if (getCakePieBonusExp() > 0) {
+            outPacket.encodeInt(getCakePieBonusExp());
+        }
+        if (getPvpBonusExp() > 0) {
+            outPacket.encodeInt(getPvpBonusExp());
+        }
+        if (getPetTrainingBonusExp() > 0) {
+            outPacket.encodeInt(getPetTrainingBonusExp());
+        }
+        if (getCombinationItemBonusExp() > 0) {
+            outPacket.encodeInt(getCombinationItemBonusExp());
+        }
+        if (getCombinationItemPartyBonusExp() > 0) {
+            outPacket.encodeInt(getCombinationItemPartyBonusExp());
+        }
+        if (getServerExtraBonusExp() > 0) {
+            outPacket.encodeInt(getServerExtraBonusExp());
+        }
     }
 }

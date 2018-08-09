@@ -71,19 +71,29 @@ public enum ExpIncreaseInfoFlags {
     // [Int] 冷凍勇士經驗值獎勵(+ %d)
     FreezeHotEventBonusExp(0x200000),
     // d-[Int]x-[Int] 燃燒場地獎勵經驗 x%(+%d)
-    RestField(0x400000),
+    RestFieldExpRate(0x400000),
     UserHPRateBonusExp(0x800000),
     FieldValueBonusExp(0x1000000),
     MobKillBonusExp(0x2000000),
-    LiveEventBonusExp(0x4000000),;
+    LiveEventBonusExp(0x4000000),
+    InternetCafeBestFriendBonusExp(0x8000000),
+    FrozenFieldBonusExp(0x10000000),
+    PartyBonusExp2(0x10000000),
+    CakePieBonusExp(0x20000000),
+    PVPBonusExp(0x40000000 ),
+    CombinationItemBonusExp(0x40000000),
+    CombinationItemPartyBonusExp(0x80000000),
+    PetTrainingBounsExp(0x80000000),
+    // 伺服器加持經驗值 (+%d)
+    ServerBonusExp(0x100000000L);
 
-    private int value;
+    private long value;
 
-    ExpIncreaseInfoFlags(int vlaue) {
+    ExpIncreaseInfoFlags(long vlaue) {
         this.value = vlaue;
     }
 
-    public int getValue() {
+    public long getValue() {
         return value;
     }
 }

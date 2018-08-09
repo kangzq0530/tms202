@@ -72,7 +72,7 @@ public class ForceAtomManager {
         }
     }
 
-    public ForceAtomInfo getForceAtom(int count) {
+    public ForceAtomInfo getForceAtomByCount(int count) {
         lock.lock();
         try {
             return getForceAtomInfos().stream()
@@ -89,13 +89,13 @@ public class ForceAtomManager {
             List<ForceAtomInfo> toRemove = getForceAtomInfos().stream()
                     .filter(ForceAtomInfo::isExpired)
                     .collect(Collectors.toList());
-            toRemove.forEach(this::removeAtom);
+            toRemove.forEach(this::removeForceAtom);
         } finally {
             lock.unlock();
         }
     }
 
-    public void removeAtom(int count) {
+    public void removeForceAtomByCount(int count) {
         lock.lock();
         try {
             ForceAtomInfo toRemove = getForceAtomInfos().stream()
@@ -107,7 +107,7 @@ public class ForceAtomManager {
         }
     }
 
-    public void removeAtom(ForceAtomInfo atom) {
+    public void removeForceAtom(ForceAtomInfo atom) {
         lock.lock();
         try {
             this.forceAtomInfos.remove(atom);

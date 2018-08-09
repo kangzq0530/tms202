@@ -274,4 +274,5 @@ public class GameConstants {
             x /= multiKillCount;
         return x;
     }
+
 }

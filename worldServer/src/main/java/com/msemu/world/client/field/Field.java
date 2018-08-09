@@ -877,15 +877,15 @@ public class Field {
     }
 
     public void removeForceAtomByCount(int count) {
-        getForceAtomManager().removeAtom(count);
+        getForceAtomManager().removeForceAtomByCount(count);
     }
 
     public ForceAtomInfo getForceAtomByCount(int count) {
-        return getForceAtomManager().getForceAtom(count);
+        return getForceAtomManager().getForceAtomByCount(count);
     }
 
     public boolean hasForceAtom(int count) {
-        return getForceAtomManager().getForceAtom(count) != null;
+        return getForceAtomManager().getForceAtomByCount(count) != null;
     }
 
     public int getReturnMap() {
@@ -894,6 +894,10 @@ public class Field {
 
     public int getFieldLimit() {
         return getFieldData().getFieldLimit();
+    }
+
+    public boolean isTown() {
+        return getFieldData().isTown();
     }
 
     public boolean checkFieldLimit(FieldLimit limits) {

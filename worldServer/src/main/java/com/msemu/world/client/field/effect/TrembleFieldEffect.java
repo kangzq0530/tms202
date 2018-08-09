@@ -28,28 +28,33 @@ import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;
 import com.msemu.world.enums.FieldEffectType;
 
-/**
- * Created by Weber on 2018/5/2.
- */
-public class ScreenDelayFieldEffect implements IFieldEffect {
+public class TrembleFieldEffect implements IFieldEffect {
 
-    private String effect;
+        private short trembleForce = 30;
+        private byte heavy;
+        private int delay;
 
-    private int delay;
+        public TrembleFieldEffect(short trembleForce, byte heavy, int delay) {
+            this.trembleForce = trembleForce;
+            this.heavy = heavy;
+            this.delay = delay;
+        }
 
-    public ScreenDelayFieldEffect(String effect, int delay) {
-        this.effect = effect;
-        this.delay = delay;
-    }
+        public TrembleFieldEffect(byte heavy, int delay) {
+            this.heavy = heavy;
+            this.delay = delay;
+        }
 
-    @Override
-    public FieldEffectType getType() {
-        return FieldEffectType.ScreenDelayed;
-    }
 
-    @Override
-    public void encode(OutPacket<GameClient> outPacket) {
-        outPacket.encodeString(effect);
-        outPacket.encodeInt(delay);
-    }
+        @Override
+        public FieldEffectType getType() {
+            return FieldEffectType.Tremble;
+        }
+
+        @Override
+        public void encode(OutPacket<GameClient> outPacket) {
+            outPacket.encodeByte(heavy);
+            outPacket.encodeInt(delay);
+            outPacket.encodeShort(trembleForce);
+        }
 }

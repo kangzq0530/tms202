@@ -33,7 +33,7 @@ import com.msemu.world.client.field.runestones.RuneStone;
 public class LP_RuneStoneDisappear extends OutPacket<GameClient> {
     public LP_RuneStoneDisappear(RuneStone runeStone, Character chr, boolean destroyed) {
         super(OutHeader.LP_RuneStoneDisappear);
-        encodeInt(runeStone.getIndex());
+        encodeInt(runeStone.getType().getValue());
         encodeInt(chr != null ? chr.getId() : 0);
         encodeInt(0); // unknown
         encodeByte(destroyed);

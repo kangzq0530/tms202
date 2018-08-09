@@ -22,47 +22,31 @@
  * SOFTWARE.
  */
 
-package com.msemu.world.enums;
+package com.msemu.world.client.field.effect;
 
-/**
- * Created by Weber on 2018/4/13.
- */
-public enum FieldEffectType {
-    Summon(0),
-    Tremble(1),
-    Object(2),
-    ObjectDisable(3),
-    Screen(4),
-    Sound(5),
-    MobHPTag(6),
-    ChangeBGM(7),
-    BGMVolumeOnly(8),
-    BGMVolume(9),
-    RewardRoullet(10),
-    Unk1(11),
-    TopScreen(12),
-    ScreenDelayed(13),
-    ScreenEffect(14),
-    ScreenFloatingEffect(15),
-    CreateWindowMaybeidk(16),
-    SetGrey(17),
-    OnOffLayer(18),
-    SomeAnimation(19),
-    MoreAnimation(20),
-    RemoveAnimation(21),
-    ChangeColor(22),
-    StageClearExpOnly(23),
-    EvenMoreAnimation(24),
-    SkeletonAnimation(25),
-    OneTimeSkeletonAnimation(26),;
+import com.msemu.commons.network.packets.OutPacket;
+import com.msemu.core.network.GameClient;
+import com.msemu.world.enums.FieldEffectType;
 
-    private byte value;
+public class ChangeBGMFieldEffect implements IFieldEffect {
 
-    FieldEffectType(int val) {
-        this.value = (byte) val;
+    private final String effect;
+    private final int unk1 = 0;
+    private final int unk2 = 0;
+
+    public ChangeBGMFieldEffect(String effect) {
+        this.effect = effect;
     }
 
-    public byte getValue() {
-        return value;
+    @Override
+    public FieldEffectType getType() {
+        return FieldEffectType.ChangeBGM;
+    }
+
+    @Override
+    public void encode(OutPacket<GameClient> outPacket) {
+        outPacket.encodeString(effect);
+        outPacket.encodeInt(unk1);
+        outPacket.encodeInt(unk2);
     }
 }
