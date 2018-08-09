@@ -41,19 +41,16 @@ import java.util.List;
 public class QuestSkillActData extends QuestActData {
 
     @Getter
+    List<Short> jobs = new ArrayList<>();
+    @Getter
     @Setter
     private int skill;
-
     @Getter
     @Setter
     private int level = 1;
-
     @Getter
     @Setter
     private int masterLevel = 1;
-
-    @Getter
-    List<Short> jobs = new ArrayList<>();
 
     @Override
     public QuestActDataType getType() {
@@ -65,7 +62,7 @@ public class QuestSkillActData extends QuestActData {
         dos.writeInt(skill);
         dos.writeShort(level);
         dos.writeInt(jobs.size());
-        for(Short v : jobs)
+        for (Short v : jobs)
             dos.writeShort(v);
     }
 
@@ -74,7 +71,7 @@ public class QuestSkillActData extends QuestActData {
         setSkill(dis.readInt());
         setLevel(dis.readShort());
         int size = dis.readInt();
-        for(int i  = 0 ; i < size; i++)
+        for (int i = 0; i < size; i++)
             getJobs().add(dis.readShort());
         return this;
     }

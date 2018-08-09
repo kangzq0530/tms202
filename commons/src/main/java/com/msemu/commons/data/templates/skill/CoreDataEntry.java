@@ -35,13 +35,13 @@ import java.util.List;
 @Getter
 public class CoreDataEntry {
 
+    public List<Integer> job;
+    public List<Integer> connectSkill;
     private int coreId;
     private String name;
     private String desc;
     private int type;
     private int maxLevel;
-    public List<Integer> job;
-    public List<Integer> connectSkill;
 
     public CoreDataEntry(int coreId, String name, String desc, int type, int maxLevel, List<Integer> job, List<Integer> connectSkill) {
         this.coreId = coreId;

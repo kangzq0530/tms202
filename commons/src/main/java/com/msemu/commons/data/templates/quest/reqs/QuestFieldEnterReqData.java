@@ -50,14 +50,14 @@ public class QuestFieldEnterReqData extends QuestReqData {
     @Override
     public void write(DataOutputStream dos) throws IOException {
         dos.writeInt(fields.size());
-        for(Long val : fields)
+        for (Long val : fields)
             dos.writeLong(val);
     }
 
     @Override
     public DatSerializable load(DataInputStream dis) throws IOException {
         int fieldSize = dis.readInt();
-        for(int i = 0 ; i < fieldSize; i++) {
+        for (int i = 0; i < fieldSize; i++) {
             getFields().add(dis.readLong());
         }
         return this;

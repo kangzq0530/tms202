@@ -33,6 +33,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class BFSkillInfo {
+    boolean allMap;
     private String name;
     private String desc;
     private int mobSkillID;
@@ -40,5 +41,4 @@ public class BFSkillInfo {
     private int owner;
     private String effect;
     private int level;
-    boolean allMap;
 }

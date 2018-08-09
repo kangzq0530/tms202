@@ -56,7 +56,7 @@ public class QuestJobReqData extends QuestReqData {
     @Override
     public void write(DataOutputStream dos) throws IOException {
         dos.writeInt(getJobs().size());
-        for(Short v: jobs) {
+        for (Short v : jobs) {
             dos.writeShort(v);
         }
     }
@@ -64,7 +64,7 @@ public class QuestJobReqData extends QuestReqData {
     @Override
     public DatSerializable load(DataInputStream dis) throws IOException {
         int jobSize = dis.readInt();
-        for(int i = 0; i < jobSize; i++)
+        for (int i = 0; i < jobSize; i++)
             addJob(dis.readShort());
         return this;
     }

@@ -84,7 +84,7 @@ public class FieldObjectInfo implements DatSerializable {
         dos.writeInt(repeat);
         dos.writeInt(reactor);
         dos.writeInt(quests.size());
-        for(Tuple<Integer, Integer> pair : quests) {
+        for (Tuple<Integer, Integer> pair : quests) {
             dos.writeInt(pair.getLeft());
             dos.writeInt(pair.getRight());
         }
@@ -93,7 +93,7 @@ public class FieldObjectInfo implements DatSerializable {
         dos.writeInt(x2);
         dos.writeInt(y2);
         dos.writeInt(sns.size());
-        for(Integer sn : sns) {
+        for (Integer sn : sns) {
             dos.writeInt(sn);
         }
 
@@ -131,7 +131,7 @@ public class FieldObjectInfo implements DatSerializable {
         setRepeat(dis.readInt());
         setReactor(dis.readInt());
         int qSize = dis.readInt();
-        for(int i = 0 ; i < qSize; i++) {
+        for (int i = 0; i < qSize; i++) {
             Tuple<Integer, Integer> tup = new Tuple<>(dis.readInt(), dis.readInt());
             getQuests().add(tup);
         }
@@ -140,7 +140,7 @@ public class FieldObjectInfo implements DatSerializable {
         setX2(dis.readInt());
         setY2(dis.readInt());
         int size = dis.readInt();
-        for(int i = 0 ; i < size; i++)
+        for (int i = 0; i < size; i++)
             getSns().add(dis.readInt());
         return this;
     }

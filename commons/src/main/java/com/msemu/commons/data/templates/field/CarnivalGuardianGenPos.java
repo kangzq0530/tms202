@@ -37,7 +37,7 @@ import java.io.IOException;
  */
 @Getter
 @Setter
-public class CarnivalGuardianGenPos implements DatSerializable{
+public class CarnivalGuardianGenPos implements DatSerializable {
     private int x, y, f;
 
     @Override

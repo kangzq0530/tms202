@@ -39,7 +39,7 @@ import java.util.List;
  */
 @Getter
 @Setter
-public class CarnivalReward implements DatSerializable{
+public class CarnivalReward implements DatSerializable {
     float climax;
     private List<Integer> cpDiff = new ArrayList<>();
 
@@ -47,7 +47,7 @@ public class CarnivalReward implements DatSerializable{
     public void write(DataOutputStream dos) throws IOException {
         dos.writeFloat(climax);
         dos.writeInt(cpDiff.size());
-        for(Integer v : cpDiff)
+        for (Integer v : cpDiff)
             dos.writeInt(v);
     }
 
@@ -55,7 +55,7 @@ public class CarnivalReward implements DatSerializable{
     public DatSerializable load(DataInputStream dis) throws IOException {
         setClimax(dis.readFloat());
         int size = dis.readInt();
-        for(int i = 0 ; i < size; i++)
+        for (int i = 0; i < size; i++)
             getCpDiff().add(dis.readInt());
         return this;
     }

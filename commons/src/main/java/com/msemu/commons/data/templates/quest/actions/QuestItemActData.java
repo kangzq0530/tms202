@@ -74,23 +74,24 @@ public class QuestItemActData extends QuestActData {
     public void setJobEx(int mask) {
         jobExReqs.addAll(getJobExFromMask(mask));
     }
+
     public void setJob(int mask) {
         jobReqs.addAll(getJobFromMask(mask));
     }
 
     private List<Short> getJobFromMask(int mask) {
         List<Short> jobs = new ArrayList<>();
-        if((mask & 0x1) != 0) {
-            jobs.add((short)200);
+        if ((mask & 0x1) != 0) {
+            jobs.add((short) 200);
         }
-        if((mask & 0x2) != 0) {
-            jobs.add((short)300);
+        if ((mask & 0x2) != 0) {
+            jobs.add((short) 300);
         }
-        if((mask & 0x3) != 0) {
-            jobs.add((short)400);
+        if ((mask & 0x3) != 0) {
+            jobs.add((short) 400);
         }
-        if((mask & 0x4) != 0) {
-            jobs.add((short)500);
+        if ((mask & 0x4) != 0) {
+            jobs.add((short) 500);
         }
         return jobs;
     }
@@ -169,11 +170,11 @@ public class QuestItemActData extends QuestActData {
         dos.writeInt(prop);
         dos.writeByte(gender);
         dos.writeInt(jobReqs.size());
-        for(Short v : jobReqs) {
+        for (Short v : jobReqs) {
             dos.writeShort(v);
         }
         dos.writeInt(jobExReqs.size());
-        for(Short v : jobExReqs) {
+        for (Short v : jobExReqs) {
             dos.writeShort(v);
         }
     }
@@ -186,10 +187,10 @@ public class QuestItemActData extends QuestActData {
         setProp(dis.readInt());
         setGender(dis.readByte());
         int sizeJob = dis.readInt();
-        for(int i = 0 ; i < sizeJob ;i++)
+        for (int i = 0; i < sizeJob; i++)
             jobReqs.add(dis.readShort());
         int sizeJobex = dis.readInt();
-        for(int i = 0 ; i < sizeJobex ;i++)
+        for (int i = 0; i < sizeJobex; i++)
             jobExReqs.add(dis.readShort());
         return this;
     }

@@ -37,7 +37,7 @@ import java.io.IOException;
  */
 @Getter
 @Setter
-public class ReqSkill implements DatSerializable{
+public class ReqSkill implements DatSerializable {
 
     private int level;
     private int reqAmount;

@@ -57,7 +57,7 @@ public class QuestPetReqData extends QuestReqData {
     @Override
     public DatSerializable load(DataInputStream dis) throws IOException {
         int petItemsSize = dis.readInt();
-        for(int i = 0 ; i < petItemsSize; i++)
+        for (int i = 0; i < petItemsSize; i++)
             petItems.add(dis.readInt());
         return this;
     }

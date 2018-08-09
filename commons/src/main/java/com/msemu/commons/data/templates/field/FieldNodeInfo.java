@@ -39,7 +39,7 @@ import java.util.List;
  */
 @Getter
 @Setter
-public class FieldNodeInfo implements DatSerializable{
+public class FieldNodeInfo implements DatSerializable {
 
     private int start = -1;
     private int end = -1;
@@ -50,7 +50,7 @@ public class FieldNodeInfo implements DatSerializable{
         dos.writeInt(start);
         dos.writeInt(end);
         dos.writeInt(nodes.size());
-        for(FieldNode n : nodes)
+        for (FieldNode n : nodes)
             n.write(dos);
     }
 
@@ -59,7 +59,7 @@ public class FieldNodeInfo implements DatSerializable{
         setStart(dis.readInt());
         setEnd(dis.readInt());
         int size = dis.readInt();
-        for(int i = 0 ; i< size; i++)
+        for (int i = 0; i < size; i++)
             getNodes().add((FieldNode) new FieldNode().load(dis));
         return this;
     }

@@ -37,7 +37,7 @@ import java.io.IOException;
  */
 @Getter
 @Setter
-public class CarnivalSkillInfo implements DatSerializable{
+public class CarnivalSkillInfo implements DatSerializable {
     private int target;
     private int skillID;
     private int level;
@@ -61,7 +61,7 @@ public class CarnivalSkillInfo implements DatSerializable{
 
     @Override
     public DatSerializable load(DataInputStream dis) throws IOException {
-        this .setTarget(dis.readInt());
+        this.setTarget(dis.readInt());
         this.setSkillID(dis.readInt());
         this.setLevel(dis.readInt());
         this.setName(dis.readUTF());

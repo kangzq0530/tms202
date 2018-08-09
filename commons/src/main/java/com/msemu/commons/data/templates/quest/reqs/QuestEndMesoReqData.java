@@ -54,7 +54,7 @@ public class QuestEndMesoReqData extends QuestReqData {
 
     @Override
     public DatSerializable load(DataInputStream dis) throws IOException {
-        setMeso(dis .readInt());
+        setMeso(dis.readInt());
         return this;
     }
 }

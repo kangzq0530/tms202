@@ -33,9 +33,7 @@ import lombok.Setter;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -106,7 +104,7 @@ public class QuestInfo implements DatSerializable {
         }
         dos.writeInt(this.getStartReqsData().size());
         for (QuestReqData reqData : getStartReqsData()) {
-            if(reqData.getClass() == null) {
+            if (reqData.getClass() == null) {
 
             }
             String clazzName = reqData.getClass().getSimpleName();

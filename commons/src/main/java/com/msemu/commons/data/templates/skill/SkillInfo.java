@@ -63,8 +63,8 @@ public class SkillInfo implements DatSerializable {
     private Map<Integer, Map<SkillStat, Integer>> psdWT = new HashMap<>();
     private List<Integer> finalAttackSkills = new ArrayList<>();
 
-    public void addSkillStatInfo(int slv,  SkillStat sc, String value) {
-        if(!getSkillStatInfo().containsKey(slv))
+    public void addSkillStatInfo(int slv, SkillStat sc, String value) {
+        if (!getSkillStatInfo().containsKey(slv))
             getSkillStatInfo().put(slv, new HashMap<>());
         getSkillStatInfo().get(slv).put(sc, value);
     }
@@ -75,7 +75,7 @@ public class SkillInfo implements DatSerializable {
 
     public int getValue(SkillStat skillStat, int slv) {
         int result = 0;
-        if(!getSkillStatInfo().containsKey(slv))
+        if (!getSkillStatInfo().containsKey(slv))
             return 0;
         String value = getSkillStatInfo().get(slv).get(skillStat);
         if (value == null) {
@@ -187,22 +187,22 @@ public class SkillInfo implements DatSerializable {
         for (Map.Entry<Integer, Map<SkillStat, String>> entry : skillStatInfo.entrySet()) {
             dos.writeInt(entry.getKey());
             dos.writeInt(entry.getValue().size());
-            for(Map.Entry<SkillStat, String> subEntry: entry.getValue().entrySet()) {
+            for (Map.Entry<SkillStat, String> subEntry : entry.getValue().entrySet()) {
                 dos.writeUTF(subEntry.getKey().name());
                 dos.writeUTF(subEntry.getValue());
             }
         }
         dos.writeInt(psdWT.size());
-        for(Map.Entry<Integer, Map<SkillStat, Integer>> entry: psdWT.entrySet()) {
+        for (Map.Entry<Integer, Map<SkillStat, Integer>> entry : psdWT.entrySet()) {
             dos.writeInt(entry.getKey());
             dos.writeInt(entry.getValue().size());
-            for(Map.Entry<SkillStat, Integer> subEntry : entry.getValue().entrySet()) {
+            for (Map.Entry<SkillStat, Integer> subEntry : entry.getValue().entrySet()) {
                 dos.writeUTF(subEntry.getKey().name());
                 dos.writeInt(subEntry.getValue());
             }
         }
         dos.writeInt(finalAttackSkills.size());
-        for(Integer skillId : finalAttackSkills) {
+        for (Integer skillId : finalAttackSkills) {
             dos.writeInt(skillId);
         }
     }
@@ -259,20 +259,20 @@ public class SkillInfo implements DatSerializable {
             int slv = dis.readInt();
             getSkillStatInfo().put(slv, new EnumMap<>(SkillStat.class));
             int size = dis.readInt();
-            for(int j = 0 ; j < size; j++)
+            for (int j = 0; j < size; j++)
                 getSkillStatInfo().get(slv).put(SkillStat.valueOf(dis.readUTF()), dis.readUTF());
         }
         int psdWTSize = dis.readInt();
-        for(int i = 0 ; i < psdWTSize; i++) {
+        for (int i = 0; i < psdWTSize; i++) {
             int wt = dis.readInt();
             getPsdWT().put(wt, new EnumMap<>(SkillStat.class));
             int size = dis.readInt();
-            for(int j = 0 ; j < size; j++) {
+            for (int j = 0; j < size; j++) {
                 getPsdWT().get(wt).put(SkillStat.valueOf(dis.readUTF()), dis.readInt());
             }
         }
         int finalSkillIdSize = dis.readInt();
-        for(int i = 0 ; i < finalSkillIdSize; i++)
+        for (int i = 0; i < finalSkillIdSize; i++)
             getFinalAttackSkills().add(dis.readInt());
         return this;
     }
