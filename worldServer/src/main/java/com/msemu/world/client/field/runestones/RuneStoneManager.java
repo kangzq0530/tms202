@@ -99,7 +99,7 @@ public class RuneStoneManager {
             Foothold fh = getField().getRandomFoothold();
             Collections.shuffle(typesCanSpawn);
             if (!typesCanSpawn.isEmpty() && fh != null) {
-                RuneStoneType type = RuneStoneType.RST_THUNDER;//typesCanSpawn.get(0);
+                RuneStoneType type = typesCanSpawn.get(0);
                 RuneStone toSpawn = new RuneStone(type, getRuneStones().size() + 1);
                 toSpawn.setPosition(new Position(fh.getX1(), fh.getYFromX(fh.getX1())));
                 toSpawn.setFlip(false);

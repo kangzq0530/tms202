@@ -22,46 +22,23 @@
  * SOFTWARE.
  */
 
-package com.msemu.world.enums;
+package com.msemu.world.client.field.whisper.location;
 
-import lombok.Getter;
+import com.msemu.world.enums.WhisperCommand;
+import com.msemu.world.enums.WhisperLocationResType;
 
-/**
- * Created by Weber on 2018/5/12.
- */
-public enum WhisperCommand {
-    Location(0x1),
-    Location_Request(0x1 | 0x4),
-    Location_Result(0x1 | 0x8),
-    Whisper(0x2),
-    Whisper_Request(0x2 | 0x4),
-    Whisper_Result(0x2 | 0x8),
-    Whisper_Receive(0x2 | 0x10),
-    FarmWhisper(0x3),
-    Request(0x4),
-    Result(0x8),
-    Receive(0x10),
-    Blocked(0x20),
-    Location_F(0x40),
-    Location_F_Request(0x40 | 0x4),
-    Location_F_Result(0x40 | 0x8),
-
-    Manager(0x80),
-
-    NONE(0xFF)
-    ;
-    @Getter
-    private int value;
-
-    WhisperCommand(int value) {
-        this.value = value;
+public class LocationFoundInChannelResult extends AbstractLocationResult {
+    public LocationFoundInChannelResult(String charName, int channel) {
+        super(charName, channel);
     }
 
-    public static WhisperCommand getByValue(int value) {
-        for (WhisperCommand cmd : values()) {
-            if (cmd.getValue() == value)
-                return cmd;
-        }
-        return NONE;
+    @Override
+    public WhisperLocationResType getLocationResType() {
+        return WhisperLocationResType.CANT_FIND_CHAR_IN_CHANNEL;
+    }
+
+    @Override
+    public WhisperCommand getType() {
+        return WhisperCommand.Location_Result;
     }
 }

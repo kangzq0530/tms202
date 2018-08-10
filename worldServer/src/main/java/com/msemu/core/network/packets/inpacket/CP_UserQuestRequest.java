@@ -97,7 +97,7 @@ public class CP_UserQuestRequest extends InPacket<GameClient> {
         switch (type) {
 
             case 1: // 內建任務
-                if (qm.canStartQuest(questID) && !qi.hasStartScript()) {
+                if (qm.canStartQuest(questID) && !qi.hasStartScript() || qi.isAutoAccept()) {
                     qm.startQuest(questID);
                 }
                 break;

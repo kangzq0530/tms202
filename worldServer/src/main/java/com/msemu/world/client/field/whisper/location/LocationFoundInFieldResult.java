@@ -22,46 +22,33 @@
  * SOFTWARE.
  */
 
-package com.msemu.world.enums;
+package com.msemu.world.client.field.whisper.location;
 
-import lombok.Getter;
+import com.msemu.commons.network.packets.OutPacket;
+import com.msemu.core.network.GameClient;
+import com.msemu.world.enums.WhisperCommand;
+import com.msemu.world.enums.WhisperLocationResType;
 
-/**
- * Created by Weber on 2018/5/12.
- */
-public enum WhisperCommand {
-    Location(0x1),
-    Location_Request(0x1 | 0x4),
-    Location_Result(0x1 | 0x8),
-    Whisper(0x2),
-    Whisper_Request(0x2 | 0x4),
-    Whisper_Result(0x2 | 0x8),
-    Whisper_Receive(0x2 | 0x10),
-    FarmWhisper(0x3),
-    Request(0x4),
-    Result(0x8),
-    Receive(0x10),
-    Blocked(0x20),
-    Location_F(0x40),
-    Location_F_Request(0x40 | 0x4),
-    Location_F_Result(0x40 | 0x8),
+public class LocationFoundInFieldResult extends AbstractLocationResult {
 
-    Manager(0x80),
-
-    NONE(0xFF)
-    ;
-    @Getter
-    private int value;
-
-    WhisperCommand(int value) {
-        this.value = value;
+    public LocationFoundInFieldResult(String charName, int fieldId) {
+        super(charName, fieldId);
     }
 
-    public static WhisperCommand getByValue(int value) {
-        for (WhisperCommand cmd : values()) {
-            if (cmd.getValue() == value)
-                return cmd;
-        }
-        return NONE;
+    @Override
+    public WhisperLocationResType getLocationResType() {
+        return WhisperLocationResType.CHAR_IN_FIELD;
+    }
+
+    @Override
+    public WhisperCommand getType() {
+        return WhisperCommand.Location_Result;
+    }
+
+    @Override
+    public void encode(OutPacket<GameClient> outPacket) {
+        super.encode(outPacket);
+        outPacket.encodeInt(0);
+        outPacket.encodeInt(0);
     }
 }

@@ -24,6 +24,8 @@
 
 package com.msemu.world.client.character.friends;
 
+import com.msemu.commons.network.packets.OutPacket;
+import com.msemu.core.network.GameClient;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -57,4 +59,5 @@ public class FriendList {
                 .stream().filter(f -> f.getAccountID() == accountID)
                 .findFirst().orElse(null);
     }
+
 }

@@ -25,6 +25,7 @@
 package com.msemu.commons.tools;
 
 import com.msemu.commons.config.utils.ConfigLoader;
+import com.msemu.commons.data.loader.wz.QuestInfoLoader;
 import com.msemu.commons.data.loader.wz.SkillInfoLoader;
 import com.msemu.commons.data.loader.wz.WzManager;
 
@@ -47,8 +48,8 @@ public class wzToDat {
 //        new FieldTemplateLoader(wzManager).saveToDat();
 //        new NpcTemplateLoader(wzManager).saveToDat();
 //
-        new SkillInfoLoader(wzManager).saveToDat();
-//        new QuestInfoLoader(wzManager).saveToDat();
+//        new SkillInfoLoader(wzManager).saveToDat();
+        new QuestInfoLoader(wzManager).saveToDat();
 //        new MobTemplateLoader(wzManager).saveToDat();
 //        new FieldTemplateLoader(wzManager).saveToDat();
     }

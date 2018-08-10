@@ -22,46 +22,18 @@
  * SOFTWARE.
  */
 
-package com.msemu.world.enums;
+package com.msemu.core.network.packets.outpacket.field;
 
-import lombok.Getter;
+import com.msemu.commons.enums.OutHeader;
+import com.msemu.commons.network.packets.OutPacket;
+import com.msemu.core.network.GameClient;
+import com.msemu.world.client.field.whisper.IWhisperResult;
 
-/**
- * Created by Weber on 2018/5/12.
- */
-public enum WhisperCommand {
-    Location(0x1),
-    Location_Request(0x1 | 0x4),
-    Location_Result(0x1 | 0x8),
-    Whisper(0x2),
-    Whisper_Request(0x2 | 0x4),
-    Whisper_Result(0x2 | 0x8),
-    Whisper_Receive(0x2 | 0x10),
-    FarmWhisper(0x3),
-    Request(0x4),
-    Result(0x8),
-    Receive(0x10),
-    Blocked(0x20),
-    Location_F(0x40),
-    Location_F_Request(0x40 | 0x4),
-    Location_F_Result(0x40 | 0x8),
+public class LP_Whisper extends OutPacket<GameClient> {
 
-    Manager(0x80),
-
-    NONE(0xFF)
-    ;
-    @Getter
-    private int value;
-
-    WhisperCommand(int value) {
-        this.value = value;
-    }
-
-    public static WhisperCommand getByValue(int value) {
-        for (WhisperCommand cmd : values()) {
-            if (cmd.getValue() == value)
-                return cmd;
-        }
-        return NONE;
+    public LP_Whisper(IWhisperResult result) {
+        super(OutHeader.LP_Whisper);
+        encodeByte(result.getType().getValue());
+        result.encode(this);
     }
 }

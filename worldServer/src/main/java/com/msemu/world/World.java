@@ -154,4 +154,24 @@ public class World implements IReloadable {
         }
         return ret;
     }
+
+    public Channel getChannelByCharacterName(String charName) {
+        Character ret = null;
+        for (Channel channel : getChannels()) {
+            ret = channel.getCharacterByName(charName);
+            if (ret != null)
+                return channel;
+        }
+        return null;
+    }
+
+    public Character getCharacterById(int charId) {
+        Character ret = null;
+        for (Channel channel : getChannels()) {
+            ret = channel.getCharacterById(charId);
+            if (ret != null)
+                break;
+        }
+        return ret;
+    }
 }

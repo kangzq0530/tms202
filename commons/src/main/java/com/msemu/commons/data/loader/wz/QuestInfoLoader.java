@@ -259,13 +259,12 @@ public class QuestInfoLoader extends WzDataLoader<Map<Integer, QuestInfo>> {
                 .forEach(questProp -> {
                     QuestInfo questInfo = new QuestInfo();
                     questProp.getProperties().forEach(prop -> {
-                        if (prop.getName().equals("autoStart")) {
+                        if (prop.getName().equals("name")) {
                             questInfo.setName(prop.getString());
                         } else if (prop.getName().equals("autoComplete")) {
                             questInfo.setAutoComplete(prop.getInt() > 0);
                         } else if (prop.getName().equals("autoStart")) {
                             questInfo.setAutoStart(prop.getInt() > 0);
-
                         } else if (prop.getName().equals("selfStart")) {
                             questInfo.setSelfStart(prop.getInt() > 0);
                         } else if (prop.getName().equals("autoAccept")) {

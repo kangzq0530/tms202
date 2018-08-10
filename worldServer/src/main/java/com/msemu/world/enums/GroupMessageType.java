@@ -26,41 +26,28 @@ package com.msemu.world.enums;
 
 import lombok.Getter;
 
-/**
- * Created by Weber on 2018/5/12.
- */
-public enum WhisperCommand {
-    Location(0x1),
-    Location_Request(0x1 | 0x4),
-    Location_Result(0x1 | 0x8),
-    Whisper(0x2),
-    Whisper_Request(0x2 | 0x4),
-    Whisper_Result(0x2 | 0x8),
-    Whisper_Receive(0x2 | 0x10),
-    FarmWhisper(0x3),
-    Request(0x4),
-    Result(0x8),
-    Receive(0x10),
-    Blocked(0x20),
-    Location_F(0x40),
-    Location_F_Request(0x40 | 0x4),
-    Location_F_Result(0x40 | 0x8),
+public enum  GroupMessageType {
 
-    Manager(0x80),
+    FRIENDS(0),
+    PARTY(1),
+    GUILD(2),
+    ALLIANCE(3),
+    EXPEDITION(4),
 
-    NONE(0xFF)
+    NONE(0xFF);
+
     ;
     @Getter
-    private int value;
+    private final int value;
 
-    WhisperCommand(int value) {
+    GroupMessageType(int value) {
         this.value = value;
     }
 
-    public static WhisperCommand getByValue(int value) {
-        for (WhisperCommand cmd : values()) {
-            if (cmd.getValue() == value)
-                return cmd;
+    public static GroupMessageType getByValue(int value) {
+        for(GroupMessageType type : values()) {
+            if(type.getValue() == value)
+                return type;
         }
         return NONE;
     }

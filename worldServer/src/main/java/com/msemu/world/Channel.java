@@ -184,4 +184,8 @@ public class Channel {
         return getCharactersList().stream()
                 .filter(chr -> chr.getName().equalsIgnoreCase(charName)).findFirst().orElse(null);
     }
+
+    public Character getCharacterById(int charId) {
+        return getCharacters().getOrDefault(charId, null);
+    }
 }
