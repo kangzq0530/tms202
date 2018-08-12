@@ -499,7 +499,7 @@ public class Magician extends JobHandler {
 //            ForceAtomInfo forceAtomInfo = new ForceAtomInfo(1, inc, 20, 40,
 //                    0, 500, (int) System.currentTimeMillis(), 1, 0,
 //                    new Position(0, 0));
-//            chr.getField().broadcastPacket(CField.createForceAtom(false, 0, chr.getId(), type,
+//            chr.getField().broadcast(CField.createForceAtom(false, 0, chr.getId(), type,
 //                    true, mobID, MEGIDDO_FLAME_ATOM, forceAtomInfo, new Rect(), 0, 300,
 //                    mob.getPosition(), MEGIDDO_FLAME_ATOM, mob.getPosition()));
 
@@ -800,7 +800,7 @@ public class Magician extends JobHandler {
 //                ForceAtomInfo forceAtomInfo = new ForceAtomInfo(1, inc, 30, 5,
 //                        anglenum, delaynum, (int) System.currentTimeMillis(), 1, 0,
 //                        new Position(0, 0)); //Slightly behind the player
-//                chr.getField().broadcastPacket(CField.createForceAtom(true, chr.getId(), mobID, type,
+//                chr.getField().broadcast(CField.createForceAtom(true, chr.getId(), mobID, type,
 //                        true, mobID, MEGIDDO_FLAME_ATOM, forceAtomInfo, new Rect(), 0, 300,
 //                        mob.getPosition(), MEGIDDO_FLAME_ATOM, mob.getPosition()));
 //            }

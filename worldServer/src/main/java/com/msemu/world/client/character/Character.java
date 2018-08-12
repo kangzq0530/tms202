@@ -35,6 +35,7 @@ import com.msemu.commons.enums.FileTimeUnit;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.utils.types.FileTime;
 import com.msemu.core.network.GameClient;
+import com.msemu.core.network.packets.outpacket.field.LP_TransferChannelReqIgnored;
 import com.msemu.core.network.packets.outpacket.mob.LP_MobChangeController;
 import com.msemu.core.network.packets.outpacket.stage.LP_SetField;
 import com.msemu.core.network.packets.outpacket.user.LP_UserEnterField;

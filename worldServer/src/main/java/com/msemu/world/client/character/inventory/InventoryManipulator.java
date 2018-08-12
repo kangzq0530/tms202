@@ -38,6 +38,7 @@ import com.msemu.world.enums.InventoryOperationType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Weber on 2018/4/28.
@@ -62,15 +63,14 @@ public class InventoryManipulator {
         chr.getEquippedInventory().removeItem(srcEquip);
         chr.getEquipInventory().addItem(srcEquip);
         srcEquip.setBagIndex(destSlot);
-        List<Integer> hairEquips = al.getHairEquips();
         if (ItemConstants.類型.武器(srcEquip.getItemId())) {
             chr.getAvatarData().getAvatarLook().setWeaponId(0);
         } else if (ItemConstants.類型.副手(srcEquip.getItemId())) {
             chr.getAvatarData().getAvatarLook().setSubWeaponId(0);
         }
-        if (hairEquips.contains(srcEquip.getItemId())) {
-            hairEquips.remove(new Integer(srcEquip.getItemId()));
-        }
+        List<Integer> newHairEqups = chr.getEquippedInventory().getItems().stream()
+                .map(Item::getItemId).collect(Collectors.toList());
+        al.setHairEquips(newHairEqups);
         operates.add(new InventoryOperationInfo(InventoryOperationType.MOVE,
                 srcEquip, srcSlot));
         chr.write(new LP_InventoryOperation(true, false, operates));
@@ -112,9 +112,9 @@ public class InventoryManipulator {
         srcEquip.setBagIndex(destSlot);
         operates.add(new InventoryOperationInfo(InventoryOperationType.MOVE,
                 srcEquip, srcSlot));
-        if (!hairEquips.contains(srcEquip.getItemId())) {
-            hairEquips.add(srcEquip.getItemId());
-        }
+        List<Integer> newHairEqups = chr.getEquippedInventory().getItems().stream()
+                .map(Item::getItemId).collect(Collectors.toList());
+        al.setHairEquips(newHairEqups);
         if (ItemConstants.類型.武器(srcEquip.getItemId())) {
             chr.getAvatarData().getAvatarLook().setWeaponId(srcEquip.getItemId());
         } else if (ItemConstants.類型.副手(srcEquip.getItemId())) {

@@ -270,7 +270,7 @@ public class Party {
                 }
             }
             PartyService.getInstance().updatePartyLeader(oldLeaderId, this);
-            broadcastPacket(new LP_PartyResult(new ChangePartyBossDoneResponse(getPartyLeaderId(), dc)));
+            broadcast(new LP_PartyResult(new ChangePartyBossDoneResponse(getPartyLeaderId(), dc)));
         } finally {
             getLock().unlock();
         }
@@ -288,26 +288,33 @@ public class Party {
     }
 
     public void withdrawParty(PartyMember member) {
-        broadcastPacket(new LP_PartyResult(new WithdrawPartyDoneResponse(this, member, false, false)));
+        broadcast(new LP_PartyResult(new WithdrawPartyDoneResponse(this, member, false, false)));
         removePartyMember(member);
         updateFull();
     }
 
     public void kickPartyMember(PartyMember expelled) {
         removePartyMember(expelled);
-        broadcastPacket(new LP_PartyResult(new WithdrawPartyDoneResponse(this, expelled, false, true)));
+        broadcast(new LP_PartyResult(new WithdrawPartyDoneResponse(this, expelled, false, true)));
         updateFull();
     }
 
-    public void broadcastPacket(OutPacket<GameClient> outPacket) {
+    public void broadcast(OutPacket<GameClient> outPacket) {
         getOnlineMembers().forEach(partyMember -> {
             partyMember.getCharacter().write(outPacket);
         });
     }
 
+    public void broadcast(OutPacket<GameClient> outPacket, Character chr) {
+        getOnlineMembers().stream().filter(partyMember -> partyMember.getCharacterID() != chr.getId()).forEach(partyMember -> {
+            partyMember.getCharacter().write(outPacket);
+        });
+    }
+
+
     public void changeSetting(boolean appliable, String partyName) {
         this.name = partyName;
         this.appliable = appliable;
-        broadcastPacket(new LP_PartyResult(new PartySettingDoneResponse(appliable, partyName)));
+        broadcast(new LP_PartyResult(new PartySettingDoneResponse(appliable, partyName)));
     }
 }

@@ -22,43 +22,29 @@
  * SOFTWARE.
  */
 
-package com.msemu.core.network.packets.inpacket;
+package com.msemu.world.enums;
 
-import com.msemu.commons.network.packets.InPacket;
-import com.msemu.core.network.GameClient;
-import com.msemu.world.client.character.Character;
-import com.msemu.world.enums.ActivateDamageSkinOpcode;
+import lombok.Getter;
 
-/**
- * Created by Weber on 2018/5/22.
- */
-public class CP_UserActivateDamageSkin extends InPacket<GameClient> {
+public enum  ActivateDamageSkinOpcode {
+    SAVE(0),
+    REMOVE(1),
+    ACTIVE(2),
+    NONE(0xFF);
+    ;
+    @Getter
+    private final int value;
 
-    private ActivateDamageSkinOpcode opcode;
-
-    private int damageSkinId;
-
-    public CP_UserActivateDamageSkin(short opcode) {
-        super(opcode);
+    ActivateDamageSkinOpcode(int value) {
+        this.value = value;
     }
 
-    @Override
-    public void read() {
-        opcode = ActivateDamageSkinOpcode.getByValue(decodeByte());
-        switch (opcode) {
-            case REMOVE:
-            case ACTIVE:
-                damageSkinId = decodeShort();
-                break;
+    public static ActivateDamageSkinOpcode getByValue(int value) {
+        for(ActivateDamageSkinOpcode type : values()) {
+            if(type.getValue() == value) {
+                return type;
+            }
         }
-    }
-
-    @Override
-    public void runImpl() {
-        final Character chr = getClient().getCharacter();
-
-        switch (opcode) {
-
-        }
+        return NONE;
     }
 }

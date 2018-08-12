@@ -24,41 +24,44 @@
 
 package com.msemu.core.network.packets.inpacket;
 
+import com.msemu.commons.data.enums.InvType;
 import com.msemu.commons.network.packets.InPacket;
 import com.msemu.core.network.GameClient;
 import com.msemu.world.client.character.Character;
-import com.msemu.world.enums.ActivateDamageSkinOpcode;
+import com.msemu.world.client.character.Inventory;
+import com.msemu.world.client.character.inventory.items.Item;
+import com.msemu.world.constants.ItemConstants;
 
-/**
- * Created by Weber on 2018/5/22.
- */
-public class CP_UserActivateDamageSkin extends InPacket<GameClient> {
+public class CP_UserScriptItemUseRequest extends InPacket<GameClient> {
 
-    private ActivateDamageSkinOpcode opcode;
+    private int updateTick;
+    private int bagIndex;
+    private int itemId;
 
-    private int damageSkinId;
-
-    public CP_UserActivateDamageSkin(short opcode) {
+    public CP_UserScriptItemUseRequest(short opcode) {
         super(opcode);
     }
 
     @Override
     public void read() {
-        opcode = ActivateDamageSkinOpcode.getByValue(decodeByte());
-        switch (opcode) {
-            case REMOVE:
-            case ACTIVE:
-                damageSkinId = decodeShort();
-                break;
-        }
+        updateTick = decodeInt();
+        bagIndex = decodeShort();
+        itemId = decodeInt();
     }
 
     @Override
     public void runImpl() {
         final Character chr = getClient().getCharacter();
+        final InvType invType = ItemConstants.getInvTypeFromItemID(itemId);
+        final Inventory inventory = chr.getInventoryByType(invType);
+        final Item item = inventory.getItemBySlot(bagIndex);
 
-        switch (opcode) {
-
+        if(item.getItemId() != itemId) {
+            chr.enableActions();
+            return;
         }
+
+
+
     }
 }

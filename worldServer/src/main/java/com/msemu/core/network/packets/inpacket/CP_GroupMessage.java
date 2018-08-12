@@ -53,7 +53,7 @@ public class CP_GroupMessage extends InPacket<GameClient> {
     public void read() {
 
         typeValue = decodeByte();
-        final int targetCount = decodeInt();
+        final int targetCount = decodeByte();
         for (int i = 0; i < targetCount; i++)
             targets.add(decodeInt());
         text = decodeString();
@@ -83,11 +83,11 @@ public class CP_GroupMessage extends InPacket<GameClient> {
                 break;
             case PARTY:
                 final Party party = chr.getParty();
-                party.broadcastPacket(packet);
+                party.broadcast(packet, chr);
                 break;
             case GUILD:
                 final Guild guild = chr.getGuild();
-                guild.broadcast(packet);
+                guild.broadcast(packet, chr);
                 break;
             case ALLIANCE:
                 // TODO

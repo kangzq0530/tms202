@@ -64,8 +64,13 @@ public class CP_MobMove extends InPacket<GameClient> {
 
     @Override
     public void read() {
+        final GameClient client = getClient();
+        final Character chr = client.getCharacter();
+        final Field field = chr.getField();
+        if(field == null)
+            return;
         mobObjectID = decodeInt();
-        mob = getClient().getCharacter().getField().getMobByObjectId(mobObjectID);
+        mob = field.getMobByObjectId(mobObjectID);
         if (mob == null)
             return;
         moveId = decodeShort();

@@ -26,39 +26,35 @@ package com.msemu.core.network.packets.inpacket;
 
 import com.msemu.commons.network.packets.InPacket;
 import com.msemu.core.network.GameClient;
+import com.msemu.world.Channel;
+import com.msemu.world.World;
 import com.msemu.world.client.character.Character;
-import com.msemu.world.enums.ActivateDamageSkinOpcode;
 
-/**
- * Created by Weber on 2018/5/22.
- */
-public class CP_UserActivateDamageSkin extends InPacket<GameClient> {
+public class CP_UserTransferChannelRequest extends InPacket<GameClient> {
 
-    private ActivateDamageSkinOpcode opcode;
+    private int targetChannelId;
+    private int updateTick;
 
-    private int damageSkinId;
-
-    public CP_UserActivateDamageSkin(short opcode) {
+    public CP_UserTransferChannelRequest(short opcode) {
         super(opcode);
     }
 
     @Override
     public void read() {
-        opcode = ActivateDamageSkinOpcode.getByValue(decodeByte());
-        switch (opcode) {
-            case REMOVE:
-            case ACTIVE:
-                damageSkinId = decodeShort();
-                break;
-        }
+        targetChannelId = decodeByte();
+        updateTick = decodeInt();
     }
 
     @Override
     public void runImpl() {
         final Character chr = getClient().getCharacter();
+        final Channel channel = getClient().getChannelInstance();
+        final World world = getClient().getWorld();
 
-        switch (opcode) {
-
+        if (world.hasChannel(targetChannelId) && channel.getChannelId() != targetChannelId) {
+            final Channel targetChannel = world.getChannel(targetChannelId);
+            world.changeChannel(chr, targetChannel);
         }
+
     }
 }

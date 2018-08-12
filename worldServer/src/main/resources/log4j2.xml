@@ -49,6 +49,18 @@
                 <ThresholdFilter level="info"  onMatch="DENY" onMismatch="NEUTRAL"/>
             </Filters>
         </RollingFile>
+        <RollingFile name="ClientDump" fileName="log/dump/clientDump.log" filePattern="log/dump/clientDump-%d{MM-dd-yyyy}.log.gz">
+            <PatternLayout pattern="%d - %msg%n"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="250 MB"/>
+            </Policies>
+            <Filters>
+                <ThresholdFilter level="warn"  onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="error" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="fatal" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="info"  onMatch="DENY" onMismatch="NEUTRAL"/>
+            </Filters>
+        </RollingFile>
         <RollingFile name="Authentication" fileName="log/authentication/authentication.log" filePattern="log/authentication/authentication-%d{MM-dd-yyyy}.log.gz">
             <PatternLayout pattern="%d - %msg%n"/>
             <Policies>
@@ -75,11 +87,13 @@
         <logger name="DebugLogger" level="debug" additivity="false">
             <appender-ref ref="DebugToFile"/>
         </logger>
+        <logger name="CP_ClientDumpLog" level="debug" additivity="false">
+            <appender-ref ref="ClientDump"/>
+        </logger>
         <root level="info">
             <appender-ref ref="Console"/>
             <appender-ref ref="ConsoleToFile" level="info"/>
             <appender-ref ref="ErrorToFile" level="error"/>
-            <!-- Uncomment this for debug IWvsMessage -->
             <appender-ref ref="DebugToFile" level="debug"/>
         </root>
     </loggers>

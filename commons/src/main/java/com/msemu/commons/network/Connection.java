@@ -125,6 +125,8 @@ public class Connection<TClient extends Client<TClient>> extends ChannelInboundH
                 InPacket<TClient> inPacket = this.getServer().getPacketHandler().handleClientPacket(opcode, getClient());
 
                 if (inPacket != null) {
+                    if(!client.isConnected())
+                        return;
                     inPacket.setClient(client);
                     inPacket.setByteBuf(buff);
                     InHeader header = InHeader.getInHeaderByOp(opcode);
@@ -140,7 +142,6 @@ public class Connection<TClient extends Client<TClient>> extends ChannelInboundH
                         this.close();
                     }
                 } else {
-
                     InHeader header = InHeader.getInHeaderByOp(opcode);
                     if (header != null && !header.ignoreDebug())
                         log.error(String.format("[In][Unknown][state=%s]\t| %s, %d/0x%s\t| Length: %d\n\t[All]\t%s\n\t[ASCII]\t%s", client.getState(), InHeader.getInHeaderByOp(opcode), opcode, Integer.toHexString(opcode).toUpperCase(), buff.array().length, HexUtils.readableByteArray(Arrays.copyOfRange(buff.array(), 2, buff.array().length)), HexUtils.toAscii(buff.array())));

@@ -341,7 +341,7 @@ public class Field {
 
     @Override
     public String toString() {
-        return String.format("[地圖] %s(%d)s", getFieldData().getName(), getFieldData().getId());
+        return String.format("[地圖] %s(%d)", getFieldData().getName(), getFieldData().getId());
     }
 
     public void broadcastPacket(OutPacket<GameClient> outPacket) {

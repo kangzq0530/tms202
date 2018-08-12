@@ -406,7 +406,7 @@ public class Archer extends Beginner {
 //                        AbstractForceAtom forceAtomInfo = new AbstractForceAtom(1, inc, 15, 15,
 //                                num, 0, (int) System.currentTimeMillis(), 1, 0,
 //                                new Position());
-//                        chr.getField().broadcastPacket(field.createForceAtom(false, 0, chr.getItemId(), type,
+//                        chr.getField().broadcast(field.createForceAtom(false, 0, chr.getItemId(), type,
 //                                true, mobId, 魔幻箭筒_ATOM, forceAtomInfo, new Rect(), 0, 300,
 //                                mob.getPosition(), 0, mob.getPosition()));
 //                    }

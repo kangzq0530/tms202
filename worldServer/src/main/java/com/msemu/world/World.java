@@ -29,12 +29,19 @@ import com.msemu.commons.enums.WorldServerType;
 import com.msemu.commons.reload.IReloadable;
 import com.msemu.commons.rmi.model.WorldInfo;
 import com.msemu.core.configs.WorldConfig;
+import com.msemu.core.network.GameClient;
+import com.msemu.core.network.packets.outpacket.client.LP_MigrateCommand;
+import com.msemu.core.network.packets.outpacket.field.LP_TransferChannelReqIgnored;
 import com.msemu.core.startup.StartupComponent;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.guild.Guild;
+import com.msemu.world.enums.TransferChannelReqIgnoredType;
 import lombok.Getter;
 import lombok.Setter;
+import org.slf4j.LoggerFactory;
 
+import java.net.Inet4Address;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -49,7 +56,7 @@ import java.util.stream.Collectors;
 @StartupComponent("Network")
 public class World implements IReloadable {
     private static final AtomicReference<World> instance = new AtomicReference<>();
-    private final Map<Integer, Guild> guilds = new ConcurrentHashMap<>();
+
     private ConcurrentHashMap<Integer, Channel> channels;
     @Getter
     @Setter
@@ -137,13 +144,6 @@ public class World implements IReloadable {
         return new ArrayList<>(channels.values());
     }
 
-    public Map<Integer, Guild> getAllGuilds() {
-        return Collections.unmodifiableMap(guilds);
-    }
-
-    public Guild getGuildByID(int id) {
-        return getAllGuilds().get(id);
-    }
 
     public Character getCharacterByName(String charName) {
         Character ret = null;
@@ -173,5 +173,29 @@ public class World implements IReloadable {
                 break;
         }
         return ret;
+    }
+
+    public boolean hasChannel(int targetChannel) {
+        return getChannels().stream().anyMatch(ch -> ch.getChannelId() == targetChannel);
+    }
+
+    public Channel getChannel(int targetChannel) {
+        return getChannels().stream().filter(ch -> ch.getChannelId() == targetChannel)
+                .findFirst().orElse(null);
+    }
+
+    public void changeChannel(Character chr, Channel targetChannel) {
+        final GameClient client = chr.getClient();
+        final Channel channel = client.getChannelInstance();
+        if ( !channel.equals(targetChannel) ) {
+            targetChannel.addTransfer(client.getAccount().getId(), chr.getId());
+            chr.logout();
+            try {
+                chr.write(new LP_MigrateCommand(true, Inet4Address.getByName(targetChannel.getHost()).getAddress(), channel.getPort()));
+            } catch (UnknownHostException e) {
+                LoggerFactory.getLogger("Network").error("changeChannel exception", e);
+                chr.write(new LP_TransferChannelReqIgnored(TransferChannelReqIgnoredType.CANT_OPERATE_NOT));
+            }
+        }
     }
 }

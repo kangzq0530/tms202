@@ -32,6 +32,7 @@ import com.msemu.world.client.character.quest.Quest;
 import com.msemu.world.client.character.quest.QuestManager;
 import com.msemu.world.client.scripting.ScriptManager;
 import com.msemu.world.data.QuestData;
+import com.msemu.world.enums.ChatMsgType;
 import com.msemu.world.enums.QuestStatus;
 import com.msemu.world.enums.ScriptType;
 
@@ -94,6 +95,8 @@ public class CP_UserQuestRequest extends InPacket<GameClient> {
             return;
         QuestInfo qi = QuestData.getInstance().getQuestInfoById(questID);
 
+        chr.chatMessage(ChatMsgType.GAME_DESC, String.format("任務要求 : %s (%d) type: %d", qi.getName(), qi.getId(), type));
+
         switch (type) {
 
             case 1: // 內建任務
@@ -121,7 +124,7 @@ public class CP_UserQuestRequest extends InPacket<GameClient> {
                     startScript = String.format("%d%s%s", questID, ScriptManager.QUEST_START_SCRIPT_END_TAG, ScriptManager.SCRIPT_ENGINE_EXTENSION);
                 }
 
-                if (qm.canStartQuest(questID)) {
+                if (qm.canStartQuest(questID) || qi.isAutoAccept()) {
                     if (qi.isAutoAccept()) {
                         qm.startQuest(questID);
                     } else {
