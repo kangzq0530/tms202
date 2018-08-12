@@ -179,12 +179,12 @@ public class CP_GuildRequest extends InPacket<GameClient> {
                     return;
                 }
                 target = channel.getCharacterByName(charName);
-                if (true || target == null) {
+                if (target == null) {
                     chr.write(new LP_GuildResult(new JoinGuildUnknownUserResponse()));
+                } else if (guild.getMembers().size() >= guild.getMaxMembers()) {
+                    chr.write(new LP_GuildResult(new JoinGuildAlreadyFullResponse()));
                 } else if (target.getGuild() != null) {
-                    return;
-                } else {
-
+                    guild.invite(target);
                 }
                 break;
             case ReqSetGradeName:
@@ -192,7 +192,6 @@ public class CP_GuildRequest extends InPacket<GameClient> {
                 if (guild.getLeaderID() == chr.getId())
                     guild.changeGradeNames(gradeName);
                 break;
-
             case ReqSetMark:
                 guild = chr.getGuild();
                 if (guild.getLeaderID() == chr.getId()) {

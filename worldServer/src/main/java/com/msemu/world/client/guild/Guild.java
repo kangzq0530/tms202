@@ -255,4 +255,8 @@ public class Guild {
         DatabaseFactory.getInstance().saveToDB(this);
         broadcast(new LP_GuildResult(new SetMarkDoneResponse(this)));
     }
+
+    public void invite(Character target) {
+        //TODO
+    }
 }
