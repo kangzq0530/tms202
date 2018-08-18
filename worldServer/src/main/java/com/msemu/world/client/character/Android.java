@@ -49,8 +49,10 @@ public class Android extends AbstractAnimatedFieldLife {
     private int type;
 
     @Getter
-    private AndroidInfo androidInfo = new AndroidInfo();
+    private int itemId;
 
+    @Getter
+    private AndroidInfo androidInfo = new AndroidInfo();
 
     @Override
     public FieldObjectType getFieldObjectType() {

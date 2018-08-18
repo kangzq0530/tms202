@@ -78,7 +78,7 @@ public class CharacterLocalStat {
     }
 
 
-    public void reCalculateLocalStat() {
+    public void recalculateLocalStat() {
         AvatarData ad = character.getAvatarData();
         CharacterStat cs = ad.getCharacterStat();
         TemporaryStatManager tsm = character.getTemporaryStatManager();

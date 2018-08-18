@@ -25,6 +25,7 @@
 package com.msemu.world.client.character;
 
 import com.msemu.commons.data.enums.InvType;
+import com.msemu.commons.data.enums.SkillStat;
 import com.msemu.commons.data.templates.ItemTemplate;
 import com.msemu.commons.data.templates.field.FieldTemplate;
 import com.msemu.commons.data.templates.field.Portal;
@@ -33,14 +34,16 @@ import com.msemu.commons.database.DatabaseFactory;
 import com.msemu.commons.database.Schema;
 import com.msemu.commons.enums.FileTimeUnit;
 import com.msemu.commons.network.packets.OutPacket;
+import com.msemu.commons.utils.Rand;
 import com.msemu.commons.utils.types.FileTime;
 import com.msemu.core.network.GameClient;
-import com.msemu.core.network.packets.outpacket.field.LP_TransferChannelReqIgnored;
 import com.msemu.core.network.packets.outpacket.mob.LP_MobChangeController;
 import com.msemu.core.network.packets.outpacket.stage.LP_SetField;
 import com.msemu.core.network.packets.outpacket.user.LP_UserEnterField;
 import com.msemu.core.network.packets.outpacket.user.LP_UserLeaveField;
 import com.msemu.core.network.packets.outpacket.user.local.LP_ChatMsg;
+import com.msemu.core.network.packets.outpacket.user.local.LP_OpenUIOnDead;
+import com.msemu.core.network.packets.outpacket.user.local.LP_SetBuffProtector;
 import com.msemu.core.network.packets.outpacket.user.remote.LP_UserAvatarModified;
 import com.msemu.core.network.packets.outpacket.user.remote.effect.LP_UserEffectRemote;
 import com.msemu.core.network.packets.outpacket.wvscontext.*;
@@ -62,10 +65,7 @@ import com.msemu.world.client.character.quest.QuestManager;
 import com.msemu.world.client.character.skill.Skill;
 import com.msemu.world.client.character.skill.SkillMacro;
 import com.msemu.world.client.character.skill.vcore.VMatrixRecord;
-import com.msemu.world.client.character.stats.CharacterLocalStat;
-import com.msemu.world.client.character.stats.CharacterStat;
-import com.msemu.world.client.character.stats.ForcedStatManager;
-import com.msemu.world.client.character.stats.TemporaryStatManager;
+import com.msemu.world.client.character.stats.*;
 import com.msemu.world.client.field.AbstractFieldObject;
 import com.msemu.world.client.field.AffectedArea;
 import com.msemu.world.client.field.Field;
@@ -340,6 +340,8 @@ public class Character extends Life {
         return result;
     }
 
+    // Character Stats
+
     public String getName() {
         return getAvatarData().getCharacterStat().getName();
     }
@@ -400,6 +402,19 @@ public class Character extends Life {
         return (short) getAvatarData().getCharacterStat().getSubJob();
     }
 
+    public int getFieldID() {
+        return (int) getAvatarData().getCharacterStat().getPosMap();
+    }
+
+    private void setFieldID(long fieldId) {
+        setFieldID((int) fieldId);
+    }
+
+    private void setFieldID(int fieldID) {
+        getAvatarData().getCharacterStat().setPosMap(fieldID);
+    }
+
+
     public boolean hasQuestInProgress(int questReq) {
         return getQuestManager().hasQuestInProgress(questReq);
     }
@@ -408,10 +423,6 @@ public class Character extends Life {
         if (getClient() != null) {
             getClient().write(outPacket);
         }
-    }
-
-    public ExpIncreaseInfo getExpIncreaseInfo() {
-        return new ExpIncreaseInfo();
     }
 
     public Field getField() {
@@ -424,17 +435,6 @@ public class Character extends Life {
             setFieldID(field.getFieldId());
     }
 
-    public int getFieldID() {
-        return (int) getAvatarData().getCharacterStat().getPosMap();
-    }
-
-    private void setFieldID(long fieldId) {
-        setFieldID((int) fieldId);
-    }
-
-    private void setFieldID(int fieldID) {
-        getAvatarData().getCharacterStat().setPosMap(fieldID);
-    }
 
     public QuestManager getQuestManager() {
         if (questManager.getCharacter() == null)
@@ -484,8 +484,8 @@ public class Character extends Life {
         stats.put(Stat.EXP, newExp);
         if (eii != null)
             write(new LP_Message(new IncExpMessage(eii)));
+        notifyChanges();
         getClient().write(new LP_StatChanged(stats));
-        this.addSp(1, 30);
     }
 
     public void addStat(Stat charStat, int amount) {
@@ -580,6 +580,14 @@ public class Character extends Life {
         });
         notifyChanges();
         write(new LP_StatChanged(changedStats));
+    }
+
+    public int getHp() {
+        return getStat(Stat.HP);
+    }
+
+    public int getMp() {
+        return getStat(Stat.MP);
     }
 
     private void notifyChanges() {
@@ -1788,7 +1796,9 @@ public class Character extends Life {
 
     public void renewCharacterStats() {
         renewBulletIDForAttack();
-        getCharacterLocalStat().reCalculateLocalStat();
+        getCharacterLocalStat().recalculateLocalStat();
+        if (getHp() == 0)
+            this.playerDead();
     }
 
     public void enableActions() {
@@ -2030,6 +2040,101 @@ public class Character extends Life {
             this.addExp(bonusExp, null);
             this.write(new LP_Message(new MultiKillMessage(bonusExp, multiKillCount)));
         }
+    }
+
+    public void playerDead() {
+
+        final TemporaryStatManager tsm = getTemporaryStatManager();
+        final Android android = getActiveAndroid();
+        final AndroidInfo androidInfo = android != null ? android.getAndroidInfo() : null;
+        CharacterTemporaryStat[] unDeadBuff = {
+                CharacterTemporaryStat.HeavensDoor,
+                CharacterTemporaryStat.FlareTrick,
+                CharacterTemporaryStat.PreReviveOnce,
+                CharacterTemporaryStat.ReviveOnce
+        };
+
+        // 處理復活Buff
+        Arrays.stream(unDeadBuff).forEach(buff -> {
+            final int hp = getStat(Stat.HP);
+            if (hp > 0)
+                return;
+            int rOption = tsm.getOption(buff).rOption;
+            final SkillInfo si = SkillData.getInstance().getSkillInfoById(rOption);
+            final Skill skill = getSkill(rOption);
+            if (si == null || skill == null)
+                return;
+            final int slv = skill.getCurrentLevel();
+            final int x = si.getValue(SkillStat.x, slv);
+            int recoveryHpR = (x <= 0 ? 100 : x);
+            boolean revive = true;
+            switch (rOption) {
+                case 12111023: // 火鳳凰
+                    recoveryHpR = si.getValue(SkillStat.y, slv);
+                    break;
+                case 20050286: // 死裡逃生
+                    revive = Rand.getChance(si.getValue(SkillStat.prop, slv));
+            }
+            if (!revive)
+                return;
+            setStat(Stat.HP, getCurrentMaxHp() / 100 * recoveryHpR);
+            setAction((byte) 0);
+            tsm.removeStat(buff, true);
+            // TODO cooldown
+        });
+
+        final int hp = getStat(Stat.HP);
+        if (hp > 0)
+            return;
+
+        Item buffProtectorItem = null;
+        int maskUIOnDead = UIOnDead.Normal.getValue();
+        UIReviveType reviveType = UIReviveType.Normal;
+
+        if (android != null) {
+            if (android.getItemId() == 1662072 || android.getItemId() == 1662073) {
+                reviveType = UIReviveType.BattleRoid;
+            }
+
+            if (hasItem(5133000)) {
+                buffProtectorItem = getCashInventory().getItemByItemID(5133000);
+            } else if (hasItem(5133001)) {
+                buffProtectorItem = getCashInventory().getItemByItemID(5133001);
+            }
+
+            if(buffProtectorItem != null)
+                maskUIOnDead |= UIOnDead.ToProtectForExp.getValue();
+
+        } else if (tsm.hasStat(CharacterTemporaryStat.SoulStone)) {
+            reviveType = UIReviveType.SoulStone;
+        }
+
+        setStat(Stat.HP, 0);
+        write(new LP_OpenUIOnDead(maskUIOnDead, false, reviveType));
+
+        tsm.removeStat(CharacterTemporaryStat.ShadowPartner, true);
+        tsm.removeStat(CharacterTemporaryStat.Morph, true);
+        tsm.removeStat(CharacterTemporaryStat.Flying, true);
+        tsm.removeStat(CharacterTemporaryStat.RideVehicle, true);
+        tsm.removeStat(CharacterTemporaryStat.Mechanic, true);
+        tsm.removeStat(CharacterTemporaryStat.Regen, true);
+        tsm.removeStat(CharacterTemporaryStat.IndieMHPR, true);
+        tsm.removeStat(CharacterTemporaryStat.IndieMMPR, true);
+        tsm.removeStat(CharacterTemporaryStat.IndieMHP, true);
+        tsm.removeStat(CharacterTemporaryStat.IndieMMP, true);
+        tsm.removeStat(CharacterTemporaryStat.EMHP, true);
+        tsm.removeStat(CharacterTemporaryStat.EMMP, true);
+        tsm.removeStat(CharacterTemporaryStat.MaxHP, true);
+        tsm.removeStat(CharacterTemporaryStat.MaxMP, true);
+
+        if (buffProtectorItem != null) {
+            getCashInventory().removeItem(buffProtectorItem);
+            write(new LP_SetBuffProtector(buffProtectorItem, true));
+        } else {
+            tsm.getCurrentStats().keySet().forEach(cts -> tsm.removeStat(cts, true));
+        }
+
+        //TODO 技能處理
     }
 
     public void showDebugMessage(String caption, ChatMsgType type, String text) {
