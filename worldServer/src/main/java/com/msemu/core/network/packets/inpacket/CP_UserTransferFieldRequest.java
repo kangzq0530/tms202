@@ -32,6 +32,8 @@ import com.msemu.core.network.packets.outpacket.user.local.LP_SetInGameDirection
 import com.msemu.world.Channel;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.field.Field;
+import com.msemu.world.data.FieldData;
+import com.msemu.world.enums.Stat;
 
 /**
  * Created by Weber on 2018/5/2.
@@ -70,19 +72,26 @@ public class CP_UserTransferFieldRequest extends InPacket<GameClient> {
 
         if (targetMapId != -1) {
 
-            int divi = field.getFieldId() / 100;
-            boolean unlock = false;
-            boolean warp = false;
-            if ((divi / 10 == 1020) && (targetMapId == 1020000 || targetMapId == 4000026)) {
-                unlock = true;
-                warp = true;
-            }
-            if (unlock) {
-                getClient().write(new LP_SetDirectionMode(false));
-                getClient().write(new LP_SetInGameDirectionMode(false));
-            }
-            if (warp) {
-                chr.warp(channel.getField(targetMapId));
+            if (chr.isAlive()) {
+                int divi = field.getFieldId() / 100;
+                boolean unlock = false;
+                boolean warp = false;
+                if ((divi / 10 == 1020) && (targetMapId == 1020000 || targetMapId == 4000026)) {
+                    unlock = true;
+                    warp = true;
+                }
+                if (unlock) {
+                    getClient().write(new LP_SetDirectionMode(false));
+                    getClient().write(new LP_SetInGameDirectionMode(false));
+                }
+                if (warp) {
+                    chr.warp(channel.getField(targetMapId));
+                }
+            } else {
+                // 死亡
+                final Field returnMap = channel.getField(chr.getField().getReturnMap());
+                chr.setStat(Stat.HP, 50);
+                chr.warp(returnMap);
             }
 
         } else {

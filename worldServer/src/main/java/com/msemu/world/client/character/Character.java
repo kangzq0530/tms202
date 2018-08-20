@@ -96,6 +96,8 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Predicate;
 
@@ -306,6 +308,7 @@ public class Character extends Life {
     private List<SkillMacro> skillMacros = new ArrayList<>();
     @Transient
     private int comboKill;
+
 
     // timestamps ??
 
@@ -1795,10 +1798,14 @@ public class Character extends Life {
     }
 
     public void renewCharacterStats() {
+        final AtomicReference<CharacterStatus> status = getAvatarData().getCharacterStat().getStatus();
         renewBulletIDForAttack();
         getCharacterLocalStat().recalculateLocalStat();
-        if (getHp() == 0)
+        if (getHp() <= 0 && status.compareAndSet(CharacterStatus.ALIVE, CharacterStatus.DEAD)) {
             this.playerDead();
+        } else {
+            status.compareAndSet(CharacterStatus.DEAD, CharacterStatus.ALIVE);
+        }
     }
 
     public void enableActions() {
@@ -2012,18 +2019,18 @@ public class Character extends Life {
             Mob mob = field.getMobByObjectId(mai.getObjectID());
             if (mob != null) {
                 long totalDamage = Arrays.stream(mai.getDamages()).sum();
-                this.chatMessage(ChatMsgType.GAME_DESC, String.format("近距離攻擊: 技能: %s(%d) 怪物: %s(%d)  HP: (%d/%d) MP: (%d/%d) 總攻擊: %d 座標: %s",
-                        (si != null ? si.getName() : "普通攻擊"), attackInfo.getSkillId(), mob.getTemplate().getName(),
-                        mob.getTemplateId(), mob.getHp(), mob.getMaxHp(), mob.getMp(), mob.getMaxHp(), totalDamage, attackInfo.getPos().toString()));
                 mob.addDamage(this, totalDamage);
                 mob.damage(totalDamage);
-
                 // 處理 multikill & combo kill
                 if (!mob.isAlive()) {
                     killedMob.add(mob);
                     setComboKill(getComboKill() + 1);
                     this.write(new LP_Message(new ComboKillMessage(getComboKill(), mob.getObjectId())));
                 }
+                this.chatMessage(ChatMsgType.GAME_DESC, String.format("近距離攻擊: 技能: %s(%d) 怪物: %s(%d)  HP: (%d/%d) MP: (%d/%d) 總攻擊: %d 座標: %s",
+                        (si != null ? si.getName() : "普通攻擊"), attackInfo.getSkillId(), mob.getTemplate().getName(),
+                        mob.getTemplateId(), mob.getHp(), mob.getMaxHp(), mob.getMp(), mob.getMaxHp(), totalDamage, attackInfo.getPos().toString()));
+
             }
         });
 
@@ -2057,14 +2064,12 @@ public class Character extends Life {
         // 處理復活Buff
         Arrays.stream(unDeadBuff).forEach(buff -> {
             final int hp = getStat(Stat.HP);
-            if (hp > 0)
-                return;
-            int rOption = tsm.getOption(buff).rOption;
+            final int rOption = tsm.getOption(buff).rOption;
             final SkillInfo si = SkillData.getInstance().getSkillInfoById(rOption);
             final Skill skill = getSkill(rOption);
-            if (si == null || skill == null)
+            final int slv = skill != null ? skill.getCurrentLevel() : 0;
+            if (si == null || skill == null || hp > 0 || slv == 0)
                 return;
-            final int slv = skill.getCurrentLevel();
             final int x = si.getValue(SkillStat.x, slv);
             int recoveryHpR = (x <= 0 ? 100 : x);
             boolean revive = true;
@@ -2088,6 +2093,8 @@ public class Character extends Life {
             return;
 
         Item buffProtectorItem = null;
+        // TODO 原地復活
+        Item upgradeTombItem = null;
         int maskUIOnDead = UIOnDead.Normal.getValue();
         UIReviveType reviveType = UIReviveType.Normal;
 
@@ -2102,7 +2109,7 @@ public class Character extends Life {
                 buffProtectorItem = getCashInventory().getItemByItemID(5133001);
             }
 
-            if(buffProtectorItem != null)
+            if (buffProtectorItem != null)
                 maskUIOnDead |= UIOnDead.ToProtectForExp.getValue();
 
         } else if (tsm.hasStat(CharacterTemporaryStat.SoulStone)) {
@@ -2111,6 +2118,7 @@ public class Character extends Life {
 
         setStat(Stat.HP, 0);
         write(new LP_OpenUIOnDead(maskUIOnDead, false, reviveType));
+
 
         tsm.removeStat(CharacterTemporaryStat.ShadowPartner, true);
         tsm.removeStat(CharacterTemporaryStat.Morph, true);

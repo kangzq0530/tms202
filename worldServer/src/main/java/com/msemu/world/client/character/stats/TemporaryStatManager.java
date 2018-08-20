@@ -195,16 +195,19 @@ public class TemporaryStatManager {
         if (cts == CharacterTemporaryStat.CombatOrders) {
             character.setCombatOrders(0);
         }
-        getRemovedStats().put(cts, getCurrentStats().get(cts));
-        getCurrentStats().remove(cts);
-        getCharacter().getClient().write(new LP_TemporaryStatReset(this, false));
-        if (TSIndex.isTwoStat(cts)) {
-            getTSBByTSIndex(TSIndex.getTSEFromCTS(cts)).reset();
-        }
-        if (!fromSchedule && getSchedules().containsKey(cts)) {
-            getSchedules().get(cts).cancel(false);
-        } else {
-            getSchedules().remove(cts);
+        final List<Option> options = getCurrentStats().getOrDefault(cts, Collections.emptyList());
+        if (!options.isEmpty()) {
+            getRemovedStats().put(cts, getCurrentStats().get(cts));
+            getCurrentStats().remove(cts);
+            getCharacter().getClient().write(new LP_TemporaryStatReset(this, false));
+            if (TSIndex.isTwoStat(cts)) {
+                getTSBByTSIndex(TSIndex.getTSEFromCTS(cts)).reset();
+            }
+            if (!fromSchedule && getSchedules().containsKey(cts)) {
+                getSchedules().get(cts).cancel(false);
+            } else {
+                getSchedules().remove(cts);
+            }
         }
     }
 

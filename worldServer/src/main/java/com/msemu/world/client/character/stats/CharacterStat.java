@@ -32,12 +32,15 @@ import com.msemu.core.network.GameClient;
 import com.msemu.world.client.character.*;
 import com.msemu.world.constants.JobConstants;
 import com.msemu.world.constants.MapleJob;
+import com.msemu.world.enums.CharacterStatus;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 /**
@@ -175,6 +178,9 @@ public class CharacterStat {
     @Transient // TODO 建表
     @Getter
     private List<PopularityRecord> popularityRecords = new ArrayList<>();
+    @Transient
+    @Getter
+    private AtomicReference<CharacterStatus> status = new AtomicReference<>(CharacterStatus.ALIVE);
 
     public CharacterStat() {
         extendSP = new ExtendSP(5);

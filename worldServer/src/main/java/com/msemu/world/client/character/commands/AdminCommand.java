@@ -291,5 +291,92 @@ public class AdminCommand {
         }
     }
 
+    public static class Hp extends CommandExecute {
+
+        @Override
+        public boolean execute(GameClient client, List<String> args) {
+            if (args.size() < 2)
+                return false;
+            try {
+                final int hp = Integer.parseInt(args.get(1));
+                final Character chr = client.getCharacter();
+                chr.setStat(Stat.HP, hp);
+            } catch (NumberFormatException except) {
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        public String getHelpMessage() {
+            return "!hp <value> - set hp";
+        }
+    }
+
+    public static class MaxHp extends CommandExecute {
+
+        @Override
+        public boolean execute(GameClient client, List<String> args) {
+            if (args.size() < 2)
+                return false;
+            try {
+                final int mhp = Integer.parseInt(args.get(1));
+                final Character chr = client.getCharacter();
+                chr.setStat(Stat.MAX_HP, mhp);
+            } catch (NumberFormatException except) {
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        public String getHelpMessage() {
+            return "!hp <value> - set max hp";
+        }
+    }
+
+    public static class Mp extends CommandExecute {
+
+        @Override
+        public boolean execute(GameClient client, List<String> args) {
+            if (args.size() < 2)
+                return false;
+            try {
+                final int mp = Integer.parseInt(args.get(1));
+                final Character chr = client.getCharacter();
+                chr.setStat(Stat.MP, mp);
+            } catch (NumberFormatException except) {
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        public String getHelpMessage() {
+            return "!hp <value> - set mp";
+        }
+    }
+
+    public static class MaxMp extends CommandExecute {
+
+        @Override
+        public boolean execute(GameClient client, List<String> args) {
+            if (args.size() < 2)
+                return false;
+            try {
+                final int mmp = Integer.parseInt(args.get(1));
+                final Character chr = client.getCharacter();
+                chr.setStat(Stat.MAX_MP, mmp);
+            } catch (NumberFormatException except) {
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        public String getHelpMessage() {
+            return "!hp <value> - set max mp";
+        }
+    }
 
 }
