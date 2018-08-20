@@ -409,14 +409,9 @@ public class Character extends Life {
         return (int) getAvatarData().getCharacterStat().getPosMap();
     }
 
-    private void setFieldID(long fieldId) {
-        setFieldID((int) fieldId);
-    }
-
     private void setFieldID(int fieldID) {
         getAvatarData().getCharacterStat().setPosMap(fieldID);
     }
-
 
     public boolean hasQuestInProgress(int questReq) {
         return getQuestManager().hasQuestInProgress(questReq);
@@ -2093,8 +2088,6 @@ public class Character extends Life {
             return;
 
         Item buffProtectorItem = null;
-        // TODO 原地復活
-        Item upgradeTombItem = null;
         int maskUIOnDead = UIOnDead.Normal.getValue();
         UIReviveType reviveType = UIReviveType.Normal;
 
@@ -2114,6 +2107,8 @@ public class Character extends Life {
 
         } else if (tsm.hasStat(CharacterTemporaryStat.SoulStone)) {
             reviveType = UIReviveType.SoulStone;
+        } else if (hasItem(5510000)) {// 原地復活之術
+            reviveType = UIReviveType.UpgradeTombItem;
         }
 
         setStat(Stat.HP, 0);
@@ -2136,7 +2131,7 @@ public class Character extends Life {
         tsm.removeStat(CharacterTemporaryStat.MaxMP, true);
 
         if (buffProtectorItem != null) {
-            getCashInventory().removeItem(buffProtectorItem);
+            consumeItem(buffProtectorItem);
             write(new LP_SetBuffProtector(buffProtectorItem, true));
         } else {
             tsm.getCurrentStats().keySet().forEach(cts -> tsm.removeStat(cts, true));

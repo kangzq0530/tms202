@@ -31,8 +31,9 @@ import com.msemu.core.network.packets.outpacket.user.local.LP_SetDirectionMode;
 import com.msemu.core.network.packets.outpacket.user.local.LP_SetInGameDirectionMode;
 import com.msemu.world.Channel;
 import com.msemu.world.client.character.Character;
+import com.msemu.world.client.character.inventory.items.Item;
 import com.msemu.world.client.field.Field;
-import com.msemu.world.data.FieldData;
+import com.msemu.world.enums.ReviveType;
 import com.msemu.world.enums.Stat;
 
 /**
@@ -46,7 +47,7 @@ public class CP_UserTransferFieldRequest extends InPacket<GameClient> {
 
     private int tick;
 
-    private short wheelType;
+    private ReviveType reviveType;
 
     public CP_UserTransferFieldRequest(short opcode) {
         super(opcode);
@@ -60,7 +61,8 @@ public class CP_UserTransferFieldRequest extends InPacket<GameClient> {
         if (available() >= 7)
             tick = decodeInt();
         decodeByte();
-        wheelType = decodeShort();
+        final short reviveValue = decodeShort();
+        reviveType = ReviveType.getByValue(reviveValue);
     }
 
     @Override
@@ -89,8 +91,20 @@ public class CP_UserTransferFieldRequest extends InPacket<GameClient> {
                 }
             } else {
                 // 死亡
-                final Field returnMap = channel.getField(chr.getField().getReturnMap());
+                Field returnMap = channel.getField(chr.getField().getReturnMap());
                 chr.setStat(Stat.HP, 50);
+                switch (reviveType) {
+                    case Normal:
+                        break;
+                    case UpgradeTomb:
+                        final Item upgradeTombItem = chr.getCashInventory().getItemByItemID(5510000);
+                        if (upgradeTombItem != null) {
+                            chr.consumeItem(upgradeTombItem);
+                            returnMap = chr.getField();
+                        }
+                        break;
+                }
+
                 chr.warp(returnMap);
             }
 
