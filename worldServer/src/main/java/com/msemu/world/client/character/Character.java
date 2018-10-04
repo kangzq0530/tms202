@@ -51,6 +51,7 @@ import com.msemu.world.Channel;
 import com.msemu.world.client.character.effect.LevelUpUserEffect;
 import com.msemu.world.client.character.effect.MultiKillMessage;
 import com.msemu.world.client.character.friends.FriendList;
+import com.msemu.world.client.character.inventory.InventoryManipulator;
 import com.msemu.world.client.character.inventory.items.Equip;
 import com.msemu.world.client.character.inventory.items.Item;
 import com.msemu.world.client.character.jobs.JobHandler;
@@ -59,6 +60,7 @@ import com.msemu.world.client.character.messages.ComboKillMessage;
 import com.msemu.world.client.character.messages.IncExpMessage;
 import com.msemu.world.client.character.messages.IncMoneyMessage;
 import com.msemu.world.client.character.messages.MoneyDropPickUpMessage;
+import com.msemu.world.client.character.miniroom.MiniRoom;
 import com.msemu.world.client.character.party.Party;
 import com.msemu.world.client.character.quest.Quest;
 import com.msemu.world.client.character.quest.QuestManager;
@@ -96,14 +98,14 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Predicate;
 
 import static com.msemu.commons.data.enums.InvType.EQUIP;
 import static com.msemu.commons.data.enums.InvType.EQUIPPED;
-import static com.msemu.world.enums.InventoryOperationType.*;
+import static com.msemu.world.enums.InventoryOperationType.ADD;
+import static com.msemu.world.enums.InventoryOperationType.UPDATE;
 
 /**
  * Created by Weber on 2018/3/29.
@@ -637,53 +639,6 @@ public class Character extends Life {
         }
     }
 
-    /**
-     * Consumes a single {@link Item} from this Char's {@link Inventory}. Will unregisterParty the Item if it has a quantity of 1.
-     *
-     * @param item The Item to consume, which is currently in the Char's inventory.
-     */
-    public void consumeItem(Item item) {
-        Inventory inventory = getInventoryByType(item.getInvType());
-        // data race possible
-        if (item.getQuantity() <= 1 && !ItemConstants.isThrowingItem(item.getItemId())) {
-            item.setQuantity(0);
-            inventory.removeItem(item);
-            write(new LP_InventoryOperation(true, false,
-                    REMOVE, item, item.getBagIndex()));
-        } else {
-            item.setQuantity(item.getQuantity() - 1);
-            write(new LP_InventoryOperation(true, false,
-                    UPDATE, item, item.getBagIndex()));
-        }
-        this.renewBulletIDForAttack();
-    }
-
-    /**
-     * Consumes an item of this Char with the given id. Will do nothing if the Char doesn't have the Item.
-     * Only works for non-Equip (i.e., type is not EQUIPPED or EQUIP, CASH is fine) itemTemplates.
-     * Calls {@link #consumeItem(Item)} if an Item is found.
-     *
-     * @param id       The Item's id.
-     * @param quantity The amount to consume.
-     */
-    public void consumeItem(int id, int quantity) {
-        quantity -= 1;
-        Item checkItem = ItemData.getInstance().createItem(id);
-        Item item = getInventoryByType(checkItem.getInvType()).getItemByItemID(id);
-        item.setQuantity(quantity);
-        consumeItem(item);
-    }
-
-    public boolean hasItem(int itemID) {
-        return getInventories().stream().anyMatch(inv -> inv.containsItem(itemID));
-    }
-
-    public boolean hasItemCount(int itemID, int quantity) {
-        return getInventories().stream().anyMatch(inv -> {
-            Item item = inv.getItemByItemID(itemID);
-            return item != null && item.getQuantity() >= quantity;
-        });
-    }
 
     public int getCurrentMaxHp() {
         return getCharacterLocalStat().getMaxHp();
@@ -1852,6 +1807,27 @@ public class Character extends Life {
         }
     }
 
+    public void consumeItem(int itemId) {
+        consumeItem(itemId, 1);
+    }
+
+    public void consumeItem(int itemId, int quantity) {
+        InvType invType = ItemConstants.getInvTypeFromItemID(itemId);
+        Item item = getInventoryByType(invType).getItemByItemID(itemId);
+        InventoryManipulator.consume(this, item, quantity);
+    }
+
+    public boolean hasItem(int itemID) {
+        return getInventories().stream().anyMatch(inv -> inv.containsItem(itemID));
+    }
+
+    public boolean hasItemCount(int itemID, int quantity) {
+        return getInventories().stream().anyMatch(inv -> {
+            Item item = inv.getItemByItemID(itemID);
+            return item != null && item.getQuantity() >= quantity;
+        });
+    }
+
     public boolean canHold(final int itemID, final int quantity) {
         if (ItemConstants.isEquip(itemID)) {
             return getEquipInventory().getSlots() > getEquipInventory().getItems().size();
@@ -1879,6 +1855,7 @@ public class Character extends Life {
             addItemToInventory(item);
         }
     }
+
 
     @Override
     public FieldObjectType getFieldObjectType() {
@@ -2080,7 +2057,6 @@ public class Character extends Life {
             setStat(Stat.HP, getCurrentMaxHp() / 100 * recoveryHpR);
             setAction((byte) 0);
             tsm.removeStat(buff, true);
-            // TODO cooldown
         });
 
         final int hp = getStat(Stat.HP);
@@ -2131,7 +2107,7 @@ public class Character extends Life {
         tsm.removeStat(CharacterTemporaryStat.MaxMP, true);
 
         if (buffProtectorItem != null) {
-            consumeItem(buffProtectorItem);
+            consumeItem(buffProtectorItem.getItemId(), 1);
             write(new LP_SetBuffProtector(buffProtectorItem, true));
         } else {
             tsm.getCurrentStats().keySet().forEach(cts -> tsm.removeStat(cts, true));

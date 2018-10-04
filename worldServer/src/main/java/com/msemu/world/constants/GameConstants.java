@@ -42,7 +42,7 @@ public class GameConstants {
     public static final int RANDOM_EQUIP_RARE_CHANCE = 8; // out of a 100
     public static final int THIRD_LINE_CHANCE = 50;
 
-    public static final int MAX_RUNESTONE_PER_FIELD = 2;
+    public static final int MAX_RUNE_STONE_PER_FIELD = 1;
     public static final int RUNE_RESPAWN_TIME = 5;
     public static final int RUNE_STONE_REQUEST_COOLTIME = 5000; // 5000 miles
     public static final int RUNE_COOLDOWN_TIME = 4; // minutes

@@ -22,46 +22,28 @@
  * SOFTWARE.
  */
 
-package com.msemu.world.client.field;
+package com.msemu.core.network.packets.inpacket;
 
-import com.msemu.commons.utils.types.Position;
+import com.msemu.commons.network.packets.InPacket;
 import com.msemu.core.network.GameClient;
-import com.msemu.world.enums.FieldObjectType;
-import lombok.Getter;
-import lombok.Setter;
+import com.msemu.world.client.character.Character;
 
-/**
- * Created by Weber on 2018/5/13.
- */
-public abstract class AbstractFieldObject {
+public class CP_UserADBoardClose extends InPacket<GameClient> {
 
-    @Getter
-    private final Position position = new Position();
-
-    @Getter
-    private final Position oldPosition = new Position();
-
-    @Getter
-    @Setter
-    private int objectId;
-
-    @Getter
-    @Setter
-    private Field field;
-
-    public abstract FieldObjectType getFieldObjectType();
-
-    public abstract void enterScreen(GameClient client);
-
-    public abstract void outScreen(GameClient client);
-
-    public void setPosition(Position position) {
-        getPosition().setX(position.getX());
-        getPosition().setY(position.getY());
+    public CP_UserADBoardClose(short opcode) {
+        super(opcode);
     }
 
-    public void setOldPosition(Position position) {
-        getOldPosition().setX(position.getX());
-        getOldPosition().setY(position.getY());
+    @Override
+    public void read() {
+
+    }
+
+    @Override
+    public void runImpl() {
+        final Character chr = getClient().getCharacter();
+        if(chr.getADBoardRemoteMsg() != null) {
+            chr.setADBoardRemoteMsg(null);
+        }
     }
 }

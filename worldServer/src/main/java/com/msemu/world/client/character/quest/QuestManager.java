@@ -200,8 +200,8 @@ public class QuestManager {
         getCharacter().write(new LP_Message(new QuestRecordMessage(quest)));
         getCharacter().write(new LP_UserEffectLocal(new QuestCompleteUserEffect()));
         getCharacter().getField().broadcastPacket(new LP_UserEffectRemote(getCharacter(), new QuestCompleteUserEffect()));
-        for (QuestProgressItemRequirement qpir : quest.getItemReqs()) {
-            getCharacter().consumeItem(qpir.getItemID(), qpir.getRequiredCount());
+        for (QuestProgressItemRequirement questRequireInfo : quest.getItemReqs()) {
+            getCharacter().consumeItem(questRequireInfo.getItemID(), questRequireInfo.getRequiredCount());
         }
         for (IQuestAction reward : questData.getCompleteActionsById(questID)) {
             reward.action(character);

@@ -37,10 +37,6 @@ public abstract class Life extends AbstractFieldObject {
 
     @Getter
     @Setter
-    private Field field;
-
-    @Getter
-    @Setter
     private byte action;
 
     @Getter

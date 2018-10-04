@@ -59,7 +59,7 @@ public class CP_UserChangeSlotPositionRequest extends InPacket<GameClient> {
         Character chr = getClient().getCharacter();
         InvType invType = InvType.getInvTypeByValue(invTypeVal);
         if (srcSlot < 0 && destSlot > 0) {
-            InventoryManipulator.unequip(chr, srcSlot, destSlot);
+            InventoryManipulator.unequipped(chr, srcSlot, destSlot);
         } else if (destSlot < 0) {
             InventoryManipulator.equip(chr, srcSlot, destSlot);
         } else if (destSlot == 0) {

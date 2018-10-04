@@ -22,46 +22,18 @@
  * SOFTWARE.
  */
 
-package com.msemu.world.client.field;
+package com.msemu.world.client.character.miniroom;
 
-import com.msemu.commons.utils.types.Position;
-import com.msemu.core.network.GameClient;
-import com.msemu.world.enums.FieldObjectType;
-import lombok.Getter;
-import lombok.Setter;
+import com.msemu.world.enums.MiniRoomType;
 
-/**
- * Created by Weber on 2018/5/13.
- */
-public abstract class AbstractFieldObject {
+public class MiniRoomFactory {
 
-    @Getter
-    private final Position position = new Position();
 
-    @Getter
-    private final Position oldPosition = new Position();
-
-    @Getter
-    @Setter
-    private int objectId;
-
-    @Getter
-    @Setter
-    private Field field;
-
-    public abstract FieldObjectType getFieldObjectType();
-
-    public abstract void enterScreen(GameClient client);
-
-    public abstract void outScreen(GameClient client);
-
-    public void setPosition(Position position) {
-        getPosition().setX(position.getX());
-        getPosition().setY(position.getY());
-    }
-
-    public void setOldPosition(Position position) {
-        getOldPosition().setX(position.getX());
-        getOldPosition().setY(position.getY());
+    public static MiniRoom getMiniRoom(MiniRoomType type) {
+        switch (type) {
+            case MR_TradingRoom:
+                return new TradeRoom();
+        }
+        return null;
     }
 }

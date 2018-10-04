@@ -97,9 +97,8 @@ public class CP_UserTransferFieldRequest extends InPacket<GameClient> {
                     case Normal:
                         break;
                     case UpgradeTomb:
-                        final Item upgradeTombItem = chr.getCashInventory().getItemByItemID(5510000);
-                        if (upgradeTombItem != null) {
-                            chr.consumeItem(upgradeTombItem);
+                        if (chr.hasItem(5510000)) {
+                            chr.consumeItem(5510000);
                             returnMap = chr.getField();
                         }
                         break;

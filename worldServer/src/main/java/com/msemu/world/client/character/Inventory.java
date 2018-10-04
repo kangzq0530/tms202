@@ -36,6 +36,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 /**
@@ -59,6 +60,9 @@ public class Inventory {
     private InvType type;
     @Column(name = "slots")
     private byte slots;
+    @Getter
+    @Transient
+    private final ReentrantLock lock = new ReentrantLock();
 
     public Inventory() {
         items = new ArrayList<>();
@@ -129,4 +133,5 @@ public class Inventory {
     private boolean isFull() {
         return getItems().size() >= getSlots();
     }
+
 }

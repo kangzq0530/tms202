@@ -22,46 +22,33 @@
  * SOFTWARE.
  */
 
-package com.msemu.world.client.field;
+package com.msemu.world.client.character.miniroom.actions;
 
-import com.msemu.commons.utils.types.Position;
+import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;
-import com.msemu.world.enums.FieldObjectType;
-import lombok.Getter;
-import lombok.Setter;
+import com.msemu.world.client.character.Character;
+import com.msemu.world.client.character.miniroom.MiniRoomVisitor;
+import com.msemu.world.enums.MiniRoomOperation;
 
-/**
- * Created by Weber on 2018/5/13.
- */
-public abstract class AbstractFieldObject {
+public class MiniRoomEnterAction implements IMiniRoomAction {
 
-    @Getter
-    private final Position position = new Position();
+    private final MiniRoomVisitor visitor;
 
-    @Getter
-    private final Position oldPosition = new Position();
-
-    @Getter
-    @Setter
-    private int objectId;
-
-    @Getter
-    @Setter
-    private Field field;
-
-    public abstract FieldObjectType getFieldObjectType();
-
-    public abstract void enterScreen(GameClient client);
-
-    public abstract void outScreen(GameClient client);
-
-    public void setPosition(Position position) {
-        getPosition().setX(position.getX());
-        getPosition().setY(position.getY());
+    public MiniRoomEnterAction(MiniRoomVisitor visitor) {
+        this.visitor = visitor;
     }
 
-    public void setOldPosition(Position position) {
-        getOldPosition().setX(position.getX());
-        getOldPosition().setY(position.getY());
+    @Override
+    public MiniRoomOperation getType() {
+        return MiniRoomOperation.MRP_Enter;
+    }
+
+    @Override
+    public void encode(OutPacket<GameClient> outPacket) {
+        outPacket.encodeByte(visitor.getCharIndex());
+        final Character chr = visitor.getCharacter();
+        chr.getAvatarData().getAvatarLook().encode(outPacket);
+        outPacket.encodeString(chr.getName());
+        outPacket.encodeInt(chr.getJob());
     }
 }

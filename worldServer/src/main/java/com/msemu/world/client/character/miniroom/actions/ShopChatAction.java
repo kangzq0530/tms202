@@ -22,46 +22,32 @@
  * SOFTWARE.
  */
 
-package com.msemu.world.client.field;
+package com.msemu.world.client.character.miniroom.actions;
 
-import com.msemu.commons.utils.types.Position;
+import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;
-import com.msemu.world.enums.FieldObjectType;
-import lombok.Getter;
-import lombok.Setter;
+import com.msemu.world.enums.MiniRoomOperation;
 
-/**
- * Created by Weber on 2018/5/13.
- */
-public abstract class AbstractFieldObject {
+public class ShopChatAction implements IMiniRoomAction {
 
-    @Getter
-    private final Position position = new Position();
+    private final int charIndex;
 
-    @Getter
-    private final Position oldPosition = new Position();
+    private final String text;
 
-    @Getter
-    @Setter
-    private int objectId;
-
-    @Getter
-    @Setter
-    private Field field;
-
-    public abstract FieldObjectType getFieldObjectType();
-
-    public abstract void enterScreen(GameClient client);
-
-    public abstract void outScreen(GameClient client);
-
-    public void setPosition(Position position) {
-        getPosition().setX(position.getX());
-        getPosition().setY(position.getY());
+    public ShopChatAction(int charIndex, String text) {
+        this.charIndex = charIndex;
+        this.text = text;
     }
 
-    public void setOldPosition(Position position) {
-        getOldPosition().setX(position.getX());
-        getOldPosition().setY(position.getY());
+    @Override
+    public MiniRoomOperation getType() {
+        return MiniRoomOperation.MRP_Chat;
+    }
+
+    @Override
+    public void encode(OutPacket<GameClient> outPacket) {
+        outPacket.encodeByte(MiniRoomOperation.MRP_UserChat.getValue());
+        outPacket.encodeByte(charIndex);
+        outPacket.encodeString(text);
     }
 }

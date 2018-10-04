@@ -22,46 +22,52 @@
  * SOFTWARE.
  */
 
-package com.msemu.world.client.field;
+package com.msemu.world.client.character.miniroom;
 
-import com.msemu.commons.utils.types.Position;
+import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;
+import com.msemu.world.client.character.Character;
 import com.msemu.world.enums.FieldObjectType;
-import lombok.Getter;
-import lombok.Setter;
+import com.msemu.world.enums.MiniRoomType;
 
-/**
- * Created by Weber on 2018/5/13.
- */
-public abstract class AbstractFieldObject {
-
-    @Getter
-    private final Position position = new Position();
-
-    @Getter
-    private final Position oldPosition = new Position();
-
-    @Getter
-    @Setter
-    private int objectId;
-
-    @Getter
-    @Setter
-    private Field field;
-
-    public abstract FieldObjectType getFieldObjectType();
-
-    public abstract void enterScreen(GameClient client);
-
-    public abstract void outScreen(GameClient client);
-
-    public void setPosition(Position position) {
-        getPosition().setX(position.getX());
-        getPosition().setY(position.getY());
+public class PersonalShop extends MiniRoom {
+    @Override
+    public MiniRoomType getType() {
+        return MiniRoomType.MR_PersonalShop;
     }
 
-    public void setOldPosition(Position position) {
-        getOldPosition().setX(position.getX());
-        getOldPosition().setY(position.getY());
+    @Override
+    public int getMaxUsers() {
+        return 3;
+    }
+
+    @Override
+    public void create(Character creator) {
+
+    }
+
+    @Override
+    public void enter(Character visitor) {
+
+    }
+
+    @Override
+    public void close() {
+
+    }
+
+    @Override
+    public FieldObjectType getFieldObjectType() {
+        return null;
+    }
+
+    @Override
+    public void enterScreen(GameClient client) {
+
+    }
+
+    @Override
+    public void outScreen(GameClient client) {
+
     }
 }

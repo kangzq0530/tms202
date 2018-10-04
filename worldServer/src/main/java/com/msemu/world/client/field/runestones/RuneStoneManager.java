@@ -31,6 +31,7 @@ import com.msemu.commons.thread.EventManager;
 import com.msemu.commons.utils.Rand;
 import com.msemu.commons.utils.Utils;
 import com.msemu.commons.utils.types.Position;
+import com.msemu.core.configs.FieldConfig;
 import com.msemu.core.network.packets.outpacket.field.LP_RuneStoneAppear;
 import com.msemu.core.network.packets.outpacket.field.LP_RuneStoneClearAndAllRegister;
 import com.msemu.core.network.packets.outpacket.field.LP_RuneStoneDisappear;
@@ -95,7 +96,7 @@ public class RuneStoneManager {
                         .collect(Collectors.toList())
                         .contains(type) && type != RuneStoneType.RST_NONE)
                 .collect(Collectors.toList());
-        for (int i = 0; i < GameConstants.MAX_RUNESTONE_PER_FIELD; i++) {
+        for (int i = 0; i < GameConstants.MAX_RUNE_STONE_PER_FIELD; i++) {
             Foothold fh = getField().getRandomFoothold();
             Collections.shuffle(typesCanSpawn);
             if (!typesCanSpawn.isEmpty() && fh != null) {
@@ -111,7 +112,7 @@ public class RuneStoneManager {
 
     public void spawnTask() {
 
-        if (getField().getAllMobs().isEmpty() || getField().getBossMobID() > 0)
+        if (getField().getAllMobs().isEmpty() || getField().getBossMobID() > 0 && FieldConfig.ENABLE_RUNE_STONE)
             return;
 
         boolean allEnable = getRuneStones().stream().allMatch(RuneStone::isEnable);

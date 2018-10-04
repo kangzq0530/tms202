@@ -22,46 +22,20 @@
  * SOFTWARE.
  */
 
-package com.msemu.world.client.field;
+package com.msemu.core.configs;
 
-import com.msemu.commons.utils.types.Position;
-import com.msemu.core.network.GameClient;
-import com.msemu.world.enums.FieldObjectType;
-import lombok.Getter;
-import lombok.Setter;
+import com.msemu.commons.config.annotation.ConfigComments;
+import com.msemu.commons.config.annotation.ConfigFile;
+import com.msemu.commons.config.annotation.ConfigProperty;
+import com.msemu.commons.reload.Reloadable;
 
-/**
- * Created by Weber on 2018/5/13.
- */
-public abstract class AbstractFieldObject {
+@Reloadable(name = "world",
+        group = "all")
+@ConfigFile(name = "configs/field.properties")
+public class FieldConfig {
 
-    @Getter
-    private final Position position = new Position();
+    @ConfigComments(comment = {"The rune stone switch", "Default: true"})
+    @ConfigProperty(name = "field.enableRuneStone", value = "true")
+    public static boolean ENABLE_RUNE_STONE = true;
 
-    @Getter
-    private final Position oldPosition = new Position();
-
-    @Getter
-    @Setter
-    private int objectId;
-
-    @Getter
-    @Setter
-    private Field field;
-
-    public abstract FieldObjectType getFieldObjectType();
-
-    public abstract void enterScreen(GameClient client);
-
-    public abstract void outScreen(GameClient client);
-
-    public void setPosition(Position position) {
-        getPosition().setX(position.getX());
-        getPosition().setY(position.getY());
-    }
-
-    public void setOldPosition(Position position) {
-        getOldPosition().setX(position.getX());
-        getOldPosition().setY(position.getY());
-    }
 }

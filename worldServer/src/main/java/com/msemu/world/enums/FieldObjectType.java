@@ -43,6 +43,7 @@ public enum FieldObjectType {
     EXTRACTOR,
     FAMILIAR,
     HIRED_MERCHANT,
+    TRADE,
     ANDROID,
     KITE
 }

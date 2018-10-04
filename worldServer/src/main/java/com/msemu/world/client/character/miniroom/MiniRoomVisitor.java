@@ -22,46 +22,37 @@
  * SOFTWARE.
  */
 
-package com.msemu.world.client.field;
+package com.msemu.world.client.character.miniroom;
 
-import com.msemu.commons.utils.types.Position;
+import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;
-import com.msemu.world.enums.FieldObjectType;
+import com.msemu.world.client.character.Character;
 import lombok.Getter;
-import lombok.Setter;
 
-/**
- * Created by Weber on 2018/5/13.
- */
-public abstract class AbstractFieldObject {
+import java.lang.ref.WeakReference;
+import java.util.concurrent.atomic.AtomicReference;
 
-    @Getter
-    private final Position position = new Position();
+public class MiniRoomVisitor {
 
     @Getter
-    private final Position oldPosition = new Position();
+    private final int charIndex;
 
     @Getter
-    @Setter
-    private int objectId;
+    private final WeakReference<Character> charRef;
 
-    @Getter
-    @Setter
-    private Field field;
-
-    public abstract FieldObjectType getFieldObjectType();
-
-    public abstract void enterScreen(GameClient client);
-
-    public abstract void outScreen(GameClient client);
-
-    public void setPosition(Position position) {
-        getPosition().setX(position.getX());
-        getPosition().setY(position.getY());
+    public MiniRoomVisitor(int charIndex, Character character) {
+        this.charIndex = charIndex;
+        this.charRef = new WeakReference<>(character);
     }
 
-    public void setOldPosition(Position position) {
-        getOldPosition().setX(position.getX());
-        getOldPosition().setY(position.getY());
+    public Character getCharacter() {
+        return getCharRef().get();
     }
+
+    public void write(OutPacket<GameClient> outPacket) {
+        if (getCharacter() != null) {
+            getCharacter().write(outPacket);
+        }
+    }
+
 }

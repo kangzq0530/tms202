@@ -161,11 +161,14 @@ public class LP_UserEnterField extends OutPacket<GameClient> {
         encodeInt(chr.getTamingMobFatigue());
         encodeByte(false);
 
-        byte miniRoomType = chr.getMiniRoom() != null ? chr.getMiniRoom().getType() : 0;
-        encodeByte(miniRoomType);
-        if (miniRoomType > 0) {
-            chr.getMiniRoom().encode(this);
-        }
+
+        encodeByte(0);
+
+//        byte miniRoomType = chr.getMiniRoom() != null ? chr.getMiniRoom().getType() : 0;
+//        encodeByte(miniRoomType);
+//        if (miniRoomType > 0) {
+//            //chr.getMiniRoom().encode(this);
+//        }
 
         encodeByte(chr.getADBoardRemoteMsg() != null);
         if (chr.getADBoardRemoteMsg() != null) {

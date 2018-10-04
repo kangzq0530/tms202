@@ -22,46 +22,46 @@
  * SOFTWARE.
  */
 
-package com.msemu.world.client.field;
+package com.msemu.world.enums;
 
-import com.msemu.commons.utils.types.Position;
-import com.msemu.core.network.GameClient;
-import com.msemu.world.enums.FieldObjectType;
 import lombok.Getter;
-import lombok.Setter;
 
-/**
- * Created by Weber on 2018/5/13.
- */
-public abstract class AbstractFieldObject {
-
+public enum MiniRoomType {
+    MR_NOT_DEFINED(0x0),
+    MR_OmokRoom(0x1),
+    MR_MemoryGameRoom(0x2),
+    MR_RpsGameRoom(0x3),
+    MR_TradingRoom(0x4),
+    MR_PersonalShop(0x5),
+    MR_EntrustedShop(0x6),
+    MR_CashTradingRoom(0x7),
+    MR_WeddingExRoom(0x8),
+    MR_CandyTradingRoom(0x9),
+    MR_MultiYutRoom(0xA),
+    MR_SignRoom(0xB),
+    MR_TenthAnniversaryBoardGameRoom(0xC),
+    MR_BingoGameRoom(0xD),
+    MR_OmokRenewalRoom(0xE),
+    MR_MemoryGameRoom_2013(0xF),
+    MR_OneCardGameRoom(0x10),
+    MR_SuperMultiYutRoom(0x11),
+    MR_RunnerGameRoom(0x12),
+    MR_TypeNo(0x13),
+    None(-1),;
     @Getter
-    private final Position position = new Position();
+    private final int value;
 
-    @Getter
-    private final Position oldPosition = new Position();
-
-    @Getter
-    @Setter
-    private int objectId;
-
-    @Getter
-    @Setter
-    private Field field;
-
-    public abstract FieldObjectType getFieldObjectType();
-
-    public abstract void enterScreen(GameClient client);
-
-    public abstract void outScreen(GameClient client);
-
-    public void setPosition(Position position) {
-        getPosition().setX(position.getX());
-        getPosition().setY(position.getY());
+    MiniRoomType(int value) {
+        this.value = value;
     }
 
-    public void setOldPosition(Position position) {
-        getOldPosition().setX(position.getX());
-        getOldPosition().setY(position.getY());
+    public static MiniRoomType getByValue(int value) {
+        for (MiniRoomType type : values()) {
+            if (type.getValue() == value) {
+                return type;
+            }
+        }
+        return None;
     }
+
 }
