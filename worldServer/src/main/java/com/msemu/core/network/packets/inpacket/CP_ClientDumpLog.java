@@ -89,6 +89,7 @@ public class CP_ClientDumpLog extends InPacket<GameClient> {
                 .append("封包頭:").append(header).append(System.lineSeparator())
                 .append("封包內容:").append(HexUtils.byteArraytoHex(buffer.array()));
         log.debug(builder.toString());
+        getClient().close();
     }
 
     @Override

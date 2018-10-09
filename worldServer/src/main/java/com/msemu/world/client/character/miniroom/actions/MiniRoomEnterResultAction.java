@@ -28,20 +28,29 @@ import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.miniroom.MiniRoom;
+import com.msemu.world.enums.MiniRoomEnterResult;
 import com.msemu.world.enums.MiniRoomOperation;
-
-import java.util.List;
 
 public class MiniRoomEnterResultAction implements IMiniRoomAction {
 
     private final MiniRoom miniRoom;
     private final int charIndex;
+    private final MiniRoomEnterResult result;
+    private final String text;
 
     public MiniRoomEnterResultAction(MiniRoom miniRoom, int charIndex) {
         this.miniRoom = miniRoom;
         this.charIndex = charIndex;
+        this.result = MiniRoomEnterResult.MR_Success;
+        this.text = "";
     }
 
+    public MiniRoomEnterResultAction(MiniRoomEnterResult result, String text) {
+        this.miniRoom = null;
+        this.charIndex = -1;
+        this.result = result;
+        this.text = text;
+    }
 
     @Override
     public MiniRoomOperation getType() {
@@ -50,22 +59,24 @@ public class MiniRoomEnterResultAction implements IMiniRoomAction {
 
     @Override
     public void encode(OutPacket<GameClient> outPacket) {
-        outPacket.encodeByte(miniRoom.getType().getValue());
-        outPacket.encodeByte(miniRoom.getMaxUsers());
-        outPacket.encodeByte(charIndex);
-
-
-        miniRoom.getVisitorsMap().forEach((index, visitor) -> {
-            final Character chr = visitor.getCharacter();
-            outPacket.encodeByte(index);
-            chr.getAvatarData()
-                    .getAvatarLook().encode(outPacket);
-            outPacket.encodeString(chr.getName());
-            outPacket.encodeShort(chr.getJob());
-        });
-        outPacket.encodeByte(-1);
-
-
-        outPacket.encodeByte(-1);
+        if (result == MiniRoomEnterResult.MR_Success && miniRoom != null) {
+            outPacket.encodeByte(miniRoom.getType().getValue());
+            outPacket.encodeByte(miniRoom.getMaxUsers());
+            outPacket.encodeByte(charIndex);
+            miniRoom.getVisitorsMap().forEach((index, visitor) -> {
+                final Character chr = visitor.getCharacter();
+                outPacket.encodeByte(index);
+                chr.getAvatarData()
+                        .getAvatarLook().encode(outPacket);
+                outPacket.encodeString(chr.getName());
+                outPacket.encodeShort(chr.getJob());
+            });
+            outPacket.encodeByte(-1);
+            outPacket.encodeByte(-1);
+        } else {
+            outPacket.encodeByte(0);
+            outPacket.encodeByte(result.getValue());
+            outPacket.encodeString(text);
+        }
     }
 }

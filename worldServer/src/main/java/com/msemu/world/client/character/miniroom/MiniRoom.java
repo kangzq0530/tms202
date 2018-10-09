@@ -29,10 +29,12 @@ import com.msemu.core.network.GameClient;
 import com.msemu.core.network.packets.outpacket.miniroom.LP_MiniRoom;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.miniroom.actions.MiniRoomEnterAction;
+import com.msemu.world.client.character.miniroom.actions.MiniRoomEnterResultAction;
+import com.msemu.world.client.character.miniroom.actions.MiniRoomLeaveAction;
 import com.msemu.world.client.field.AbstractFieldObject;
+import com.msemu.world.enums.MiniRoomLeaveResult;
 import com.msemu.world.enums.MiniRoomType;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,9 +44,6 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public abstract class MiniRoom extends AbstractFieldObject {
 
-    @Getter
-    @Setter
-    protected String title = "";
 
     @Getter
     protected final Map<Integer, MiniRoomVisitor> visitorsMap = new HashMap<>();
@@ -52,7 +51,7 @@ public abstract class MiniRoom extends AbstractFieldObject {
     @Getter
     protected final ReentrantLock lock = new ReentrantLock();
 
-    public boolean closed;
+    public boolean closed = true;
 
     protected MiniRoom() {
     }
@@ -65,21 +64,23 @@ public abstract class MiniRoom extends AbstractFieldObject {
 
     public abstract void enter(Character visitor);
 
+    public abstract void leave(Character chr);
+
     public abstract void close();
 
-    public void broadcast(OutPacket<GameClient> outPacket) {
+    protected void broadcast(OutPacket<GameClient> outPacket) {
         broadcast(outPacket, null);
     }
 
-    public void broadcast(OutPacket<GameClient> outPacket, Character except) {
-        getVisitorsMap().forEach((index, visitor) -> {
+    protected void broadcast(OutPacket<GameClient> outPacket, Character except) {
+        useLock(() -> getVisitorsMap().forEach((index, visitor) -> {
             if (!visitor.getCharacter().equals(except)) {
                 visitor.getCharacter().write(outPacket);
             }
-        });
+        }));
     }
 
-    void useLock(Runnable runnable) {
+    public void useLock(Runnable runnable) {
         getLock().lock();
         try {
             runnable.run();
@@ -89,27 +90,28 @@ public abstract class MiniRoom extends AbstractFieldObject {
     }
 
     public MiniRoomVisitor getVisitor(int index) {
-        if (getVisitorsMap().size() < index)
-            return getVisitorsMap().get(index);
-        return null;
+        return getVisitorsMap().getOrDefault(index, null);
     }
 
     public List<MiniRoomVisitor> getVisitors() {
         return new ArrayList<>(this.visitorsMap.values());
     }
 
-    public void addVisitor(Character chr) {
+    protected void addVisitor(Character chr) {
         for (int i = 0; i < getMaxUsers(); i++) {
             if (!getVisitorsMap().containsKey(i)) {
                 final MiniRoomVisitor visitor = new MiniRoomVisitor(i, chr);
                 getVisitorsMap().put(i, visitor);
-                visitor.write(new LP_MiniRoom(new MiniRoomEnterAction(visitor)));
+                chr.setMiniRoom(this);
+                visitor.write(new LP_MiniRoom(new MiniRoomEnterResultAction(this, i)));
+                broadcast(new LP_MiniRoom(new MiniRoomEnterAction(visitor)) , chr);
                 return;
             }
         }
+
     }
 
-    public void removeVisitorByCharacter(Character chr) {
+    protected void removeVisitorByCharacter(Character chr) {
         for (int i = 0; i < getMaxUsers(); i++) {
             final MiniRoomVisitor visitor = getVisitorsMap().get(i);
             if (visitor.getCharacter() != null && visitor.getCharacter().equals(chr)) {
@@ -119,14 +121,16 @@ public abstract class MiniRoom extends AbstractFieldObject {
         }
     }
 
-    public void removeVisitor(MiniRoomVisitor visitor) {
+    protected void removeVisitor(MiniRoomVisitor visitor) {
         if (getVisitorsMap().containsValue(visitor)) {
+            broadcast(new LP_MiniRoom(new MiniRoomLeaveAction(MiniRoomLeaveResult.TR_TradeDone, visitor.getCharIndex(), visitor.getCharacter().getName())));
             getVisitorsMap().remove(visitor.getCharIndex());
+            visitor.getCharacter().setMiniRoom(null);
         }
     }
 
-    public void removeAllVisitors() {
-        getVisitorsMap().clear();
+    protected void removeAllVisitors() {
+        getVisitors().forEach(this::removeVisitor);
     }
 
     public boolean isFull() {
@@ -137,7 +141,7 @@ public abstract class MiniRoom extends AbstractFieldObject {
         return closed;
     }
 
-    public void setClosed(boolean closed) {
+    protected void setClosed(boolean closed) {
         this.closed = closed;
     }
 
@@ -146,4 +150,5 @@ public abstract class MiniRoom extends AbstractFieldObject {
                 .filter(each -> each.getCharacter().equals(chr)).findFirst()
                 .orElse(null);
     }
+
 }

@@ -112,7 +112,7 @@ public class RuneStoneManager {
 
     public void spawnTask() {
 
-        if (getField().getAllMobs().isEmpty() || getField().getBossMobID() > 0 && FieldConfig.ENABLE_RUNE_STONE)
+        if (getField().getAllMobs().isEmpty() || getField().getBossMobID() > 0 || !FieldConfig.ENABLE_RUNE_STONE)
             return;
 
         boolean allEnable = getRuneStones().stream().allMatch(RuneStone::isEnable);

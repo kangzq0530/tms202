@@ -27,18 +27,29 @@ package com.msemu.core.network.packets.inpacket;
 import com.msemu.commons.data.enums.InvType;
 import com.msemu.commons.network.packets.InPacket;
 import com.msemu.core.network.GameClient;
+import com.msemu.core.network.packets.outpacket.miniroom.LP_MiniRoom;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.Inventory;
 import com.msemu.world.client.character.inventory.items.Item;
 import com.msemu.world.client.character.miniroom.MiniRoom;
 import com.msemu.world.client.character.miniroom.MiniRoomFactory;
+import com.msemu.world.client.character.miniroom.MiniRoomInvitation;
 import com.msemu.world.client.character.miniroom.TradeRoom;
+import com.msemu.world.client.character.miniroom.actions.MiniRoomEnterResultAction;
+import com.msemu.world.client.character.miniroom.actions.MiniRoomInviteResultAction;
+import com.msemu.world.client.character.miniroom.actions.MiniRoomInvtie;
+import com.msemu.world.client.field.Field;
+import com.msemu.world.enums.MiniRoomEnterResult;
+import com.msemu.world.enums.MiniRoomInviteResult;
 import com.msemu.world.enums.MiniRoomOperation;
 import com.msemu.world.enums.MiniRoomType;
+import com.msemu.world.service.MiniRoomService;
 
 public class CP_MiniRoom extends InPacket<GameClient> {
 
-    private int opcodeValue, miniRoomTypeValue, invTypeValue, srcSlot, quantity, targetSlot;
+    private int opcodeValue, miniRoomTypeValue, invTypeValue,
+            srcSlot, quantity, targetSlot, targetCharacterId,
+            invitationSN, errorCode;
 
     public CP_MiniRoom(short opcode) {
         super(opcode);
@@ -63,6 +74,18 @@ public class CP_MiniRoom extends InPacket<GameClient> {
             case MRP_Create:
                 miniRoomTypeValue = decodeByte();
                 break;
+            case MRP_Invite:
+                targetCharacterId = decodeInt();
+                break;
+            case MRP_InviteResult:
+                invitationSN = decodeInt();
+                errorCode = decodeByte();
+                break;
+            case MRP_Enter:
+                invitationSN = decodeInt();
+                skip(2);
+                break;
+
         }
     }
 
@@ -70,8 +93,9 @@ public class CP_MiniRoom extends InPacket<GameClient> {
     public void runImpl() {
 
         final Character chr = getClient().getCharacter();
+        final Field field = chr.getField();
         final MiniRoomOperation opcode = MiniRoomOperation.getByValue(opcodeValue);
-        final MiniRoom miniRoom;
+        MiniRoom miniRoom;
 
         switch (opcode) {
             case TRP_PutItem1:
@@ -103,17 +127,77 @@ public class CP_MiniRoom extends InPacket<GameClient> {
                     ((TradeRoom) miniRoom).completeTrade(chr);
                 }
                 break;
-            case MRP_Enter:
-                break;
+
             case MRP_Create:
-                final MiniRoomType miniRoomType = MiniRoomType.getByValue(miniRoomTypeValue);
-                miniRoom = MiniRoomFactory.getMiniRoom(miniRoomType);
+                miniRoom = chr.getMiniRoom();
+                // 檢查是否能創立
                 if (miniRoom != null) {
-                    chr.setMiniRoom(miniRoom);
-                    miniRoom.create(chr);
+                    chr.write(new LP_MiniRoom(new MiniRoomEnterResultAction(
+                            MiniRoomEnterResult.MG_AlreadyPlaying, "")));
+                } else {
+                    final MiniRoomType miniRoomType = MiniRoomType.getByValue(miniRoomTypeValue);
+                    miniRoom = MiniRoomFactory.getMiniRoom(miniRoomType);
+                    if (miniRoom != null) {
+                        field.addFieldObject(miniRoom);
+                        miniRoom.create(chr);
+                    }
+                    break;
                 }
+            case MRP_Invite: {
+                // 檢查是否能邀請
+                // TODO 拒絕邀請狀態
+                final Character invitee = field.getCharacterById(targetCharacterId);
+                if (invitee == null) {
+                    chr.write(new LP_MiniRoom(new MiniRoomInviteResultAction(MiniRoomInviteResult.NoCharacter, true, "")));
+                } else {
+                    final MiniRoomInvitation invitation = MiniRoomService.getInstance().createInvitation(chr, invitee);
+                    invitee.write(new LP_MiniRoom(new MiniRoomInvtie(chr.getMiniRoom(), invitee, invitation)));
+                }
+                break;
+            }
+            case MRP_InviteResult: {
+                final MiniRoomInviteResult inviteResult = MiniRoomInviteResult.getByValue(errorCode);
+                if (inviteResult == MiniRoomInviteResult.Rejected) {
+                    final MiniRoomInvitation invitation = MiniRoomService.getInstance().getInvitationByInvitee(chr);
+                    if (invitation == null || invitation.getId() != invitationSN) {
+                        chr.enableActions();
+                    } else {
+                        final Character inviter = invitation.getInviter();
+                        final Character invitee = invitation.getInvitee();
+                        inviter.write(new LP_MiniRoom(new MiniRoomInviteResultAction(MiniRoomInviteResult.Rejected, false, invitee.getName())));
+                    }
+                }
+                break;
+            }
+            case MRP_Enter:
+                MiniRoomInvitation invitation = MiniRoomService.getInstance().getInvitationByInvitee(chr);
+                miniRoom = invitation != null && invitation.getId() == invitationSN ? invitation.getInviter().getMiniRoom() : null;
+                if (miniRoom == null) {
+                    chr.write(new LP_MiniRoom(new MiniRoomEnterResultAction(MiniRoomEnterResult.MR_NoRoom, "")));
+                } else {
+                    MiniRoomService.getInstance().removeInvitation(chr);
+                    miniRoom.enter(chr);
+                }
+                break;
+            case MRP_Leave:
+                miniRoom = chr.getMiniRoom();
+                if (miniRoom != null)
+                    miniRoom.leave(chr);
                 break;
         }
 
+    }
+
+    private MiniRoomInviteResult canInvite(Character chr, Character invitee) {
+        final boolean inviteeExists = invitee != null;
+        if (!inviteeExists)
+            return MiniRoomInviteResult.NoCharacter;
+        final boolean hasInvited = MiniRoomService.getInstance().hasInvitation(invitee);
+        if (hasInvited)
+            return MiniRoomInviteResult.Busy;
+        final boolean sameField = chr.getField().equals(invitee.getField());
+        if (!sameField)
+            return MiniRoomInviteResult.NotSameField;
+        return MiniRoomInviteResult.Success;
     }
 }

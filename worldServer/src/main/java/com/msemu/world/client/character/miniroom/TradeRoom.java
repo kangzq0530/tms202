@@ -24,7 +24,6 @@
 
 package com.msemu.world.client.character.miniroom;
 
-import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;
 import com.msemu.core.network.packets.outpacket.miniroom.LP_MiniRoom;
 import com.msemu.world.client.character.Character;
@@ -76,29 +75,43 @@ public class TradeRoom extends MiniRoom {
     public void create(Character creator) {
         useLock(() -> {
             addVisitor(creator);
-            setClosed(true);
-            creator.setMiniRoom(this);
+            setClosed(false);
         });
     }
 
     @Override
-    public void enter(Character visitor) {
+    public void enter(Character chr) {
         useLock(() -> {
-            addVisitor(visitor);
-            if (getVisitors().size() == 1 && !isClosed()) {
+            addVisitor(chr);
+            if (getVisitors().size() == 2 && !isClosed()) {
                 getVisitor(0).write(new LP_MiniRoom(new ShopChatAction(0, "系統提示 : 進行楓幣交換請注意手續費")));
                 getVisitor(1).write(new LP_MiniRoom(new ShopChatAction(1, "系統提示 : 進行楓幣交換請注意手續費")));
                 getVisitor(0).write(new LP_MiniRoom(new ShopChatAction(0, "系統提示 : 使用指令 '/幫助' 可以看到交易可用的指令說明.")));
                 getVisitor(1).write(new LP_MiniRoom(new ShopChatAction(1, "系統提示 : 使用指令 '/幫助' 可以看到交易可用的指令說明.")));
                 setClosed(false);
+            } else {
+                this.close();
+            }
+        });
+    }
+
+    @Override
+    public void leave(Character chr) {
+        useLock(() -> {
+            final MiniRoomVisitor visitor = getVisitorByCharacter(chr);
+            if (visitor != null) {
+                removeVisitor(visitor);
+
             }
         });
     }
 
     @Override
     public void close() {
-        setClosed(true);
-        removeAllVisitors();
+        useLock(() -> {
+            setClosed(true);
+            removeAllVisitors();
+        });
     }
 
     public boolean canPutItem(Character chr) {

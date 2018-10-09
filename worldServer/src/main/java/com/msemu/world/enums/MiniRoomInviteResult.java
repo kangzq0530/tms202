@@ -22,57 +22,41 @@
  * SOFTWARE.
  */
 
-package com.msemu.world.client.character.miniroom;
+package com.msemu.world.enums;
 
-import com.msemu.commons.network.packets.OutPacket;
-import com.msemu.core.network.GameClient;
-import com.msemu.world.client.character.Character;
-import com.msemu.world.enums.FieldObjectType;
-import com.msemu.world.enums.MiniRoomType;
+import lombok.Getter;
 
-public class MemoryGameRoom extends MiniRoom {
-    @Override
-    public MiniRoomType getType() {
-        return MiniRoomType.MR_MemoryGameRoom;
+public enum MiniRoomInviteResult {
+    Success(0x0),
+    NoCharacter(0x1),
+    CannotInvite(0x2),
+    Rejected(0x3),
+    Blocked(0x4),
+    CantInvite_DupeCharacter(0x5),
+    OverPlay(0x6),
+    CantInvite_OverPlay(0x7),
+    LowPop(0x8),
+    CantInvite_LowPop(0x9),
+    NotSameField(0xA),
+    Busy(0xB),
+    Limit(0xC),
+    Invalid_Map(0xD),
+    BlockedBehavior(0xE),
+    None(-1);
+    ;
+    @Getter
+    private final int value;
+
+    MiniRoomInviteResult(int value) {
+        this.value = value;
     }
 
-    @Override
-    public int getMaxUsers() {
-        return 0;
-    }
-
-    @Override
-    public void create(Character creator) {
-
-    }
-
-    @Override
-    public void enter(Character visitor) {
-
-    }
-
-    @Override
-    public void leave(Character chr) {
-
-    }
-
-    @Override
-    public void close() {
-
-    }
-
-    @Override
-    public FieldObjectType getFieldObjectType() {
-        return null;
-    }
-
-    @Override
-    public void enterScreen(GameClient client) {
-
-    }
-
-    @Override
-    public void outScreen(GameClient client) {
-
+    public static MiniRoomInviteResult getByValue(int value) {
+        for(MiniRoomInviteResult type: values()) {
+            if(type.getValue() == value) {
+                return type;
+            }
+        }
+        return None;
     }
 }

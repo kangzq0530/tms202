@@ -22,57 +22,34 @@
  * SOFTWARE.
  */
 
-package com.msemu.world.client.character.miniroom;
+package com.msemu.world.client.character.miniroom.actions;
 
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;
-import com.msemu.world.client.character.Character;
-import com.msemu.world.enums.FieldObjectType;
-import com.msemu.world.enums.MiniRoomType;
+import com.msemu.world.enums.MiniRoomLeaveResult;
+import com.msemu.world.enums.MiniRoomOperation;
 
-public class MemoryGameRoom extends MiniRoom {
-    @Override
-    public MiniRoomType getType() {
-        return MiniRoomType.MR_MemoryGameRoom;
+public class MiniRoomLeaveAction implements IMiniRoomAction {
+
+    private final int charIndex;
+    private final MiniRoomLeaveResult result;
+    private final String chrName;
+
+    public MiniRoomLeaveAction(MiniRoomLeaveResult result, int charIndex, String chrName) {
+        this.charIndex = charIndex;
+        this.result = result;
+        this.chrName = chrName;
     }
 
     @Override
-    public int getMaxUsers() {
-        return 0;
+    public MiniRoomOperation getType() {
+        return MiniRoomOperation.MRP_Leave;
     }
 
     @Override
-    public void create(Character creator) {
-
-    }
-
-    @Override
-    public void enter(Character visitor) {
-
-    }
-
-    @Override
-    public void leave(Character chr) {
-
-    }
-
-    @Override
-    public void close() {
-
-    }
-
-    @Override
-    public FieldObjectType getFieldObjectType() {
-        return null;
-    }
-
-    @Override
-    public void enterScreen(GameClient client) {
-
-    }
-
-    @Override
-    public void outScreen(GameClient client) {
-
+    public void encode(OutPacket<GameClient> outPacket) {
+        outPacket.encodeByte(charIndex);
+        outPacket.encodeByte(result.getValue());
+        outPacket.encodeString(chrName);
     }
 }

@@ -24,55 +24,41 @@
 
 package com.msemu.world.client.character.miniroom;
 
-import com.msemu.commons.network.packets.OutPacket;
-import com.msemu.core.network.GameClient;
+import com.msemu.commons.utils.types.FileTime;
 import com.msemu.world.client.character.Character;
-import com.msemu.world.enums.FieldObjectType;
-import com.msemu.world.enums.MiniRoomType;
+import lombok.Getter;
 
-public class MemoryGameRoom extends MiniRoom {
-    @Override
-    public MiniRoomType getType() {
-        return MiniRoomType.MR_MemoryGameRoom;
+import java.lang.ref.WeakReference;
+import java.util.concurrent.atomic.AtomicInteger;
+
+public class MiniRoomInvitation {
+
+    private static final AtomicInteger partyIdGenerator = new AtomicInteger(1);
+
+    @Getter
+    private final int id;
+
+    @Getter
+    private final WeakReference<Character> inviterRef;
+
+    @Getter
+    private final WeakReference<Character> inviteeRef;
+
+    @Getter
+    private final FileTime createAt;
+
+    public MiniRoomInvitation(Character inviter, Character invitee) {
+        this.id = partyIdGenerator.incrementAndGet();
+        this.inviterRef = new WeakReference<>(inviter);
+        this.inviteeRef = new WeakReference<>(invitee);
+        this.createAt = FileTime.now();
     }
 
-    @Override
-    public int getMaxUsers() {
-        return 0;
+    public Character getInviter() {
+        return getInviterRef().get();
     }
 
-    @Override
-    public void create(Character creator) {
-
-    }
-
-    @Override
-    public void enter(Character visitor) {
-
-    }
-
-    @Override
-    public void leave(Character chr) {
-
-    }
-
-    @Override
-    public void close() {
-
-    }
-
-    @Override
-    public FieldObjectType getFieldObjectType() {
-        return null;
-    }
-
-    @Override
-    public void enterScreen(GameClient client) {
-
-    }
-
-    @Override
-    public void outScreen(GameClient client) {
-
+    public Character getInvitee() {
+        return getInviteeRef().get();
     }
 }

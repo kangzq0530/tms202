@@ -52,6 +52,11 @@ public class EntrustedShop extends MiniRoom {
     }
 
     @Override
+    public void leave(Character chr) {
+
+    }
+
+    @Override
     public void close() {
 
     }

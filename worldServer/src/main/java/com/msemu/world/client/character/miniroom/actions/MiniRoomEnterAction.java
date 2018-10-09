@@ -38,6 +38,7 @@ public class MiniRoomEnterAction implements IMiniRoomAction {
         this.visitor = visitor;
     }
 
+
     @Override
     public MiniRoomOperation getType() {
         return MiniRoomOperation.MRP_Enter;
@@ -49,6 +50,6 @@ public class MiniRoomEnterAction implements IMiniRoomAction {
         final Character chr = visitor.getCharacter();
         chr.getAvatarData().getAvatarLook().encode(outPacket);
         outPacket.encodeString(chr.getName());
-        outPacket.encodeInt(chr.getJob());
+        outPacket.encodeShort(chr.getJob());
     }
 }
