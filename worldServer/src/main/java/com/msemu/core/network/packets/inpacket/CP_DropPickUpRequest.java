@@ -88,7 +88,7 @@ public class CP_DropPickUpRequest extends InPacket<GameClient> {
                 chr.enableActions();
             } else {
                 if (drop.isMoney()) {
-                    boolean canHoldMoney = chr.getMoney() + drop.getMoney() > GameConstants.MAX_MONEY;
+                    boolean canHoldMoney = chr.getMoney() + drop.getMoney() <= GameConstants.MAX_MONEY;
                     if (!canHoldMoney) {
                         chr.write(new LP_Message(new DropPickUpItemFullFail()));
                         return;
@@ -109,7 +109,7 @@ public class CP_DropPickUpRequest extends InPacket<GameClient> {
                             }
                         }
                         chr.write(new LP_Message(new DropPickUpAddIenventoryItem(item)));
-                        chr.addItemToInventory(item);
+                        chr.giveItem(item);
                     }
                 }
                 drop.setPicked(true);

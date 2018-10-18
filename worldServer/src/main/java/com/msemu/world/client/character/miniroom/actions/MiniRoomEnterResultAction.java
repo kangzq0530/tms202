@@ -28,8 +28,12 @@ import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.miniroom.MiniRoom;
+import com.msemu.world.client.character.miniroom.MiniRoomVisitor;
 import com.msemu.world.enums.MiniRoomEnterResult;
 import com.msemu.world.enums.MiniRoomOperation;
+
+import java.util.Collections;
+import java.util.List;
 
 public class MiniRoomEnterResultAction implements IMiniRoomAction {
 
@@ -63,9 +67,11 @@ public class MiniRoomEnterResultAction implements IMiniRoomAction {
             outPacket.encodeByte(miniRoom.getType().getValue());
             outPacket.encodeByte(miniRoom.getMaxUsers());
             outPacket.encodeByte(charIndex);
-            miniRoom.getVisitorsMap().forEach((index, visitor) -> {
+            List<MiniRoomVisitor> visitorList = miniRoom.getVisitors();
+            Collections.reverse(visitorList);
+            visitorList.forEach(visitor -> {
                 final Character chr = visitor.getCharacter();
-                outPacket.encodeByte(index);
+                outPacket.encodeByte(visitor.getCharIndex());
                 chr.getAvatarData()
                         .getAvatarLook().encode(outPacket);
                 outPacket.encodeString(chr.getName());

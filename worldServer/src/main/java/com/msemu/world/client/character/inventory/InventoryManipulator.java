@@ -27,6 +27,7 @@ package com.msemu.world.client.character.inventory;
 import com.msemu.commons.data.enums.InvType;
 import com.msemu.commons.data.templates.ItemTemplate;
 import com.msemu.commons.database.DatabaseFactory;
+import com.msemu.commons.utils.types.FileTime;
 import com.msemu.core.network.packets.outpacket.wvscontext.LP_InventoryOperation;
 import com.msemu.world.client.character.AvatarLook;
 import com.msemu.world.client.character.Character;
@@ -39,7 +40,9 @@ import com.msemu.world.data.ItemData;
 import com.msemu.world.enums.InventoryOperationType;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import static com.msemu.world.enums.InventoryOperationType.REMOVE;
@@ -220,7 +223,8 @@ public class InventoryManipulator {
             if (destItem != null) {
                 destItem.setBagIndex(srcSlot);
             }
-            srcItem.setBagIndex(destSlot);
+            if (srcItem != null)
+                srcItem.setBagIndex(destSlot);
             chr.getInventoryByType(invType).sortItemsByIndex();
         } finally {
             chr.getInventoryByType(invType).getLock().unlock();
@@ -250,16 +254,17 @@ public class InventoryManipulator {
     public static void consume(final Character chr, final Item item, final int consumeCount) {
         Inventory inventory = chr.getInventoryByType(item.getInvType());
         // data race possible
-        if (item.getQuantity() <= consumeCount && !ItemConstants.類型.可充值道具(item.getItemId())) {
+        if (item.getQuantity() == consumeCount && !ItemConstants.類型.可充值道具(item.getItemId())) {
             inventory.getLock().lock();
             try {
                 item.setQuantity(0);
             } finally {
                 inventory.getLock().unlock();
             }
+            int oldeBagIndex = item.getBagIndex();
             inventory.removeItem(item);
             chr.write(new LP_InventoryOperation(true, false,
-                    REMOVE, item, item.getBagIndex()));
+                    REMOVE, item, oldeBagIndex));
         } else {
             item.setQuantity(item.getQuantity() - consumeCount);
             chr.write(new LP_InventoryOperation(true, false,
@@ -267,4 +272,109 @@ public class InventoryManipulator {
         }
         chr.renewBulletIDForAttack();
     }
+
+    public static void add(final Character chr, final Item item) {
+
+        final InvType invType = item.getInvType();
+        final Inventory inventory = chr.getInventoryByType(invType);
+        final ItemTemplate template = item.getTemplate();
+
+        inventory.doLock(() -> {
+
+            if (invType != InvType.EQUIP) {
+                final int slotMax = template.getSlotMax();
+
+                if (!ItemConstants.類型.可充值道具(item.getItemId())) {
+                    // 非裝備、充值道具 限制最大堆疊數量
+                    final List<Item> existsItems = inventory.getItems()
+                            .stream().filter(each -> each.getItemId() == item.getItemId()).collect(Collectors.toList());
+
+                    int lastQuantity = item.getQuantity();
+                    Iterator<Item> iterator = existsItems.iterator();
+                    while (item.getQuantity() > 0) {
+                        if (iterator.hasNext()) {
+                            Item bagItem = iterator.next();
+                            if (bagItem.getQuantity() < slotMax &&
+                                    (bagItem.getOwner() == null || bagItem.getOwner().equals(chr.getName())) &&
+                                    bagItem.getDateExpire().equal(FileTime.getFileTimeFromType(FileTime.Type.MAX_TIME))) {
+                                short newQuantity = (short) Math.min(bagItem.getQuantity() + lastQuantity, slotMax);
+                                lastQuantity -= (newQuantity - bagItem.getQuantity());
+                                bagItem.setQuantity(newQuantity);
+                                chr.write(new LP_InventoryOperation(true, false,
+                                        UPDATE, bagItem, bagItem.getBagIndex()));
+                            }
+                        } else {
+                            break;
+                        }
+                    }
+
+                    while (item.getQuantity() > 0) {
+
+                        final Item insertItem;
+
+                        if (item.getQuantity() > slotMax) {
+                            short newQuantity = (short) Math.min(lastQuantity, slotMax);
+                            lastQuantity -= newQuantity;
+                            item.setQuantity(lastQuantity);
+                            insertItem = ItemData.getInstance().createItem(item.getItemId());
+                            insertItem.setDateExpire(item.getDateExpire());
+                            insertItem.setOwner(item.getOwner());
+                            insertItem.setQuantity(newQuantity);
+                        } else if (item.getQuantity() > 0) {
+                            insertItem = item;
+                        } else {
+                            insertItem = null;
+                        }
+
+                        if (insertItem == null)
+                            break;
+
+                        insertItem.setBagIndex(inventory.getFirstOpenSlot());
+                        inventory.addItem(insertItem);
+                        List<InventoryOperationInfo> operates = new ArrayList<>();
+                        operates.add(new InventoryOperationInfo(InventoryOperationType.ADD, insertItem, insertItem.getBagIndex()));
+                        chr.write(new LP_InventoryOperation(true, false, operates));
+
+                    }
+
+                } else {
+                    item.setBagIndex(inventory.getFirstOpenSlot());
+                    inventory.addItem(item);
+                }
+            } else {
+                item.setQuantity(1);
+                item.setBagIndex(inventory.getFirstOpenSlot());
+                inventory.addItem(item);
+                List<InventoryOperationInfo> operates = new ArrayList<>();
+                operates.add(new InventoryOperationInfo(InventoryOperationType.ADD, item, item.getBagIndex()));
+                chr.write(new LP_InventoryOperation(true, false, operates));
+            }
+            chr.renewBulletIDForAttack();
+        });
+    }
+
+
+    public static void remove(Character chr, Item item) {
+        consume(chr, item, item.getQuantity());
+    }
+
+
+    public static boolean canHold(Character chr, int itemId, int quantity) {
+        final InvType invType = ItemConstants.getInvTypeFromItemID(itemId);
+        final Inventory inventory = chr.getInventoryByType(invType);
+        final AtomicBoolean result = new AtomicBoolean(false);
+        inventory.doLock(() -> {
+            if (ItemConstants.isEquip(itemId)) {
+                result.set(chr.getEquipInventory().getSlots() > chr.getEquipInventory().getItems().size());
+            } else {
+                ItemTemplate template = ItemData.getInstance().getItemInfo(itemId);
+                Item existsItem = inventory.getItemByItemID(itemId);
+                result.set((existsItem != null && existsItem.getQuantity() + 1 < template.getSlotMax())
+                        || inventory.getSlots() > inventory.getItems().size());
+            }
+        });
+        return result.get();
+
+    }
+
 }

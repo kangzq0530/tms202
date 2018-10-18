@@ -81,7 +81,7 @@ public enum WvsMessageType {
 
     private final int value;
 
-    private WvsMessageType(int value) {
+    WvsMessageType(int value) {
         this.value = value;
     }
 

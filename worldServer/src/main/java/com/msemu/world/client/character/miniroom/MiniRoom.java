@@ -30,9 +30,7 @@ import com.msemu.core.network.packets.outpacket.miniroom.LP_MiniRoom;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.miniroom.actions.MiniRoomEnterAction;
 import com.msemu.world.client.character.miniroom.actions.MiniRoomEnterResultAction;
-import com.msemu.world.client.character.miniroom.actions.MiniRoomLeaveAction;
 import com.msemu.world.client.field.AbstractFieldObject;
-import com.msemu.world.enums.MiniRoomLeaveResult;
 import com.msemu.world.enums.MiniRoomType;
 import lombok.Getter;
 
@@ -73,14 +71,14 @@ public abstract class MiniRoom extends AbstractFieldObject {
     }
 
     protected void broadcast(OutPacket<GameClient> outPacket, Character except) {
-        useLock(() -> getVisitorsMap().forEach((index, visitor) -> {
+        doLock(() -> getVisitorsMap().forEach((index, visitor) -> {
             if (!visitor.getCharacter().equals(except)) {
                 visitor.getCharacter().write(outPacket);
             }
         }));
     }
 
-    public void useLock(Runnable runnable) {
+    public void doLock(Runnable runnable) {
         getLock().lock();
         try {
             runnable.run();
@@ -123,14 +121,13 @@ public abstract class MiniRoom extends AbstractFieldObject {
 
     protected void removeVisitor(MiniRoomVisitor visitor) {
         if (getVisitorsMap().containsValue(visitor)) {
-            broadcast(new LP_MiniRoom(new MiniRoomLeaveAction(MiniRoomLeaveResult.TR_TradeDone, visitor.getCharIndex(), visitor.getCharacter().getName())));
-            getVisitorsMap().remove(visitor.getCharIndex());
             visitor.getCharacter().setMiniRoom(null);
+            getVisitorsMap().remove(visitor.getCharIndex());
         }
     }
 
     protected void removeAllVisitors() {
-        getVisitors().forEach(this::removeVisitor);
+            getVisitors().forEach(this::removeVisitor);
     }
 
     public boolean isFull() {

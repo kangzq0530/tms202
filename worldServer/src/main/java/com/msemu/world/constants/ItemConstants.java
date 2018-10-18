@@ -362,8 +362,7 @@ public class ItemConstants {
     }
 
     public static InvType getInvTypeFromItemID(int itemId) {
-        InvType invType = InvType.getInvTypeByValue(itemId / 1000000);
-        return invType;
+        return InvType.getInvTypeByValue(itemId / 1000000);
     }
 
     public static List<ItemOptionInfo> getOptionsByEquip(Equip equip, boolean bonus) {

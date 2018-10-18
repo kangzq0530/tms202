@@ -36,7 +36,8 @@ public enum InvType {
     CONSUME(2),
     INSTALL(3),
     ETC(4),
-    CASH(5);
+    CASH(5),
+    TRADE(6),;
 
     private byte value;
 

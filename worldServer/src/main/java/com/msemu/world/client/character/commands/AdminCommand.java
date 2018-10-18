@@ -150,7 +150,7 @@ public class AdminCommand {
             if (item == null) {
                 return true;
             }
-            chr.addItemToInventory(item);
+            chr.giveItem(item);
             return true;
         }
 

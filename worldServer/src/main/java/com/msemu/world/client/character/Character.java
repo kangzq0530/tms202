@@ -26,7 +26,6 @@ package com.msemu.world.client.character;
 
 import com.msemu.commons.data.enums.InvType;
 import com.msemu.commons.data.enums.SkillStat;
-import com.msemu.commons.data.templates.ItemTemplate;
 import com.msemu.commons.data.templates.field.FieldTemplate;
 import com.msemu.commons.data.templates.field.Portal;
 import com.msemu.commons.data.templates.skill.SkillInfo;
@@ -46,7 +45,10 @@ import com.msemu.core.network.packets.outpacket.user.local.LP_OpenUIOnDead;
 import com.msemu.core.network.packets.outpacket.user.local.LP_SetBuffProtector;
 import com.msemu.core.network.packets.outpacket.user.remote.LP_UserAvatarModified;
 import com.msemu.core.network.packets.outpacket.user.remote.effect.LP_UserEffectRemote;
-import com.msemu.core.network.packets.outpacket.wvscontext.*;
+import com.msemu.core.network.packets.outpacket.wvscontext.LP_ChangeSkillRecordResult;
+import com.msemu.core.network.packets.outpacket.wvscontext.LP_GuildResult;
+import com.msemu.core.network.packets.outpacket.wvscontext.LP_Message;
+import com.msemu.core.network.packets.outpacket.wvscontext.LP_StatChanged;
 import com.msemu.world.Channel;
 import com.msemu.world.client.character.effect.LevelUpUserEffect;
 import com.msemu.world.client.character.effect.MultiKillMessage;
@@ -104,8 +106,6 @@ import java.util.function.Predicate;
 
 import static com.msemu.commons.data.enums.InvType.EQUIP;
 import static com.msemu.commons.data.enums.InvType.EQUIPPED;
-import static com.msemu.world.enums.InventoryOperationType.ADD;
-import static com.msemu.world.enums.InventoryOperationType.UPDATE;
 
 /**
  * Created by Weber on 2018/3/29.
@@ -649,10 +649,14 @@ public class Character extends Life {
     }
 
     public void addMoney(long amount) {
-        addMoney(amount, true);
+        addMoney(amount, true, true);
     }
 
-    public void addMoney(long amount, boolean showInChat) {
+    public void addMoney(long amount, boolean show) {
+        addMoney(amount, show, true);
+    }
+
+    public void addMoney(long amount, boolean show, boolean showInChat) {
         CharacterStat cs = getAvatarData().getCharacterStat();
         long money = cs.getMoney();
         long newMoney = money + amount;
@@ -663,6 +667,8 @@ public class Character extends Life {
             stats.put(Stat.MONEY, newMoney);
             write(new LP_StatChanged(stats));
         }
+        if (!show)
+            return;
         if (showInChat) {
             write(new LP_Message(new IncMoneyMessage(amount)));
         } else {
@@ -697,42 +703,23 @@ public class Character extends Life {
         return i != null ? i.getItemId() : 0;
     }
 
-    public void addItemToInventory(InvType type, Item item, boolean hasCorrectBagIndex) {
+    public void giveItem(Item item) {
         getQuestManager().handleItemGain(item);
-        Inventory inventory = getInventoryByType(type);
-        if (inventory != null) {
-            Item existingItem = inventory.getItems().stream()
-                    .filter(_item -> _item.getDateExpire().equal(item.getDateExpire()) &&
-                            _item.getItemId() == item.getItemId()).findFirst().orElse(null);
-            if (existingItem != null && existingItem.getInvType().isStackable()) {
-                existingItem.addQuantity(item.getQuantity());
-                write(new LP_InventoryOperation(true, false,
-                        UPDATE, existingItem, (short) existingItem.getBagIndex()));
-            } else {
-                item.setInventoryId(inventory.getId());
-                if (!hasCorrectBagIndex) {
-                    item.setBagIndex(inventory.getFirstOpenSlot());
-                }
-                inventory.addItem(item);
-                if (item.getId() == 0) {
-                    DatabaseFactory.getInstance().saveToDB(item);
-                }
-                write(new LP_InventoryOperation(true, false,
-                        ADD, item, item.getBagIndex()));
-            }
-            this.renewBulletIDForAttack();
-        }
+        InventoryManipulator.add(this, item);
     }
 
-    public void addItemToInventory(Item item) {
-        addItemToInventory(item.getInvType(), item, false);
+    public void giveItem(int itemID, int quantity, int period) {
+        Item item = ItemData.getInstance().createItem(itemID);
+        if (item == null)
+            return;
+        if (period > 0)
+            item.setDateExpire(FileTime.now().plus(period, FileTimeUnit.DAY));
+        if (item.getType() != Item.Type.EQUIP)
+            item.setQuantity(quantity);
+        giveItem(item);
     }
 
-    /**
-     * Sends a message to this Char with a default colour {@link ChatMsgType#MOB}.
-     *
-     * @param msg The message to display.
-     */
+
     public void chatMessage(String msg) {
         chatMessage(ChatMsgType.NOTICE, msg);
     }
@@ -1733,6 +1720,10 @@ public class Character extends Life {
             getParty().updateFull();
             setParty(null);
         }
+        if (getMiniRoom() != null) {
+            getMiniRoom().close();
+            setMiniRoom(null);
+        }
         PartyService.getInstance().removeInvitation(this);
         DatabaseFactory.getInstance().saveToDB(this);
         getClient().getChannelInstance().removeCharacter(this);
@@ -1829,31 +1820,7 @@ public class Character extends Life {
     }
 
     public boolean canHold(final int itemID, final int quantity) {
-        if (ItemConstants.isEquip(itemID)) {
-            return getEquipInventory().getSlots() > getEquipInventory().getItems().size();
-        } else {
-            ItemTemplate template = ItemData.getInstance().getItemInfo(itemID);
-            Inventory inv = getInventoryByType(template.getInvType());
-            Item existsItem = inv.getItemByItemID(itemID);
-            return (existsItem != null && existsItem.getQuantity() + 1 < template.getSlotMax())
-                    || inv.getSlots() > inv.getItems().size();
-        }
-    }
-
-
-    public void giveItem(int itemID, int quantity, int period) {
-        double isEquip = Math.floor((itemID / 1000000));
-        Item item = ItemData.getInstance().createItem(itemID);
-        if (item == null)
-            return;
-        if (period > 0)
-            item.setDateExpire(FileTime.now().plus(period, FileTimeUnit.DAY));
-        if (item.getType() == Item.Type.EQUIP) {  //Equip
-            addItemToInventory(item.getInvType(), item, false);
-        } else {    //Item
-            item.setQuantity(quantity);
-            addItemToInventory(item);
-        }
+        return InventoryManipulator.canHold(this, itemID, quantity);
     }
 
 
