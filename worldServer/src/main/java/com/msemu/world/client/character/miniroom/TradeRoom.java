@@ -36,6 +36,7 @@ import com.msemu.world.constants.GameConstants;
 import com.msemu.world.constants.ItemConstants;
 import com.msemu.world.data.ItemData;
 import com.msemu.world.enums.FieldObjectType;
+import com.msemu.world.enums.MiniGameMessageType;
 import com.msemu.world.enums.MiniRoomLeaveResult;
 import com.msemu.world.enums.MiniRoomType;
 import lombok.AccessLevel;
@@ -93,10 +94,8 @@ public class TradeRoom extends MiniRoom {
     public void enter(Character chr) {
         addVisitor(chr);
         if (getVisitors().size() == 2 && !isClosed()) {
-            getVisitor(0).write(new LP_MiniRoom(new ShopChatAction(0, "系統提示 : 進行楓幣交換請注意手續費")));
-            getVisitor(1).write(new LP_MiniRoom(new ShopChatAction(1, "系統提示 : 進行楓幣交換請注意手續費")));
-            getVisitor(0).write(new LP_MiniRoom(new ShopChatAction(0, "系統提示 : 使用指令 '/幫助' 可以看到交易可用的指令說明.")));
-            getVisitor(1).write(new LP_MiniRoom(new ShopChatAction(1, "系統提示 : 使用指令 '/幫助' 可以看到交易可用的指令說明.")));
+            broadcast(new LP_MiniRoom(new UserChatAction(2, "系統訊息 : 進行楓幣交換請注意手續費")));
+            broadcast(new LP_MiniRoom(new UserChatAction(2, "系統訊息 : 使用指令 '/幫助' 可以看到交易可用的指令說明.")));
             setClosed(false);
         } else {
             this.close();
@@ -105,7 +104,7 @@ public class TradeRoom extends MiniRoom {
 
     @Override
     public void leave(Character chr) {
-        setResult(MiniRoomLeaveResult.MR_HostOut);
+        setResult(MiniRoomLeaveResult.MR_Closed);
         close();
     }
 

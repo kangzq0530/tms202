@@ -22,32 +22,30 @@
  * SOFTWARE.
  */
 
-package com.msemu.world.client.character.miniroom.actions;
+package com.msemu.world.enums;
 
-import com.msemu.commons.network.packets.OutPacket;
-import com.msemu.core.network.GameClient;
-import com.msemu.world.enums.MiniRoomOperation;
+import lombok.Getter;
 
-public class ShopChatAction implements IMiniRoomAction {
+public enum MiniGameMessageType {
+    MiniGame_UserBan(0x0C),
+    MiniGame_UserTurn(0x0D),
+    MiniGame_UserGiveUp(0x0E),
+    MiniGame_UserRetreatSuccess(0x0F),
+    MiniGame_UserLeave(0x10),
+    MiniGame_UserLeaveEngage(0x11),
+    MiniGame_UserLeaveEngageCancel(0x12),
+    MiniGame_UserEnter(0x13),
+    MiniGame_UserNotEnoughMoney(0x14),
+    MiniGame_UserMatchCard(0x15),
+    MiniGame_10SecAlert(0x71),
+    MiniGame_GameStart(0x72),
+    MiniGame_GameEnd(0x73),
 
-    private final int charIndex;
+    ;
+    @Getter
+    private int value;
 
-    private final String text;
-
-    public ShopChatAction(int charIndex, String text) {
-        this.charIndex = charIndex;
-        this.text = text;
-    }
-
-    @Override
-    public MiniRoomOperation getType() {
-        return MiniRoomOperation.MRP_Chat;
-    }
-
-    @Override
-    public void encode(OutPacket<GameClient> outPacket) {
-        outPacket.encodeByte(MiniRoomOperation.MRP_UserChat.getValue());
-        outPacket.encodeByte(charIndex);
-        outPacket.encodeString(text);
+    MiniGameMessageType(int value) {
+        this.value = value;
     }
 }

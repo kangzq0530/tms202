@@ -30,6 +30,7 @@ import com.msemu.core.network.packets.outpacket.miniroom.LP_MiniRoom;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.miniroom.actions.MiniRoomEnterAction;
 import com.msemu.world.client.character.miniroom.actions.MiniRoomEnterResultAction;
+import com.msemu.world.client.character.miniroom.actions.UserChatAction;
 import com.msemu.world.client.field.AbstractFieldObject;
 import com.msemu.world.enums.MiniRoomType;
 import lombok.Getter;
@@ -148,4 +149,8 @@ public abstract class MiniRoom extends AbstractFieldObject {
                 .orElse(null);
     }
 
+    public void chat(Character chr, String chatMessage) {
+        final MiniRoomVisitor visitor = getVisitorByCharacter(chr);
+        broadcast(new LP_MiniRoom(new UserChatAction(visitor.getCharIndex(), visitor.getCharacter().getName() + " : " + chatMessage)));
+    }
 }

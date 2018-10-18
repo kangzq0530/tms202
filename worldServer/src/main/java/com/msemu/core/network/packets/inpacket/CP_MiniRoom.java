@@ -49,9 +49,11 @@ public class CP_MiniRoom extends InPacket<GameClient> {
 
     private int opcodeValue, miniRoomTypeValue, invTypeValue,
             srcSlot, quantity, targetSlot, targetCharacterId,
-            invitationSN, errorCode;
+            invitationSN, errorCode, updateTick;
 
     private long money;
+
+    private String chatMessage;
 
     public CP_MiniRoom(short opcode) {
         super(opcode);
@@ -94,6 +96,10 @@ public class CP_MiniRoom extends InPacket<GameClient> {
                 skip(2);
                 break;
 
+            case MRP_Chat:
+                updateTick = decodeInt();
+                chatMessage = decodeString();
+                break;
         }
     }
 
@@ -220,6 +226,14 @@ public class CP_MiniRoom extends InPacket<GameClient> {
                 }
                 break;
             }
+            case MRP_Chat:
+                miniRoom = chr.getMiniRoom();
+                if (miniRoom != null) {
+                    miniRoom.chat(chr, chatMessage);
+                }
+                break;
+            case MRP_UserChat:
+                break;
         }
 
     }
