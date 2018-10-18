@@ -275,4 +275,20 @@ public class GameConstants {
         return x;
     }
 
+    public static int calculateTradeTax(final long money) {
+        if (money >= 100000000) {
+            return (int) Math.round(0.06 * money);
+        } else if (money >= 25000000) {
+            return (int) Math.round(0.05 * money);
+        } else if (money >= 10000000) {
+            return (int) Math.round(0.04 * money);
+        } else if (money >= 5000000) {
+            return (int) Math.round(0.03 * money);
+        } else if (money >= 1000000) {
+            return (int) Math.round(0.018 * money);
+        } else if (money >= 100000) {
+            return (int) Math.round(0.008 * money);
+        }
+        return 0;
+    }
 }

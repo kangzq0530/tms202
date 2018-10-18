@@ -32,6 +32,7 @@ import com.msemu.world.client.character.Inventory;
 import com.msemu.world.client.character.inventory.InventoryManipulator;
 import com.msemu.world.client.character.inventory.items.Item;
 import com.msemu.world.client.character.miniroom.actions.*;
+import com.msemu.world.constants.GameConstants;
 import com.msemu.world.constants.ItemConstants;
 import com.msemu.world.data.ItemData;
 import com.msemu.world.enums.FieldObjectType;
@@ -231,6 +232,8 @@ public class TradeRoom extends MiniRoom {
                 .forEach(each -> InventoryManipulator.add(creator.getCharacter(), each));
         creatorInventory.clear();
         guestInventory.clear();
+        guestMoney.addAndGet(-GameConstants.calculateTradeTax(guestMoney.get()));
+        creatorMoney.addAndGet(-GameConstants.calculateTradeTax(creatorMoney.get()));
         creator.getCharacter().addMoney(guestMoney.getAndSet(0), false);
         guest.getCharacter().addMoney(creatorMoney.getAndSet(0), false);
     }

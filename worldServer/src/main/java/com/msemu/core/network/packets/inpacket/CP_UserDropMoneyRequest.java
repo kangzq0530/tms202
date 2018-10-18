@@ -53,7 +53,7 @@ public class CP_UserDropMoneyRequest extends InPacket<GameClient> {
     public void runImpl() {
         Character chr = getClient().getCharacter();
         Field field = chr.getField();
-        if (!chr.isAlive() || money < 10 || money > 50000 || money > chr.getMoney()) {
+        if (!chr.isAlive() || money < 10 || money > 50000 || money > chr.getMoney() || chr.getMiniRoom() != null) {
             chr.enableActions();
             return;
         }
