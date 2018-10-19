@@ -124,7 +124,7 @@
                     <archive>
                         <manifest>
                             <!-- Jar file entry point -->
-                            <mainClass>com.msemu.</mainClass>
+                            <mainClass>com.msemu.cashshop.CashShopServer</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
