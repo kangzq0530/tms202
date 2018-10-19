@@ -22,26 +22,30 @@
  * SOFTWARE.
  */
 
-package com.msemu.commons.rmi;
+package com.msemu.core.network.packets.inpacket;
 
-import com.msemu.commons.rmi.model.WorldInfo;
-import com.msemu.commons.rmi.model.RMIRegisterResult;
+import com.msemu.commons.network.packets.InPacket;
+import com.msemu.core.network.GameClient;
 
-import java.rmi.Remote;
-import java.rmi.RemoteException;
+public class CP_UserFollowCharacterRequest extends InPacket<GameClient> {
 
-/**
- * Created by Weber on 2018/3/14.
- */
-public interface ILoginServerRMI extends Remote {
-    boolean checkConnection() throws RemoteException;
+    private int chrId;
+    private boolean changeMap;
+    private boolean cancel;
 
-    RMIRegisterResult registerWorld(IWorldServerRMI rmi, WorldInfo worldInfo) throws RemoteException;
+    public CP_UserFollowCharacterRequest(short opcode) {
+        super(opcode);
+    }
 
-    void updateWorld(IWorldServerRMI rmi, WorldInfo worldInfo) throws RemoteException;
+    @Override
+    public void read() {
+        chrId = decodeInt();
+        changeMap = decodeByte() > 0;
+        cancel = decodeByte() > 0;
+    }
 
-    void addReLoginCookie(String token, String username, int world, int channel) throws RemoteException;
+    @Override
+    public void runImpl() {
 
-
-
+    }
 }

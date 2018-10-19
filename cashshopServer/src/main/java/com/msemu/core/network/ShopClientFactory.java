@@ -24,47 +24,34 @@
 
 package com.msemu.core.network;
 
+import com.msemu.commons.network.Connection;
 import com.msemu.commons.network.IClientFactory;
-import com.msemu.commons.network.NetworkThread;
-import com.msemu.commons.network.handler.AbstractPacketHandlerFactory;
-import com.msemu.core.configs.NetworkConfig;
 import com.msemu.core.startup.StartupComponent;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-/**
- * Created by Weber on 2018/4/19.
- */
 @StartupComponent("Network")
-public class LoginNetworkThread extends NetworkThread<LoginClient> {
+public class ShopClientFactory implements IClientFactory<ShopClient> {
 
-    private static final AtomicReference<LoginNetworkThread> instance = new AtomicReference<>();
+    private static final AtomicReference<ShopClientFactory> instance = new AtomicReference<>();
 
-    protected LoginNetworkThread() {
-        super(NetworkConfig.HOST, NetworkConfig.PORT);
-    }
-
-    public static LoginNetworkThread getInstance() {
-        LoginNetworkThread value = instance.get();
+    public static ShopClientFactory getInstance() {
+        ShopClientFactory value = instance.get();
         if (value == null) {
-            synchronized (instance) {
+            synchronized (ShopClientFactory.instance) {
                 value = instance.get();
                 if (value == null) {
-                    value = new LoginNetworkThread();
+                    value = new ShopClientFactory();
                 }
                 instance.set(value);
             }
         }
-        return instance.get();
+        return value;
     }
 
-    @Override
-    public IClientFactory<LoginClient> getClientFactory() {
-        return LoginClientFactory.getInstance();
-    }
 
     @Override
-    public AbstractPacketHandlerFactory<LoginClient> getPacketHandler() {
-        return LoginPacketFactory.getInstance();
+    public ShopClient createClient(Connection<ShopClient> connection) {
+        return new ShopClient(connection);
     }
 }

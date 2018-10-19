@@ -22,19 +22,18 @@
  * SOFTWARE.
  */
 
-package com.msemu.commons.rmi.model;
+package com.msemu.core.network.packets.outpacket.wvscontext;
 
-import java.io.Serializable;
+import com.msemu.commons.enums.OutHeader;
+import com.msemu.commons.network.packets.OutPacket;
+import com.msemu.core.network.GameClient;
+import com.msemu.world.client.character.Character;
 
-/**
- * Created by Weber on 2018/3/18.
- */
-public enum WorldRegisterResult implements Serializable {
-    SUCCESS,
-    DISABLED,
-    UNKNOWN,
-    ALREADY_REGISTERED;
+public class LP_SetPassenserRequest extends OutPacket<GameClient> {
 
-    WorldRegisterResult() {
+
+    public LP_SetPassenserRequest(Character chr) {
+        super(OutHeader.LP_SetPassenserRequest);
+        encodeInt(chr.getId());
     }
 }

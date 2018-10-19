@@ -1454,7 +1454,7 @@ public class Character extends Life {
             outPacket.encodeLong(FileTime.now().getLongValue() + 86400000L);
             outPacket.encodeByte(MapleJob.is蒼龍俠客(getJob()) && MapleJob.is幻獸師(getJob()));
 
-            outPacket.encodeByte(1);
+            outPacket.encodeByte(0);
         }
 
         if (mask.isInMask(DBChar.OXSystem)) {

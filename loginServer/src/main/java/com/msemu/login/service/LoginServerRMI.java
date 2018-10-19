@@ -28,7 +28,7 @@ import com.msemu.commons.rmi.ILoginServerRMI;
 import com.msemu.commons.rmi.IWorldServerRMI;
 import com.msemu.commons.rmi.SocketFactory;
 import com.msemu.commons.rmi.model.WorldInfo;
-import com.msemu.commons.rmi.model.WorldRegisterResult;
+import com.msemu.commons.rmi.model.RMIRegisterResult;
 import com.msemu.commons.thread.EventManager;
 import com.msemu.core.configs.NetworkConfig;
 import com.msemu.login.client.Account;
@@ -87,17 +87,17 @@ public class LoginServerRMI extends UnicastRemoteObject implements ILoginServerR
     }
 
     @Override
-    public WorldRegisterResult registerWorld(IWorldServerRMI rmi, WorldInfo worldInfo) throws RemoteException {
+    public RMIRegisterResult registerWorld(IWorldServerRMI rmi, WorldInfo worldInfo) throws RemoteException {
         if (worlds.containsKey(worldInfo.getWorldId())) {
             log.warn("世界伺服器 - {}({}) 已在線上", worldInfo.getName(), worldInfo.getWorldId());
-            return WorldRegisterResult.ALREADY_REGISTERED;
+            return RMIRegisterResult.ALREADY_REGISTERED;
         }
         WorldInfo info = new WorldInfo();
         info.update(rmi, worldInfo);
         info.setConnection(rmi);
         worlds.put(info.getWorldId(), info);
         log.info("世界伺服器 - {}({}) 連線成功", worldInfo.getName(), worldInfo.getWorldId());
-        return WorldRegisterResult.SUCCESS;
+        return RMIRegisterResult.SUCCESS;
     }
 
     @Override

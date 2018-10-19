@@ -22,26 +22,30 @@
  * SOFTWARE.
  */
 
-package com.msemu.commons.rmi;
+package com.msemu.cashshop;
 
-import com.msemu.commons.rmi.model.WorldInfo;
-import com.msemu.commons.rmi.model.RMIRegisterResult;
+import com.msemu.core.startup.StartupLevel.StartupManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.rmi.Remote;
-import java.rmi.RemoteException;
+public class CashShopServer {
+    private static final Logger log = LoggerFactory.getLogger(CashShopServer.class);
+    private static WorldServerRMI rmi;
 
-/**
- * Created by Weber on 2018/3/14.
- */
-public interface ILoginServerRMI extends Remote {
-    boolean checkConnection() throws RemoteException;
+    public WorldServer() throws Exception {
+        rmi = new WorldServerRMI();
+        StartupManager.getInstance().startup(StartupLevel.class);
+    }
 
-    RMIRegisterResult registerWorld(IWorldServerRMI rmi, WorldInfo worldInfo) throws RemoteException;
+    public static void main(final String[] args) {
+        try {
+            new CashShopServer();
+        } catch (Exception ex) {
+            CashShopServer.log.error("Error while starting CashShopServer", ex);
+        }
+    }
 
-    void updateWorld(IWorldServerRMI rmi, WorldInfo worldInfo) throws RemoteException;
-
-    void addReLoginCookie(String token, String username, int world, int channel) throws RemoteException;
-
-
-
+    public static WorldServerRMI getRmi() {
+        return rmi;
+    }
 }

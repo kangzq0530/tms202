@@ -22,26 +22,30 @@
  * SOFTWARE.
  */
 
-package com.msemu.commons.rmi;
+package com.msemu.core.network;
 
-import com.msemu.commons.rmi.model.WorldInfo;
-import com.msemu.commons.rmi.model.RMIRegisterResult;
+import com.msemu.cashshop.client.Account;
+import com.msemu.commons.network.Client;
+import com.msemu.commons.network.Connection;
+import lombok.Getter;
+import lombok.Setter;
 
-import java.rmi.Remote;
-import java.rmi.RemoteException;
+import java.util.concurrent.ScheduledFuture;
 
-/**
- * Created by Weber on 2018/3/14.
- */
-public interface ILoginServerRMI extends Remote {
-    boolean checkConnection() throws RemoteException;
+public class ShopClient extends Client<ShopClient> {
 
-    RMIRegisterResult registerWorld(IWorldServerRMI rmi, WorldInfo worldInfo) throws RemoteException;
+    @Getter
+    @Setter
+    private Account account;
 
-    void updateWorld(IWorldServerRMI rmi, WorldInfo worldInfo) throws RemoteException;
+    @Getter
+    @Setter
+    private Character character;
 
-    void addReLoginCookie(String token, String username, int world, int channel) throws RemoteException;
+    @Getter
+    private ScheduledFuture idleTask;
 
-
-
+    public ShopClient(Connection<ShopClient> connection) {
+        super(connection);
+    }
 }

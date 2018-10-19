@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/MapleStoryServer.iml" filepath="$PROJECT_DIR$/MapleStoryServer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cashshopServer/cashshopServer.iml" filepath="$PROJECT_DIR$/cashshopServer/cashshopServer.iml" />
       <module fileurl="file://$PROJECT_DIR$/commons/commons.iml" filepath="$PROJECT_DIR$/commons/commons.iml" />
       <module fileurl="file://$PROJECT_DIR$/loginServer/loginServer.iml" filepath="$PROJECT_DIR$/loginServer/loginServer.iml" />
       <module fileurl="file://$PROJECT_DIR$/worldServer/worldServer.iml" filepath="$PROJECT_DIR$/worldServer/worldServer.iml" />

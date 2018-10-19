@@ -26,7 +26,7 @@ package com.msemu.world.service;
 
 import com.msemu.commons.rmi.ILoginServerRMI;
 import com.msemu.commons.rmi.IWorldServerRMI;
-import com.msemu.commons.rmi.model.WorldRegisterResult;
+import com.msemu.commons.rmi.model.RMIRegisterResult;
 import com.msemu.commons.thread.EventManager;
 import com.msemu.core.configs.NetworkConfig;
 import com.msemu.core.network.GameClient;
@@ -61,7 +61,7 @@ public class WorldServerRMI extends UnicastRemoteObject implements IWorldServerR
         try {
             final Registry registry = LocateRegistry.getRegistry(NetworkConfig.RMI_PORT);
             this.connection = (ILoginServerRMI) registry.lookup("msemu_login_server");
-            final WorldRegisterResult registerResult = this.connection.registerWorld(this, World.getInstance().getWorldInfo());
+            final RMIRegisterResult registerResult = this.connection.registerWorld(this, World.getInstance().getWorldInfo());
             switch (registerResult) {
                 case SUCCESS: {
                     log.info("Connected to login server successfully.");

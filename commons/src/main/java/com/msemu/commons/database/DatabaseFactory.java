@@ -90,6 +90,7 @@ public class DatabaseFactory {
 
     public Session getSession() {
         Session session = sessionFactory.openSession();
+
         sessions.add(session);
         return session;
     }

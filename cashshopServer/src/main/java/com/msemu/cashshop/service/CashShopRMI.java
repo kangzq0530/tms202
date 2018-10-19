@@ -22,26 +22,15 @@
  * SOFTWARE.
  */
 
-package com.msemu.commons.rmi;
+package com.msemu.cashshop.service;
 
-import com.msemu.commons.rmi.model.WorldInfo;
-import com.msemu.commons.rmi.model.RMIRegisterResult;
-
-import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 
-/**
- * Created by Weber on 2018/3/14.
- */
-public interface ILoginServerRMI extends Remote {
-    boolean checkConnection() throws RemoteException;
-
-    RMIRegisterResult registerWorld(IWorldServerRMI rmi, WorldInfo worldInfo) throws RemoteException;
-
-    void updateWorld(IWorldServerRMI rmi, WorldInfo worldInfo) throws RemoteException;
-
-    void addReLoginCookie(String token, String username, int world, int channel) throws RemoteException;
+public class CashShopRMI extends UnicastRemoteObject {
 
 
+    protected CashShopRMI() throws RemoteException {
+    }
 
 }

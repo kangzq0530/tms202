@@ -32,25 +32,22 @@ import com.msemu.core.startup.StartupComponent;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-/**
- * Created by Weber on 2018/4/19.
- */
 @StartupComponent("Network")
-public class LoginNetworkThread extends NetworkThread<LoginClient> {
+public class CashShopNetworkThread extends NetworkThread<ShopClient> {
 
-    private static final AtomicReference<LoginNetworkThread> instance = new AtomicReference<>();
+    private static final AtomicReference<CashShopNetworkThread> instance = new AtomicReference<>();
 
-    protected LoginNetworkThread() {
+    public CashShopNetworkThread() {
         super(NetworkConfig.HOST, NetworkConfig.PORT);
     }
 
-    public static LoginNetworkThread getInstance() {
-        LoginNetworkThread value = instance.get();
+    public static CashShopNetworkThread getInstance() {
+        CashShopNetworkThread value = instance.get();
         if (value == null) {
             synchronized (instance) {
                 value = instance.get();
                 if (value == null) {
-                    value = new LoginNetworkThread();
+                    value = new CashShopNetworkThread();
                 }
                 instance.set(value);
             }
@@ -59,12 +56,12 @@ public class LoginNetworkThread extends NetworkThread<LoginClient> {
     }
 
     @Override
-    public IClientFactory<LoginClient> getClientFactory() {
-        return LoginClientFactory.getInstance();
+    public IClientFactory<ShopClient> getClientFactory() {
+        return null;
     }
 
     @Override
-    public AbstractPacketHandlerFactory<LoginClient> getPacketHandler() {
-        return LoginPacketFactory.getInstance();
+    public AbstractPacketHandlerFactory<ShopClient> getPacketHandler() {
+        return null;
     }
 }

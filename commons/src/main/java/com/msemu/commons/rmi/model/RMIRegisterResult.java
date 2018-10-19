@@ -22,26 +22,19 @@
  * SOFTWARE.
  */
 
-package com.msemu.commons.rmi;
+package com.msemu.commons.rmi.model;
 
-import com.msemu.commons.rmi.model.WorldInfo;
-import com.msemu.commons.rmi.model.RMIRegisterResult;
-
-import java.rmi.Remote;
-import java.rmi.RemoteException;
+import java.io.Serializable;
 
 /**
- * Created by Weber on 2018/3/14.
+ * Created by Weber on 2018/3/18.
  */
-public interface ILoginServerRMI extends Remote {
-    boolean checkConnection() throws RemoteException;
+public enum RMIRegisterResult implements Serializable {
+    SUCCESS,
+    DISABLED,
+    UNKNOWN,
+    ALREADY_REGISTERED;
 
-    RMIRegisterResult registerWorld(IWorldServerRMI rmi, WorldInfo worldInfo) throws RemoteException;
-
-    void updateWorld(IWorldServerRMI rmi, WorldInfo worldInfo) throws RemoteException;
-
-    void addReLoginCookie(String token, String username, int world, int channel) throws RemoteException;
-
-
-
+    RMIRegisterResult() {
+    }
 }
