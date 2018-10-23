@@ -163,32 +163,35 @@ public class SkillInfoLoader extends WzDataLoader<Map<Integer, SkillInfo>> {
                 // TODO 儲存skill delay
             } else if (propName.equalsIgnoreCase("common")) {
                 WzSubProperty commonProp = (WzSubProperty) prop;
-                skillInfo.setMaxLevel(1);
-                HashMap<SkillStat, String> skillStatInfo = new HashMap<>();
+                skillInfo.addSkillStatByLevel(1, SkillStat.maxLevel, "1");
                 commonProp.getProperties().forEach(p -> {
-                    String subPrpname = p.getName();
-                    if (subPrpname.equalsIgnoreCase("maxLevel"))
-                        skillInfo.setMaxLevel(p.getInt());
-                    else if (subPrpname.matches("^lt[0_9]+")) {
-                        String num = subPrpname.replace("lt", "");
+                    String subPropName = p.getName();
+                   if (subPropName.matches("^lt[0-9]?")) {
+                        String num = subPropName.replace("lt", "");
                         WzVectorProperty lt = (WzVectorProperty) prop.getFromPath("lt" + num);
                         WzVectorProperty rb = (WzVectorProperty) prop.getFromPath("rb" + num);
                         Rect rect = new Rect(lt.getPoint(), rb.getPoint());
-                        skillInfo.addRect(rect);
-                    } else {
-                        SkillStat skillStat = SkillStat.getSkillStatByString(subPrpname);
+                        if (num.equals("")) {
+                            skillInfo.setRect1(rect);
+                        } else if (num.equals("2")) {
+                            skillInfo.setRect2(rect);
+                        } else if (num.equals("3")) {
+                            skillInfo.setRect3(rect);
+                        } else if (num.equals("4")) {
+                            skillInfo.setRect4(rect);
+                        }
+                    } else if (!subPropName.matches("^(lt|rb)[0-9]?")) {
+                        SkillStat skillStat = SkillStat.getSkillStatByString(subPropName);
                         if (skillStat == null) {
                             if (log.isWarnEnabled()) {
-                                log.warn("Unknown SkillStat: " + subPrpname);
+                                log.warn("Unknown SkillStat: " + subPropName);
                             }
                             return;
                         }
-                        skillStatInfo.put(skillStat, p.getString());
+                        skillInfo.addSkillStat(skillStat, p.getString());
                     }
                 });
-                for (int i = 1; i <= skillInfo.getMaxLevel(); i++) {
-                    skillInfo.getSkillStatInfo().put(i, skillStatInfo);
-                }
+
             } else if (propName.equalsIgnoreCase("psdWT")) {
                 ((WzSubProperty) prop).getProperties().stream()
                         .map(p -> (WzSubProperty) p).forEach(wtProp -> {
@@ -216,13 +219,21 @@ public class SkillInfoLoader extends WzDataLoader<Map<Integer, SkillInfo>> {
                             int slv = Integer.parseInt(pp.getName());
                             pp.getProperties().forEach(ppp -> {
                                 String pppName = ppp.getName();
-                                if (pppName.matches("^lt[0_9]+")) {
+                                if (pppName.matches("^lt[0-9]?")) {
                                     String num = pppName.replace("lt", "");
-                                    WzVectorProperty lt = (WzVectorProperty) prop.getFromPath("lt" + num);
-                                    WzVectorProperty rb = (WzVectorProperty) prop.getFromPath("rb" + num);
+                                    WzVectorProperty lt = (WzVectorProperty) pp.getFromPath("lt" + num);
+                                    WzVectorProperty rb = (WzVectorProperty) pp.getFromPath("rb" + num);
                                     Rect rect = new Rect(lt.getPoint(), rb.getPoint());
-                                    skillInfo.addRect(rect);
-                                } else {
+                                    if (num.equals("")) {
+                                        skillInfo.addRectByLevel(slv, rect);
+                                    } else if (num.equals("2")) {
+                                        skillInfo.addRect2ByLevel(slv, rect);
+                                    } else if (num.equals("3")) {
+                                        skillInfo.addRect3ByLevel(slv, rect);
+                                    } else if (num.equals("4")) {
+                                        skillInfo.addRect4ByLevel(slv, rect);
+                                    }
+                                } else if (!pppName.matches(("^(lt|rb)[0-9]?"))) {
                                     SkillStat skillStat = SkillStat.getSkillStatByString(pppName);
                                     if (skillStat == null) {
                                         if (log.isWarnEnabled()) {
@@ -230,16 +241,14 @@ public class SkillInfoLoader extends WzDataLoader<Map<Integer, SkillInfo>> {
                                         }
                                         return;
                                     }
-                                    skillInfo.addSkillStatInfo(slv, skillStat, ppp.getString());
+                                    skillInfo.addSkillStatByLevel(slv, skillStat, ppp.getString());
                                 }
                             });
                         });
-                skillInfo.setMaxLevel(skillInfo.getSkillStatInfo().size());
             }
         });
         return skillInfo;
     }
-
 
     @Override
     public void saveToDat() throws IOException {

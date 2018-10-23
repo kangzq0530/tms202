@@ -297,11 +297,11 @@ public class ScriptInteraction {
 
 
     public void dropMessage(ChatMsgType msgType, String message) {
-        getCharacter().dropMessage();
+        getCharacter().chatMessage(msgType, message);
     }
 
     public void dropMessage(String message) {
-        getCharacter().dropMessage();
+        dropMessage(ChatMsgType.GAME_DESC, message);
     }
 
     public boolean checkParty(boolean isLeader, int membersCount, int minLevel, int maxLevel) {

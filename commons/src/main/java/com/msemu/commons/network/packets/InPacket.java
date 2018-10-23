@@ -209,6 +209,10 @@ public abstract class InPacket<TClient extends Client<TClient>> extends Packet<T
         return byteBuf.readableBytes();
     }
 
+    public final int getOffset() {
+        return byteBuf.readerIndex();
+    }
+
     public abstract void read();
 
     public abstract void runImpl();

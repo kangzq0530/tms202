@@ -22,31 +22,31 @@
  * SOFTWARE.
  */
 
-package com.msemu.world.client.character;
+package com.msemu.world.client.field;
 
-import com.msemu.commons.utils.types.Position;
-import lombok.Getter;
-import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
-/**
- * Created by Weber on 2018/5/19.
- */
-@Getter
-@Setter
-public class SkillUseInfo {
 
-    private int updateTick;
-    private int skillID;
-    private byte slv;
-    private boolean zeroSkill;
-    private int option;
-    private Position position;
-    private Position position2;
-    private int bulletConsumeItemID;
-    private boolean affectedMemberBitmap;
-    private List<Integer> mobs = new ArrayList<>();
+public class FieldFactory {
 
+    private static final AtomicReference<FieldFactory> instance = new AtomicReference<>();
+
+
+    public static FieldFactory getInstance() {
+        FieldFactory value = instance.get();
+        if (value == null) {
+            synchronized (instance) {
+                value = instance.get();
+                if (value == null) {
+                    value = new FieldFactory();
+                    instance.set(value);
+                }
+            }
+        }
+        return value;
+    }
+
+
+    // TODO create field by @link(FieldType)
 }

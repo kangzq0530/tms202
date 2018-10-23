@@ -22,31 +22,26 @@
  * SOFTWARE.
  */
 
-package com.msemu.world.client.character;
+package com.msemu.core.network.packets.inpacket;
 
-import com.msemu.commons.utils.types.Position;
-import lombok.Getter;
-import lombok.Setter;
+import com.msemu.commons.network.packets.InPacket;
+import com.msemu.core.network.GameClient;
+import com.msemu.world.client.character.Character;
 
-import java.util.ArrayList;
-import java.util.List;
+public class CP_UserCalcDamageStatSetRequest extends InPacket<GameClient> {
 
-/**
- * Created by Weber on 2018/5/19.
- */
-@Getter
-@Setter
-public class SkillUseInfo {
+    public CP_UserCalcDamageStatSetRequest(short opcode) {
+        super(opcode);
+    }
 
-    private int updateTick;
-    private int skillID;
-    private byte slv;
-    private boolean zeroSkill;
-    private int option;
-    private Position position;
-    private Position position2;
-    private int bulletConsumeItemID;
-    private boolean affectedMemberBitmap;
-    private List<Integer> mobs = new ArrayList<>();
+    @Override
+    public void read() {
 
+    }
+
+    @Override
+    public void runImpl() {
+        final Character chr = getClient().getCharacter();
+        chr.getCharacterLocalStat().recalculateLocalStat();
+    }
 }

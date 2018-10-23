@@ -24,16 +24,18 @@
 
 package com.msemu.cashshop;
 
-import com.msemu.core.startup.StartupLevel.StartupManager;
+import com.msemu.cashshop.service.CashShopServerRMI;
+import com.msemu.core.startup.StartupLevel;
+import com.msemu.core.startup.StartupManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class CashShopServer {
     private static final Logger log = LoggerFactory.getLogger(CashShopServer.class);
-    private static WorldServerRMI rmi;
+    private static CashShopServerRMI rmi;
 
-    public WorldServer() throws Exception {
-        rmi = new WorldServerRMI();
+    public CashShopServer() throws Exception {
+        rmi = new CashShopServerRMI();
         StartupManager.getInstance().startup(StartupLevel.class);
     }
 
@@ -45,7 +47,7 @@ public class CashShopServer {
         }
     }
 
-    public static WorldServerRMI getRmi() {
+    public static CashShopServerRMI getRmi() {
         return rmi;
     }
 }

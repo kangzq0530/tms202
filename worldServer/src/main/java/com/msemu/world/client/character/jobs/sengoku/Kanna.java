@@ -138,7 +138,7 @@ public class Kanna extends JobHandler {
                 aa.setMobOrigin((byte) 0);
                 aa.setCharID(chr.getId());
                 aa.setPosition(chr.getPosition());
-                aa.setRect(aa.getPosition().getRectAround(si.getRects().get(0)));
+                aa.setRect(aa.getPosition().getRectAround(si.getRect()));
                 aa.setDelay((short) 5);
                 chr.getField().spawnAffectedArea(aa);
                 break;
@@ -247,7 +247,7 @@ public class Kanna extends JobHandler {
                     aa.setMobOrigin((byte) 0);
                     aa.setCharID(chr.getId());
                     aa.setPosition(chr.getPosition());
-                    aa.setRect(aa.getPosition().getRectAround(si.getRects().get(0)));
+                    aa.setRect(aa.getPosition().getRectAround(si.getRect()));
                     aa.setDelay((short) 3);
                     chr.getField().spawnAffectedArea(aa);
                     break;

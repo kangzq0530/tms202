@@ -35,6 +35,7 @@ import com.msemu.world.client.character.party.Party;
 import com.msemu.world.client.character.party.PartyMember;
 import com.msemu.world.client.character.party.operations.*;
 import com.msemu.world.client.field.Field;
+import com.msemu.world.constants.MapleJob;
 import com.msemu.world.enums.PartyOperation;
 import com.msemu.world.service.PartyService;
 
@@ -101,6 +102,8 @@ public class CP_PartyRequest extends InPacket<GameClient> {
             case PartyReq_CreateNewParty:
                 if (chr.getParty() != null) {
                     chr.write(new LP_PartyResult(new JoinPartyAlreadyJoinedResponse()));
+                } else if (MapleJob.is初心者(chr.getJob())) {
+                    chr.write(new LP_PartyResult(new CreateNewPartyBeginnerResponse()));
                 } else {
                     party = new Party();
                     party.setName(partyName);
@@ -183,8 +186,6 @@ public class CP_PartyRequest extends InPacket<GameClient> {
                 PartyMember leader = party.getPartyLeader();
                 if (chr.getParty() != null) {
                     chr.write(new LP_PartyResult(new JoinPartyAlreadyJoinedResponse()));
-                } else if (leader.getFieldID() != chr.getFieldID()) {
-                    // 沒有適合的回應 (不同地圖)
                 } else {
                     leader.getCharacter().write(new LP_PartyResult(new ApplyPartyRequest(chr)));
                     chr.write(new LP_PartyResult(new ApplyPartySentResponse()));

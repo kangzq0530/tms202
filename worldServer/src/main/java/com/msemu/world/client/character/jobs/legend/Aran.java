@@ -260,12 +260,13 @@ public class Aran extends JobHandler {
 
     private void handleAdrenalinRush(int skillId, TemporaryStatManager tsm) {
         // 處理鬥氣爆發
-        SkillInfo adrenalinInfo = SkillData.getInstance().getSkillInfoById(鬥氣爆發);
+        final Character chr = getCharacter();
+        final SkillInfo adrenalinInfo = SkillData.getInstance().getSkillInfoById(鬥氣爆發);
         if (getCharacter().hasSkill(鬥氣爆發)) {
             Option o = new Option();
             o.nOption = 1;
             o.rOption = 鬥氣爆發;
-            o.tOption = adrenalinInfo.getValue(time, adrenalinInfo.getCurrentLevel());
+            o.tOption = adrenalinInfo.getValue(time, chr.getSkill(鬥氣爆發).getCurrentLevel());
             o.cOption = 1;
             tsm.putCharacterStatValue(AdrenalinBoost, o);
             getClient().write(new LP_TemporaryStatSet(tsm));
@@ -500,7 +501,7 @@ public class Aran extends JobHandler {
                     aa.setMobOrigin((byte) 0);
                     aa.setCharID(chr.getId());
                     aa.setPosition(chr.getPosition());
-                    aa.setRect(aa.getPosition().getRectAround(mdi.getRects().get(0)));
+                    aa.setRect(aa.getPosition().getRectAround(mdi.getRect(slv)));
                     chr.getField().spawnAffectedArea(aa);
                     break;
             }

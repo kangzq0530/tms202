@@ -167,7 +167,6 @@ public class QuestData implements IReloadable {
                     questReq = new QuestProgressMoneyRequirement();
                     break;
                 default:
-                    log.warn("Unimplemented questProgressReq: {}", reqData.getType());
                     questReq = null;
                     break;
             }

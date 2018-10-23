@@ -100,7 +100,7 @@ public class CalcDamage {
 
                 }
 
-                double adjustedRandomDamage = GameConstants.getRand(rand[index++], minDamage, maxDamage);
+                double adjustedRandomDamage = GameConstants.getRand(rand[index++ % rand.length], minDamage, maxDamage);
                 realDamage += adjustedRandomDamage;
 
 

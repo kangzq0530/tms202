@@ -29,6 +29,7 @@ import com.msemu.commons.data.enums.SkillStat;
 import com.msemu.commons.data.templates.skill.SkillInfo;
 import com.msemu.commons.network.packets.InPacket;
 import com.msemu.commons.utils.Rand;
+import com.msemu.commons.utils.types.Rect;
 import com.msemu.core.network.packets.outpacket.mob.LP_MobStatSet;
 import com.msemu.core.network.packets.outpacket.summon.LP_SummonLeaveField;
 import com.msemu.core.network.packets.outpacket.wvscontext.LP_TemporaryStatReset;
@@ -123,6 +124,7 @@ public class Warrior extends JobHandler {
     public static final int 神域護佑 = 1221054; //Lv150
     public static final int 黑暗飢渴 = 1321054; //Lv150
     public static final int 神之滅擊 = 1221052; //Lv170
+
     private final int[] buffs = new int[]{
             極速武器, // Weapon Booster - Fighter
             鬥氣集中, // Combo Attack
@@ -385,6 +387,7 @@ public class Warrior extends JobHandler {
                 o2.tOption = si.getValue(time, slv);
                 tsm.putCharacterStatValue(DotHealHPPerSecond, o2); //TODO   ?  unsure about TempStat
                 break;
+
         }
         getClient().write(new LP_TemporaryStatSet(tsm));
     }
@@ -701,17 +704,21 @@ public class Warrior extends JobHandler {
                 case 魔防消除_黑騎士:
                 case 魔防消除_英雄:
                 case 魔防消除_聖騎士:
-//                    Rect rect2 = new Rect(inPacket.decodeShort(), inPacket.decodeShort()
-//                            , inPacket.decodeShort(), inPacket.decodeShort());
-//                    chr.getField().getMobInRect(rect2).stream().filter(mob -> mob.getHp() > 0).forEach(mob -> {
-//                        MobTemporaryStat mts = mob.getTemporaryStat();
-//                        if (Rand.getChance(si.getValue(prop, slv))) {
-//                            o1.nOption = 1;
-//                            o1.rOption = skillID;
-//                            o1.tOption = si.getValue(time, slv);
-//                            mts.addStatOptionsAndBroadcast(MobBuffStat.MagicCrash, o1);
-//                        }
-//                    });
+                    skillUseInfo.getMobs().forEach(objectId -> {
+                        final Mob mob = chr.getField().getMobByObjectId(objectId);
+                        final Rect rect = si.getRect();
+                        if (mob == null || !mob.isAlive())
+                            return;
+                        if (rect.hasPositionInside(chr.getPosition(), mob.getPosition())) {
+                            MobTemporaryStat mts = mob.getTemporaryStat();
+                            if (Rand.getChance(si.getValue(prop, slv))) {
+                                o1.nOption = 1;
+                                o1.rOption = skillID;
+                                o1.tOption = si.getValue(time, slv);
+                                mts.addStatOptionsAndBroadcast(MobBuffStat.MagicCrash, o1);
+                            }
+                        }
+                    });
                     break;
             }
         }
@@ -772,7 +779,7 @@ public class Warrior extends JobHandler {
         if (chr.hasSkill(祝福護甲)) {
             TemporaryStatManager tsm = chr.getTemporaryStatManager();
             SkillInfo si = SkillData.getInstance().getSkillInfoById(祝福護甲);
-            int slv = si.getCurrentLevel();
+            int slv = chr.getSkill(祝福護甲).getCurrentLevel();
             int shieldProp = si.getValue(SkillStat.prop, slv);       //TODO should be prop in WzFiles, but it's actually 0
             Option o1 = new Option();
             Option o2 = new Option();
@@ -800,7 +807,7 @@ public class Warrior extends JobHandler {
         }
         if (chr.hasSkill(鬥氣綜合)) {
             SkillInfo csi = SkillData.getInstance().getSkillInfoById(鬥氣綜合);
-            int slv = csi.getCurrentLevel();
+            int slv = chr.getSkill(鬥氣綜合).getCurrentLevel();
             int comboProp = csi.getValue(subProp, slv);
             if (Rand.getChance(comboProp)) {
                 addCombo();

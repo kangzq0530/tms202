@@ -27,10 +27,10 @@ package com.msemu.cashshop.service;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-public class CashShopRMI extends UnicastRemoteObject {
+public class CashShopServerRMI extends UnicastRemoteObject {
 
 
-    protected CashShopRMI() throws RemoteException {
+    public CashShopServerRMI() throws RemoteException {
     }
 
 }

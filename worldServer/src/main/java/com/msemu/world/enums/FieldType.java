@@ -1,0 +1,144 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2018 msemu
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+package com.msemu.world.enums;
+
+import lombok.Getter;
+
+public enum FieldType {
+    DEFAULT(0x0),
+    SNOWBALL(0x1),
+    CONTIMOVE(0x2),
+    TOURNAMENT(0x3),
+    COCONUT(0x4),
+    OXQUIZ(0x5),
+    PERSONALTIMELIMIT(0x6),
+    WAITINGROOM(0x7),
+    GUILDBOSS(0x8),
+    LIMITEDVIEW(0x9),
+    MONSTERCARNIVAL_S2(0xA),
+    MONSTERCARNIVALREVIVE(0xB),
+    ZAKUM(0xC),
+    ARIANTARENA(0xD),
+    DOJANG(0xE),
+    MONSTERCARNIVAL_NOT_USE(0xF),
+    MONSTERCARNIVALWAITINGROOM(0x10),
+    COOKIEHOUSE(0x11),
+    BALROG(0x12),
+    BATTLEFIELD(0x13),
+    SPACEGAGA(0x14),
+    WITCHTOWER(0x15),
+    TUTORIAL(0x16),
+    MASSACRE(0x17),
+    MASSACRE_RESULT(0x18),
+    PARTYRAID(0x19),
+    PARTYRAID_BOSS(0x1A),
+    PARTYRAID_RESULT(0x1B),
+    NODRAGON(0x1C),
+    DYNAMICFOOTHOLD(0x1D),
+    ESCORT(0x1E),
+    ESCORT_RESULT(0x1F),
+    HUNTINGADBALLOON(0x20),
+    CHAOSZAKUM(0x21),
+    KILLCOUNT(0x22),
+    PVP(0x24),
+    WAITINGPARTYQUEST(0x25),
+    DEFENSE(0x26),
+    JULDARIGI(0x27),
+    FILEDTYPE_LITTLEINDIAN(0x28),
+    CASHMINIDUNGEON(0x29),
+    CONQUEST(0x2A),
+    CONQUEST_WAITINGPARTY(0x2B),
+    MPARKBONUS(0x2C),
+    HILLAH(0x2D),
+    RANDOMDROP(0x2E),
+    SUMMONEVENT(0x2F),
+    GILSSAM(0x30),
+    MULTISTAGE(0x31),
+    BASEBALLDROP(0x32),
+    DEATHCOUNT(0x33),
+    COOK(0x34),
+    FLYINGKITEDROP(0x35),
+    WEDDING(0x3C),
+    WEDDINGPHOTO(0x3D),
+    RHYTHMGAME(0x42),
+    FPSMODE(0x43),
+    MOUNTAINRIDING(0x44),
+    FABRESNIPING(0x45),
+    PIRANHA(0x46),
+    ROBBINS(0x47),
+    FALLINGSTONE(0x48),
+    HEKATON(0x49),
+    ZEROTUTORIAL(0x4A),
+    BOSSARENA(0x4B),
+    INVASION(0x4C),
+    SPACEMOONRABBIT(0x51),
+    CATAPULT(0x52),
+    SPACEMOONRABBIT_BONUS(0x53),
+    CAPTURE_THE_FLAG(0x54),
+    HUNDREDBINGO(0x55),
+    BONUSREWARD(0x56),
+    TYPINGGAME(0x57),
+    HUNDREDOXQUIZ(0x58),
+    CUSTOMIMPACT_PORTAL_USABLE(0x59),
+    COORDY(0x5A),
+    SAD(0x5F),
+    SOUL(0x60),
+    STARPLANETRPS(0x64),
+    SIDESCROLLFLYSHOOTING(0x66),
+    FPSMODE_LEAFGAME(0x67),
+    STARPLANETBATTLE(0x6C),
+    RUNNING_GAME(0x6D),
+    MOMENTSWIMAREA(0x72),
+    VERTICAL_RUNAWAY(0x73),
+    _12TH_TRESURE(0x74),
+    _12TH_TRESURE_SAT(0x75),
+    PIGGY_BAR(0x76),
+    URUS(0x79),
+    DOJANGMINDBODYTRAINING(0x7A),
+    GHOST_PARK(0x7B),
+    COW_GAME(0x7C),
+    FPSMODE_LEAFGAME_KR(0x7D),
+    MINIGAME_PINBALL_KR(0x7E),
+    ROLEPLAYING_KR(0x7F),
+    POLOFRITOBOUNTYHUNTING(0x80),
+    POLOFRITOTOWNDEFENSE(0x81),
+    POLOFRITOKILLMONSTER(0x82),
+    POLOFRITOEAGLEHUNTING(0x83),
+    POLOFRITOSTEALDRAGONSEGG(0x84),
+    POLOFRITOCOURTSHIPDANCE(0x85),
+    POLOFRITOFLAMEWOLF(0x87),
+    WADDLER(0x89),
+    KAPUS(0x8D),
+    TRADEKING(0x8E),
+    PLATPORMER_OXYGEN(0x8F),
+    DEMIAN(0x90),
+    COUNT_OF_FIELDTYPE(0x91),;
+    @Getter
+    private final int value;
+
+    FieldType(int value) {
+        this.value = value;
+    }
+}

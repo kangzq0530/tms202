@@ -25,6 +25,7 @@
 package com.msemu.world.client.character.commands;
 
 
+import com.msemu.commons.data.templates.skill.SkillInfo;
 import com.msemu.commons.enums.FileTimeUnit;
 import com.msemu.commons.utils.StringUtils;
 import com.msemu.commons.utils.types.FileTime;
@@ -33,6 +34,7 @@ import com.msemu.world.Channel;
 import com.msemu.world.World;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.inventory.items.Item;
+import com.msemu.world.client.character.skill.Skill;
 import com.msemu.world.client.character.stats.CharacterLocalStat;
 import com.msemu.world.client.character.stats.CharacterStat;
 import com.msemu.world.client.field.Field;
@@ -40,6 +42,7 @@ import com.msemu.world.client.field.lifes.Drop;
 import com.msemu.world.constants.GameConstants;
 import com.msemu.world.constants.MapleJob;
 import com.msemu.world.data.ItemData;
+import com.msemu.world.data.SkillData;
 import com.msemu.world.enums.ChatMsgType;
 import com.msemu.world.enums.DropType;
 import com.msemu.world.enums.Stat;
@@ -376,6 +379,70 @@ public class AdminCommand {
         @Override
         public String getHelpMessage() {
             return "!hp <value> - set max mp";
+        }
+    }
+
+    public static class Sp extends CommandExecute {
+
+        @Override
+        public boolean execute(GameClient client, List<String> args) {
+            if (args.size() < 2)
+                return false;
+            final Character chr = client.getCharacter();
+            int jobGrade = 0;
+            int addSp = 0;
+            if (args.size() < 3) {
+                addSp = Integer.parseInt(args.get(1));
+            } else {
+                jobGrade = Integer.parseInt(args.get(1));
+                addSp = Integer.parseInt(args.get(2));
+            }
+            chr.addSp(jobGrade, addSp);
+            return true;
+        }
+
+        @Override
+        public String getHelpMessage() {
+            return "!sp <jobGrade> <value>";
+        }
+    }
+
+    public static class LearnSkill extends CommandExecute {
+
+        @Override
+        public boolean execute(GameClient client, List<String> args) {
+            if(args.size() < 3)
+                return false;
+            final Character chr = client.getCharacter();
+
+            int skillId = Integer.parseInt(args.get(1));
+            int level = Integer.parseInt(args.get(2));
+            int masterLevel = 0;
+            if(args.size() >= 4)
+                masterLevel = Integer.parseInt(args.get(3));
+            SkillInfo si = SkillData.getInstance().getSkillInfoById(skillId);
+            if ( si != null )
+            {
+                Skill skill = chr.getSkill(skillId);
+                if ( skill == null) {
+                    skill = SkillData.getInstance().getSkillById(skillId);
+                }
+                masterLevel = Math.min(masterLevel, skill.getMaxLevel());
+                if(masterLevel > 0)
+                    skill.setMasterLevel(masterLevel);
+                level = Math.max(0, level);
+                level = Math.min(level, skill.getMasterLevel());
+                skill.setCurrentLevel(level);
+                chr.addSkill(skill);
+            } else {
+                chr.chatMessage(ChatMsgType.GAME_DESC, "找不到此技能");
+            }
+            return true;
+        }
+        @Override
+        public String getHelpMessage() {
+            return "!skill <skillId> <level>\r\n"
+                    + "!skill <skillId> <level> <master level>" ;
         }
     }
 

@@ -1753,10 +1753,6 @@ public class Character extends Life {
         write(new LP_StatChanged());
     }
 
-    public void dropMessage() {
-
-    }
-
     public Field getOrCreateFieldByCurrentInstanceType(int fieldID) {
         Field res = null;
         switch (getFieldInstanceType()) {
