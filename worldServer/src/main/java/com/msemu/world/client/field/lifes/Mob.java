@@ -344,7 +344,7 @@ public class Mob extends InternalLife {
     }
 
     public void setController(Character character) {
-        controller = new WeakReference<Character>(character);
+        controller = new WeakReference<>(character);
     }
 
     @Override

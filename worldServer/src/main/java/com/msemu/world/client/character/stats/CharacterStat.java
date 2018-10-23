@@ -212,7 +212,7 @@ public class CharacterStat {
         outPacket.encodeByte(getSkin());
         outPacket.encodeInt(getFace());
         outPacket.encodeInt(getHair());
-        outPacket.encodeByte(-1/*getMixBaseHairColor()*/);
+        outPacket.encodeByte(getMixBaseHairColor());
         outPacket.encodeByte(getMixAddHairColor());
         outPacket.encodeByte(getMixHairBaseProb());
         outPacket.encodeByte(getLevel());

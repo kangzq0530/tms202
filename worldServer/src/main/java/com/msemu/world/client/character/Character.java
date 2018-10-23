@@ -1725,8 +1725,8 @@ public class Character extends Life {
             setMiniRoom(null);
         }
         PartyService.getInstance().removeInvitation(this);
-        DatabaseFactory.getInstance().saveToDB(this);
         getClient().getChannelInstance().removeCharacter(this);
+        DatabaseFactory.getInstance().saveToDB(this);
     }
 
     public int getTotalChuc() {
@@ -1872,15 +1872,16 @@ public class Character extends Life {
     }
 
     public void controlMob(Mob mob, int controllerLevel) {
-        mob.setControllerLevel(controllerLevel);
-        mob.setController(this);
         getControlledLock().writeLock().lock();
         try {
+            mob.setControllerLevel(controllerLevel);
+            mob.setController(this);
             controlledMobs.add(mob);
+            client.write(new LP_MobChangeController(mob, false, true));
+
         } finally {
             getControlledLock().writeLock().unlock();
         }
-        client.write(new LP_MobChangeController(mob, false, true));
     }
 
     public boolean isVisibleFieldObject(AbstractFieldObject object) {

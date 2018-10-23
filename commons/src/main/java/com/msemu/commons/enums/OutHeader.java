@@ -834,6 +834,8 @@ public enum OutHeader implements IHeader {
             case "LP_MobLeaveField":
             case "LP_UserMove":
             case "LP_UserChat":
+            case "LP_DropEnterField":
+            case "LP_Message":
                 return true;
             default:
                 return false;

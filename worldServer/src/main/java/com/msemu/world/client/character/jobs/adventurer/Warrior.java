@@ -633,17 +633,17 @@ public class Warrior extends JobHandler {
                     mts.addStatOptionsAndBroadcast(MobBuffStat.Stun, o1);
                 }
                 break;
-//            case FINAL_ATTACK_FIGHTER:
-//            case FINAL_ATTACK_SPEARMAN:
-//            case FINAL_ATTACK_PAGE:
-//                for(MobAttackInfo mai : attackInfo.mobAttackInfo) {
-//                    Mob mob = chr.getField().getMobByObjectId(mai.getObjectID());
-//                    long dmg = 0;
-//                    for (int i = 0; i < mai.getDamages().length; i++) {
-//                        dmg += mai.getDamages()[i];
-//                    }
-//                    c.write(MobPool.mobDamaged(mob.getObjectId(),dmg, mob.getTemplateId(), (byte) 1,(int)  mob.getHp(), (int) mob.getMaxHp()));
-//                }
+            case FINAL_ATTACK_FIGHTER:
+            case FINAL_ATTACK_SPEARMAN:
+            case FINAL_ATTACK_PAGE:
+                for(MobAttackInfo mai : attackInfo.mobAttackInfo) {
+                    Mob mob = chr.getField().getMobByObjectId(mai.getObjectID());
+                    long dmg = 0;
+                    for (int i = 0; i < mai.getDamages().length; i++) {
+                        dmg += mai.getDamages()[i];
+                    }
+                    //c.write(MobPool.mobDamaged(mob.getObjectId(),dmg, mob.getTemplateId(), (byte) 1,(int)  mob.getHp(), (int) mob.getMaxHp()));
+                }
         }
         return true;
     }

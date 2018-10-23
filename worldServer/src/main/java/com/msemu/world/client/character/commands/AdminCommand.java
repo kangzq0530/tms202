@@ -39,9 +39,11 @@ import com.msemu.world.client.character.stats.CharacterLocalStat;
 import com.msemu.world.client.character.stats.CharacterStat;
 import com.msemu.world.client.field.Field;
 import com.msemu.world.client.field.lifes.Drop;
+import com.msemu.world.client.field.lifes.Mob;
 import com.msemu.world.constants.GameConstants;
 import com.msemu.world.constants.MapleJob;
 import com.msemu.world.data.ItemData;
+import com.msemu.world.data.MobData;
 import com.msemu.world.data.SkillData;
 import com.msemu.world.enums.ChatMsgType;
 import com.msemu.world.enums.DropType;
@@ -407,28 +409,52 @@ public class AdminCommand {
         }
     }
 
+    public static class SpawnMob extends CommandExecute {
+
+        @Override
+        public boolean execute(GameClient client, List<String> args) {
+            if (args.size() < 2)
+                return false;
+            final int templateId = Integer.parseInt(args.get(1));
+            final Character chr = client.getCharacter();
+            final Mob mob = MobData.getInstance().getMobFromTemplate(templateId);
+
+            if (mob != null) {
+                mob.setPosition(chr.getPosition());
+                mob.setFh(chr.getFh());
+                mob.setOriginFh(chr.getFh());
+                client.getCharacter().getField().spawnLife(mob);
+            }
+            return true;
+        }
+
+        @Override
+        public String getHelpMessage() {
+            return "!spawnMob <templateId>";
+        }
+    }
+
     public static class LearnSkill extends CommandExecute {
 
         @Override
         public boolean execute(GameClient client, List<String> args) {
-            if(args.size() < 3)
+            if (args.size() < 3)
                 return false;
             final Character chr = client.getCharacter();
 
             int skillId = Integer.parseInt(args.get(1));
             int level = Integer.parseInt(args.get(2));
             int masterLevel = 0;
-            if(args.size() >= 4)
+            if (args.size() >= 4)
                 masterLevel = Integer.parseInt(args.get(3));
             SkillInfo si = SkillData.getInstance().getSkillInfoById(skillId);
-            if ( si != null )
-            {
+            if (si != null) {
                 Skill skill = chr.getSkill(skillId);
-                if ( skill == null) {
+                if (skill == null) {
                     skill = SkillData.getInstance().getSkillById(skillId);
                 }
                 masterLevel = Math.min(masterLevel, skill.getMaxLevel());
-                if(masterLevel > 0)
+                if (masterLevel > 0)
                     skill.setMasterLevel(masterLevel);
                 level = Math.max(0, level);
                 level = Math.min(level, skill.getMasterLevel());
@@ -439,10 +465,11 @@ public class AdminCommand {
             }
             return true;
         }
+
         @Override
         public String getHelpMessage() {
             return "!skill <skillId> <level>\r\n"
-                    + "!skill <skillId> <level> <master level>" ;
+                    + "!skill <skillId> <level> <master level>";
         }
     }
 
