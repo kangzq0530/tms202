@@ -44,7 +44,7 @@ public class ItemTemplate implements DatSerializable {
     protected long serialNumber;
     protected String name = "", desc = "", path = "", noFlip = "", path4Top = "";
     protected InvType invType;
-    protected int itemId, price, slotMax, time, stateChangeItem;
+    protected int itemId, price, slotMax = 1, time, stateChangeItem;
     protected int rate, reqSkillLevel, masterLevel;
     protected int bagType, charmEXP, reqQuestOnProgress, senseEXP, mobID, npcID, map;
     protected int linkedID, reqLevel, karma;

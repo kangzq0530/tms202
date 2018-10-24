@@ -291,7 +291,7 @@ public class InventoryManipulator {
 
                     int lastQuantity = item.getQuantity();
                     Iterator<Item> iterator = existsItems.iterator();
-                    while (item.getQuantity() > 0) {
+                    while (lastQuantity > 0) {
                         if (iterator.hasNext()) {
                             Item bagItem = iterator.next();
                             if (bagItem.getQuantity() < slotMax &&
@@ -299,6 +299,7 @@ public class InventoryManipulator {
                                     bagItem.getDateExpire().equal(FileTime.getFileTimeFromType(FileTime.Type.MAX_TIME))) {
                                 short newQuantity = (short) Math.min(bagItem.getQuantity() + lastQuantity, slotMax);
                                 lastQuantity -= (newQuantity - bagItem.getQuantity());
+                                item.setQuantity(lastQuantity);
                                 bagItem.setQuantity(newQuantity);
                                 chr.write(new LP_InventoryOperation(true, false,
                                         UPDATE, bagItem, bagItem.getBagIndex()));
@@ -308,11 +309,11 @@ public class InventoryManipulator {
                         }
                     }
 
-                    while (item.getQuantity() > 0) {
+                    while (lastQuantity > 0) {
 
                         final Item insertItem;
 
-                        if (item.getQuantity() > slotMax) {
+                        if (lastQuantity > slotMax) {
                             short newQuantity = (short) Math.min(lastQuantity, slotMax);
                             lastQuantity -= newQuantity;
                             item.setQuantity(lastQuantity);
@@ -320,21 +321,19 @@ public class InventoryManipulator {
                             insertItem.setDateExpire(item.getDateExpire());
                             insertItem.setOwner(item.getOwner());
                             insertItem.setQuantity(newQuantity);
-                        } else if (item.getQuantity() > 0) {
+                        } else if (lastQuantity > 0) {
                             insertItem = item;
+                            lastQuantity = 0;
                         } else {
                             insertItem = null;
                         }
-
                         if (insertItem == null)
                             break;
-
                         insertItem.setBagIndex(inventory.getFirstOpenSlot());
                         inventory.addItem(insertItem);
                         List<InventoryOperationInfo> operates = new ArrayList<>();
                         operates.add(new InventoryOperationInfo(InventoryOperationType.ADD, insertItem, insertItem.getBagIndex()));
                         chr.write(new LP_InventoryOperation(true, false, operates));
-
                     }
 
                 } else {

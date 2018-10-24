@@ -25,6 +25,7 @@
 package com.msemu.commons.tools;
 
 import com.msemu.commons.config.utils.ConfigLoader;
+import com.msemu.commons.data.loader.wz.ItemTemplateLoader;
 import com.msemu.commons.data.loader.wz.QuestInfoLoader;
 import com.msemu.commons.data.loader.wz.SkillInfoLoader;
 import com.msemu.commons.data.loader.wz.WzManager;
@@ -41,14 +42,14 @@ public class wzToDat {
         WzManager wzManager = new WzManager();
 //        new ForbiddenNameLoader(wzManager).saveToDat();
 //        new ItemOptionLoader(wzManager).saveToDat();
-//        new ItemTemplateLoader(wzManager).saveToDat();
+        new ItemTemplateLoader(wzManager).saveToDat();
 //        new EquipTemplateLoader(wzManager).saveToDat();
 //        new SetItemInfoLoader(wzManager).saveToDat();
 //        new MonsterBookLoader(wzManager).saveToDat();
 //        new FieldTemplateLoader(wzManager).saveToDat();
 //        new NpcTemplateLoader(wzManager).saveToDat();
 //
-        new SkillInfoLoader(wzManager).saveToDat();
+//        new SkillInfoLoader(wzManager).saveToDat();
 //        new QuestInfoLoader(wzManager).saveToDat();
 //        new MobTemplateLoader(wzManager).saveToDat();
 //        new FieldTemplateLoader(wzManager).saveToDat();

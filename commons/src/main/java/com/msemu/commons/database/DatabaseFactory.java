@@ -82,6 +82,13 @@ public class DatabaseFactory {
                 .setProperty("hibernate.connection.password", DatabaseConfig.PASSWORD)
                 .setProperty("hibernate.enable_lazy_load_no_trans", "true")
                 .setProperty("hibernate.connection.characterEncoding", "utf8")
+                .setProperty("hibernate.hbcp.validationQuery", "select 1")
+                .setProperty("hibernate.hbcp.testOnBorrow", "true")
+                .setProperty("hibernate.hbcp.testOnReturn", "true")
+                .setProperty("hibernate.hbcp.ps.maxIdle", "10")
+                .setProperty("hibernate.hbcp.ps.maxWait", "20000")
+                .setProperty("hibernate.hbcp.ps.whenExhaustedAction", "1")
+                .setProperty("hibernate.hbcp.ps.maxActive", "10")
                 .setProperty("hibernate.show_sql", String.valueOf(DatabaseConfig.SHOW_SQL));
 
         sessionFactory = configuration.buildSessionFactory();
