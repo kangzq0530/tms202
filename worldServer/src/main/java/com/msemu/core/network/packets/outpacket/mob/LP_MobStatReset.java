@@ -62,6 +62,7 @@ public class LP_MobStatReset extends OutPacket<GameClient> {
                 for (BurnedInfo bi : biList) {
                     encodeInt(bi.getCharacterId());
                     encodeInt(bi.getSuperPos());
+                    encodeInt(0);
                 }
             }
             resetStats.getBurnedInfo().clear();
