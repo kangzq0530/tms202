@@ -64,7 +64,7 @@ public class BurnedInfo {
     public void encode(OutPacket<GameClient> outPacket) {
         outPacket.encodeInt(getCharacterId());
         outPacket.encodeInt(getSkillId());
-        outPacket.encodeInt(getDamage());
+        outPacket.encodeLong(getDamage());
         outPacket.encodeInt(getInterval());
         outPacket.encodeInt(getEnd());
         outPacket.encodeInt(getDotAnimation());

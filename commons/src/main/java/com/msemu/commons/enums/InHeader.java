@@ -512,6 +512,7 @@ public enum InHeader implements IHeader {
             case "CP_DummyCode":
             case "CP_UserChangeStatRequest":
             case "CP_MobApplyCtrl":
+            case "CP_UserRequestInstanceTable":
                 return true;
             default:
                 return false;

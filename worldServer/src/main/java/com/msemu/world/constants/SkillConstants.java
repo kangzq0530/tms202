@@ -39,6 +39,7 @@ public class SkillConstants {
     public static final short LINK_SKILL_3_LEVEL = 210;
 
 
+
     public static boolean canMasteryApply(int skillID, WeaponType weaponType) {
         switch (skillID) {
             case 101000103: // 璃之力
@@ -1651,4 +1652,14 @@ public class SkillConstants {
         }
         return v1;
     }
+
+    public static int getLinkedSkill(int skillId) {
+        switch (skillId) {
+            case 1111014: // 虎咆哮_下
+                return 1111008; // 虎咆哮
+            default:
+                return 0;
+        }
+    }
+
 }

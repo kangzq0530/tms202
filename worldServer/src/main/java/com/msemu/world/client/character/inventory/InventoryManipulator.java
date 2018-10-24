@@ -310,9 +310,7 @@ public class InventoryManipulator {
                     }
 
                     while (lastQuantity > 0) {
-
                         final Item insertItem;
-
                         if (lastQuantity > slotMax) {
                             short newQuantity = (short) Math.min(lastQuantity, slotMax);
                             lastQuantity -= newQuantity;

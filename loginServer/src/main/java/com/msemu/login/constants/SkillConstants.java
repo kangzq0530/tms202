@@ -28,6 +28,8 @@ package com.msemu.login.constants;
  * Created by Weber on 2018/3/31.
  */
 public class SkillConstants {
+
+
     public static int getJobBySkill(int skillId) {
         int result = skillId / 10000;
         if (skillId / 10000 == 8000) {

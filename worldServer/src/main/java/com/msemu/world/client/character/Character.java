@@ -103,6 +103,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static com.msemu.commons.data.enums.InvType.EQUIP;
 import static com.msemu.commons.data.enums.InvType.EQUIPPED;
@@ -748,7 +749,7 @@ public class Character extends Life {
             oldSkill.setCurrentLevel(skill.getCurrentLevel());
             oldSkill.setMasterLevel(skill.getMasterLevel());
         }
-        write(new LP_ChangeSkillRecordResult(getSkills(), true,
+        write(new LP_ChangeSkillRecordResult(getVisibleSkills(), true,
                 false, false, false));
     }
 
@@ -806,6 +807,15 @@ public class Character extends Life {
             }
         }
         return createIfNull ? createAndReturnSkill(id) : null;
+    }
+
+
+    public List<Skill> getVisibleSkills() {
+        return getSkills().stream()
+                .filter(skill -> {
+                    SkillInfo si = SkillData.getInstance().getSkillInfoById(skill.getSkillId());
+                    return si != null && !si.isInvisible();
+                }).collect(Collectors.toList());
     }
 
     /**
@@ -1136,10 +1146,11 @@ public class Character extends Life {
         if (mask.isInMask(DBChar.SKILL_RECORD)) {
             boolean encodeSkills = true;
             outPacket.encodeByte(encodeSkills);
+            List<Skill> skills = getVisibleSkills();
             if (encodeSkills) {
-                short size = (short) getSkills().size();
+                short size = (short) skills.size();
                 outPacket.encodeShort(size);
-                for (Skill skill : getSkills()) {
+                for (Skill skill : skills) {
                     outPacket.encodeInt(skill.getSkillId());
                     outPacket.encodeInt(skill.getCurrentLevel());
                     outPacket.encodeFT(skill.getDateExpire());
@@ -1155,7 +1166,7 @@ public class Character extends Life {
                 final Map<Integer, Integer> skillsWithoutMax = new LinkedHashMap<>();
                 final Map<Integer, FileTime> skillsWithExpiration = new LinkedHashMap<>();
                 final Map<Integer, Integer> skillsWithMax = new LinkedHashMap<>();
-                for (Skill skill : getSkills()) {
+                for (Skill skill : skills) {
                     skillsWithoutMax.put(skill.getSkillId(), skill.getCurrentLevel());
                     if (skill.getDateExpire() != null && skill.getDateExpire().getLongValue() !=
                             FileTime.Type.PERMANENT.getVal()) {
