@@ -75,5 +75,7 @@ public class BurnedInfo {
         outPacket.encodeInt(getDotTickDamR());
         outPacket.encodeInt(getLastUpdate());
         outPacket.encodeInt(getStartTime());
+        outPacket.encodeInt(0);
+        outPacket.encodeInt(0);
     }
 }
