@@ -285,23 +285,27 @@ public class FieldTemplateLoader extends WzDataLoader<Map<Integer, FieldTemplate
                                 });
                     } else if (propName.equalsIgnoreCase("reactor")) {
                         ReactorInfo reactorInfo = new ReactorInfo();
-                        prop.getProperties().forEach(reSubProp -> {
-                            String reSubPropName = reSubProp.getName();
-                            if (reSubPropName.equalsIgnoreCase("id")) {
-                                reactorInfo.setId(Integer.parseInt(reSubProp.getString()));
-                            } else if (reSubPropName.equalsIgnoreCase("x")) {
-                                reactorInfo.setX(reSubProp.getInt());
-                            } else if (reSubPropName.equalsIgnoreCase("y")) {
-                                reactorInfo.setY(reSubProp.getInt());
-                            } else if (reSubPropName.equalsIgnoreCase("f")) {
-                                reactorInfo.setF(reSubProp.getInt());
-                            } else if (reSubPropName.equalsIgnoreCase("reactorTime")) {
-                                reactorInfo.setReactorTime(reSubProp.getInt());
-                            } else if (reSubPropName.equalsIgnoreCase("name")) {
-                                reactorInfo.setName(reSubProp.getString());
-                            }
+                        prop.getProperties().stream()
+                        .map(p -> (WzSubProperty)p)
+                        .forEach(reSubProp -> {
+                            reSubProp.getProperties().forEach(reProp -> {
+                                String rePropName = reProp.getName();
+                                if (rePropName.equalsIgnoreCase("id")) {
+                                    reactorInfo.setId(Integer.parseInt(reProp.getString()));
+                                } else if (rePropName.equalsIgnoreCase("x")) {
+                                    reactorInfo.setX(reProp.getInt());
+                                } else if (rePropName.equalsIgnoreCase("y")) {
+                                    reactorInfo.setY(reProp.getInt());
+                                } else if (rePropName.equalsIgnoreCase("f")) {
+                                    reactorInfo.setF(reProp.getInt());
+                                } else if (rePropName.equalsIgnoreCase("reactorTime")) {
+                                    reactorInfo.setReactorTime(reProp.getInt());
+                                } else if (rePropName.equalsIgnoreCase("name")) {
+                                    reactorInfo.setName(reProp.getString());
+                                }
+                            });
+                            template.getReactorsInfo().add(reactorInfo);
                         });
-                        template.getReactorsInfo().add(reactorInfo);
                     } else if (propName.equalsIgnoreCase("monsterCarnival")) {
                         MonsterCarnivalInfo carnivalInfo = new MonsterCarnivalInfo();
                         prop.getProperties().forEach(mcSubProp -> {

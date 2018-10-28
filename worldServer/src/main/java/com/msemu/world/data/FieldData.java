@@ -90,16 +90,6 @@ public class FieldData implements IReloadable {
         if (fieldTemplate == null)
             return null;
         Field field = new Field(fieldTemplate);
-        fieldTemplate.getLife().forEach(lifeData -> {
-            if (lifeData.getType().equals("m")) {
-                field.addSpawnPoint(new MobSpawnPoint(lifeData));
-            } else {
-                field.addSpawnPoint(new NpcSpawnPoint(lifeData));
-            }
-        });
-        field.getFieldData().getObjects().forEach(fieldObjectInfo -> {
-            field.getObjects().add(new FieldObj(fieldObjectInfo));
-        });
         return field;
     }
 

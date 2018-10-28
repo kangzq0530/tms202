@@ -24,7 +24,9 @@
 
 package com.msemu.world.client.field.lifes;
 
+import com.msemu.commons.data.templates.field.ReactorInfo;
 import com.msemu.commons.network.packets.OutPacket;
+import com.msemu.commons.utils.types.Position;
 import com.msemu.core.network.GameClient;
 import com.msemu.core.network.packets.outpacket.reactor.LP_ReactorEnterField;
 import com.msemu.core.network.packets.outpacket.reactor.LP_ReactorLeaveField;
@@ -35,6 +37,7 @@ import lombok.Setter;
 public class Reactor extends Life {
 
     @Getter
+    @Setter
     private int templacteId;
 
     @Getter
@@ -52,6 +55,13 @@ public class Reactor extends Life {
     @Getter
     @Setter
     private int ownerId;
+
+    public Reactor(ReactorInfo ri) {
+        setName(ri.getName());
+        setFlip(ri.getF() > 0);
+        setPosition(new Position(ri.getX(), ri.getY()));
+        setTemplacteId(ri.getId());
+    }
 
     @Override
     public FieldObjectType getFieldObjectType() {

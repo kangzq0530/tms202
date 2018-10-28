@@ -36,7 +36,7 @@ import java.io.IOException;
 @Setter
 public class ReactorInfo implements DatSerializable {
     private int id, x, y, reactorTime, f;
-    private String name;
+    private String name = "";
 
     @Override
     public void write(DataOutputStream dos) throws IOException {

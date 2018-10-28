@@ -49,6 +49,7 @@ import com.msemu.world.client.field.forceatoms.types.ForceAtomInfo;
 import com.msemu.world.client.field.lifes.*;
 import com.msemu.world.client.field.runestones.RuneStoneManager;
 import com.msemu.world.client.field.spawns.AbstractSpawnPoint;
+import com.msemu.world.client.field.spawns.MobSpawnPoint;
 import com.msemu.world.client.field.spawns.NpcSpawnPoint;
 import com.msemu.world.constants.GameConstants;
 import com.msemu.world.data.FieldData;
@@ -112,12 +113,9 @@ public class Field {
         this.fieldId = fieldData.getId();
         this.objects = new ArrayList<>();
         this.objectSchedules = new HashMap<>();
-
         Position lBound = new Position(fieldData.getRect().getLeft(), fieldData.getRect().getTop());
         Position rBound = new Position(fieldData.getRect().getRight(), fieldData.getRect().getBottom());
         this.footholdTree = new FootholdTree(lBound, rBound);
-
-
         fieldData.getFootholds().forEach(this.footholdTree::insertFoothold);
         EnumMap<FieldObjectType, LinkedHashMap<Integer, AbstractFieldObject>> objectsMap = new EnumMap<>(FieldObjectType.class);
         EnumMap<FieldObjectType, ReentrantReadWriteLock> objectLockMap = new EnumMap<>(FieldObjectType.class);
@@ -129,6 +127,19 @@ public class Field {
         this.fieldObjectLocks = Collections.unmodifiableMap(objectLockMap);
         this.forceAtomManager = new ForceAtomManager(this);
         this.runeStoneManager = new RuneStoneManager(this);
+        fieldData.getReactorsInfo().forEach(ri -> {
+            addFieldObject(new Reactor(ri));
+        });
+        fieldData.getLife().forEach(lifeData -> {
+            if (lifeData.getType().equals("m")) {
+                addSpawnPoint(new MobSpawnPoint(lifeData));
+            } else {
+                addSpawnPoint(new NpcSpawnPoint(lifeData));
+            }
+        });
+        fieldData.getObjects().forEach(fieldObjectInfo -> {
+            getObjects().add(new FieldObj(fieldObjectInfo));
+        });
     }
 
     /**
