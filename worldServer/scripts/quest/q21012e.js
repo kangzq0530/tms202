@@ -21,47 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+var status = -1;
 
-package com.msemu.world.client.field.lifes;
+function start() {
+    action(1, 0, 0)
+}
 
-
-import com.msemu.commons.utils.types.Position;
-import com.msemu.world.client.field.AbstractFieldObject;
-import com.msemu.world.client.field.Field;
-import com.msemu.world.client.field.lifes.movement.IMovement;
-import com.msemu.world.client.field.lifes.movement.MovementBase;
-import lombok.Getter;
-import lombok.Setter;
-
-import java.util.List;
-
-/**
- * Created by Weber on 2018/5/13.
- */
-public abstract class Life extends AbstractFieldObject {
-
-    @Getter
-    @Setter
-    private byte action;
-
-    @Getter
-    @Setter
-    private int fh;
-
-    public boolean isLeft() {
-        return getAction() % 2 != 0;
+function action(mode, type, selection) {
+    if (mode === 1) {
+        status++;
+    } else {
+        status--;
     }
-
-    public  void move(List<IMovement> movements){
-        for (IMovement m : movements) {
-            Position pos = m.getPosition();
-            this.setFh(m.getFh());
-            this.setAction(m.getMoveAction());
-            if (pos != null) {
-                this.setOldPosition(this.getPosition());
-                this.setPosition(pos);
-                            }
-        }
+    if (status === -1) {
+        cm.say("什麼…？不喜歡藥水嗎？");
+        cm.dispose();
+    } else if (status === 0) {
+        cm.askYesNo("嗯…看您的表情，似乎什麼都沒想起來…可是請不要擔心。總有一天會好起來的。來，請您喝下這些藥水打起精神來： \r\n\r\n#fUI/UIWindow2.img/QuestIcon/4/0# \r\n#i2000022# #t2000022# 10個 \r\n#i2000023# #t2000023# 10個 \r\n\r\n#fUI/UIWindow2.img/QuestIcon/8/0# 57 exp");
+    } else if (status === 1) {
+        cm.giveItem(2000022, 10);
+        cm.giveItem(2000023, 10);
+        cm.giveExp(57);
+        cm.completeQuest();
+        cm.say(2, "#b(就算我是真正的英雄…可是什麼能力都沒有的英雄還有用處嗎？)#k");
+        cm.dispose();
     }
-
 }

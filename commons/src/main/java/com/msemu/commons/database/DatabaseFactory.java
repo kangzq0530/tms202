@@ -82,20 +82,20 @@ public class DatabaseFactory {
                 .setProperty("hibernate.connection.password", DatabaseConfig.PASSWORD)
                 .setProperty("hibernate.enable_lazy_load_no_trans", "true")
                 .setProperty("hibernate.connection.characterEncoding", "utf8")
-                .setProperty("hibernate.hbcp.validationQuery", "select 1")
-                .setProperty("hibernate.hbcp.testOnBorrow", "true")
-                .setProperty("hibernate.hbcp.testOnReturn", "true")
-                .setProperty("hibernate.hbcp.ps.maxIdle", "10")
-                .setProperty("hibernate.hbcp.ps.maxWait", "20000")
-                .setProperty("hibernate.hbcp.ps.whenExhaustedAction", "1")
-                .setProperty("hibernate.hbcp.ps.maxActive", "10")
+                .setProperty("hibernate.dbcp.validationQuery", "select 1")
+                .setProperty("hibernate.dbcp.testOnBorrow", "true")
+                .setProperty("hibernate.dbcp.testOnReturn", "true")
+                .setProperty("hibernate.dbcp.ps.maxIdle", "10")
+                .setProperty("hibernate.dbcp.ps.maxWait", "20000")
+                .setProperty("hibernate.dbcp.ps.whenExhaustedAction", "1")
+                .setProperty("hibernate.dbcp.ps.maxActive", "10")
                 .setProperty("hibernate.show_sql", String.valueOf(DatabaseConfig.SHOW_SQL));
-
         sessionFactory = configuration.buildSessionFactory();
         sessions = new ArrayList<>();
     }
 
     public Session getSession() {
+
         Session session = sessionFactory.openSession();
 
         sessions.add(session);
@@ -112,6 +112,8 @@ public class DatabaseFactory {
                 Transaction t = session.beginTransaction();
                 session.saveOrUpdate(obj);
                 t.commit();
+            } catch (Exception ex ) {
+                log.error("saveToDB", ex);
             }
         }
         cleanUpSessions();

@@ -35,6 +35,7 @@ import com.msemu.commons.enums.FileTimeUnit;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.utils.Rand;
 import com.msemu.commons.utils.types.FileTime;
+import com.msemu.commons.utils.types.Position;
 import com.msemu.core.network.GameClient;
 import com.msemu.core.network.packets.outpacket.mob.LP_MobChangeController;
 import com.msemu.core.network.packets.outpacket.stage.LP_SetField;
@@ -44,6 +45,7 @@ import com.msemu.core.network.packets.outpacket.user.local.LP_ChatMsg;
 import com.msemu.core.network.packets.outpacket.user.local.LP_OpenUIOnDead;
 import com.msemu.core.network.packets.outpacket.user.local.LP_SetBuffProtector;
 import com.msemu.core.network.packets.outpacket.user.remote.LP_UserAvatarModified;
+import com.msemu.core.network.packets.outpacket.user.remote.LP_UserMove;
 import com.msemu.core.network.packets.outpacket.user.remote.effect.LP_UserEffectRemote;
 import com.msemu.core.network.packets.outpacket.wvscontext.LP_ChangeSkillRecordResult;
 import com.msemu.core.network.packets.outpacket.wvscontext.LP_GuildResult;
@@ -76,6 +78,8 @@ import com.msemu.world.client.field.Field;
 import com.msemu.world.client.field.lifes.Life;
 import com.msemu.world.client.field.lifes.Mob;
 import com.msemu.world.client.field.lifes.Pet;
+import com.msemu.world.client.field.lifes.movement.IMovement;
+import com.msemu.world.client.field.lifes.movement.MovementBase;
 import com.msemu.world.client.guild.Guild;
 import com.msemu.world.client.guild.GuildMember;
 import com.msemu.world.client.guild.operations.LoadGuildDoneResponse;
@@ -244,8 +248,6 @@ public class Character extends Life {
     private int portableChairID;
     @Transient
     private String portableChairMsg;
-    @Transient
-    private short foothold;
     @Transient
     private int tamingMobLevel = 1;
     @Transient
@@ -2096,6 +2098,12 @@ public class Character extends Life {
         this.write(new LP_ChatMsg(type, "[" + caption + "] " + text));
     }
 
+    @Override
+    public void move(List<IMovement> movements) {
+        super.move(movements);
+        this.getField().updateCharacterPosition(this);
+        this.getField().checkCharInAffectedAreas(this);
+    }
 }
 
 

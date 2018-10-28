@@ -79,6 +79,7 @@ public class Inventory {
     public int addItem(Item item) {
         if (getItems().size() <= getSlots() && !getItems().contains(item)) {
             getItems().add(item);
+            item.setInventoryId(getId());
             sortItemsByIndex();
             return item.getBagIndex();
         }
@@ -89,6 +90,7 @@ public class Inventory {
         if (getItems().contains(item)) {
             item.setBagIndex(0);
             getItems().remove(item);
+            item.setInventoryId(0);
             sortItemsByIndex();
         }
     }

@@ -63,16 +63,7 @@ public class CP_UserMove extends InPacket<GameClient> {
     @Override
     public void runImpl() {
         Character chr = getClient().getCharacter();
-        for (IMovement m : movements) {
-            Position pos = m.getPosition();
-            chr.setOldPosition(chr.getPosition());
-            chr.setPosition(pos);
-            chr.setFoothold(m.getFh());
-            chr.setAction(m.getMoveAction());
-            chr.getField().updateCharacterPosition(chr);
-            chr.getField().checkCharInAffectedAreas(chr);
-        }
-        int c = chr.getField().getAllCharacters().size();
+        chr.move(movements);
         chr.getField().broadcastPacket(new LP_UserMove(chr, duration, mPos, oPos, (byte) 0, movements), chr);
     }
 }

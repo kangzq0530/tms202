@@ -5,6 +5,8 @@ function start() {
 }
 
 function action(mode, type, selection) {
+    cm.dispose();
+    return;
     if (mode > 0) {
         status++;
     } else {

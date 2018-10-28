@@ -22,46 +22,29 @@
  * SOFTWARE.
  */
 
-package com.msemu.world.client.field.lifes;
-
-
-import com.msemu.commons.utils.types.Position;
-import com.msemu.world.client.field.AbstractFieldObject;
-import com.msemu.world.client.field.Field;
-import com.msemu.world.client.field.lifes.movement.IMovement;
-import com.msemu.world.client.field.lifes.movement.MovementBase;
-import lombok.Getter;
-import lombok.Setter;
-
-import java.util.List;
-
-/**
- * Created by Weber on 2018/5/13.
- */
-public abstract class Life extends AbstractFieldObject {
-
-    @Getter
-    @Setter
-    private byte action;
-
-    @Getter
-    @Setter
-    private int fh;
-
-    public boolean isLeft() {
-        return getAction() % 2 != 0;
+function start() {
+    cm.setInGameDirectionMode(true);
+    cm.setStandAloneMode(true);
+    var gender = cm.getGender();
+    switch(cm.getFieldID()) {
+        case 914090010:
+            cm.showReservedEffect("Effect/Direction1.img/aranTutorial/Scene0");
+            break;
+        case 914090011:
+            cm.showReservedEffect("Effect/Direction1.img/aranTutorial/Scene1" + (gender === 0 ? "0" : "1"));
+            break;
+        case 914090012:
+            cm.showReservedEffect("Effect/Direction1.img/aranTutorial/Scene2" + (gender === 0 ? "0" : "1"));
+            break;
+        case 914090013:
+            cm.showReservedEffect("Effect/Direction1.img/aranTutorial/Scene3");
+            break;
+        case 914090100:
+            cm.showReservedEffect("Effect/Direction1.img/aranTutorial/HandedPoleArm" + (gender === 0 ? "0" : "1"));
+            break;
+        case 914090200:
+            ms.showReservedEffect("Effect/Direction1.img/aranTutorial/Maha");
+            break;
     }
-
-    public  void move(List<IMovement> movements){
-        for (IMovement m : movements) {
-            Position pos = m.getPosition();
-            this.setFh(m.getFh());
-            this.setAction(m.getMoveAction());
-            if (pos != null) {
-                this.setOldPosition(this.getPosition());
-                this.setPosition(pos);
-                            }
-        }
-    }
-
+    cm.dispose();
 }

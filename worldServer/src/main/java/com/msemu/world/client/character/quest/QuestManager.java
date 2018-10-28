@@ -199,7 +199,7 @@ public class QuestManager {
         getCharacter().chatMessage(MOB, String.format("[任務資訊] 已完成任務 : %s(%d) ", qi.getName(), quest.getQRKey()));
         getCharacter().write(new LP_Message(new QuestRecordMessage(quest)));
         getCharacter().write(new LP_UserEffectLocal(new QuestCompleteUserEffect()));
-        getCharacter().getField().broadcastPacket(new LP_UserEffectRemote(getCharacter(), new QuestCompleteUserEffect()));
+        getCharacter().getField().broadcastPacket(new LP_UserEffectRemote(getCharacter(), new QuestCompleteUserEffect()), getCharacter());
         for (QuestProgressItemRequirement questRequireInfo : quest.getItemReqs()) {
             getCharacter().consumeItem(questRequireInfo.getItemID(), questRequireInfo.getRequiredCount());
         }

@@ -81,6 +81,9 @@ public class CP_UserTransferFieldRequest extends InPacket<GameClient> {
                 if ((divi / 10 == 1020) && (targetMapId == 1020000 || targetMapId == 4000026)) {
                     unlock = true;
                     warp = true;
+                } else if (divi == 9140900) {
+                    // 狂郎勇士拯救孩子後
+                    warp = (targetMapId == 914090011) || (targetMapId == 914090012) || (targetMapId == 914090013) || (targetMapId == 140090000);
                 }
                 if (unlock) {
                     getClient().write(new LP_SetDirectionMode(false));

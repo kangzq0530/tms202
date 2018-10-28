@@ -367,33 +367,7 @@ public class Aran extends JobHandler {
                 }
                 break;
             case ROLLING_SPIN_COMBO:
-                for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
-                    int prop = 30; //Prop value never given, so I decided upon 30%.
-                    int time = 3; //Time value never given, so I decided upon 3 seconds.
-                    if (Rand.getChance(prop)) {
-                        Mob mob = chr.getField().getMobByObjectId(mai.getObjectID());
-                        MobTemporaryStat mts = mob.getTemporaryStat();
-                        o1.nOption = 1;
-                        o1.rOption = getOriginalSkillByID(skillID);
-                        o1.tOption = time;
-                        mts.addStatOptionsAndBroadcast(MobBuffStat.Stun, o1);
-                    }
-                }
-                break;
             case 終極之矛_COMBO:
-                for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
-                    int prop = 30; //Prop value never given, so I decided upon 30%.
-                    int time = 3; //Time value never given, so I decided upon 3 seconds.
-                    if (Rand.getChance(prop)) {
-                        Mob mob = chr.getField().getMobByObjectId(mai.getObjectID());
-                        MobTemporaryStat mts = mob.getTemporaryStat();
-                        o1.nOption = 1;
-                        o1.rOption = getOriginalSkillByID(skillID);
-                        o1.tOption = time;
-                        mts.addStatOptionsAndBroadcast(MobBuffStat.Stun, o1);
-                    }
-                }
-                break;
             case 終極之矛_粉碎震撼_COMBO:
                 for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
                     int prop = 30; //Prop value never given, so I decided upon 30%.
@@ -409,41 +383,7 @@ public class Aran extends JobHandler {
                 }
                 break;
             case 鬥氣審判_COMBO_下:
-                for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
-                    int hcProp = 5; //hcProp is defined yet still gives NPEs
-                    int hcTime = 2; //hcTime is defined yet still gives NPE
-                    if (Rand.getChance(hcProp/*si.getValue(hcProp, slv)*/)) {
-                        Mob mob = chr.getField().getMobByObjectId(mai.getObjectID());
-                        MobTemporaryStat mts = mob.getTemporaryStat();
-                        o1.nOption = 1;
-                        o1.rOption = getOriginalSkillByID(skillID);
-                        o1.tOption = hcTime;    //si.getValue(time, slv);
-                        mts.addStatOptionsAndBroadcast(MobBuffStat.Freeze, o1);
-                    } else {
-                        Mob mob = chr.getField().getMobByObjectId(mai.getObjectID());
-                        MobTemporaryStat mts = mob.getTemporaryStat();
-                        mts.createAndAddBurnedInfo(chr.getId(), skill, 1);
-                    }
-                }
-                break;
             case 鬥氣審判_COMBO_左:
-                for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
-                    int hcProp = 5; //hcProp is defined yet still gives NPE
-                    int hcTime = 2; //hcTime is defined yet still gives NPE
-                    if (Rand.getChance(hcProp/*si.getValue(hcProp, slv)*/)) {
-                        Mob mob = chr.getField().getMobByObjectId(mai.getObjectID());
-                        MobTemporaryStat mts = mob.getTemporaryStat();
-                        o1.nOption = 1;
-                        o1.rOption = getOriginalSkillByID(skillID);
-                        o1.tOption = hcTime;    //si.getValue(time, slv);
-                        mts.addStatOptionsAndBroadcast(MobBuffStat.Freeze, o1);
-                    } else {
-                        Mob mob = chr.getField().getMobByObjectId(mai.getObjectID());
-                        MobTemporaryStat mts = mob.getTemporaryStat();
-                        mts.createAndAddBurnedInfo(chr.getId(), skill, 1);
-                    }
-                }
-                break;
             case 鬥氣審判_COMBO_右:
                 for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
                     int hcProp = 5; //hcProp is defined yet still gives NPEs

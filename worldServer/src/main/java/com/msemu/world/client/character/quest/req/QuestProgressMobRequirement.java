@@ -56,6 +56,12 @@ public class QuestProgressMobRequirement extends QuestProgressRequirement implem
         this.currentCount = 0;
     }
 
+    public QuestProgressMobRequirement(int mobID, int requiredCount, int currentCount) {
+        this.mobID = mobID;
+        this.requiredCount = requiredCount;
+        this.currentCount = currentCount;
+    }
+
     public void incCurrentCount(int amount) {
         currentCount += amount;
         if (currentCount < 0) {
@@ -80,5 +86,10 @@ public class QuestProgressMobRequirement extends QuestProgressRequirement implem
             setRequiredCount(((QuestMobReqData) reqData).getCount());
             setMobID(((QuestMobReqData) reqData).getMobId());
         }
+    }
+
+    @Override
+    public QuestProgressRequirement deepCopy() {
+        return new QuestProgressMobRequirement(mobID, requiredCount, 0);
     }
 }

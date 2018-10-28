@@ -131,12 +131,7 @@ public class CP_MobMove extends InPacket<GameClient> {
         Character controller = mob.getController();
 
         if (controller != null && controller.equals(chr)) {
-            for (IMovement movement : movements) {
-                mob.setPosition(movement.getPosition());
-                mob.setMoveAction(movement.getMoveAction());
-                mob.setFh(movement.getFh());
-            }
-
+            mob.move(movements);
             if (!movements.isEmpty()) {
                 getClient().write(new LP_MobCtrlAck(mob, true, moveId, mobSkillID, (byte) mobSkillLevel, 0));
                 field.broadcastPacket(new LP_MobMove(mob, msai, movements), controller);

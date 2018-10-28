@@ -22,46 +22,31 @@
  * SOFTWARE.
  */
 
-package com.msemu.world.client.field.lifes;
+var status = -1;
 
+function start() {
+    action(1, 0, 0);
+}
 
-import com.msemu.commons.utils.types.Position;
-import com.msemu.world.client.field.AbstractFieldObject;
-import com.msemu.world.client.field.Field;
-import com.msemu.world.client.field.lifes.movement.IMovement;
-import com.msemu.world.client.field.lifes.movement.MovementBase;
-import lombok.Getter;
-import lombok.Setter;
-
-import java.util.List;
-
-/**
- * Created by Weber on 2018/5/13.
- */
-public abstract class Life extends AbstractFieldObject {
-
-    @Getter
-    @Setter
-    private byte action;
-
-    @Getter
-    @Setter
-    private int fh;
-
-    public boolean isLeft() {
-        return getAction() % 2 != 0;
+function action(mode, type, selection) {
+    if (mode === 1) {
+        status++;
+    } else {
+        status--;
     }
 
-    public  void move(List<IMovement> movements){
-        for (IMovement m : movements) {
-            Position pos = m.getPosition();
-            this.setFh(m.getFh());
-            this.setAction(m.getMoveAction());
-            if (pos != null) {
-                this.setOldPosition(this.getPosition());
-                this.setPosition(pos);
-                            }
+    if (status === -1) {
+        cm.say("哎呀啊！ 狂狼勇士拒絕了！")
+        cm.dispose();
+    } else if (status === 0) {
+        cm.askYesNo("…差點被嚇死…快！快點帶我去找赫麗娜大人！");
+    } else if (status === 1) {
+        var inProgress = cm.hasQuestInProgress();
+        if (!inProgress) {
+            cm.giveItem(4001271, 1);
+            cm.startQuest();
         }
+        cm.dispose();
+        cm.warp(914000300, 0);
     }
-
 }

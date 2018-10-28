@@ -24,9 +24,12 @@
 
 package com.msemu.core.network.packets.inpacket;
 
+import com.msemu.commons.database.DatabaseFactory;
 import com.msemu.commons.network.packets.InPacket;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;
+import com.msemu.core.network.packets.outpacket.user.local.LP_HireTutor;
+import com.msemu.core.network.packets.outpacket.user.local.LP_SetDirectionMode;
 import com.msemu.core.network.packets.outpacket.user.local.LP_UserChat;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.commands.CommandProcessor;
@@ -59,8 +62,6 @@ public class CP_UserChat extends InPacket<GameClient> {
     @Override
     public void runImpl() {
         Character chr = getClient().getCharacter();
-
-
         chr.addStat(Stat.MP, 50);
 
         if (text.charAt(0) == '!') {
@@ -73,7 +74,6 @@ public class CP_UserChat extends InPacket<GameClient> {
                 }
             }
         }
-
         chr.getScriptManager().stopScript();
         OutPacket<GameClient> chatPacket = new LP_UserChat(chr.getId(), text, onlyBallon);
         chr.getField().broadcastPacket(chatPacket);

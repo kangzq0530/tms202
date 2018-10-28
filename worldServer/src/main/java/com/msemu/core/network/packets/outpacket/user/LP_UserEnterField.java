@@ -140,7 +140,7 @@ public class LP_UserEnterField extends OutPacket<GameClient> {
         encodeInt(0);
         encodePosition(chr.getPosition());
         encodeByte(chr.getAction());
-        encodeShort(chr.getFoothold());
+        encodeShort(chr.getFh());
 
 
         encodeByte(0);
@@ -154,8 +154,6 @@ public class LP_UserEnterField extends OutPacket<GameClient> {
         }
         encodeByte(0);
         encodeByte(chr.getMechanicHue());
-
-
         encodeInt(chr.getTamingMobLevel());
         encodeInt(chr.getTamingMobExp());
         encodeInt(chr.getTamingMobFatigue());

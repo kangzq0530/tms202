@@ -22,46 +22,27 @@
  * SOFTWARE.
  */
 
-package com.msemu.world.client.field.lifes;
+var status = -1;
+
+function start() {
+    action(1, 0, 0)
+}
+
+var chatMsgType = Java.type("com.msemu.world.enums.ChatMsgType");
 
 
-import com.msemu.commons.utils.types.Position;
-import com.msemu.world.client.field.AbstractFieldObject;
-import com.msemu.world.client.field.Field;
-import com.msemu.world.client.field.lifes.movement.IMovement;
-import com.msemu.world.client.field.lifes.movement.MovementBase;
-import lombok.Getter;
-import lombok.Setter;
-
-import java.util.List;
-
-/**
- * Created by Weber on 2018/5/13.
- */
-public abstract class Life extends AbstractFieldObject {
-
-    @Getter
-    @Setter
-    private byte action;
-
-    @Getter
-    @Setter
-    private int fh;
-
-    public boolean isLeft() {
-        return getAction() % 2 != 0;
+function action(mode, type, selection) {
+    if (mode === 1) {
+        status++;
+    } else {
+        status--;
     }
-
-    public  void move(List<IMovement> movements){
-        for (IMovement m : movements) {
-            Position pos = m.getPosition();
-            this.setFh(m.getFh());
-            this.setAction(m.getMoveAction());
-            if (pos != null) {
-                this.setOldPosition(this.getPosition());
-                this.setPosition(pos);
-                            }
-        }
+    var completed = cm.hasQuestCompleted(21011);
+    if (completed) {
+        cm.playPortalEffect();
+        cm.warp(140090300, 1);
+    } else {
+        cm.dropMessage(chatMsgType.SYSTEM, "完成任務後才能進入下一張地圖。");
     }
-
+    cm.dispose();
 }

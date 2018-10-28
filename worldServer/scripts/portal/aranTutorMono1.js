@@ -1,3 +1,4 @@
+
 function start() {
     var qRValue = cm.getQuestRecordEx(21002);
     if (qRValue.equals("mo1=o")) {

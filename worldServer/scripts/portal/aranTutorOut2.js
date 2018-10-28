@@ -22,46 +22,15 @@
  * SOFTWARE.
  */
 
-package com.msemu.world.client.field.lifes;
+var chatMsgType = Java.type("com.msemu.world.enums.ChatMsgType");
 
-
-import com.msemu.commons.utils.types.Position;
-import com.msemu.world.client.field.AbstractFieldObject;
-import com.msemu.world.client.field.Field;
-import com.msemu.world.client.field.lifes.movement.IMovement;
-import com.msemu.world.client.field.lifes.movement.MovementBase;
-import lombok.Getter;
-import lombok.Setter;
-
-import java.util.List;
-
-/**
- * Created by Weber on 2018/5/13.
- */
-public abstract class Life extends AbstractFieldObject {
-
-    @Getter
-    @Setter
-    private byte action;
-
-    @Getter
-    @Setter
-    private int fh;
-
-    public boolean isLeft() {
-        return getAction() % 2 != 0;
+function start() {
+    if( !cm.hasQuestInProgress(21000) ) {
+        cm.dropMessage(chatMsgType.GROUP_ALLIANCE, "去找右方的赫麗娜，可在任務進行途中離開到外面。");
+    } else{
+        cm.teachSkill(20000014, 1, 0);
+        cm.teachSkill(20000015, 1, 0);
+        cm.playPortalEffect();
+        cm.warp(914000210, 1);
     }
-
-    public  void move(List<IMovement> movements){
-        for (IMovement m : movements) {
-            Position pos = m.getPosition();
-            this.setFh(m.getFh());
-            this.setAction(m.getMoveAction());
-            if (pos != null) {
-                this.setOldPosition(this.getPosition());
-                this.setPosition(pos);
-                            }
-        }
-    }
-
 }

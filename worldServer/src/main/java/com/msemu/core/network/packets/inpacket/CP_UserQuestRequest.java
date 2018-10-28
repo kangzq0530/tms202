@@ -81,7 +81,11 @@ public class CP_UserQuestRequest extends InPacket<GameClient> {
             case 4:
                 questID = decodeInt();
                 npcTemplateID = decodeInt();
-
+                break;
+            case 5:
+                questID = decodeInt();
+                npcTemplateID = decodeInt();
+                break;
         }
     }
 

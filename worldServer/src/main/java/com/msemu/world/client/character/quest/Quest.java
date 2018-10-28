@@ -25,6 +25,7 @@
 package com.msemu.world.client.character.quest;
 
 import com.msemu.commons.database.Schema;
+import com.msemu.commons.utils.StringUtils;
 import com.msemu.commons.utils.types.FileTime;
 import com.msemu.world.client.character.inventory.items.Item;
 import com.msemu.world.client.character.quest.req.*;
@@ -148,7 +149,7 @@ public class Quest {
     }
 
     public boolean isComplete() {
-        return getProgressRequirements().stream().allMatch(req -> req.isComplete());
+        return getProgressRequirements().stream().allMatch(IQuestProgressRequirement::isComplete);
     }
 
     public void handleMobKill(int mobID) {
@@ -159,6 +160,12 @@ public class Quest {
                 .findFirst().get();
         // should never return null, as this method should only be called when this quest indeed has this mob
         qpmr.incCurrentCount(1);
+        String qrValue = getProgressRequirements()
+                .stream()
+                .filter(qr -> qr instanceof QuestProgressMobRequirement )
+                .map(q -> StringUtils.getLeftPaddedStr(String.valueOf(((QuestProgressMobRequirement) q).getCurrentCount()), '0', 3))
+                .collect(Collectors.joining(""));
+        setQrValue(qrValue);
     }
 
     @Override

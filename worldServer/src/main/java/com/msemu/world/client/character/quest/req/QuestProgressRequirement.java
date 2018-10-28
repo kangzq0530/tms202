@@ -43,4 +43,6 @@ public abstract class QuestProgressRequirement implements IQuestProgressRequirem
     @Getter
     @Setter
     private long id;
+
+    public abstract QuestProgressRequirement deepCopy();
 }

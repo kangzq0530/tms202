@@ -47,6 +47,7 @@ import com.msemu.core.network.packets.outpacket.wvscontext.LP_FuncKeySetByScript
 import com.msemu.core.network.packets.outpacket.wvscontext.LP_GuildResult;
 import com.msemu.world.Channel;
 import com.msemu.world.client.character.Character;
+import com.msemu.world.client.character.ExpIncreaseInfo;
 import com.msemu.world.client.character.effect.*;
 import com.msemu.world.client.character.party.Party;
 import com.msemu.world.client.character.party.PartyMember;
@@ -57,6 +58,7 @@ import com.msemu.world.client.field.Field;
 import com.msemu.world.client.field.effect.MobHPTagFieldEffect;
 import com.msemu.world.client.field.effect.ObjectFieldEffect;
 import com.msemu.world.client.field.effect.ScreenDelayedFieldEffect;
+import com.msemu.world.client.field.effect.TopScreenFieldEffect;
 import com.msemu.world.client.field.lifes.Mob;
 import com.msemu.world.client.field.lifes.Npc;
 import com.msemu.world.client.guild.Guild;
@@ -197,12 +199,23 @@ public class ScriptInteraction {
     }
 
     public void giveItem(int itemID, int quantity, int period) {
-        getCharacter().giveItem(itemID, quantity, period);
+        if (quantity > 0) {
+            getCharacter().giveItem(itemID, quantity, period);
+        } else {
+            getCharacter().consumeItem(itemID, quantity);
+        }
     }
 
 
     public void giveExp(int deltaExp) {
-        getCharacter().addExp(deltaExp);
+        if(scriptType.equals(ScriptType.QUEST)) {
+            ExpIncreaseInfo eii = new ExpIncreaseInfo();
+            eii.setOnQuest(true);
+            eii.setIncEXP(Math.min(Integer.MAX_VALUE, deltaExp));
+            getCharacter().addExp(deltaExp, eii);
+        } else {
+            getCharacter().addExp(deltaExp);
+        }
     }
 
     public int getHp() {
@@ -267,6 +280,14 @@ public class ScriptInteraction {
 
     public void setLuk(int luk) {
         getCharacter().setStat(Stat.LUK, luk);
+    }
+
+    public int getGender() {
+        return getCharacter().getAvatarData().getCharacterStat().getGender();
+    }
+
+    public void setGender(int value) {
+        getCharacter().getAvatarData().getCharacterStat().setGender(value);
     }
 
     public int getLevel() {
@@ -422,10 +443,12 @@ public class ScriptInteraction {
         Mob mob = MobData.getInstance().getMobFromTemplate(id);
         Field field = getCharacter().getField();
         Position pos = new Position(x, y);
+        Foothold foothold = field.findFootHoldBelow(pos);
+        mob.setFh(foothold.getId());
+        mob.setOriginFh(foothold.getId());
         mob.setPosition(pos.deepCopy());
         mob.setOldPosition(pos.deepCopy());
         mob.setPosition(pos.deepCopy());
-        mob.setField(field);
         field.spawnLife(mob);
     }
 
@@ -463,8 +486,16 @@ public class ScriptInteraction {
         getClient().write(new LP_HireTutor(show));
     }
 
-    public void showTutorMsg(boolean ui, int type, String message) {
-        getClient().write(new LP_TutorMsg());
+    public void showTutorMsg(String message, int width, int duration) {
+        write(new LP_TutorMsg(message, width, duration));
+    }
+
+    public void showTutorMsg(int id, int duration) {
+        write(new LP_TutorMsg(id, duration));
+    }
+
+    public void setHireTutor(boolean value) {
+        write(new LP_HireTutor(value));
     }
 
     public void setEmotion(int emotion, int duration) {
@@ -788,6 +819,14 @@ public class ScriptInteraction {
 
     public void onObjectFieldEffect(String effect) {
         onObjectFieldEffect(false, effect);
+    }
+
+    public void onTopScreenFieldEffect(String effect) {
+        onTopScreenFieldEffect(false, effect);
+    }
+
+    public void onTopScreenFieldEffect(boolean broadcast, String effect) {
+        write(broadcast, new LP_FieldEffect(new TopScreenFieldEffect(effect)));
     }
 
     ///////////////////////////////////////////////////////////////////////////////////\

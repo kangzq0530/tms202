@@ -22,46 +22,27 @@
  * SOFTWARE.
  */
 
-package com.msemu.world.client.field.lifes;
+package com.msemu.world.client.field.effect;
 
+import com.msemu.commons.network.packets.OutPacket;
+import com.msemu.core.network.GameClient;
+import com.msemu.world.enums.FieldEffectType;
 
-import com.msemu.commons.utils.types.Position;
-import com.msemu.world.client.field.AbstractFieldObject;
-import com.msemu.world.client.field.Field;
-import com.msemu.world.client.field.lifes.movement.IMovement;
-import com.msemu.world.client.field.lifes.movement.MovementBase;
-import lombok.Getter;
-import lombok.Setter;
+public class TopScreenFieldEffect implements IFieldEffect {
 
-import java.util.List;
+    final String effect;
 
-/**
- * Created by Weber on 2018/5/13.
- */
-public abstract class Life extends AbstractFieldObject {
-
-    @Getter
-    @Setter
-    private byte action;
-
-    @Getter
-    @Setter
-    private int fh;
-
-    public boolean isLeft() {
-        return getAction() % 2 != 0;
+    public TopScreenFieldEffect(String effect) {
+        this.effect = effect;
     }
 
-    public  void move(List<IMovement> movements){
-        for (IMovement m : movements) {
-            Position pos = m.getPosition();
-            this.setFh(m.getFh());
-            this.setAction(m.getMoveAction());
-            if (pos != null) {
-                this.setOldPosition(this.getPosition());
-                this.setPosition(pos);
-                            }
-        }
+    @Override
+    public FieldEffectType getType() {
+        return FieldEffectType.TopScreen;
     }
 
+    @Override
+    public void encode(OutPacket<GameClient> outPacket) {
+        outPacket.encodeString(effect);
+    }
 }
