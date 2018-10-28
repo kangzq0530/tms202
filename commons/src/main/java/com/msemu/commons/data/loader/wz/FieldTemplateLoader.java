@@ -283,6 +283,25 @@ public class FieldTemplateLoader extends WzDataLoader<Map<Integer, FieldTemplate
                                     });
                                     template.addPortal(pt);
                                 });
+                    } else if (propName.equalsIgnoreCase("reactor")) {
+                        ReactorInfo reactorInfo = new ReactorInfo();
+                        prop.getProperties().forEach(reSubProp -> {
+                            String reSubPropName = reSubProp.getName();
+                            if (reSubPropName.equalsIgnoreCase("id")) {
+                                reactorInfo.setId(Integer.parseInt(reSubProp.getString()));
+                            } else if (reSubPropName.equalsIgnoreCase("x")) {
+                                reactorInfo.setX(reSubProp.getInt());
+                            } else if (reSubPropName.equalsIgnoreCase("y")) {
+                                reactorInfo.setY(reSubProp.getInt());
+                            } else if (reSubPropName.equalsIgnoreCase("f")) {
+                                reactorInfo.setF(reSubProp.getInt());
+                            } else if (reSubPropName.equalsIgnoreCase("reactorTime")) {
+                                reactorInfo.setReactorTime(reSubProp.getInt());
+                            } else if (reSubPropName.equalsIgnoreCase("name")) {
+                                reactorInfo.setName(reSubProp.getString());
+                            }
+                        });
+                        template.getReactorsInfo().add(reactorInfo);
                     } else if (propName.equalsIgnoreCase("monsterCarnival")) {
                         MonsterCarnivalInfo carnivalInfo = new MonsterCarnivalInfo();
                         prop.getProperties().forEach(mcSubProp -> {

@@ -32,6 +32,7 @@ import lombok.Setter;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -58,6 +59,7 @@ public class FieldTemplate implements DatSerializable {
     private MonsterCarnivalInfo monsterCarnivalInfo = null;
     private FieldNodeInfo fieldNodeInfo = new FieldNodeInfo();
     private Set<FieldObjectInfo> objects = new HashSet<>();
+    private List<ReactorInfo> reactorsInfo = new ArrayList<>();
 
     public boolean hasCarnivalInfo() {
         return monsterCarnivalInfo != null;
@@ -162,6 +164,10 @@ public class FieldTemplate implements DatSerializable {
         for (FieldObjectInfo object : objects) {
             object.write(dos);
         }
+        dos.writeInt(reactorsInfo.size());
+        for(ReactorInfo ri : reactorsInfo) {
+            ri.write(dos);
+        }
     }
 
     @Override
@@ -240,6 +246,12 @@ public class FieldTemplate implements DatSerializable {
             FieldObjectInfo object = new FieldObjectInfo();
             object.load(dis);
             addObject(object);
+        }
+        int reSize = dis.readInt();
+        for(int i = 0 ; i < reSize; i++) {
+            ReactorInfo ri = new ReactorInfo();
+            ri.load(dis);
+            getReactorsInfo().add(ri);
         }
         return this;
     }

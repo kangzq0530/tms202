@@ -62,7 +62,6 @@ public class CP_UserChat extends InPacket<GameClient> {
     @Override
     public void runImpl() {
         Character chr = getClient().getCharacter();
-        chr.addStat(Stat.MP, 50);
 
         if (text.charAt(0) == '!') {
             List<String> args = Arrays.stream(text.toLowerCase().split(" ")).collect(Collectors.toList());

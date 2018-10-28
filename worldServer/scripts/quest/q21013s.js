@@ -21,51 +21,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+var status = -1;
 
-package com.msemu.world.client.field.lifes;
+function start() {
+    action(1, 0, 0)
+}
 
-import com.msemu.commons.network.packets.OutPacket;
-import com.msemu.core.network.GameClient;
-import com.msemu.core.network.packets.outpacket.reactor.LP_ReactorEnterField;
-import com.msemu.core.network.packets.outpacket.reactor.LP_ReactorLeaveField;
-import com.msemu.world.enums.FieldObjectType;
-import lombok.Getter;
-import lombok.Setter;
-
-public class Reactor extends Life {
-
-    @Getter
-    private int templacteId;
-
-    @Getter
-    @Setter
-    private int state;
-
-    @Getter
-    @Setter
-    private boolean flip;
-
-    @Getter
-    @Setter
-    private String name;
-
-    @Getter
-    @Setter
-    private int ownerId;
-
-    @Override
-    public FieldObjectType getFieldObjectType() {
-        return FieldObjectType.REACTOR;
+function action(mode, type, selection) {
+    if (mode === 1) {
+        status++;
+    } else {
+        status--;
     }
-
-    @Override
-    public void enterScreen(GameClient client) {
-        client.write(new LP_ReactorEnterField(this));
+    if (status === 0) {
+        if (mode === 1) {
+            cm.say("啊， 英雄…我好想你喔！  \r\n#b#L0#(害羞的樣子)#l");
+        } else {
+            cm.say("對英雄很有幫助的禮物。請不要拒絕。");
+            cm.dispose();
+        }
+    } else if (status === 1) {
+        cm.askYesNo("我從以前就決定遇見英雄要送您一個禮物…我知道您忙著回村莊，可是…可以收下我誠心的禮物嗎？");
+    } else if (status === 2) {
+        cm.startQuest();
+        cm.sayNext(1, "禮物的材料就放在這附近的箱子裡面。雖然有點麻煩，可是請您將箱子打破後，將裡面的材料 #b#t4032309##k和 #b#t4032310##k帶回來。我就會立刻幫您組裝。");
+    } else if (status === 3) {
+        cm.showTutorMsg(18, 7000);
+        cm.dispose();
+    } else {
+        cm.dispose();
     }
-
-    @Override
-    public void outScreen(GameClient client) {
-        client.write(new LP_ReactorLeaveField(this));
-    }
-
 }

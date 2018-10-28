@@ -22,50 +22,40 @@
  * SOFTWARE.
  */
 
-package com.msemu.world.client.field.lifes;
+package com.msemu.commons.data.templates.field;
 
-import com.msemu.commons.network.packets.OutPacket;
-import com.msemu.core.network.GameClient;
-import com.msemu.core.network.packets.outpacket.reactor.LP_ReactorEnterField;
-import com.msemu.core.network.packets.outpacket.reactor.LP_ReactorLeaveField;
-import com.msemu.world.enums.FieldObjectType;
+import com.msemu.commons.data.loader.dat.DatSerializable;
 import lombok.Getter;
 import lombok.Setter;
 
-public class Reactor extends Life {
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
-    @Getter
-    private int templacteId;
-
-    @Getter
-    @Setter
-    private int state;
-
-    @Getter
-    @Setter
-    private boolean flip;
-
-    @Getter
-    @Setter
+@Getter
+@Setter
+public class ReactorInfo implements DatSerializable {
+    private int id, x, y, reactorTime, f;
     private String name;
 
-    @Getter
-    @Setter
-    private int ownerId;
-
     @Override
-    public FieldObjectType getFieldObjectType() {
-        return FieldObjectType.REACTOR;
+    public void write(DataOutputStream dos) throws IOException {
+        dos.writeInt(id);
+        dos.writeInt(x);
+        dos.writeInt(y);
+        dos.writeInt(reactorTime);
+        dos.writeInt(f);
+        dos.writeUTF(name);
     }
 
     @Override
-    public void enterScreen(GameClient client) {
-        client.write(new LP_ReactorEnterField(this));
+    public DatSerializable load(DataInputStream dis) throws IOException {
+        setId(dis.readInt());
+        setX(dis.readInt());
+        setY(dis.readInt());
+        setReactorTime(dis.readInt());
+        setF(dis.readInt());
+        setName(dis.readUTF());
+        return this;
     }
-
-    @Override
-    public void outScreen(GameClient client) {
-        client.write(new LP_ReactorLeaveField(this));
-    }
-
 }
