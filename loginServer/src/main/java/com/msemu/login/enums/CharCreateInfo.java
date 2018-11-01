@@ -67,7 +67,7 @@ public enum CharCreateInfo {
     }
 
     CharCreateInfo(int jobType, int subJob, int id, int map, int flag) {
-        this(jobType, subJob, id, map, 0, true);
+        this(jobType, subJob, id, map, flag, true);
     }
 
     CharCreateInfo(int jobType, int subJob, int id, int map, int flag, boolean enableCreate) {

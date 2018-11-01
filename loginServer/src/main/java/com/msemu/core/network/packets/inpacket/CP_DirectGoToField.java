@@ -66,7 +66,6 @@ public class CP_DirectGoToField extends InPacket<LoginClient> {
             getClient().write(new LP_SelectCharacterResult(LoginResultCode.DBFail, new byte[]{0, 0, 0, 0}, (short) 0, 0));
             return;
         }
-
         try {
             worldInfo.getConnection().addTransfer(channelInfo.getChannel(), channelInfo.getWorldId(), characterId);
             InetAddress hostAddress = InetAddress.getByName(channelInfo.getHost());
