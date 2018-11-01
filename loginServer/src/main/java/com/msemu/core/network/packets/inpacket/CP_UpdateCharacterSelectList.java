@@ -45,11 +45,11 @@ public class CP_UpdateCharacterSelectList extends InPacket<LoginClient> {
 
     public CP_UpdateCharacterSelectList(short opcode) {
         super(opcode);
-        charPosArray = new ArrayList<>();
     }
 
     @Override
     public void read() {
+        charPosArray = new ArrayList<>();
 
         decodeInt();
         decodeByte();

@@ -53,7 +53,7 @@ public class CP_MobMove extends InPacket<GameClient> {
     private int mobSkillID;
     private int mobSkillLevel;
     private int mobSkillDelay;
-    private MobSkillAttackInfo msai = new MobSkillAttackInfo();
+    private MobSkillAttackInfo msai;
     private int crc0, crc1, crc2;
     private int encodedGatherDuration;
     private Mob mob;
@@ -64,6 +64,7 @@ public class CP_MobMove extends InPacket<GameClient> {
 
     @Override
     public void read() {
+        msai = new MobSkillAttackInfo();
         final GameClient client = getClient();
         final Character chr = client.getCharacter();
         final Field field = chr.getField();

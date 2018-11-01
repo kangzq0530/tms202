@@ -44,7 +44,7 @@ public class CP_GuildRequest extends InPacket<GameClient> {
     private String guildNotice;
     private int guildID;
     private int characterID;
-    private String gradeName[] = new String[5];
+    private String gradeName[];
     private int newRank;
     private int newBG;
     private int newBGColor;
@@ -59,6 +59,7 @@ public class CP_GuildRequest extends InPacket<GameClient> {
 
     @Override
     public void read() {
+        gradeName = new String[5];
         opcode = GuildResultType.getByValue(decodeByte());
         switch (opcode) {
             case ReqLoadGuild:

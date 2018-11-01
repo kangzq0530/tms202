@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Created by Weber on 2018/4/21.
@@ -58,133 +59,129 @@ public class EquipTemplateLoader extends WzDataLoader<Map<Integer, EquipTemplate
     }
 
     private EquipTemplate importItem(WzImage itemImage) {
+        final EquipTemplate template = new EquipTemplate();
+        final int itemId = Integer.parseInt(itemImage.getName().replace(".img", ""));
 
-        EquipTemplate equip = new EquipTemplate();
-        equip.setInvType(InvType.EQUIP);
+        template.setInvType(InvType.EQUIP);
+        template.setItemId(itemId);
 
-        int itemId = Integer.parseInt(itemImage.getName().replace(".img", ""));
-        equip.setItemId(itemId);
+        WzSubProperty infoNode = (WzSubProperty) itemImage.getFromPath("info");
 
-        WzSubProperty info = (WzSubProperty) itemImage.getFromPath("info");
+        if (infoNode == null)
+            return template;
 
-        if (info == null)
-            return equip;
-
-        info.getProperties().forEach(prop -> {
-
-            String propName = prop.getName();
+        for (WzImageProperty prop : infoNode.getProperties()) {
+            String propName = prop.getName().toLowerCase();
 
             if (propName.equalsIgnoreCase("islot")) {
-                equip.setISlot(prop.getString());
+                template.setISlot(prop.getString());
             } else if (propName.equalsIgnoreCase("vslot")) {
-                equip.setVSlot(prop.getString());
+                template.setVSlot(prop.getString());
             } else if (propName.equalsIgnoreCase("reqJob")) {
-                equip.setRJob(prop.getShort());
+                template.setRJob(prop.getShort());
             } else if (propName.equalsIgnoreCase("reqLevel")) {
-                equip.setRLevel(prop.getShort());
+                template.setRLevel(prop.getShort());
             } else if (propName.equalsIgnoreCase("reqSTR")) {
-                equip.setRStr(prop.getShort());
+                template.setRStr(prop.getShort());
             } else if (propName.equalsIgnoreCase("reqDEX")) {
-                equip.setRDex(prop.getShort());
+                template.setRDex(prop.getShort());
             } else if (propName.equalsIgnoreCase("reqINT")) {
-                equip.setRInt(prop.getShort());
+                template.setRInt(prop.getShort());
             } else if (propName.equalsIgnoreCase("reqLUK")) {
-                equip.setRLuk(prop.getShort());
+                template.setRLuk(prop.getShort());
             } else if (propName.equalsIgnoreCase("incSTR")) {
-                equip.setIStr(prop.getShort());
+                template.setIStr(prop.getShort());
             } else if (propName.equalsIgnoreCase("incDEX")) {
-                equip.setIDex(prop.getShort());
+                template.setIDex(prop.getShort());
             } else if (propName.equalsIgnoreCase("incINT")) {
-                equip.setIInt(prop.getShort());
+                template.setIInt(prop.getShort());
             } else if (propName.equalsIgnoreCase("incLUK")) {
-                equip.setILuk(prop.getShort());
+                template.setILuk(prop.getShort());
             } else if (propName.equalsIgnoreCase("incPDD")) {
-                equip.setIPDD(prop.getShort());
+                template.setIPDD(prop.getShort());
             } else if (propName.equalsIgnoreCase("incMDD")) {
-                equip.setIMDD(prop.getShort());
+                template.setIMDD(prop.getShort());
             } else if (propName.equalsIgnoreCase("incMHP")) {
-                equip.setIMaxHp(prop.getShort());
+                template.setIMaxHp(prop.getShort());
             } else if (propName.equalsIgnoreCase("incMHPr")) {
-                equip.setIMaxHpR(prop.getShort());
+                template.setIMaxHpR(prop.getShort());
             } else if (propName.equalsIgnoreCase("incMMP")) {
-                equip.setIMaxMp(prop.getShort());
+                template.setIMaxMp(prop.getShort());
             } else if (propName.equalsIgnoreCase("incMMPr")) {
-                equip.setIMaxMpR(prop.getShort());
+                template.setIMaxMpR(prop.getShort());
             } else if (propName.equalsIgnoreCase("incPAD")) {
-                equip.setIPad(prop.getShort());
+                template.setIPad(prop.getShort());
             } else if (propName.equalsIgnoreCase("incMAD")) {
-                equip.setIMad(prop.getShort());
+                template.setIMad(prop.getShort());
             } else if (propName.equalsIgnoreCase("incPAD")) {
-                equip.setIPad(prop.getShort());
+                template.setIPad(prop.getShort());
             } else if (propName.equalsIgnoreCase("incEVA")) {
-                equip.setIEva(prop.getShort());
+                template.setIEva(prop.getShort());
             } else if (propName.equalsIgnoreCase("incACC")) {
-                equip.setIAcc(prop.getShort());
+                template.setIAcc(prop.getShort());
             } else if (propName.equalsIgnoreCase("incSpeed")) {
-                equip.setISpeed(prop.getShort());
+                template.setISpeed(prop.getShort());
             } else if (propName.equalsIgnoreCase("incJump")) {
-                equip.setIJump(prop.getShort());
+                template.setIJump(prop.getShort());
             } else if (propName.equalsIgnoreCase("damR")) {
-                equip.setDamR(prop.getShort());
+                template.setDamR(prop.getShort());
             } else if (propName.equalsIgnoreCase("statR")) {
-                equip.setStatR(prop.getShort());
+                template.setStatR(prop.getShort());
             } else if (propName.equalsIgnoreCase("tuc")) {
-                equip.setTuc(prop.getShort());
+                template.setTuc(prop.getShort());
             } else if (propName.equalsIgnoreCase("setItemID")) {
-                equip.setSetItemID(prop.getInt());
+                template.setSetItemID(prop.getInt());
             } else if (propName.equalsIgnoreCase("price")) {
-                equip.setPrice(prop.getInt());
+                template.setPrice(prop.getInt());
             } else if (propName.equalsIgnoreCase("attackSpeed")) {
-                equip.setAttackSpeed(prop.getInt());
+                template.setAttackSpeed(prop.getInt());
             } else if (propName.equalsIgnoreCase("cash")) {
-                equip.setCash(prop.getInt() > 0);
+                template.setCash(prop.getInt() > 0);
             } else if (propName.equalsIgnoreCase("expireOnLogout")) {
-                equip.setExpireOnLogout(prop.getInt() > 0);
+                template.setExpireOnLogout(prop.getInt() > 0);
             } else if (propName.equalsIgnoreCase("exItem")) {
-                equip.setExItem(prop.getInt() > 0);
+                template.setExItem(prop.getInt() > 0);
             } else if (propName.equalsIgnoreCase("notSale")) {
-                equip.setNotSale(prop.getInt() > 0);
+                template.setNotSale(prop.getInt() > 0);
             } else if (propName.equalsIgnoreCase("only")) {
-                equip.setAttackSpeed(prop.getInt());
+                template.setAttackSpeed(prop.getInt());
             } else if (propName.equalsIgnoreCase("tradeBlock")) {
-                equip.setTradeBlock(prop.getInt() > 0);
+                template.setTradeBlock(prop.getInt() > 0);
             } else if (propName.equalsIgnoreCase("equipTradeBlock")) {
-                equip.setEquipTradeBlock(prop.getInt() > 0);
+                template.setEquipTradeBlock(prop.getInt() > 0);
             } else if (propName.equalsIgnoreCase("fixedPotential")) {
-                equip.setFixedPotential(prop.getInt() > 0);
+                template.setFixedPotential(prop.getInt() > 0);
             } else if (propName.equalsIgnoreCase("fixedGrade")) {
-                equip.setFixedGrade(prop.getInt());
+                template.setFixedGrade(prop.getInt());
             } else if (propName.equalsIgnoreCase("specialGrade")) {
-                equip.setSpecialGrade(prop.getInt());
+                template.setSpecialGrade(prop.getInt());
             } else if (propName.equalsIgnoreCase("attackSpeed")) {
-                equip.setAttackSpeed(prop.getInt());
+                template.setAttackSpeed(prop.getInt());
             } else if (propName.equalsIgnoreCase("option")) {
-                WzSubProperty optsProp = (WzSubProperty) prop;
-                optsProp.getProperties().stream().map(p -> (WzSubProperty) p).forEach(indexProp -> {
-                    indexProp.getProperties().forEach(optProp -> {
+                WzSubProperty optionNode = (WzSubProperty) prop;
+                for (WzSubProperty optionsNode : optionNode.getProperties()
+                        .stream().map(p -> (WzSubProperty)p).collect(Collectors.toList()))
+                {
+                    for(WzImageProperty eachOptionNode : optionsNode.getProperties())
+                    {
                         EquipOption option = new EquipOption();
-                        if (optProp.getName().equalsIgnoreCase("option")) {
-                            option.setOption(optProp.getInt());
-                        } else if (optProp.getName().equalsIgnoreCase("level")) {
-                            option.setLevel(optProp.getInt());
-                        } else {
-                            log.warn("new equip option : {}", optProp.getName());
+                        if (eachOptionNode.getName().equalsIgnoreCase("option")) {
+                            option.setOption(eachOptionNode.getInt());
+                        } else if (eachOptionNode.getName().equalsIgnoreCase("level")) {
+                            option.setLevel(eachOptionNode.getInt());
                         }
-                        equip.getOptions().put(indexProp.getInt(), option);
-                    });
-                });
-                while (equip.getOptions().size() < 7) {
+                        template.getOptions().put(optionsNode.getInt(), option);
+                    }
+                }
+                while (template.getOptions().size() < 7) {
                     EquipOption empty = new EquipOption();
                     empty.setLevel(0);
                     empty.setOption(0);
-                    equip.getOptions().put(equip.getOptions().size(), empty);
+                    template.getOptions().put(template.getOptions().size(), empty);
                 }
             }
-            // options
-        });
-
-
-        return equip;
+        }
+        return template;
     }
 
     private List<EquipTemplate> importCates(WzDirectory cateDir) {

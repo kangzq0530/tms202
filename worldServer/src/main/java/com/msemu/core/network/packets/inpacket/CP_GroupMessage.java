@@ -41,7 +41,7 @@ import java.util.List;
 public class CP_GroupMessage extends InPacket<GameClient> {
 
     private int typeValue;
-    private List<Integer> targets = new ArrayList<>();
+    private List<Integer> targets;
     private String text;
 
 
@@ -51,13 +51,12 @@ public class CP_GroupMessage extends InPacket<GameClient> {
 
     @Override
     public void read() {
-
+        targets = new ArrayList<>();
         typeValue = decodeByte();
         final int targetCount = decodeByte();
         for (int i = 0; i < targetCount; i++)
             targets.add(decodeInt());
         text = decodeString();
-
     }
 
     @Override

@@ -22,50 +22,34 @@
  * SOFTWARE.
  */
 
-package com.msemu.core.network.packets.inpacket;
+package com.msemu.commons.data.templates.field;
 
-import com.msemu.commons.network.packets.InPacket;
-import com.msemu.core.network.GameClient;
-import com.msemu.world.client.character.Character;
-import com.msemu.world.client.character.stats.TemporaryStatManager;
+import com.msemu.commons.data.loader.dat.DatSerializable;
+import lombok.Getter;
+import lombok.Setter;
 
-/**
- * Created by Weber on 2018/5/19.
- */
-public class CP_UserSkillCancelRequest extends InPacket<GameClient> {
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-    private int reason;
-    private int flags[];
+@Getter
+@Setter
+public class ReactorStateInfo implements DatSerializable {
 
-    public CP_UserSkillCancelRequest(short opcode) {
-        super(opcode);
+    private boolean repeat, follow;
+
+    private List<ReactorEventInfo> events = new ArrayList<>();
+
+
+    @Override
+    public void write(DataOutputStream dos) throws IOException {
+
     }
 
     @Override
-    public void read() {
-        flags = new int[18];
-        reason = decodeInt();
-        decodeByte();
-        for (int i = 0; i < 8; i++) {
-            flags[i] = decodeInt();
-        }
-    }
-
-    @Override
-    public void runImpl() {
-        Character chr = getClient().getCharacter();
-        TemporaryStatManager tsm = chr.getTemporaryStatManager();
-
-        int[] _flags = tsm.getCurrentFlags();
-
-        tsm.removeStatsBySkill(reason);
-
-        boolean check = true;
-        for (int i = 0; i < 8; i++) {
-            check = flags[i] == _flags[i];
-            if (!check)
-                break;
-        }
-
+    public DatSerializable load(DataInputStream dis) throws IOException {
+        return null;
     }
 }

@@ -68,13 +68,7 @@ public class ClientPacketHandler<TClient extends Client<TClient>> {
             unknownPacket(ch.getState(), id);
             return null;
         } else {
-            try {
-                return (InPacket<TClient>) prototype.getClass().getDeclaredConstructor(new Class[]{Short.TYPE})
-                        .newInstance(prototype.getOpcode());
-            } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-                e.printStackTrace();
-                return null;
-            }
+            return prototype.clonePacket();
         }
     }
 

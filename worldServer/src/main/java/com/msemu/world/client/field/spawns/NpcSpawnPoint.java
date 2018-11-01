@@ -24,7 +24,7 @@
 
 package com.msemu.world.client.field.spawns;
 
-import com.msemu.commons.data.templates.field.LifeData;
+import com.msemu.commons.data.templates.field.LifeInField;
 import com.msemu.world.client.field.Field;
 import com.msemu.world.client.field.lifes.Npc;
 import com.msemu.world.data.NpcData;
@@ -38,9 +38,9 @@ public class NpcSpawnPoint extends AbstractSpawnPoint {
 
     private boolean noFoothold;
 
-    public NpcSpawnPoint(LifeData lifeData) {
-        super(lifeData);
-        this.noFoothold = lifeData.isNofoothold();
+    public NpcSpawnPoint(LifeInField lifeInField) {
+        super(lifeInField);
+        this.noFoothold = lifeInField.isNofoothold();
     }
 
     @Override

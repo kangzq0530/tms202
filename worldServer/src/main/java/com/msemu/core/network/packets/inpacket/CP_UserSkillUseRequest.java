@@ -40,7 +40,7 @@ import com.msemu.world.enums.Stat;
  */
 public class CP_UserSkillUseRequest extends InPacket<GameClient> {
 
-    private SkillUseInfo skillUseInfo = new SkillUseInfo();
+    private SkillUseInfo skillUseInfo;
 
     public CP_UserSkillUseRequest(short opcode) {
         super(opcode);
@@ -48,7 +48,7 @@ public class CP_UserSkillUseRequest extends InPacket<GameClient> {
 
     @Override
     public void read() {
-
+        skillUseInfo = new SkillUseInfo();
         skillUseInfo.setUpdateTick(decodeInt());
         skillUseInfo.setSkillID(decodeInt());
 

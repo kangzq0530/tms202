@@ -24,7 +24,6 @@
 
 package com.msemu.core.network.packets.inpacket;
 
-import com.msemu.commons.data.enums.InvType;
 import com.msemu.commons.database.DatabaseFactory;
 import com.msemu.commons.network.packets.InPacket;
 import com.msemu.core.network.LoginClient;
@@ -70,11 +69,12 @@ public class CP_CreateNewCharacter extends InPacket<LoginClient> {
 
     public CP_CreateNewCharacter(short opcode) {
         super(opcode);
-        items = new ArrayList<>();
     }
 
     @Override
     public void read() {
+        items = new ArrayList<>();
+
         charName = decodeString();
         keyMapType = decodeInt();
         eventNewCharSaleJob = decodeInt();

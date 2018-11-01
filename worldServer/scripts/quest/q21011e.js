@@ -51,8 +51,8 @@ function action(mode, type, selection) {
         cm.askYesNo("湊合著用可能會太寒酸，不過 #b請你先收下這把劍吧#k！這是我送給英雄的禮物。英雄空著手總是有點奇怪…\r\n\r\n#fUI/UIWindow2.img/QuestIcon/4/0# \r\n#i1302000# #t1302000# 1個 \r\n\r\n#fUI/UIWindow2.img/QuestIcon/8/0# 35 exp");
     } else if (status === 5) {
         if (cm.hasQuestInProgress(21011)) {
-            cm.give(1302000, 1);
-            cm.give(35);
+            cm.giveItem(1302000, 1);
+            cm.giveExp(35);
         }
         cm.completeQuest();
         cm.sayNext(3, "#b(連技能一點都不像英雄…連劍都好陌生。我之前真的有用過劍嗎？劍該怎麼配戴呢？)#k");

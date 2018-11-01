@@ -22,40 +22,19 @@
  * SOFTWARE.
  */
 
-package com.msemu.commons.data.templates.field;
+package com.msemu.commons.data.loader.dat;
 
-import com.msemu.commons.data.loader.dat.DatSerializable;
-import lombok.Getter;
-import lombok.Setter;
+import com.msemu.commons.data.loader.DatMappingDataLoader;
+import com.msemu.commons.data.templates.field.ReactorTemplate;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+public class ReactorTemplateDatLoader extends DatMappingDataLoader<ReactorTemplate> {
 
-@Getter
-@Setter
-public class ReactorInfo implements DatSerializable {
-    private int id, x, y, reactorTime, f;
-    private String name = "";
-
-    @Override
-    public void write(DataOutputStream dos) throws IOException {
-        dos.writeInt(id);
-        dos.writeInt(x);
-        dos.writeInt(y);
-        dos.writeInt(reactorTime);
-        dos.writeInt(f);
-        dos.writeUTF(name);
+    public ReactorTemplateDatLoader() {
+        super(DatManager.Reactor);
     }
 
     @Override
-    public DatSerializable load(DataInputStream dis) throws IOException {
-        setId(dis.readInt());
-        setX(dis.readInt());
-        setY(dis.readInt());
-        setReactorTime(dis.readInt());
-        setF(dis.readInt());
-        setName(dis.readUTF());
-        return this;
+    protected ReactorTemplate create() {
+        return new ReactorTemplate();
     }
 }

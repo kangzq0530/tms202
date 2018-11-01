@@ -24,7 +24,7 @@
 
 package com.msemu.world.client.field.spawns;
 
-import com.msemu.commons.data.templates.field.LifeData;
+import com.msemu.commons.data.templates.field.LifeInField;
 import com.msemu.commons.utils.types.Position;
 import com.msemu.world.client.field.Field;
 import com.msemu.world.client.field.lifes.InternalLife;
@@ -59,19 +59,19 @@ public abstract class AbstractSpawnPoint {
     @Setter
     private String limitedName;
 
-    public AbstractSpawnPoint(LifeData lifeData) {
-        this.templateId = lifeData.getId();
-        this.f = lifeData.getF();
-        this.fh = lifeData.getFh();
-        this.cy = lifeData.getCy();
-        this.rx0 = lifeData.getRx0();
-        this.rx1 = lifeData.getRx1();
-        this.hide = lifeData.isHide();
-        this.useDay = lifeData.isUseDay();
-        this.useNight = lifeData.isUseNight();
-        this.position = new Position(lifeData.getX(), lifeData.getY());
-        this.lifeType = lifeData.getType();
-        this.limitedName = lifeData.getLimitedname();
+    public AbstractSpawnPoint(LifeInField lifeInField) {
+        this.templateId = lifeInField.getId();
+        this.f = lifeInField.getF();
+        this.fh = lifeInField.getFh();
+        this.cy = lifeInField.getCy();
+        this.rx0 = lifeInField.getRx0();
+        this.rx1 = lifeInField.getRx1();
+        this.hide = lifeInField.isHide();
+        this.useDay = lifeInField.isUseDay();
+        this.useNight = lifeInField.isUseNight();
+        this.position = new Position(lifeInField.getX(), lifeInField.getY());
+        this.lifeType = lifeInField.getType();
+        this.limitedName = lifeInField.getLimitedname();
     }
 
     public abstract boolean shouldSpawn(LocalDateTime time);

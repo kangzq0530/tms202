@@ -24,8 +24,7 @@
 
 package com.msemu.world.client.field.lifes;
 
-import com.msemu.commons.data.templates.field.ReactorInfo;
-import com.msemu.commons.network.packets.OutPacket;
+import com.msemu.commons.data.templates.field.ReactorInField;
 import com.msemu.commons.utils.types.Position;
 import com.msemu.core.network.GameClient;
 import com.msemu.core.network.packets.outpacket.reactor.LP_ReactorEnterField;
@@ -57,7 +56,7 @@ public class Reactor extends Life {
     @Setter
     private int ownerId;
 
-    public Reactor(ReactorInfo ri) {
+    public Reactor(ReactorInField ri) {
         setName(ri.getName());
         setFlip(ri.getF() > 0);
         setPosition(new Position(ri.getX(), ri.getY()));

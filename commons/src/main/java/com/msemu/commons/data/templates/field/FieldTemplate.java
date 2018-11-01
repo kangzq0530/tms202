@@ -32,7 +32,6 @@ import lombok.Setter;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -51,15 +50,15 @@ public class FieldTemplate implements DatSerializable {
     private String onFirstUserEnter = "", onUserEnter = "";
     private Set<Foothold> footholds = new HashSet<>();
     private Set<Portal> portals = new HashSet<>();
-    private Set<LifeData> life = new HashSet<>();
-    private HashMap<Integer, LifeData> categoryLife = new HashMap<>();
+    private Set<LifeInField> life = new HashSet<>();
+    private HashMap<Integer, LifeInField> categoryLife = new HashMap<>();
     private Set<RadderRope> radderRopes = new HashSet<>();
     private List<FieldArea> areas = new ArrayList<>();
     private Set<FieldDirectionInfo> directionInfos = new HashSet<>();
     private MonsterCarnivalInfo monsterCarnivalInfo = null;
     private FieldNodeInfo fieldNodeInfo = new FieldNodeInfo();
     private Set<FieldObjectInfo> objects = new HashSet<>();
-    private List<ReactorInfo> reactorsInfo = new ArrayList<>();
+    private List<ReactorInField> reactorsInfo = new ArrayList<>();
 
     public boolean hasCarnivalInfo() {
         return monsterCarnivalInfo != null;
@@ -85,12 +84,12 @@ public class FieldTemplate implements DatSerializable {
         portals.add(portal);
     }
 
-    public void addLifeData(LifeData lifeData) {
-        life.add(lifeData);
+    public void addLifeData(LifeInField lifeInField) {
+        life.add(lifeInField);
     }
 
-    public void addLifeData(Integer category, LifeData lifeData) {
-        categoryLife.put(category, lifeData);
+    public void addLifeData(Integer category, LifeInField lifeInField) {
+        categoryLife.put(category, lifeInField);
     }
 
     public List<FieldObjectInfo> getMovingPlatforms() {
@@ -140,7 +139,7 @@ public class FieldTemplate implements DatSerializable {
             portal.write(dos);
         }
         dos.writeInt(life.size());
-        for (LifeData i : life) {
+        for (LifeInField i : life) {
             i.write(dos);
         }
         dos.writeInt(radderRopes.size());
@@ -165,7 +164,7 @@ public class FieldTemplate implements DatSerializable {
             object.write(dos);
         }
         dos.writeInt(reactorsInfo.size());
-        for(ReactorInfo ri : reactorsInfo) {
+        for(ReactorInField ri : reactorsInfo) {
             ri.write(dos);
         }
     }
@@ -211,7 +210,7 @@ public class FieldTemplate implements DatSerializable {
         }
         int lSize = dis.readInt();
         for (int i = 0; i < lSize; i++) {
-            LifeData life = new LifeData();
+            LifeInField life = new LifeInField();
             life.load(dis);
             getLife().add(life);
         }
@@ -249,7 +248,7 @@ public class FieldTemplate implements DatSerializable {
         }
         int reSize = dis.readInt();
         for(int i = 0 ; i < reSize; i++) {
-            ReactorInfo ri = new ReactorInfo();
+            ReactorInField ri = new ReactorInField();
             ri.load(dis);
             getReactorsInfo().add(ri);
         }

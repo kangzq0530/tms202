@@ -25,74 +25,72 @@
 package com.msemu.commons.data.templates.field;
 
 import com.msemu.commons.data.loader.dat.DatSerializable;
+import com.msemu.commons.utils.types.Rect;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- * Created by Weber on 2018/4/24.
- */
 @Getter
 @Setter
-public class LifeData implements DatSerializable {
-    private String type = "";
+public class ReactorTemplate implements DatSerializable {
+
     private int id;
-    private int x, y, f, fh, cy, rx0, rx1;
-    private int mobTime, mobAliveReq, regenStart;
-    private boolean hide, useDay, useNight, hold, nofoothold, dummy, spine, mobTimeOnDie;
-    private String limitedname = "";
+
+    private String viewName = "", action = "";
+
+    private int resetTime, level, link;
+
+    private boolean frontTile, backTile, activateByTouch, notFatigue, forcedViewName;
+
+    private List<ReactorStateInfo> statesInfo = new ArrayList<>();
 
     @Override
     public void write(DataOutputStream dos) throws IOException {
-        dos.writeUTF(type);
-        dos.writeUTF(limitedname);
+        dos.writeUTF(viewName);
+        dos.writeUTF(action);
         dos.writeInt(id);
-        dos.writeInt(x);
-        dos.writeInt(y);
-        dos.writeInt(f);
-        dos.writeInt(fh);
-        dos.writeInt(cy);
-        dos.writeInt(rx0);
-        dos.writeInt(rx1);
-        dos.writeInt(mobTime);
-        dos.writeInt(mobAliveReq);
-        dos.writeInt(regenStart);
-        dos.writeBoolean(hide);
-        dos.writeBoolean(useDay);
-        dos.writeBoolean(useNight);
-        dos.writeBoolean(hold);
-        dos.writeBoolean(nofoothold);
-        dos.writeBoolean(dummy);
-        dos.writeBoolean(spine);
-        dos.writeBoolean(mobTimeOnDie);
+        dos.writeInt(resetTime);
+        dos.writeInt(level);
+        dos.writeInt(link);
+        dos.writeBoolean(frontTile);
+        dos.writeBoolean(backTile);
+        dos.writeBoolean(activateByTouch);
+        dos.writeBoolean(notFatigue);
+        dos.writeBoolean(forcedViewName);
+
+        dos.writeInt(statesInfo.size());
+
+        for(ReactorStateInfo stateInfo : statesInfo)
+        {
+            stateInfo.write(dos);
+        }
+
     }
 
     @Override
     public DatSerializable load(DataInputStream dis) throws IOException {
-        setType(dis.readUTF());
-        setLimitedname(dis.readUTF());
+        setViewName(dis.readUTF());
+        setAction(dis.readUTF());
         setId(dis.readInt());
-        setX(dis.readInt());
-        setY(dis.readInt());
-        setF(dis.readInt());
-        setFh(dis.readInt());
-        setCy(dis.readInt());
-        setRx0(dis.readInt());
-        setRx1(dis.readInt());
-        setMobTime(dis.readInt());
-        setMobAliveReq(dis.readInt());
-        setRegenStart(dis.readInt());
-        setHide(dis.readBoolean());
-        setUseDay(dis.readBoolean());
-        setUseNight(dis.readBoolean());
-        setHold(dis.readBoolean());
-        setNofoothold(dis.readBoolean());
-        setDummy(dis.readBoolean());
-        setSpine(dis.readBoolean());
-        setMobTimeOnDie(dis.readBoolean());
+        setResetTime(dis.readInt());
+        setLevel(dis.readInt());
+        setLink(dis.readInt());
+        setFrontTile(dis.readBoolean());
+        setBackTile(dis.readBoolean());
+        setActivateByTouch(dis.readBoolean());
+        setNotFatigue(dis.readBoolean());
+        setForcedViewName(dis.readBoolean());
+        int statesSize = dis.readInt();
+        for(int i = 0 ; i < statesSize;  i++){
+            ReactorStateInfo state = new ReactorStateInfo();
+            state.load(dis);
+            getStatesInfo().add(state);
+        }
         return this;
     }
 }

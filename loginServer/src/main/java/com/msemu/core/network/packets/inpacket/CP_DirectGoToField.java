@@ -40,6 +40,7 @@ import java.rmi.RemoteException;
  * Created by Weber on 2018/4/23.
  */
 public class CP_DirectGoToField extends InPacket<LoginClient> {
+
     int characterId;
     boolean offlineMode;
 

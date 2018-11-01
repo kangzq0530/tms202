@@ -25,6 +25,7 @@
 package com.msemu.commons.tools;
 
 import com.msemu.commons.config.utils.ConfigLoader;
+import com.msemu.commons.data.loader.dat.ReactorTemplateDatLoader;
 import com.msemu.commons.data.loader.wz.*;
 
 import java.io.IOException;
@@ -49,6 +50,8 @@ public class wzToDat {
 //        new SkillInfoLoader(wzManager).saveToDat();
 //        new QuestInfoLoader(wzManager).saveToDat();
 //        new MobTemplateLoader(wzManager).saveToDat();
-        new FieldTemplateLoader(wzManager).saveToDat();
+//        new FieldTemplateLoader(wzManager).saveToDat();
+//        new ReactorTemplateLoader(wzManager).saveToDat();
+        new ReactorTemplateDatLoader().load();
     }
 }

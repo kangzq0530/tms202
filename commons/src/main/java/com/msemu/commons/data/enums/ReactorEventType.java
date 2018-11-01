@@ -22,23 +22,33 @@
  * SOFTWARE.
  */
 
-package com.msemu.commons.data.loader.dat;
+package com.msemu.commons.data.enums;
 
-/**
- * Created by Weber on 2018/4/27.
- */
-public class DatManager {
-    public static final String MonsterBook = "monsterBook.dat";
-    public static final String VCoreInfo = "vcore.dat";
-    public static final String Equip = "equip.dat";
-    public static final String SetItem = "setItem.dat";
-    public static final String Field = "field.dat";
-    public static final String Item = "item.dat";
-    public static final String QuestInfo = "quest.dat";
-    public static final String SkillInfo = "skill.dat";
-    public static final String Npc = "npc.dat";
-    public static final String Mob = "mob.dat";
-    public static final String ItemOption = "itemOption.dat";
-    public static final String ForbiddenName = "forbiddenName.dat";
-    public static final String Reactor = "reactors.dat";
+import lombok.Getter;
+
+public enum ReactorEventType {
+
+    REACTOR_EVENT_HIT(0x0),
+    REACTOR_EVENT_HIT_LEFT(0x1),
+    REACTOR_EVENT_HIT_RIGHT(0x2),
+    REACTOR_EVENT_HIT_JUMP_LEFT(0x3),
+    REACTOR_EVENT_HIT_JUMP_RIGHT(0x4),
+    REACTOR_EVENT_HIT_SKILL_CHECK(0x5),
+    REACTOR_EVENT_GATHER(0x8),
+    REACTOR_EVENT_CLICK_CHECK(0x9),
+    REACTOR_EVENT_MOB_CHECK(0xA),
+    REACTOR_EVENT_CHARACTER_ACT(0xB),
+    REACTOR_EVENT_REMOVE_REACTOR(0xC),
+    REACTOR_EVENT_HIT_JUMP(0xD),
+    REACTOR_EVENT_FIND_ITEM_UPDATE(0x64),
+    REACTOR_EVENT_TIMEOUT_RESET(0x65),
+    REACTOR_EVENT_KEY_CHECK1(0xC8),
+    REACTOR_EVENT_KEY_CHECK2(0xC9),
+    ;
+    @Getter
+    private final int value;
+
+    ReactorEventType(int value) {
+        this.value = value;
+    }
 }
