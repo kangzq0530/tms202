@@ -150,11 +150,13 @@ public class AdminCommand {
             final int itemID = Integer.parseInt(args.get(1));
             final ItemData itemData = ItemData.getInstance();
             final Item item = itemData.createItem(itemID, true);
-            item.setDateExpire(FileTime.now().plus(5, FileTimeUnit.DAY));
-            item.setQuantity(1);
             if (item == null) {
+                chr.chatMessage(ChatMsgType.SYSTEM, "道具不存在");
                 return true;
             }
+            item.setDateExpire(FileTime.now().plus(5, FileTimeUnit.DAY));
+            item.setQuantity(1);
+
             chr.giveItem(item);
             return true;
         }

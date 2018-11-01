@@ -30,6 +30,7 @@ import com.msemu.commons.utils.types.Position;
 import com.msemu.core.network.GameClient;
 import com.msemu.core.network.packets.outpacket.reactor.LP_ReactorEnterField;
 import com.msemu.core.network.packets.outpacket.reactor.LP_ReactorLeaveField;
+import com.msemu.world.client.character.Character;
 import com.msemu.world.enums.FieldObjectType;
 import lombok.Getter;
 import lombok.Setter;
@@ -78,4 +79,6 @@ public class Reactor extends Life {
         client.write(new LP_ReactorLeaveField(this));
     }
 
+    public void hit(Character chr) {
+    }
 }

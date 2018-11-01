@@ -762,6 +762,9 @@ public class Field {
         return (Drop) getFieldObjectsByKey(FieldObjectType.DROP, objectId);
     }
 
+    public Reactor getReactorByObjectId(int objectId) {
+        return (Reactor) getFieldObjectsByKey(FieldObjectType.REACTOR, objectId);
+    }
 
     public List<Mob> getMobInRect(Rect rect) {
         return getAllMobs().stream().filter(mob -> rect.contains(mob.getPosition())).collect(Collectors.toList());

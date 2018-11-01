@@ -45,13 +45,13 @@ public class LP_InventoryOperation extends OutPacket<GameClient> {
 
     public LP_InventoryOperation(boolean exclRequestSent, boolean notRemoveAddInfo, InventoryOperationType type,
                                  Item item, int oldBagIndex, short oldQuantity) {
-        this(exclRequestSent, notRemoveAddInfo, Collections.singletonList(new InventoryOperationInfo(type, item, oldBagIndex, oldQuantity)));
+        this(exclRequestSent, notRemoveAddInfo, Collections.singletonList(new InventoryOperationInfo(type, item, item.getInvType(), oldBagIndex, oldQuantity)));
     }
 
 
     public LP_InventoryOperation(boolean exclRequestSent, boolean notRemoveAddInfo, InventoryOperationType type,
                                  Item item, int oldBagIndex) {
-        this(exclRequestSent, notRemoveAddInfo, Collections.singletonList(new InventoryOperationInfo(type, item, oldBagIndex)));
+        this(exclRequestSent, notRemoveAddInfo, Collections.singletonList(new InventoryOperationInfo(type, item, item.getInvType(), oldBagIndex)));
     }
 
     public LP_InventoryOperation(boolean exclRequestSent, boolean notRemoveAddInfo, List<InventoryOperationInfo> operates) {
@@ -62,9 +62,8 @@ public class LP_InventoryOperation extends OutPacket<GameClient> {
         operates.forEach(op -> {
             Item item = op.getItem();
             InvType invType = item.getInvType();
-            if (invType == EQUIPPED) {
+            if (invType == EQUIPPED)
                 invType = EQUIP;
-            }
             encodeByte(op.getType().getValue());
             encodeByte(invType.getValue());
             encodeShort(op.getOldBagIndex());
@@ -73,7 +72,7 @@ public class LP_InventoryOperation extends OutPacket<GameClient> {
                     op.getItem().encode(this);
                     break;
                 case REMOVE:
-                    if (invType == EQUIP && (op.getOldBagIndex() < 0)) {
+                    if (op.getOldInvType() == EQUIP && (op.getOldBagIndex() < 0)) {
                         encodeByte(false);
                     }
                     break;

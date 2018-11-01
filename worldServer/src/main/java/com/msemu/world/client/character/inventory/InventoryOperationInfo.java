@@ -24,6 +24,7 @@
 
 package com.msemu.world.client.character.inventory;
 
+import com.msemu.commons.data.enums.InvType;
 import com.msemu.world.client.character.inventory.items.Item;
 import com.msemu.world.enums.InventoryOperationType;
 import lombok.Getter;
@@ -42,16 +43,19 @@ public class InventoryOperationInfo {
     private final int oldBagIndex;
     @Getter
     private final int oldQuantity;
+    @Getter
+    private final InvType oldInvType;
 
-    public InventoryOperationInfo(InventoryOperationType type, Item item, int oldBagIndex, int oldQuantity) {
+    public InventoryOperationInfo(InventoryOperationType type, Item item, InvType oldInvType, int oldBagIndex, int oldQuantity) {
         this.type = type;
         this.item = new WeakReference<>(item);
         this.oldBagIndex = oldBagIndex;
         this.oldQuantity = oldQuantity;
+        this.oldInvType = oldInvType;
     }
 
-    public InventoryOperationInfo(InventoryOperationType type, Item item, int oldBagIndex) {
-        this(type, item, oldBagIndex, item.getQuantity());
+    public InventoryOperationInfo(InventoryOperationType type, Item item, InvType oldInvType, int oldBagIndex) {
+        this(type, item, oldInvType, oldBagIndex, item.getQuantity());
     }
 
     public Item getItem() {

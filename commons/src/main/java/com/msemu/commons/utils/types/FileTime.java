@@ -59,7 +59,7 @@ public class FileTime implements Serializable {
     }
 
     public FileTime(long time) {
-        lowDateTime = (int) time;
+        lowDateTime = (int) (time);
         highDateTime = (int) (time >> 32);
     }
 

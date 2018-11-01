@@ -24,36 +24,42 @@
 
 package com.msemu.core.network.packets.inpacket;
 
+import com.msemu.commons.database.DatabaseFactory;
+import com.msemu.commons.enums.ClientState;
 import com.msemu.commons.network.packets.InPacket;
-import com.msemu.core.network.GameClient;
-import com.msemu.world.client.character.Character;
-import com.msemu.world.client.field.Field;
-import com.msemu.world.client.field.lifes.Reactor;
+import com.msemu.commons.utils.BCryptUtils;
+import com.msemu.core.network.LoginClient;
+import com.msemu.core.network.packets.outpacket.login.LP_SetGenderResult;
+import com.msemu.login.client.Account;
 
-public class CP_ReactorHit extends InPacket<GameClient> {
+public class CP_SetGender extends InPacket<LoginClient> {
 
-    private int objectId;
-    private int hitOption;
-    private int actDelay;
+    private String username;
+    private String pic;
 
-    public CP_ReactorHit(short opcode) {
+    public CP_SetGender(short opcode) {
         super(opcode);
     }
 
     @Override
     public void read() {
-        objectId = decodeInt();
-        hitOption = decodeInt();
-        actDelay = decodeShort();
+        username = decodeString();
+        pic = decodeString();
     }
 
     @Override
     public void runImpl() {
-        final Character chr = getClient().getCharacter();
-        final Field field = chr.getField();
-        final Reactor reactor = field.getReactorByObjectId(objectId);
-
-        //TODO check distance && actDelaY
-        reactor.hit(chr);
+        final LoginClient client = getClient();
+        final Account account = client.getAccount();
+        if (!client.compareAndSetState(ClientState.AUTHED_GG, ClientState.CONNECTED))
+            return;
+        if (account == null || !account.getUsername().equalsIgnoreCase(username)) {
+            client.write(new LP_SetGenderResult(false));
+        } else {
+            final String picHash = BCryptUtils.hashPassword(pic);
+            account.setPic(picHash);
+            DatabaseFactory.getInstance().saveToDB(account);
+            client.write(new LP_SetGenderResult(true));
+        }
     }
 }

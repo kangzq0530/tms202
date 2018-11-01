@@ -72,7 +72,7 @@ public enum InHeader implements IHeader {
     CP_AliveAck(ClientState.CONNECTED),
     CP_ResponseToCheckAliveAck,
     CP_ClientDumpLog(ClientState.values()),
-    CP_SetGender(ClientState.CONNECTED),
+    CP_SetGender(ClientState.AUTHED_GG),
     CP_ServerStatusRequest,
     CP_LoginBackground(ClientState.CONNECTED),
     CP_DirectGoToField(ClientState.AUTHED),

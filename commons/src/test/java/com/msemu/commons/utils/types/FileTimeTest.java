@@ -22,19 +22,27 @@
  * SOFTWARE.
  */
 
-package com.msemu.core.network.packets.outpacket.login;
+package com.msemu.commons.utils.types;
 
-import com.msemu.commons.enums.OutHeader;
-import com.msemu.commons.network.packets.OutPacket;
-import com.msemu.core.network.LoginClient;
+import com.msemu.commons.config.utils.ConfigLoader;
+import com.msemu.commons.database.DatabaseFactory;
+import jdk.nashorn.internal.runtime.regexp.joni.Config;
+import org.hibernate.Session;
+import org.junit.Test;
 
-/**
- * Created by Weber on 2018/3/30.
- */
-public class LP_SetAccountGender extends OutPacket<LoginClient> {
+import static org.junit.Assert.*;
 
-    public LP_SetAccountGender() {
-        super(OutHeader.LP_RequestSetGender);
-        encodeByte(true);
+public class FileTimeTest {
+
+    @Test
+    public void testTimeSave() {
+        ConfigLoader.getInstance().reload();
+        FileTime fileTime = FileTime.getFileTimeFromType(FileTime.Type.MAX_TIME);
+        DatabaseFactory.getInstance().saveToDB(fileTime);
+
+        Session session = DatabaseFactory.getInstance().getSession();
+
+        FileTime fileTime2 = session.get(FileTime.class, fileTime.getId());
+        assertEquals(fileTime.getLongValue(), fileTime2.getLongValue());
     }
 }
