@@ -35,7 +35,6 @@ import com.msemu.commons.enums.FileTimeUnit;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.utils.Rand;
 import com.msemu.commons.utils.types.FileTime;
-import com.msemu.commons.utils.types.Position;
 import com.msemu.core.network.GameClient;
 import com.msemu.core.network.packets.outpacket.mob.LP_MobChangeController;
 import com.msemu.core.network.packets.outpacket.stage.LP_SetField;
@@ -44,14 +43,15 @@ import com.msemu.core.network.packets.outpacket.user.LP_UserLeaveField;
 import com.msemu.core.network.packets.outpacket.user.local.LP_ChatMsg;
 import com.msemu.core.network.packets.outpacket.user.local.LP_OpenUIOnDead;
 import com.msemu.core.network.packets.outpacket.user.local.LP_SetBuffProtector;
+import com.msemu.core.network.packets.outpacket.user.local.effect.LP_UserEffectLocal;
 import com.msemu.core.network.packets.outpacket.user.remote.LP_UserAvatarModified;
-import com.msemu.core.network.packets.outpacket.user.remote.LP_UserMove;
 import com.msemu.core.network.packets.outpacket.user.remote.effect.LP_UserEffectRemote;
 import com.msemu.core.network.packets.outpacket.wvscontext.LP_ChangeSkillRecordResult;
 import com.msemu.core.network.packets.outpacket.wvscontext.LP_GuildResult;
 import com.msemu.core.network.packets.outpacket.wvscontext.LP_Message;
 import com.msemu.core.network.packets.outpacket.wvscontext.LP_StatChanged;
 import com.msemu.world.Channel;
+import com.msemu.world.client.character.effect.AvatarOrientedUserEffect;
 import com.msemu.world.client.character.effect.LevelUpUserEffect;
 import com.msemu.world.client.character.effect.MultiKillMessage;
 import com.msemu.world.client.character.friends.FriendList;
@@ -79,7 +79,6 @@ import com.msemu.world.client.field.lifes.Life;
 import com.msemu.world.client.field.lifes.Mob;
 import com.msemu.world.client.field.lifes.Pet;
 import com.msemu.world.client.field.lifes.movement.IMovement;
-import com.msemu.world.client.field.lifes.movement.MovementBase;
 import com.msemu.world.client.guild.Guild;
 import com.msemu.world.client.guild.GuildMember;
 import com.msemu.world.client.guild.operations.LoadGuildDoneResponse;
@@ -583,6 +582,26 @@ public class Character extends Life {
         });
         notifyChanges();
         write(new LP_StatChanged(changedStats));
+    }
+
+    public void resetStats(int str, int dex, int int_, int luk) {
+        resetStats(str, dex, int_, luk, false);
+    }
+
+    public void resetStats(final int str, final int dex, final int int_, final int luk, boolean recalculate) {
+        Map<Stat, Integer> stats = new EnumMap<>(Stat.class);
+        int totalAP = getStat(Stat.STR) + getStat(Stat.DEX) + getStat(Stat.INT) + getStat(Stat.LUK) + getStat(Stat.AP);
+        if (recalculate) {
+            totalAP = GameConstants.calcMaxRemainingAP(getLevel(), getJob());
+        }
+        totalAP -= (str + dex + int_ + luk);
+        stats.put(Stat.STR, str);
+        stats.put(Stat.DEX, dex);
+        stats.put(Stat.INT, int_);
+        stats.put(Stat.LUK, luk);
+        stats.put(Stat.AP, totalAP);
+        setStat(stats);
+        write(new LP_UserEffectLocal(new AvatarOrientedUserEffect("Effect/OnUserEff.img/RecordClear_BT/clear")));
     }
 
     public int getHp() {
@@ -1811,7 +1830,7 @@ public class Character extends Life {
         consumeItem(itemId, 1);
     }
 
-    public void consumeItem(int itemId , int quantity) {
+    public void consumeItem(int itemId, int quantity) {
         InvType invType = ItemConstants.getInvTypeFromItemID(itemId);
         Item item = getInventoryByType(invType).getItemByItemID(itemId);
         consumeItem(item, quantity);

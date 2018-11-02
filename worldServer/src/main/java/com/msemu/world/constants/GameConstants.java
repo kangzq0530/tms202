@@ -291,4 +291,13 @@ public class GameConstants {
         }
         return 0;
     }
+
+    public static int calcMaxRemainingAP(int level, short job) {
+        int total = 20;
+        if (MapleJob.getJobGrade(job) >= 3 && level >= 60) {
+            total += MapleJob.getJobGrade(job) - 2;
+        }
+        total += level * 5;
+        return total;
+    }
 }

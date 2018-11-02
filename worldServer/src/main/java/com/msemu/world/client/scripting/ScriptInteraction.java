@@ -24,6 +24,7 @@
 
 package com.msemu.world.client.scripting;
 
+import com.msemu.commons.data.enums.InvType;
 import com.msemu.commons.data.enums.QuestRequirementDataType;
 import com.msemu.commons.data.templates.field.Foothold;
 import com.msemu.commons.data.templates.field.Portal;
@@ -302,6 +303,27 @@ public class ScriptInteraction {
         getCharacter().addMoney(amount, true);
     }
 
+    public int getJob() {
+        return getCharacter().getJob();
+    }
+
+    public void setJob(int job) {
+        getCharacter().setJob(job);
+    }
+
+    public void resetStats(int str, int dex, int int_, int luk) {
+        getCharacter().resetStats(str, dex, int_, luk);
+    }
+
+    public void expendInventory(int invTypeValue, int amount) {
+        InvType invType = InvType.getInvTypeByValue(invTypeValue);
+        expendInventory(invType, amount);
+    }
+
+    public void expendInventory(InvType invType, int amount) {
+        int currSlots = getCharacter().getInventoryByType(invType).getSlots();
+        getCharacter().getInventoryByType(invType).setSlots((byte) (currSlots + amount));
+    }
 
     public void teachSkill(int skillID, int level) {
         Skill skill = SkillData.getInstance().getSkillById(skillID);

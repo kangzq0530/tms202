@@ -37,6 +37,7 @@ import com.msemu.world.client.field.Field;
 import com.msemu.world.client.field.lifes.Mob;
 import com.msemu.world.constants.SkillConstants;
 import com.msemu.world.data.SkillData;
+import com.msemu.world.enums.ChatMsgType;
 import com.msemu.world.enums.Stat;
 
 import java.util.ArrayList;
@@ -238,6 +239,8 @@ public class CP_UserMeleeAttack extends InPacket<GameClient> {
             }
             chr.renewCharacterStats();
             chr.attackMob(ai);
+        } else {
+            chr.showDebugMessage("攻擊失敗", ChatMsgType.SYSTEM,"物理攻擊失效");
         }
     }
 }

@@ -40,6 +40,8 @@ import com.msemu.world.client.field.AffectedArea;
 import com.msemu.world.client.field.Field;
 import com.msemu.world.client.field.lifes.Mob;
 import com.msemu.world.client.field.lifes.skills.MobTemporaryStat;
+import com.msemu.world.constants.MapleJob;
+import com.msemu.world.constants.SkillConstants;
 import com.msemu.world.data.SkillData;
 import com.msemu.world.enums.ChatMsgType;
 import com.msemu.world.enums.Stat;
@@ -131,6 +133,7 @@ public class Aran extends JobHandler {
             找回記憶,
             戰鬥衝刺,
     };
+
     private int combo = 0;
 
     public Aran(Character character) {
@@ -311,17 +314,20 @@ public class Aran extends JobHandler {
         final boolean normalAttack = attackInfo.skillId == 0;
         final Character chr = getCharacter();
         final TemporaryStatManager tsm = chr.getTemporaryStatManager();
-        final Skill skill = chr.getSkill(attackInfo.skillId);
-        final int skillID = skill != null ? skill.getSkillId() : 0;
-        SkillInfo si = skill != null ? getSkillInfo(skillID) : null;
-        boolean hasHitMobs = attackInfo.mobAttackInfo.size() > 0;
-        int slv = attackInfo.getSlv();
-        if ((!normalAttack && (skill == null || si == null)))
+        final int linkedSkill = SkillConstants.getLinkedSkill(attackInfo.skillId);
+        final boolean hasSkill = chr.getSkill(linkedSkill > 0 ? linkedSkill : attackInfo.skillId) != null;
+        if (!hasSkill)
             return false;
-        if ((!normalAttack) && skill.getCurrentLevel() != slv)
+        final SkillInfo si = getSkillInfo(attackInfo.skillId);
+        if ((!normalAttack) && si == null)
+            return false;
+        final int slv = chr.getSkill(linkedSkill > 0 ? linkedSkill : attackInfo.skillId).getCurrentLevel();
+        if ((!normalAttack) && attackInfo.slv != slv)
             return false;
         if (normalAttack && slv != 0)
             return false;
+        final boolean hasHitMobs = attackInfo.mobAttackInfo.size() > 0;
+        final int skillId = attackInfo.skillId;
         // trigger cheat attack
         if (hasHitMobs) {
             handleComboAbility(tsm, attackInfo);
@@ -329,7 +335,7 @@ public class Aran extends JobHandler {
                 if (tsm.getOption(ComboAbilityBuff).nOption > 999) {
                     if (chr.hasSkill(鬥氣爆發)) {
                         tsm.getOption(ComboAbilityBuff).nOption = 1000;
-                        handleAdrenalinRush(skillID, tsm);
+                        handleAdrenalinRush(skillId, tsm);
                         getClient().write(new LP_TemporaryStatSet(tsm));
                         comboAfterAdrenalin();
                     }
@@ -338,16 +344,16 @@ public class Aran extends JobHandler {
         }
 
         if (normalAttack) return true;
-        handleSwingStudies(getOriginalSkillByID(skillID), tsm);
+        handleSwingStudies(getOriginalSkillByID(skillId), tsm);
 
         Option o1 = new Option();
         Option o2 = new Option();
         Option o3 = new Option();
-        switch (skillID) {
+        switch (skillId) {
             case 極速巔峰_目標鎖定:
                 int t = si.getValue(subTime, slv);
                 o1.nOption = 1;
-                o1.rOption = skillID;
+                o1.rOption = skillId;
                 o1.tOption = t;
                 tsm.putCharacterStatValue(AranBoostEndHunt, o1);
                 getClient().write(new LP_TemporaryStatSet(tsm));
@@ -360,7 +366,7 @@ public class Aran extends JobHandler {
                         Mob mob = chr.getField().getMobByObjectId(mai.getObjectID());
                         MobTemporaryStat mts = mob.getTemporaryStat();
                         o1.nOption = 1;
-                        o1.rOption = getOriginalSkillByID(skillID);
+                        o1.rOption = getOriginalSkillByID(skillId);
                         o1.tOption = hcTime;
                         mts.addStatOptionsAndBroadcast(MobBuffStat.Stun, o1);
                     }
@@ -376,7 +382,7 @@ public class Aran extends JobHandler {
                         Mob mob = chr.getField().getMobByObjectId(mai.getObjectID());
                         MobTemporaryStat mts = mob.getTemporaryStat();
                         o1.nOption = 1;
-                        o1.rOption = getOriginalSkillByID(skillID);
+                        o1.rOption = getOriginalSkillByID(skillId);
                         o1.tOption = time;
                         mts.addStatOptionsAndBroadcast(MobBuffStat.Stun, o1);
                     }
@@ -392,13 +398,13 @@ public class Aran extends JobHandler {
                         Mob mob = chr.getField().getMobByObjectId(mai.getObjectID());
                         MobTemporaryStat mts = mob.getTemporaryStat();
                         o1.nOption = 1;
-                        o1.rOption = getOriginalSkillByID(skillID);
+                        o1.rOption = getOriginalSkillByID(skillId);
                         o1.tOption = hcTime;    //si.getValue(time, slv);
                         mts.addStatOptionsAndBroadcast(MobBuffStat.Freeze, o1);
                     } else {
                         Mob mob = chr.getField().getMobByObjectId(mai.getObjectID());
                         MobTemporaryStat mts = mob.getTemporaryStat();
-                        mts.createAndAddBurnedInfo(chr.getId(), skill, 1);
+                        mts.createAndAddBurnedInfo(chr.getId(), chr.getSkill(skillId), 1);
                     }
                 }
                 break;
@@ -451,7 +457,7 @@ public class Aran extends JobHandler {
 
     @Override
     public boolean isHandlerOfJob(short id) {
-        return false;
+        return MapleJob.is狂狼勇士(id);
     }
 
     @Override

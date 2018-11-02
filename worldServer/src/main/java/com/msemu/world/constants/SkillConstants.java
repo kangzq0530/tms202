@@ -1657,6 +1657,9 @@ public class SkillConstants {
         switch (skillId) {
             case 1111014: // 虎咆哮_下
                 return 1111008; // 虎咆哮
+            case 21000006:
+            case 21000007:
+                return 21001010; // 粉碎震撼
             default:
                 return 0;
         }
