@@ -149,7 +149,7 @@ public class QuestManager {
         quest.setStatus(STARTED);
         getCharacter().write(new LP_Message(new QuestRecordMessage(quest)));
         getCharacter().chatMessage(MOB, String.format("[任務資訊] 已接受任務 : %s(%d) ", qi != null ? qi.getName() : "自定義任務", quest.getQRKey()));
-        if (qi != null && qi.isAutoComplete())
+        if (qi != null && qi.isAutoPreComplete())
             completeQuest(questID);
     }
 

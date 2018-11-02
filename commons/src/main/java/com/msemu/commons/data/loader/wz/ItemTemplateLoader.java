@@ -61,13 +61,13 @@ public class ItemTemplateLoader extends WzDataLoader<Map<Integer, ItemTemplate>>
 
     private ItemTemplate loadProp(WzSubProperty itemProp) {
         WzSubProperty info = (WzSubProperty) itemProp.getFromPath("info");
-        WzSubProperty specPorp = (WzSubProperty) itemProp.getFromPath("spec");
+        WzSubProperty specProp = (WzSubProperty) itemProp.getFromPath("spec");
         ItemTemplate item = new ItemTemplate();
         item.setItemId(itemProp.getInt());
         List<String> tmp = new ArrayList<>();
 
-        if (specPorp != null) {
-            specPorp.getProperties().forEach(p -> {
+        if (specProp != null) {
+            specProp.getProperties().forEach(p -> {
                 if (p.getName().equalsIgnoreCase("script")) {
                     item.getItemSpec().setScript(p.getString());
                 } else if (p.getName().equalsIgnoreCase("npc")) {
@@ -146,6 +146,8 @@ public class ItemTemplateLoader extends WzDataLoader<Map<Integer, ItemTemplate>>
                     ((WzSubProperty) p).getProperties().forEach(pp -> {
                         item.getItemSpec().getIndieQrPointTermStats().add(new Tuple<>(Integer.parseInt(pp.getName()), pp.getInt()));
                     });
+                } else if (p.getName().equalsIgnoreCase("moveTo")) {
+                    item.getItemSpec().setMoveTo(p.getInt());
                 } else {
                     ItemSpecStat specStat = ItemSpecStat.getSpecStatByName(p.getName());
                     if (specStat != null) {
