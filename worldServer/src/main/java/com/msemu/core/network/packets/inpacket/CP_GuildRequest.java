@@ -24,6 +24,7 @@
 
 package com.msemu.core.network.packets.inpacket;
 
+import com.msemu.commons.database.DatabaseFactory;
 import com.msemu.commons.network.packets.InPacket;
 import com.msemu.core.network.GameClient;
 import com.msemu.core.network.packets.outpacket.wvscontext.LP_GuildResult;
@@ -125,61 +126,71 @@ public class CP_GuildRequest extends InPacket<GameClient> {
         final Channel channel = getClient().getChannelInstance();
         final Character chr = getClient().getCharacter();
         final Field field = chr.getField();
-        final GuildService guildService = GuildService.getInstance();
-        final Guild guild;
-        final GuildMember guildMember;
-        final Character target;
+        final GuildService service = GuildService.getInstance();
 
         switch (opcode) {
-            case ReqLoadGuild:
-                guild = chr.getGuild();
+            case ReqLoadGuild: {
+                final Guild guild = chr.getGuild();
                 chr.write(new LP_GuildResult(new LoadGuildDoneResponse(guild)));
                 break;
+            }
             case ReqFindGuildByCid:
                 break;
-            case ReqCheckGuildName:
-                boolean nameExists = guildService.isGuildNameExists(guildName);
-                boolean nameLeagal = guildService.isGuildNameLegal(guildName);
+            case ReqCheckGuildName: {
+                final boolean nameExists = service.isGuildNameExists(guildName);
+                final boolean nameLegal = service.isGuildNameLegal(guildName);
                 if (nameExists) {
                     chr.write(new LP_GuildResult(new CheckGuildNameExistsResponse()));
-                } else if (!nameLeagal) {
+                } else if (!nameLegal) {
                     chr.write(new LP_GuildResult(new CheckGuildNameUnknownResponse()));
                 } else {
-                    guildService.addReservedGuildName(chr, guildName);
+                    service.addReservedGuildName(chr, guildName);
                     chr.write(new LP_GuildResult(new CreateGuildAgreeRequest(guildName)));
                 }
                 break;
-            case ResCreateGuildAgree_Reply:
-                if (!guildService.hasReservedGuildName(chr))
+            }
+            case ResCreateGuildAgree_Reply: {
+
+                final boolean hasReservedName = !service.hasReservedGuildName(chr);
+                if (!hasReservedName) {
                     return;
-                guildName = guildService.getReservedGuildName(chr);
-                guildService.removeRerservedGuildName(chr);
-                if (createAgreeReply) {
-                    if (chr.getGuild() != null || chr.getFieldID() != 200000301) {
-                        chr.write(new LP_GuildResult(new CreateNewGuildAlreadyJoinedResponse()));
-                    } else if (chr.getLevel() < 100) {
-                        chr.write(new LP_GuildResult(new CreateNewGuildBeginnerResponse()));
-                    } else if (chr.getMoney() < 5000000) {
-                        // chr.write(new LP_GuildResult(new ));
-                    } else {
-                        chr.addMoney(-5000000, true);
-                        guild = guildService.createNewGuild(chr, guildName);
-                        chr.setGuild(guild);
-                        chr.write(new LP_GuildResult(new CreateNewGuildDoneResponse(chr.getGuild())));
-                    }
-                } else {
+                }
+                final String guildName = service.getReservedGuildName(chr);
+                service.removeRerservedGuildName(chr);
+                if (!createAgreeReply) {
                     chr.write(new LP_GuildResult(new CreateNewGuildDisagreeResponse()));
+                    return;
+                }
+                final boolean hasGuild = chr.getGuild() != null;
+                final boolean inField = field.getFieldId() == 200000301;
+                final boolean isLevel100 = chr.getLevel() >= 100;
+                final boolean hasMoney = chr.getMoney() >= 5000000;
+                if (!hasGuild || !inField) {
+                    chr.write(new LP_GuildResult(new CreateNewGuildAlreadyJoinedResponse()));
+                } else if (!isLevel100) {
+                    chr.write(new LP_GuildResult(new CreateNewGuildBeginnerResponse()));
+                } else if (!hasMoney) {
+                    // chr.write(new LP_GuildResult(new ));
+                } else {
+                    final Guild guild = service.createNewGuild(chr, guildName);
+                    chr.addMoney(-5000000, true);
+                    chr.setGuild(guild);
+                    chr.write(new LP_GuildResult(new CreateNewGuildDoneResponse(chr.getGuild())));
+                    DatabaseFactory.getInstance().saveToDB(guild);
+                    DatabaseFactory.getInstance().saveToDB(chr);
                 }
                 break;
-            case ReqInviteGuild:
-                guild = chr.getGuild();
+            }
+            case ReqInviteGuild: {
+                final Guild guild = chr.getGuild();
                 if (guild == null)
                     return;
-                guildMember = guild.getMemberByID(chr.getId());
-                if (guildMember.getGrade() > 2) {
+                final GuildMember guildMember = guild.getMemberByID(chr.getId());
+                final boolean canInvite = guildMember.getGrade() > 2;
+                if (canInvite) {
                     return;
                 }
-                target = channel.getCharacterByName(charName);
+                final Character target = channel.getCharacterByName(charName);
                 if (target == null) {
                     chr.write(new LP_GuildResult(new JoinGuildUnknownUserResponse()));
                 } else if (guild.getMembers().size() >= guild.getMaxMembers()) {
@@ -188,17 +199,23 @@ public class CP_GuildRequest extends InPacket<GameClient> {
                     guild.invite(target);
                 }
                 break;
-            case ReqSetGradeName:
-                guild = chr.getGuild();
-                if (guild.getLeaderID() == chr.getId())
+            }
+            case ReqSetGradeName: {
+                final Guild guild = chr.getGuild();
+                final boolean isLeader = guild.getLeaderID() == chr.getId();
+                if (isLeader) {
                     guild.changeGradeNames(gradeName);
+                }
                 break;
-            case ReqSetMark:
-                guild = chr.getGuild();
-                if (guild.getLeaderID() == chr.getId()) {
+            }
+            case ReqSetMark: {
+                final Guild guild = chr.getGuild();
+                final boolean isLeader = guild.getLeaderID() == chr.getId();
+                if (isLeader) {
                     guild.chaneMark(newBG, newBGColor, newLogo, newLogoColor);
                 }
-
+                break;
+            }
             case ReqSearch:
                 // [1] [1] [1] [1] [string]
                 break;

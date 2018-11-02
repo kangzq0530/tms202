@@ -226,12 +226,13 @@ public class CP_MiniRoom extends InPacket<GameClient> {
                 }
                 break;
             }
-            case MRP_Chat:
+            case MRP_Chat: {
                 miniRoom = chr.getMiniRoom();
                 if (miniRoom != null) {
                     miniRoom.chat(chr, chatMessage);
                 }
                 break;
+            }
             case MRP_UserChat:
                 break;
         }

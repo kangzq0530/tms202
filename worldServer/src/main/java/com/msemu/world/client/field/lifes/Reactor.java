@@ -25,11 +25,16 @@
 package com.msemu.world.client.field.lifes;
 
 import com.msemu.commons.data.templates.field.ReactorInField;
+import com.msemu.commons.data.templates.field.ReactorStateInfo;
+import com.msemu.commons.data.templates.field.ReactorTemplate;
 import com.msemu.commons.utils.types.Position;
 import com.msemu.core.network.GameClient;
+import com.msemu.core.network.packets.outpacket.reactor.LP_ReactorChangeState;
 import com.msemu.core.network.packets.outpacket.reactor.LP_ReactorEnterField;
 import com.msemu.core.network.packets.outpacket.reactor.LP_ReactorLeaveField;
 import com.msemu.world.client.character.Character;
+import com.msemu.world.client.field.Field;
+import com.msemu.world.data.ReactorData;
 import com.msemu.world.enums.FieldObjectType;
 import lombok.Getter;
 import lombok.Setter;
@@ -63,6 +68,31 @@ public class Reactor extends Life {
         setTemplacteId(ri.getId());
     }
 
+    public ReactorTemplate getTemplate() {
+        return ReactorData.getInstance().getReactorTemplateById(templacteId);
+    }
+
+    public boolean hasNextState() {
+        final ReactorTemplate template = getTemplate();
+        return state + 1 < template.getStatesInfo().size();
+    }
+
+    public void hit(Character chr, int actDelay) {
+        final Field field = chr.getField();
+        final ReactorTemplate template = getTemplate();
+        if (hasNextState()) {
+            final int statesCount = template.getStatesInfo().size();
+            final ReactorStateInfo nextStateInfo = template.getStatesInfo().get(getState() + 1);
+            final ReactorStateInfo endStateInfo = template.getStatesInfo().get(statesCount - 1);
+            setOwnerId(chr.getId());
+            setState(nextStateInfo.getState());
+            field.broadcastPacket(new LP_ReactorChangeState(this, state, 0, statesCount));
+        } else {
+            field.removeLife(this);
+        }
+    }
+
+
     @Override
     public FieldObjectType getFieldObjectType() {
         return FieldObjectType.REACTOR;
@@ -77,7 +107,5 @@ public class Reactor extends Life {
     public void outScreen(GameClient client) {
         client.write(new LP_ReactorLeaveField(this));
     }
-
-    public void hit(Character chr) {
-    }
 }
+

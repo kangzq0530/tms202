@@ -103,6 +103,7 @@ public class ReactorTemplateLoader extends WzDataLoader<Map<Integer, ReactorTemp
                 }
 
                 if (propName.matches("^[0-9]+$")) {
+
                     // state info
                     final ReactorStateInfo stateInfo = new ReactorStateInfo();
                     final int state = Integer.parseInt(propName);
@@ -113,6 +114,8 @@ public class ReactorTemplateLoader extends WzDataLoader<Map<Integer, ReactorTemp
                         stateInfo.setFollow(prop.getFromPath("follow").getInt() > 0);
                     else if (prop.getFromPath("repeat") != null)
                         stateInfo.setRepeat(prop.getFromPath("repeat").getInt() > 0);
+
+                    stateInfo.setState(state);
 
                     loadReactorEvents(stateInfo, eventNode);
                     if (state <= template.getStatesInfo().size()) {

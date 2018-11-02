@@ -69,7 +69,7 @@ public class LP_MobEnterField extends OutPacket<GameClient> {
                 encodeInt(mob.getOption());
             }
             encodeByte(mob.getTeamForMCarnival());
-            encodeLong(mob.getHp() > Long.MAX_VALUE ? Long.MAX_VALUE : (int) mob.getHp());
+            encodeLong(mob.getHp());
             encodeInt(mob.getEffectItemID());
             if (mob.isPatrolMob()) {
                 encodeInt(mob.getPatrolScopeX1());

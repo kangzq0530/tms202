@@ -26,10 +26,13 @@ package com.msemu.world.client.character.friends;
 
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;
+import com.msemu.world.World;
+import com.msemu.world.client.character.Character;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by Weber on 2018/5/7.
@@ -48,7 +51,7 @@ public class FriendList {
         this.maxCount += amount;
     }
 
-    public FriendEntry getByCharId(int charID) {
+    public FriendEntry getCharacterById(int charID) {
         return friendEntries
                 .stream().filter(f -> f.getCharId() == charID)
                 .findFirst().orElse(null);
@@ -58,6 +61,15 @@ public class FriendList {
         return friendEntries
                 .stream().filter(f -> f.getAccountID() == accountID)
                 .findFirst().orElse(null);
+    }
+
+    public void broadcast(OutPacket<GameClient> packet, List<Integer> targets, Character chr) {
+        final World world = chr.getClient().getWorld();
+        targets.stream()
+                .filter(target -> this.getCharacterById(target) != null)
+                .map(world::getCharacterById)
+                .filter(Objects::nonNull)
+                .forEach(target -> target.write(packet));
     }
 
 }

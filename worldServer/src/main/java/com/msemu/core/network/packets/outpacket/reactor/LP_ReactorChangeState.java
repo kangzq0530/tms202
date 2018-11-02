@@ -27,17 +27,17 @@ package com.msemu.core.network.packets.outpacket.reactor;
 import com.msemu.commons.enums.OutHeader;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;
-import com.msemu.world.client.character.Character;
 import com.msemu.world.client.field.lifes.Reactor;
 
 public class LP_ReactorChangeState extends OutPacket<GameClient> {
-    public LP_ReactorChangeState(Reactor reactor, int delay, int stateLength) {
+    public LP_ReactorChangeState(Reactor reactor, int actDelay, int properEventIdx, int stateEnd) {
         super(OutHeader.LP_ReactorChangeState);
         encodeInt(reactor.getObjectId());
         encodeByte(reactor.getState());
         encodePosition(reactor.getPosition());
-        encodeShort(delay);
-        encodeByte(stateLength);
+        encodeShort(actDelay);
+        encodeByte(properEventIdx);
+        encodeByte(stateEnd);
         encodeInt(reactor.getOwnerId());
     }
 }

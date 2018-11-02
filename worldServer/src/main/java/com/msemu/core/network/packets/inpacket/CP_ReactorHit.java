@@ -54,6 +54,6 @@ public class CP_ReactorHit extends InPacket<GameClient> {
         final Reactor reactor = field.getReactorByObjectId(objectId);
 
         //TODO check distance && actDelaY
-        reactor.hit(chr);
+        reactor.hit(chr, actDelay);
     }
 }

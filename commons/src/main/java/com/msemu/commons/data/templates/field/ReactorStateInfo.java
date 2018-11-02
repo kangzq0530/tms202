@@ -38,6 +38,8 @@ import java.util.List;
 @Setter
 public class ReactorStateInfo implements DatSerializable {
 
+    private int state;
+
     private boolean repeat, follow;
 
     private List<ReactorEventInfo> events = new ArrayList<>();
@@ -45,11 +47,25 @@ public class ReactorStateInfo implements DatSerializable {
 
     @Override
     public void write(DataOutputStream dos) throws IOException {
-
+        dos.writeInt(state);
+        dos.writeBoolean(repeat);
+        dos.writeBoolean(follow);
+        dos.writeInt(events.size());
+        for (ReactorEventInfo event : events)
+            event.write(dos);
     }
 
     @Override
     public DatSerializable load(DataInputStream dis) throws IOException {
-        return null;
+        setState(dis.readInt());
+        setRepeat(dis.readBoolean());
+        setFollow(dis.readBoolean());
+        int eventsCount = dis.readInt();
+        for (int i = 0; i < eventsCount; i++) {
+            ReactorEventInfo event = new ReactorEventInfo();
+            event.load(dis);
+            getEvents().add(event);
+        }
+        return this;
     }
 }

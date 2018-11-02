@@ -26,7 +26,6 @@ package com.msemu.world;
 
 import com.msemu.commons.rmi.model.ChannelInfo;
 import com.msemu.commons.thread.EventManager;
-import com.msemu.core.configs.CoreConfig;
 import com.msemu.core.configs.NetworkConfig;
 import com.msemu.core.configs.WorldConfig;
 import com.msemu.world.client.character.Character;
@@ -192,5 +191,14 @@ public class Channel {
 
     public boolean isFull() {
         return getCharacters().size() < WorldConfig.CHANNEL_MAX_LOADING;
+    }
+
+    public int getOnlineCount() {
+        return getCharacters().size();
+    }
+
+    @Override
+    public String toString() {
+        return "頻道 : " + getChannelId() + " 上線人數 : " + getOnlineCount();
     }
 }

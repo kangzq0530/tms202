@@ -198,4 +198,15 @@ public class World implements IReloadable {
             }
         }
     }
+
+    public int getOnlineCount() {
+        return getChannels().stream()
+                .mapToInt(Channel::getOnlineCount).sum();
+    }
+
+    @Override
+    public String toString()
+    {
+        return "世界 : " + getName() + " 頻道數 : " + channels.size() + " 上線人數 : " + getOnlineCount();
+    }
 }

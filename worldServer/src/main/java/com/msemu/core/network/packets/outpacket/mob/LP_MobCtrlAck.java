@@ -39,7 +39,7 @@ public class LP_MobCtrlAck extends OutPacket<GameClient> {
         encodeInt(mob.getObjectId());
         encodeShort(moveID);
         encodeByte(nextAttackPossible);
-        encodeInt((int) mob.getMp());
+        encodeInt(mob.getMp());
         encodeInt(skillID);
         encodeByte(slv);
         encodeInt(forcedAttack);
