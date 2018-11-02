@@ -1811,9 +1811,13 @@ public class Character extends Life {
         consumeItem(itemId, 1);
     }
 
-    public void consumeItem(int itemId, int quantity) {
+    public void consumeItem(int itemId , int quantity) {
         InvType invType = ItemConstants.getInvTypeFromItemID(itemId);
         Item item = getInventoryByType(invType).getItemByItemID(itemId);
+        consumeItem(item, quantity);
+    }
+
+    public void consumeItem(final Item item, int quantity) {
         InventoryManipulator.consume(this, item, quantity);
     }
 

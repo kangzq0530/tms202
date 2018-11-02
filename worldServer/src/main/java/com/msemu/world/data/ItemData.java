@@ -37,6 +37,7 @@ import com.msemu.commons.data.templates.SetItemInfo;
 import com.msemu.commons.reload.IReloadable;
 import com.msemu.commons.reload.Reloadable;
 import com.msemu.commons.utils.Rand;
+import com.msemu.commons.utils.types.FileTime;
 import com.msemu.core.startup.StartupComponent;
 import com.msemu.world.client.character.inventory.items.Equip;
 import com.msemu.world.client.character.inventory.items.Item;
@@ -176,6 +177,7 @@ public class ItemData implements IReloadable {
             item = ItemData.getInstance().getItemFromTemplate(itemId);
             if (item != null) {
                 item.setQuantity(1);
+                item.setDateExpire(FileTime.getFileTimeFromType(FileTime.Type.MAX_TIME));
             }
         }
         return item;

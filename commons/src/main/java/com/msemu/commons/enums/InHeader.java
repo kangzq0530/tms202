@@ -505,7 +505,7 @@ public enum InHeader implements IHeader {
 
     public boolean ignoreDebug() {
         switch (this.name()) {
-            //case "CP_UserQuestRequest":
+            case "CP_UserQuestRequest":
             case "CP_MobMove":
             case "CP_UserMove":
             case "CP_UserHit":
@@ -514,6 +514,8 @@ public enum InHeader implements IHeader {
             case "CP_MobApplyCtrl":
             case "CP_UserRequestInstanceTable":
             case "CP_UserPortalScriptRequest":
+            case "CP_ReactorHit":
+            case "CP_UserMeleeAttack":
                 return true;
             default:
                 return false;

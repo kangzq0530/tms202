@@ -150,8 +150,7 @@ public class ScriptManager {
                     ScriptInteraction cm = getScriptInfo().getInteraction();
                     if (lastType.getValue() != cm.getNpcScriptInfo().getLastMessageType().getValue()) {
                         stopScriptWithoutLock();
-                    } else if (cm.getNpcScriptInfo().getLastMessageType() == NpcMessageType.NM_SAY && !cm.getNpcScriptInfo().isPrev()
-                            && !cm.getNpcScriptInfo().isNext()) {
+                    } else if (action < 0) {
                         stopScriptWithoutLock();
                     } else {
                         if (getScriptInfo() != null) {

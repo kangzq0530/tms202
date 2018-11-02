@@ -293,7 +293,7 @@ public class InventoryManipulator {
                         if (iterator.hasNext()) {
                             Item bagItem = iterator.next();
                             if (bagItem.getQuantity() < slotMax &&
-                                    (bagItem.getOwner() == null || bagItem.getOwner().equals(chr.getName())) &&
+                                    (bagItem.getOwner().equalsIgnoreCase("") || bagItem.getOwner().equals(chr.getName())) &&
                                     bagItem.getDateExpire().equal(FileTime.getFileTimeFromType(FileTime.Type.MAX_TIME))) {
                                 short newQuantity = (short) Math.min(bagItem.getQuantity() + lastQuantity, slotMax);
                                 lastQuantity -= (newQuantity - bagItem.getQuantity());

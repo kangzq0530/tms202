@@ -667,6 +667,31 @@ public class ScriptInteraction {
         getClient().write(new LP_ScriptMessage(NpcMessageType.NM_ASK_MENU, nSpeakerTypeID, nSpeakerTemplateID, nAnotherSpeakerTemplateID, nOtherSpeakerTemplateID, bParam, eColor, new String[]{sMsg}, null, null, null));
     }
 
+    public void askAccept(String sMsg) {
+        askYesNo(0, sMsg);
+    }
+
+    public void askAccept(int bParam, String sMsg) {
+        askYesNo(getSpeakerTemplateID(), bParam, sMsg);
+    }
+
+    public void askAccept(int nSpeakerTemplateID, int bParam, String sMsg) {
+        askYesNo(nSpeakerTemplateID, nSpeakerTemplateID, bParam, sMsg);
+    }
+
+    public void askAccept(int nSpeakerTemplateID, int nAnotherSpeakerTemplateID, int bParam, String sMsg) {
+        askYesNo(nSpeakerTemplateID, nAnotherSpeakerTemplateID, -1, bParam, sMsg);
+    }
+
+    public void askAccept(int nSpeakerTemplateID, int nAnotherSpeakerTemplateID, int nOtherSpeakerTemplateID, int bParam, String sMsg) {
+        askYesNo(4, nSpeakerTemplateID, nAnotherSpeakerTemplateID, nOtherSpeakerTemplateID, bParam, 0, sMsg);
+    }
+
+    public void askAccept(int nSpeakerTypeID, int nSpeakerTemplateID, int nAnotherSpeakerTemplateID, int nOtherSpeakerTemplateID, int bParam, int eColor, String sMsg) {
+        getNpcScriptInfo().setLastMessageType(NpcMessageType.NM_ASK_ACCEPT);
+        getClient().write(new LP_ScriptMessage(NpcMessageType.NM_ASK_ACCEPT, nSpeakerTypeID, nSpeakerTemplateID, nAnotherSpeakerTemplateID, nOtherSpeakerTemplateID, bParam, eColor, new String[]{sMsg}, null, null, null));
+    }
+
     public void selfTalk(String text) {
         getNpcScriptInfo().setLastMessageType(NpcMessageType.NM_SAY);
         getNpcScriptInfo().setNext(true);

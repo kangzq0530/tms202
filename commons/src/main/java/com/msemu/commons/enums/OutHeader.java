@@ -837,6 +837,8 @@ public enum OutHeader implements IHeader {
             case "LP_DropEnterField":
             case "LP_Message":
             case "LP_ResultInstanceTable":
+            case "LP_NpcEnterField":
+            case "LP_NpcChangeController":
                 return true;
             default:
                 return false;

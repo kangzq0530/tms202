@@ -24,6 +24,8 @@
 
 package com.msemu.world.client.field.lifes;
 
+import com.msemu.commons.data.enums.ReactorEventType;
+import com.msemu.commons.data.templates.field.ReactorEventInfo;
 import com.msemu.commons.data.templates.field.ReactorInField;
 import com.msemu.commons.data.templates.field.ReactorStateInfo;
 import com.msemu.commons.data.templates.field.ReactorTemplate;
@@ -38,8 +40,14 @@ import com.msemu.world.data.ReactorData;
 import com.msemu.world.enums.FieldObjectType;
 import lombok.Getter;
 import lombok.Setter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 public class Reactor extends Life {
+
+    private static final Logger log = LoggerFactory.getLogger(Reactor.class);
 
     @Getter
     @Setter
@@ -74,7 +82,7 @@ public class Reactor extends Life {
 
     public boolean hasNextState() {
         final ReactorTemplate template = getTemplate();
-        return state + 1 < template.getStatesInfo().size();
+        return (state + 1) < template.getStatesInfo().size();
     }
 
     public void hit(Character chr, int actDelay) {
@@ -84,11 +92,28 @@ public class Reactor extends Life {
             final int statesCount = template.getStatesInfo().size();
             final ReactorStateInfo nextStateInfo = template.getStatesInfo().get(getState() + 1);
             final ReactorStateInfo endStateInfo = template.getStatesInfo().get(statesCount - 1);
+
+            final List<ReactorEventInfo> events = nextStateInfo.getEvents();
+
+            // TODO process reactor events
+
+            for (ReactorEventInfo event : events) {
+
+                final ReactorEventType eventType = ReactorEventType.getByValue(event.getType());
+                switch (eventType) {
+                    case REACTOR_EVENT_HIT:
+                        break;
+                    default:
+                        log.warn(String.format("[Unknown ReactorEvent] value = %d", event.getType()));
+                        break;
+                }
+
+
+            }
+
             setOwnerId(chr.getId());
             setState(nextStateInfo.getState());
-            field.broadcastPacket(new LP_ReactorChangeState(this, state, 0, statesCount));
-        } else {
-            field.removeLife(this);
+            field.broadcastPacket(new LP_ReactorChangeState(this, state, 0, statesCount), chr);
         }
     }
 

@@ -154,9 +154,7 @@ public class AdminCommand {
                 chr.chatMessage(ChatMsgType.SYSTEM, "道具不存在");
                 return true;
             }
-            item.setDateExpire(FileTime.now().plus(5, FileTimeUnit.DAY));
             item.setQuantity(1);
-
             chr.giveItem(item);
             return true;
         }
