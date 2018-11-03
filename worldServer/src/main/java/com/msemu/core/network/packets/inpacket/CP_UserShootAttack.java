@@ -231,7 +231,7 @@ public class CP_UserShootAttack extends InPacket<GameClient> {
             chr.renewCharacterStats();
             chr.attackMob(attackInfo);
         } else {
-            chr.showDebugMessage("攻擊失敗", ChatMsgType.SYSTEM,"物理攻擊失效");
+            chr.showDebugMessage("射擊攻擊失敗", ChatMsgType.SYSTEM,"物理攻擊失效");
         }
     }
 }

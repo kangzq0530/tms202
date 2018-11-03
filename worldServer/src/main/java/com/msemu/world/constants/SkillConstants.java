@@ -1496,9 +1496,22 @@ public class SkillConstants {
                 return 1111008; // 虎咆哮
             case 21000006:
             case 21000007:
+            case 21110022:
                 return 21001010; // 粉碎震撼
-            case 21000004: // 猛擲之矛
-                return 21001009;
+            case 21000004:
+                return 21001009; // 猛擲之矛
+            case 21100012:
+            case 21100002:
+                return 21101016; // 突次之矛
+            case 21100013:
+                return 21101017; // 旋風斬
+            case 21110020:
+            case 21110028:
+                return 21111021; // 終極之矛
+            case 21110018:
+                return 21111019; // 一網打盡
+            case 21110011:
+                return 21111017; // 鬥氣審判
             default:
                 return 0;
         }

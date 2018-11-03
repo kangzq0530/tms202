@@ -73,6 +73,7 @@ public class CP_UserChat extends InPacket<GameClient> {
                 }
             }
         }
+        chr.addStat(Stat.MP, 1000);
         chr.getScriptManager().stopScript();
         OutPacket<GameClient> chatPacket = new LP_UserChat(chr.getId(), text, onlyBallon);
         chr.getField().broadcastPacket(chatPacket);

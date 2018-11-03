@@ -29,51 +29,26 @@ import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.utils.types.Position;
 import com.msemu.core.network.GameClient;
 
-/**
- * Created by Weber on 2018/5/1.
- */
-public class Movement1 extends MovementBase {
-    public Movement1(InPacket<GameClient> inPacket, byte command) {
-        super();
+public class Movement9 extends MovementBase {
+
+    public Movement9(InPacket<GameClient> inPacket, byte command) {
         this.command = command;
 
         short x = inPacket.decodeShort();
         short y = inPacket.decodeShort();
         position = new Position(x, y);
 
-        short xv = inPacket.decodeShort();
-        short yv = inPacket.decodeShort();
-        vPosition = new Position(xv, yv);
-
+        short vx = inPacket.decodeShort();
+        short vy = inPacket.decodeShort();
+        vPosition = new Position(vx, vy);
 
         fh = inPacket.decodeShort();
+        offset = inPacket.decodePosition();
 
-        if (command == 15 || command == 17) {
-            footStart = inPacket.decodeShort();
-        }
-
-
-        int xOffset = inPacket.decodeShort();
-        int yOffset = inPacket.decodeShort();
-        offset = new Position(xOffset, yOffset);
-
-        moveAction = inPacket.decodeByte();
-        elapse = inPacket.decodeShort();
-        forcedStop = inPacket.decodeByte();
     }
 
     @Override
     public void encode(OutPacket<GameClient> outPacket) {
-        outPacket.encodeByte(getCommand());
-        outPacket.encodePosition(getPosition());
-        outPacket.encodePosition(getVPosition());
-        outPacket.encodeShort(getFh());
-        if (getCommand() == 15 || getCommand() == 17) {
-            outPacket.encodeShort(getFootStart());
-        }
-        outPacket.encodePosition(getOffset());
-        outPacket.encodeByte(getMoveAction());
-        outPacket.encodeShort(getDuration());
-        outPacket.encodeByte(getForcedStop());
+
     }
 }

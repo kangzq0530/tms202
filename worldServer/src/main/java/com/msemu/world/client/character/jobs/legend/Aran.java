@@ -25,6 +25,7 @@
 package com.msemu.world.client.character.jobs.legend;
 
 import com.msemu.commons.data.enums.MobBuffStat;
+import com.msemu.commons.data.enums.SkillStat;
 import com.msemu.commons.data.templates.skill.SkillInfo;
 import com.msemu.commons.network.packets.InPacket;
 import com.msemu.commons.utils.Rand;
@@ -339,6 +340,43 @@ public class Aran extends JobHandler {
                         getClient().write(new LP_TemporaryStatSet(tsm));
                         comboAfterAdrenalin();
                     }
+                }
+            }
+        }
+        // 觸發寒冰屬性
+        if (hasHitMobs) {
+            if (tsm.hasStat(WeaponCharge) && tsm.getOption(WeaponCharge).rOption == 寒冰屬性) {
+                final SkillInfo iceSklllInfo = SkillData.getInstance().getSkillInfoById(寒冰屬性);
+                final Skill iceSkill = chr.getSkill(寒冰屬性);
+                attackInfo.getMobAttackInfo().forEach(mai -> {
+                    Mob mob = chr.getField().getMobByObjectId(mai.getObjectID());
+                    if (mob != null && mob.getTemporaryStat().hasCurrentMobStat(MobBuffStat.Speed)) {
+                        return;
+                    }
+                    MobTemporaryStat mts = mob.getTemporaryStat();
+                    Option option = new Option();
+                    option.nOption = iceSklllInfo.getValue(SkillStat.x, iceSkill.getCurrentLevel());
+                    option.rOption = 寒冰屬性;
+                    option.tOption = iceSklllInfo.getValue(SkillStat.y, iceSkill.getCurrentLevel());
+                    mts.addStatOptionsAndBroadcast(MobBuffStat.Speed, option);
+                });
+            }
+        }
+
+        // 觸發吸血術
+
+        if (hasHitMobs) {
+            if (chr.hasSkill(吸血術)) {
+                if (tsm.hasStat(AranDrain)) {
+                    final SkillInfo aranDrainInfo = SkillData.getInstance().getSkillInfoById(吸血術);
+                    final Skill aranDrain = chr.getSkill(吸血術);
+                    attackInfo.getMobAttackInfo().forEach(mai -> {
+                        Mob mob = chr.getField().getMobByObjectId(mai.getObjectID());
+                        final int maxHp = mob.getMaxMp();
+                        final int x = aranDrainInfo.getValue(SkillStat.x, aranDrain.getCurrentLevel());
+                        final int healHp = (int) ((maxHp *  x) / 100.0);
+                        chr.addStat(Stat.HP, healHp);
+                    });
                 }
             }
         }
