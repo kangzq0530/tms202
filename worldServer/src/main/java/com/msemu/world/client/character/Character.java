@@ -465,7 +465,8 @@ public class Character extends Life {
     }
 
     public void addExp(long amount, ExpIncreaseInfo eii) {
-        CharacterStat cs = getAvatarData().getCharacterStat();
+        final CharacterStat cs = getAvatarData().getCharacterStat();
+        final Field field = getField();
         long curExp = cs.getExp();
         int level = getStat(Stat.LEVEL);
         if (level >= GameConstants.CHAR_EXP_TABLE.length - 1) {
@@ -480,14 +481,13 @@ public class Character extends Life {
             addStat(Stat.LEVEL, 1);
             getJobHandler().handleLevelUp();
             level++;
-            getField().broadcastPacket(new LP_UserEffectRemote(this, new LevelUpUserEffect()), this);
+            field.broadcastPacket(new LP_UserEffectRemote(this, new LevelUpUserEffect()), this);
         }
         cs.setExp(newExp);
         stats.put(Stat.EXP, newExp);
-        if (eii != null)
-            write(new LP_Message(new IncExpMessage(eii)));
+        if (eii != null) write(new LP_Message(new IncExpMessage(eii)));
+        write(new LP_StatChanged(stats));
         notifyChanges();
-        getClient().write(new LP_StatChanged(stats));
     }
 
     public void addStat(Stat charStat, int amount) {
@@ -1986,7 +1986,7 @@ public class Character extends Life {
     public void attackMob(AttackInfo attackInfo) {
         final List<Mob> killedMob = new ArrayList<>();
         final Skill skill = this.getSkill(attackInfo.getSkillId());
-        final SkillInfo si = skill != null ? SkillData.getInstance().getSkillInfoById(attackInfo.getSkillId()) : null;
+        final SkillInfo si = SkillData.getInstance().getSkillInfoById(attackInfo.getSkillId());
         attackInfo.getMobAttackInfo().forEach(mai -> {
             Mob mob = field.getMobByObjectId(mai.getObjectID());
             if (mob != null) {
@@ -1999,10 +1999,9 @@ public class Character extends Life {
                     setComboKill(getComboKill() + 1);
                     this.write(new LP_Message(new ComboKillMessage(getComboKill(), mob.getObjectId())));
                 }
-                this.chatMessage(ChatMsgType.GAME_DESC, String.format("近距離攻擊: 技能: %s(%d) 怪物: %s(%d)  HP: (%d/%d) MP: (%d/%d) 總攻擊: %d 座標: %s",
+                this.chatMessage(ChatMsgType.GAME_DESC, String.format("攻擊: 技能: %s(%d) 怪物: %s(%d)  HP: (%d/%d) MP: (%d/%d) 總攻擊: %d 座標: %s",
                         (si != null ? si.getName() : "普通攻擊"), attackInfo.getSkillId(), mob.getTemplate().getName(),
                         mob.getTemplateId(), mob.getHp(), mob.getMaxHp(), mob.getMp(), mob.getMaxHp(), totalDamage, attackInfo.getPos().toString()));
-
             }
         });
 

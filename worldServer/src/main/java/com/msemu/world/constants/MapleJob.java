@@ -549,31 +549,25 @@ public enum MapleJob {
         return is惡魔(job) || is天使破壞者(job) || is神之子(job) || is陰陽師(job) || is凱內西斯(job);
     }
 
-    public static boolean is初心者(int jobid) {
-        if (jobid > 5000) {
-            if (jobid > 13000) {
-                if (jobid == 14000) {
+    public static boolean is初心者(int nJob) {
+        if (nJob > 5000) {
+            if (nJob > 13000) {
+                if (nJob == 14000)
                     return true;
-                }
-            } else if (jobid == 13000 || jobid >= 6000 && jobid <= 6001) {
+            } else if (nJob == 13000 || nJob >= 6000 && nJob <= 6001) {
                 return true;
             }
         } else {
-            if (jobid == 5000) {
+            if (nJob == 5000)
                 return true;
-            }
-            if (jobid > 3002) {
-                if (jobid >= 4001 && jobid <= 4002) {
+            if (nJob > 3002) {
+                if (nJob >= 4001 && nJob <= 4002)
                     return true;
-                }
-            } else if (jobid >= 3001 || jobid >= 2001 && jobid <= 2005) {
+            } else if (nJob >= 3001 || nJob >= 2001 && nJob <= 2005) {
                 return true;
             }
         }
-        if (jobid - 40000 <= 5 || jobid % 1000 > 0 && jobid - 800000 >= 100 && jobid != 8001 && jobid - 800100 >= 100) {
-            return false;
-        }
-        return true;
+        return nJob - 40000 > 5 && (nJob % 1000 <= 0 || nJob - 800000 < 100 || nJob - 800100 < 0x64);
     }
 
     public static boolean isJob8000(int job) {
