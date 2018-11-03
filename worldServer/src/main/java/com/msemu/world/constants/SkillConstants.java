@@ -1507,11 +1507,15 @@ public class SkillConstants {
                 return 21101017; // 旋風斬
             case 21110020:
             case 21110028:
+            case 21120025:
                 return 21111021; // 終極之矛
             case 21110018:
                 return 21111019; // 一網打盡
             case 21110011:
                 return 21111017; // 鬥氣審判
+            case 21121016:
+            case 21121017:
+                return 21120022; // 比耀德
             default:
                 return 0;
         }
