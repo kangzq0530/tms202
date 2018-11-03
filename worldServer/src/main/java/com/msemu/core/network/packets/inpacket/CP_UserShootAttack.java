@@ -210,7 +210,9 @@ public class CP_UserShootAttack extends InPacket<GameClient> {
     public void runImpl() {
         final Character chr = getClient().getCharacter();
         final Field field = chr.getField();
-        final Skill skill = chr.getSkill(attackInfo.getSkillId());
+        final int skillID = attackInfo.getSkillId();
+        final int originSkill = SkillConstants.getLinkedSkill(skillID);
+        final Skill skill = chr.getSkill(originSkill != 0 ? originSkill : skillID);
         final SkillInfo si = SkillData.getInstance().getSkillInfoById(attackInfo.getSkillId());
         final boolean attackSuccess = chr.getJobHandler().handleAttack(attackInfo);
         final List<Mob> killedMob = new ArrayList<>();

@@ -27,6 +27,7 @@ package com.msemu.world.client.character.commands;
 
 import com.msemu.commons.data.templates.skill.SkillInfo;
 import com.msemu.commons.enums.FileTimeUnit;
+import com.msemu.commons.utils.ServerInfoUtils;
 import com.msemu.commons.utils.StringUtils;
 import com.msemu.commons.utils.types.FileTime;
 import com.msemu.core.network.GameClient;
@@ -51,6 +52,7 @@ import com.msemu.world.enums.Stat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -470,6 +472,21 @@ public class AdminCommand {
         public String getHelpMessage() {
             return "!skill <skillId> <level>\r\n"
                     + "!skill <skillId> <level> <master level>";
+        }
+    }
+
+    public class ServerStatus extends CommandExecute {
+
+        @Override
+        public boolean execute(GameClient client, List<String> args) {
+            String[] lines = ServerInfoUtils.getMemoryUsageStatistics();
+            Arrays.stream(lines).forEach(line -> client.getCharacter().chatMessage(ChatMsgType.NOTICE, line));
+            return true;
+        }
+
+        @Override
+        public String getHelpMessage() {
+            return "!serverstatus";
         }
     }
 

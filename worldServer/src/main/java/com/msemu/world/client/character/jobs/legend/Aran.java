@@ -96,8 +96,8 @@ public class Aran extends JobHandler {
     public static final int 終極研究I = 21100015;
     public static final int FINAL_TOSS_COMBO = 21100012;
 
-    public static final int ROLLING_SPIN = 21101017;
-    public static final int ROLLING_SPIN_COMBO = 21100013; //Special Attack (Stun Debuff) (Special Skill from Key-Command)
+    public static final int 旋風斬 = 21101017;
+    public static final int 旋風斬_COMBO = 21100013; //Special Attack (Stun Debuff) (Special Skill from Key-Command)
 
     public static final int GATHERING_HOOK = 21111019;
     public static final int GATHERING_HOOK_COMBO = 21110018;
@@ -374,7 +374,7 @@ public class Aran extends JobHandler {
                         Mob mob = chr.getField().getMobByObjectId(mai.getObjectID());
                         final int maxHp = mob.getMaxMp();
                         final int x = aranDrainInfo.getValue(SkillStat.x, aranDrain.getCurrentLevel());
-                        final int healHp = (int) ((maxHp *  x) / 100.0);
+                        final int healHp = (int) ((maxHp * x) / 100.0);
                         chr.addStat(Stat.HP, healHp);
                     });
                 }
@@ -394,58 +394,68 @@ public class Aran extends JobHandler {
                 o1.rOption = skillId;
                 o1.tOption = t;
                 tsm.putCharacterStatValue(AranBoostEndHunt, o1);
-                getClient().write(new LP_TemporaryStatSet(tsm));
                 break;
-            case 突刺之矛_COMBO: //TODO  Leaves an ice trail behind that freezes enemies
+            case 突刺之矛_COMBO:
+                final SkillInfo fcComboInfo = SkillData.getInstance().getSkillInfoById(21100002);
+                final SkillInfo fcInfo = SkillData.getInstance().getSkillInfoById(21101011);
+                final Skill fcSkill = chr.getSkill(21101011);
                 for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
-                    int hcProp = 5; //hcProp is defined yet still gives NPEs
-                    int hcTime = 10; //hcTime is defined yet still gives NPEs
+                    int x = fcComboInfo.getValue(SkillStat.x, fcSkill.getCurrentLevel());
+                    int hcProp = fcComboInfo.getValue(SkillStat.hcProp, fcSkill.getCurrentLevel());
+                    int hcTime = fcComboInfo.getValue(SkillStat.hcTime, fcSkill.getCurrentLevel());
                     if (Rand.getChance(hcProp)) {
                         Mob mob = chr.getField().getMobByObjectId(mai.getObjectID());
                         MobTemporaryStat mts = mob.getTemporaryStat();
-                        o1.nOption = 1;
-                        o1.rOption = getOriginalSkillByID(skillId);
+                        o1.nOption = x;
+                        o1.rOption = fcInfo.getSkillId();
                         o1.tOption = hcTime;
                         mts.addStatOptionsAndBroadcast(MobBuffStat.Stun, o1);
                     }
                 }
                 break;
-            case ROLLING_SPIN_COMBO:
+            case 旋風斬_COMBO:
             case 終極之矛_COMBO:
-            case 終極之矛_粉碎震撼_COMBO:
+            case 終極之矛_粉碎震撼_COMBO: {
+                final SkillInfo psdInfo = SkillData.getInstance().getSkillInfoById(skillId);
+                final Skill oriSkill = chr.getSkill(linkedSkill);
                 for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
-                    int prop = 30; //Prop value never given, so I decided upon 30%.
-                    int time = 3; //Time value never given, so I decided upon 3 seconds.
+                    int prop = psdInfo.getValue(SkillStat.prop, oriSkill.getCurrentLevel());
+                    int time = psdInfo.getValue(SkillStat.time, oriSkill.getCurrentLevel());
                     if (Rand.getChance(prop)) {
                         Mob mob = chr.getField().getMobByObjectId(mai.getObjectID());
                         MobTemporaryStat mts = mob.getTemporaryStat();
                         o1.nOption = 1;
-                        o1.rOption = getOriginalSkillByID(skillId);
+                        o1.rOption = oriSkill.getSkillId();
                         o1.tOption = time;
                         mts.addStatOptionsAndBroadcast(MobBuffStat.Stun, o1);
                     }
                 }
                 break;
+            }
             case 鬥氣審判_COMBO_下:
             case 鬥氣審判_COMBO_左:
-            case 鬥氣審判_COMBO_右:
+            case 鬥氣審判_COMBO_右: {
                 for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
-                    int hcProp = 5; //hcProp is defined yet still gives NPEs
-                    int hcTime = 2; //hcTime is defined yet still gives NPE
-                    if (Rand.getChance(hcProp/*si.getValue(hcProp, slv)*/)) {
+                    final SkillInfo psdInfo = SkillData.getInstance().getSkillInfoById(skillId);
+                    final Skill judgeSkill = chr.getSkill(鬥氣審判);
+                    int hcProp = psdInfo.getValue(SkillStat.hcProp, judgeSkill.getCurrentLevel());
+                    int hcTime = psdInfo.getValue(SkillStat.hcTime, judgeSkill.getCurrentLevel());
+                    int x = psdInfo.getValue(SkillStat.x, judgeSkill.getCurrentLevel());
+                    if (Rand.getChance(hcProp)) {
                         Mob mob = chr.getField().getMobByObjectId(mai.getObjectID());
                         MobTemporaryStat mts = mob.getTemporaryStat();
                         o1.nOption = 1;
-                        o1.rOption = getOriginalSkillByID(skillId);
-                        o1.tOption = hcTime;    //si.getValue(time, slv);
+                        o1.rOption = 鬥氣審判;
+                        o1.tOption = hcTime;
                         mts.addStatOptionsAndBroadcast(MobBuffStat.Freeze, o1);
                     } else {
                         Mob mob = chr.getField().getMobByObjectId(mai.getObjectID());
                         MobTemporaryStat mts = mob.getTemporaryStat();
-                        mts.createAndAddBurnedInfo(chr.getId(), chr.getSkill(skillId), 1);
+                        mts.createAndAddBurnedInfo(chr.getId(), chr.getSkill(鬥氣審判), 1);
                     }
                 }
                 break;
+            }
         }
         return true;
     }
