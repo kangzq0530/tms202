@@ -516,6 +516,7 @@ public enum InHeader implements IHeader {
             case "CP_UserPortalScriptRequest":
             case "CP_ReactorHit":
             case "CP_UserMeleeAttack":
+            case "CP_UserChangeSlotPositionRequest":
                 return true;
             default:
                 return false;

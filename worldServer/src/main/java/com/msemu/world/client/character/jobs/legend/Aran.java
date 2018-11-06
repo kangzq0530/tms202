@@ -372,6 +372,8 @@ public class Aran extends JobHandler {
                     final Skill aranDrain = chr.getSkill(吸血術);
                     attackInfo.getMobAttackInfo().forEach(mai -> {
                         Mob mob = chr.getField().getMobByObjectId(mai.getObjectID());
+                        if (mob == null)
+                            return;
                         final int maxHp = mob.getMaxMp();
                         final int x = aranDrainInfo.getValue(SkillStat.x, aranDrain.getCurrentLevel());
                         final int healHp = (int) ((maxHp * x) / 100.0);

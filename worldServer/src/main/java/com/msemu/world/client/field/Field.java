@@ -30,9 +30,11 @@ import com.msemu.commons.data.templates.field.Portal;
 import com.msemu.commons.data.templates.field.ReactorTemplate;
 import com.msemu.commons.data.templates.skill.SkillInfo;
 import com.msemu.commons.enums.FieldLimit;
+import com.msemu.commons.enums.FileTimeUnit;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.thread.EventManager;
 import com.msemu.commons.utils.Rand;
+import com.msemu.commons.utils.types.FileTime;
 import com.msemu.commons.utils.types.Position;
 import com.msemu.commons.utils.types.Rect;
 import com.msemu.core.network.GameClient;
@@ -462,9 +464,17 @@ public class Field {
         drop.setOwnerID(ownerId);
         ScheduledFuture sf = EventManager.getInstance().addEvent(() -> {
             addFieldObject(drop);
-            broadcastPacket(new LP_DropEnterField(drop, posFrom, posTo, ownerId));
+            broadcastPacket(new LP_DropEnterField(drop, posFrom, posTo, drop.getOwnerID()));
         }, Rand.get(0, 200));
         addObjectSchedule(drop, sf);
+    }
+
+    public void removeDrop(Drop drop) {
+        final int objectID = drop.getObjectId();
+        if(getDropByObjectId(objectID) != null) {
+            broadcastPacket(new LP_DropLeaveField(DropLeaveType.ByTimeOut, drop.getObjectId(), 0, (short) 0, 0, 0));
+            removeFieldObject(drop);
+        }
     }
 
     public void dropFadeOut(Drop drop, Position position) {
@@ -837,7 +847,7 @@ public class Field {
     public void update(LocalDateTime now) {
         getAllDrops().forEach(drop -> {
             if (drop.isExpired()) {
-
+                removeDrop(drop);
             }
         });
         int charSize = getAllCharacters().size();

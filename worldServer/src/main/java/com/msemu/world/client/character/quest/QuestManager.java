@@ -32,7 +32,7 @@ import com.msemu.core.network.packets.outpacket.user.local.effect.LP_UserEffectL
 import com.msemu.core.network.packets.outpacket.user.remote.effect.LP_UserEffectRemote;
 import com.msemu.core.network.packets.outpacket.wvscontext.LP_Message;
 import com.msemu.world.client.character.Character;
-import com.msemu.world.client.character.effect.QuestCompleteUserEffect;
+import com.msemu.world.client.character.effects.QuestCompleteUserEffect;
 import com.msemu.world.client.character.inventory.items.Item;
 import com.msemu.world.client.character.messages.QuestRecordExMessage;
 import com.msemu.world.client.character.messages.QuestRecordMessage;

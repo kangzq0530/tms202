@@ -49,7 +49,7 @@ import com.msemu.core.network.packets.outpacket.wvscontext.LP_GuildResult;
 import com.msemu.world.Channel;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.ExpIncreaseInfo;
-import com.msemu.world.client.character.effect.*;
+import com.msemu.world.client.character.effects.*;
 import com.msemu.world.client.character.party.Party;
 import com.msemu.world.client.character.party.PartyMember;
 import com.msemu.world.client.character.quest.Quest;

@@ -41,6 +41,9 @@ import java.util.stream.Collectors;
  * Created by Weber on 2018/3/31.
  */
 public class ItemConstants {
+    // 咒文痕跡
+    public static final int ITEM_VESTIGE = 4001832;
+
     private static final Logger log = LoggerFactory.getLogger(ItemConstants.class);
 
     public static int getItemDropChance(int itemId) {

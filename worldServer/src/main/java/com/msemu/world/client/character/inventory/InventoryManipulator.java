@@ -26,7 +26,6 @@ package com.msemu.world.client.character.inventory;
 
 import com.msemu.commons.data.enums.InvType;
 import com.msemu.commons.data.templates.ItemTemplate;
-import com.msemu.commons.database.DatabaseFactory;
 import com.msemu.commons.utils.types.FileTime;
 import com.msemu.core.network.packets.outpacket.wvscontext.LP_InventoryOperation;
 import com.msemu.world.client.character.AvatarLook;
@@ -45,8 +44,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
-import static com.msemu.world.enums.InventoryOperationType.REMOVE;
-import static com.msemu.world.enums.InventoryOperationType.UPDATE;
+import static com.msemu.world.enums.InventoryOperationType.*;
 
 /**
  * Created by Weber on 2018/4/28.
@@ -104,7 +102,6 @@ public class InventoryManipulator {
                 .getItemBySlot(srcSlot);
         Equip destEquip = (Equip) chr.getEquippedInventory()
                 .getItemBySlot(-destSlot);
-        List<Integer> hairEquips = al.getHairEquips();
         chr.chatMessage(String.format("[穿上裝備] 來源: %d 道具: %s(%d) 目標: %d 道具: %s(%d)",
                 srcSlot,
                 srcEquip != null ? srcEquip.getTemplate().getName() : "無",
@@ -244,27 +241,48 @@ public class InventoryManipulator {
         chr.write(new LP_InventoryOperation(true, false, operates));
         chr.renewBulletIDForAttack();
     }
+    public static void consume(final Character chr, final int itemID, final int amount) {
+        consume(chr, itemID, amount, false);
+    }
+    public static void consume(final Character chr, final int itemID, final int amount, boolean skipLock) {
+        InvType invType = ItemConstants.getInvTypeFromItemID(itemID);
+        Inventory inventory = chr.getInventoryByType(invType);
+        inventory.doLock(() -> {
+            int lastAmount = amount;
+            Item item = chr.getInventoryByType(invType).getItemByItemID(itemID);
+            while (item != null && lastAmount > 0) {
+                if (item.getQuantity() > lastAmount) {
+                    consume(chr, item, lastAmount, true);
+                    lastAmount = 0;
+                } else {
+                    consume(chr, item, item.getQuantity(), true);
+                    lastAmount -= item.getQuantity();
+                }
+                item = chr.getInventoryByType(invType).getItemByItemID(itemID);
+            }
+        }, skipLock);
+    }
 
     public static void consume(final Character chr, final Item item) {
-        consume(chr, item, 1);
+        consume(chr, item, 1, false);
     }
 
     public static void consume(final Character chr, final Item item, final int consumeCount) {
+        consume(chr, item, consumeCount, false);
+    }
+
+    public static void consume(final Character chr, final Item item, final int consumeCount, boolean skipLock) {
         Inventory inventory = chr.getInventoryByType(item.getInvType());
-        // data race possible
         if (item.getQuantity() == consumeCount && !ItemConstants.類型.可充值道具(item.getItemId())) {
-            inventory.getLock().lock();
-            try {
+            inventory.doLock(() -> {
                 item.setQuantity(0);
-            } finally {
-                inventory.getLock().unlock();
-            }
-            int oldeBagIndex = item.getBagIndex();
-            inventory.removeItem(item);
+                inventory.removeItem(item);
+            }, skipLock);
+            int oldBagIndex = item.getBagIndex();
             chr.write(new LP_InventoryOperation(true, false,
-                    REMOVE, item, oldeBagIndex));
+                    REMOVE, item, oldBagIndex));
         } else {
-            item.setQuantity(item.getQuantity() - consumeCount);
+            inventory.doLock(() -> item.setQuantity(item.getQuantity() - consumeCount), skipLock);
             chr.write(new LP_InventoryOperation(true, false,
                     UPDATE, item, item.getBagIndex()));
         }
@@ -272,13 +290,16 @@ public class InventoryManipulator {
     }
 
     public static void add(final Character chr, final Item item) {
+        add(chr, item, false);
+    }
+
+    public static void add(final Character chr, final Item item, boolean skipLock) {
 
         final InvType invType = item.getInvType();
         final Inventory inventory = chr.getInventoryByType(invType);
         final ItemTemplate template = item.getTemplate();
 
         inventory.doLock(() -> {
-
             if (invType != InvType.EQUIP) {
                 final int slotMax = template.getSlotMax();
 
@@ -317,14 +338,10 @@ public class InventoryManipulator {
                             insertItem.setDateExpire(item.getDateExpire());
                             insertItem.setOwner(item.getOwner());
                             insertItem.setQuantity(newQuantity);
-                        } else if (lastQuantity > 0) {
+                        } else {
                             insertItem = item;
                             lastQuantity = 0;
-                        } else {
-                            insertItem = null;
                         }
-                        if (insertItem == null)
-                            break;
                         insertItem.setBagIndex(inventory.getFirstOpenSlot());
                         inventory.addItem(insertItem);
                         List<InventoryOperationInfo> operates = new ArrayList<>();
@@ -345,7 +362,12 @@ public class InventoryManipulator {
                 chr.write(new LP_InventoryOperation(true, false, operates));
             }
             chr.renewBulletIDForAttack();
-        });
+        }, skipLock);
+    }
+
+    public static void update(Character chr, Item item) {
+        chr.write(new LP_InventoryOperation(true, false,
+                ADD, item, item.getBagIndex()));
     }
 
 

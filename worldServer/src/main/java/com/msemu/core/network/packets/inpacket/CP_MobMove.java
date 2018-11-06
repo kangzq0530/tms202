@@ -64,6 +64,7 @@ public class CP_MobMove extends InPacket<GameClient> {
 
     @Override
     public void read() {
+
         msai = new MobSkillAttackInfo();
         final GameClient client = getClient();
         final Character chr = client.getCharacter();

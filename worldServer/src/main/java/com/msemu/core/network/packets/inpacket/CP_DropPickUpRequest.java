@@ -30,7 +30,7 @@ import com.msemu.core.network.GameClient;
 import com.msemu.core.network.packets.outpacket.user.local.effect.LP_UserEffectLocal;
 import com.msemu.core.network.packets.outpacket.wvscontext.LP_Message;
 import com.msemu.world.client.character.Character;
-import com.msemu.world.client.character.effect.PickUpItemUserEffect;
+import com.msemu.world.client.character.effects.PickUpItemUserEffect;
 import com.msemu.world.client.character.inventory.items.Equip;
 import com.msemu.world.client.character.inventory.items.Item;
 import com.msemu.world.client.character.messages.DropPickUpAddIenventoryItem;

@@ -29,7 +29,7 @@ import com.msemu.core.network.GameClient;
 import com.msemu.core.network.packets.outpacket.user.local.effect.LP_UserEffectLocal;
 import com.msemu.core.network.packets.outpacket.user.remote.effect.LP_UserEffectRemote;
 import com.msemu.world.client.character.Character;
-import com.msemu.world.client.character.effect.*;
+import com.msemu.world.client.character.effects.*;
 import com.msemu.world.client.character.inventory.items.Item;
 import com.msemu.world.enums.UserEffectType;
 

@@ -136,7 +136,7 @@ public class CalcDamage {
                 if (GameConstants.getRand(rand[index++ % numRand], 100, 0) < (localStat.getCirticalRate() + cr)) {
                     criticaled = true;
                 }
-                character.chatMessage(ChatMsgType.NOTICE_2, String.format("[CalcDamage] Damage :%f Critical :%s Diff :%f", realDamage, String.valueOf(criticaled), Math.abs(damage - adjustedRandomDamage) / 100.0));
+                // character.chatMessage(ChatMsgType.NOTICE_2, String.format("[CalcDamage] Damage :%f Critical :%s Diff :%f", realDamage, String.valueOf(criticaled), Math.abs(damage - adjustedRandomDamage) / 100.0));
 
             }
 

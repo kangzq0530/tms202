@@ -142,11 +142,18 @@ public class Inventory {
     }
 
     public void doLock(Runnable runnable) {
-        getLock().lock();
-        try {
+        doLock(runnable, false);
+    }
+    public void doLock(Runnable runnable, boolean skipLock) {
+        if(!skipLock) {
+            getLock().lock();
+            try {
+                runnable.run();
+            } finally {
+                getLock().unlock();
+            }
+        } else {
             runnable.run();
-        } finally {
-            getLock().unlock();
         }
     }
 

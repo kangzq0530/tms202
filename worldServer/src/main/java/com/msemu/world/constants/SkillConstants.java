@@ -1512,6 +1512,8 @@ public class SkillConstants {
             case 21110018:
                 return 21111019; // 一網打盡
             case 21110011:
+            case 21110025:
+            case 21110024:
                 return 21111017; // 鬥氣審判
             case 21121016:
             case 21121017:

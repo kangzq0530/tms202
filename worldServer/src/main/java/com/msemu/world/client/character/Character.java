@@ -51,9 +51,9 @@ import com.msemu.core.network.packets.outpacket.wvscontext.LP_GuildResult;
 import com.msemu.core.network.packets.outpacket.wvscontext.LP_Message;
 import com.msemu.core.network.packets.outpacket.wvscontext.LP_StatChanged;
 import com.msemu.world.Channel;
-import com.msemu.world.client.character.effect.AvatarOrientedUserEffect;
-import com.msemu.world.client.character.effect.LevelUpUserEffect;
-import com.msemu.world.client.character.effect.MultiKillMessage;
+import com.msemu.world.client.character.effects.AvatarOrientedUserEffect;
+import com.msemu.world.client.character.effects.LevelUpUserEffect;
+import com.msemu.world.client.character.effects.MultiKillMessage;
 import com.msemu.world.client.character.friends.FriendList;
 import com.msemu.world.client.character.inventory.InventoryManipulator;
 import com.msemu.world.client.character.inventory.items.Equip;
@@ -312,6 +312,10 @@ public class Character extends Life {
     private List<SkillMacro> skillMacros = new ArrayList<>();
     @Transient
     private int comboKill;
+    @Transient
+    @Getter
+    @Setter
+    private int hyperMiniGameSeed;
 
 
     // timestamps ??

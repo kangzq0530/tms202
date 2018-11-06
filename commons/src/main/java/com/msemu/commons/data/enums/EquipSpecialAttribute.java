@@ -24,18 +24,29 @@
 
 package com.msemu.commons.data.enums;
 
+import lombok.Getter;
+
 /**
  * Created by Weber on 2018/4/13.
  */
 public enum EquipSpecialAttribute {
-    NO_DESTROY_EXCEPT_ENHANCE(0x1),
-    ALWAYS_TIER_UP(0x2),
-    ALWAYS_SCROLL_SUCCEED(0x4),
-    TRACE(0x80);
-    private int value;
+    // 道具不會被破壞
+    ITEM_NOT_DESTROY(0),
+    // 潛能一定成功
+    ALWAYS_GRADE_UPGRADE(1),
+    // 卷軸一定成功
+    ALWAYS_ENCHANT_SUCCESS(2),
+    ITEM_EXTENDED(3),
+    SELLING_ONE_MESO(4),
+    MAKING_SKILL_MEISTER_ITEM(5),
+    MAKING_SKILL_MASTER_ITEM(6),
+    // 裝備痕跡
+    VESTIGE(7),;
+    @Getter
+    private final int value;
 
-    EquipSpecialAttribute(final int val) {
-        this.value = val;
+    EquipSpecialAttribute(int index) {
+        this.value = (1 << index);
     }
 
     public int getValue() {

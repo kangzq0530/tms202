@@ -28,10 +28,13 @@ import com.msemu.commons.data.enums.SkillStat;
 import com.msemu.commons.data.templates.skill.SkillInfo;
 import com.msemu.commons.utils.types.Position;
 import com.msemu.core.network.GameClient;
+import com.msemu.core.network.packets.outpacket.summon.LP_SummonEnterField;
+import com.msemu.core.network.packets.outpacket.summon.LP_SummonLeaveField;
 import com.msemu.world.client.character.AvatarLook;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.data.SkillData;
 import com.msemu.world.enums.FieldObjectType;
+import com.msemu.world.enums.LeaveType;
 import com.msemu.world.enums.Stat;
 import lombok.Getter;
 import lombok.Setter;
@@ -103,12 +106,12 @@ public class Summon extends Life {
 
     @Override
     public void enterScreen(GameClient client) {
-
+        client.write(new LP_SummonEnterField(this));
     }
 
     @Override
     public void outScreen(GameClient client) {
-
+        client.write(new LP_SummonLeaveField(this, LeaveType.NO_ANIMATION));
     }
 
 }

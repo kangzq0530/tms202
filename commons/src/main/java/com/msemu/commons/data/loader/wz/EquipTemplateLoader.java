@@ -141,12 +141,16 @@ public class EquipTemplateLoader extends WzDataLoader<Map<Integer, EquipTemplate
                 template.setExpireOnLogout(prop.getInt() > 0);
             } else if (propName.equalsIgnoreCase("exItem")) {
                 template.setExItem(prop.getInt() > 0);
+            } else if (propName.equalsIgnoreCase("superiorEqp")) {
+                template.setSuperiorEqp(prop.getInt() > 0);
             } else if (propName.equalsIgnoreCase("notSale")) {
                 template.setNotSale(prop.getInt() > 0);
             } else if (propName.equalsIgnoreCase("only")) {
                 template.setAttackSpeed(prop.getInt());
             } else if (propName.equalsIgnoreCase("tradeBlock")) {
                 template.setTradeBlock(prop.getInt() > 0);
+            } else if (propName.equalsIgnoreCase("tradeAvailable")) {
+                template.setTradeAvailable(prop.getInt() > 0);
             } else if (propName.equalsIgnoreCase("equipTradeBlock")) {
                 template.setEquipTradeBlock(prop.getInt() > 0);
             } else if (propName.equalsIgnoreCase("fixedPotential")) {

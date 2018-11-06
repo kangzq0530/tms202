@@ -28,9 +28,7 @@ import com.msemu.commons.data.enums.SkillStat;
 import com.msemu.commons.data.templates.skill.SkillInfo;
 import com.msemu.commons.network.packets.InPacket;
 import com.msemu.core.network.GameClient;
-import com.msemu.core.network.packets.outpacket.user.remote.LP_UserMeleeAttack;
 import com.msemu.core.network.packets.outpacket.user.remote.LP_UserShootAttack;
-import com.msemu.world.Channel;
 import com.msemu.world.client.character.AttackInfo;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.character.MobAttackInfo;
@@ -124,7 +122,7 @@ public class CP_UserShootAttack extends InPacket<GameClient> {
         attackInfo.setAttackSpeed(decodeByte());
         attackInfo.setTick(decodeInt());
         attackInfo.setTotlalBulletCount(decodeInt());
-        getClient().getCharacter().showDebugMessage("Shoot", ChatMsgType.SYSTEM, String.format("%d", (((long)attackInfo.tick) & 0xFFFFFFFFL)));
+        getClient().getCharacter().showDebugMessage("Shoot", ChatMsgType.SYSTEM, String.format("%d", (((long) attackInfo.tick) & 0xFFFFFFFFL)));
 
         decodeShort();
         decodeShort();
@@ -211,6 +209,9 @@ public class CP_UserShootAttack extends InPacket<GameClient> {
         final Character chr = getClient().getCharacter();
         final Field field = chr.getField();
         final int skillID = attackInfo.getSkillId();
+        if (skillID == 21111017) {
+            int x = 1;
+        }
         final int originSkill = SkillConstants.getLinkedSkill(skillID);
         final Skill skill = chr.getSkill(originSkill != 0 ? originSkill : skillID);
         final SkillInfo si = SkillData.getInstance().getSkillInfoById(attackInfo.getSkillId());
@@ -233,7 +234,7 @@ public class CP_UserShootAttack extends InPacket<GameClient> {
             chr.renewCharacterStats();
             chr.attackMob(attackInfo);
         } else {
-            chr.showDebugMessage("射擊攻擊失敗", ChatMsgType.SYSTEM,"物理攻擊失效");
+            chr.showDebugMessage("射擊攻擊失敗", ChatMsgType.SYSTEM, "物理攻擊失效");
         }
     }
 }

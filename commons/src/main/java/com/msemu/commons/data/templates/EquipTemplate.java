@@ -50,7 +50,8 @@ public class EquipTemplate extends ItemTemplate {
     private short itemState, chuc;
     private short soulOptionId, soulSocketId, soulOption;
     private short rStr, rDex, rInt, rLuk, rLevel, rJob, rPop;
-    private boolean fixedPotential, only, exItem, equipTradeBlock;
+    private boolean fixedPotential, only, exItem, equipTradeBlock, superiorEqp, tradeAvailable;
+
     private Map<Integer, EquipOption> options = new HashMap<>(7);
 
 
@@ -115,6 +116,8 @@ public class EquipTemplate extends ItemTemplate {
         dos.writeBoolean(only);
         dos.writeBoolean(exItem);
         dos.writeBoolean(equipTradeBlock);
+        dos.writeBoolean(superiorEqp);
+        dos.writeBoolean(tradeAvailable);
         dos.writeInt(getOptions().size());
         for (Map.Entry<Integer, EquipOption> entry : getOptions().entrySet()) {
             dos.writeInt(entry.getKey());
@@ -181,6 +184,8 @@ public class EquipTemplate extends ItemTemplate {
         setOnly(dis.readBoolean());
         setExItem(dis.readBoolean());
         setEquipTradeBlock(dis.readBoolean());
+        setSuperiorEqp(dis.readBoolean());
+        setTradeAvailable(dis.readBoolean());
         int size = dis.readInt();
         for (int i = 0; i < size; i++) {
             getOptions().put(dis.readInt(), (EquipOption) new EquipOption().load(dis));

@@ -150,13 +150,14 @@ public class AdminCommand {
             }
             final Character chr = client.getCharacter();
             final int itemID = Integer.parseInt(args.get(1));
+            final int quantity = args.size() == 2 ? 1 : Integer.parseInt(args.get(2));
             final ItemData itemData = ItemData.getInstance();
             final Item item = itemData.createItem(itemID, true);
             if (item == null) {
                 chr.chatMessage(ChatMsgType.SYSTEM, "道具不存在");
                 return true;
             }
-            item.setQuantity(1);
+            item.setQuantity(quantity);
             chr.giveItem(item);
             return true;
         }

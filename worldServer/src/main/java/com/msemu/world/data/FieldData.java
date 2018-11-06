@@ -72,7 +72,7 @@ public class FieldData implements IReloadable {
 
     public void load() {
         getFieldTemplateDatLoader().load();
-        log.info("{} fieldTemplates loaded", getFieldTemplateDatLoader().size());
+        log.info("{} FieldTemplates loaded", getFieldTemplateDatLoader().size());
     }
 
     public void clear() {
