@@ -37,6 +37,7 @@ import com.msemu.world.client.field.Field;
 import com.msemu.world.client.field.lifes.Mob;
 import com.msemu.world.constants.SkillConstants;
 import com.msemu.world.data.SkillData;
+import com.msemu.world.enums.ChatMsgType;
 import com.msemu.world.enums.Stat;
 
 import java.util.ArrayList;
@@ -47,7 +48,7 @@ import java.util.List;
  */
 public class CP_UserMeleeAttack extends InPacket<GameClient> {
 
-    private AttackInfo ai;
+    private AttackInfo attackInfo;
 
     public CP_UserMeleeAttack(short opcode) {
         super(opcode);
@@ -55,51 +56,51 @@ public class CP_UserMeleeAttack extends InPacket<GameClient> {
 
     @Override
     public void read() {
-        ai = new AttackInfo();
-        ai.isMeleeAttack = true;
-        ai.setFieldKey(decodeByte());
+        attackInfo = new AttackInfo();
+        attackInfo.isMeleeAttack = true;
+        attackInfo.setFieldKey(decodeByte());
         Byte atkMask = decodeByte();
-        ai.setHits((byte) (atkMask & 0xF));
-        ai.setMobCount((atkMask & 0xF0) >> 4);
-        ai.setSkillId(decodeInt());
-        ai.setSlv(decodeByte());
-        ai.setAddAttackProc(decodeByte());
-        ai.setCrc(decodeInt());
-        final int skillID = ai.skillId;
+        attackInfo.setHits((byte) (atkMask & 0xF));
+        attackInfo.setMobCount((atkMask & 0xF0) >> 4);
+        attackInfo.setSkillId(decodeInt());
+        attackInfo.setSlv(decodeByte());
+        attackInfo.setAddAttackProc(decodeByte());
+        attackInfo.setCrc(decodeInt());
+        final int skillID = attackInfo.skillId;
         if (SkillConstants.isKeyDownSkill(skillID) || SkillConstants.isSuperNovaSkill(skillID)) {
-            ai.setKeyDown(decodeInt());
+            attackInfo.setKeyDown(decodeInt());
         }
         if (SkillConstants.isRushBombSkill(skillID) || skillID == 5300007 || skillID == 27120211 || skillID == 14111023) {
-            ai.setGrenadeId(decodeInt());
+            attackInfo.setGrenadeId(decodeInt());
         }
         if (SkillConstants.isZeroSkill(skillID)) {
-            ai.zero = decodeByte();
+            attackInfo.zero = decodeByte();
         }
         if (SkillConstants.isUsercloneSummonedAbleSkill(skillID)) {
-            ai.bySummonedID = decodeInt();
+            attackInfo.bySummonedID = decodeInt();
         }
         skip(13);
-        ai.setBuckShot(decodeByte());
-        ai.setSomeMask(decodeByte());
+        attackInfo.setBuckShot(decodeByte());
+        attackInfo.setSomeMask(decodeByte());
         Short actionMask = decodeShort();
-        ai.setLeft(((actionMask >> 15) & 1) != 0);
-        ai.setAttackAction((short) (actionMask & 0x7FFF));
+        attackInfo.setLeft(((actionMask >> 15) & 1) != 0);
+        attackInfo.setAttackAction((short) (actionMask & 0x7FFF));
         decodeInt(); // crc
-        ai.setAttackActionType(decodeByte());
-        ai.setAttackSpeed(decodeByte());
-        ai.setTick(decodeInt());
-        ai.getPtTarget().setY(decodeInt());
-        ai.setFinalAttackLastSkillID(decodeInt());
-        if (ai.getFinalAttackLastSkillID() > 0) {
-            ai.setFinalAttackByte(decodeByte());
+        attackInfo.setAttackActionType(decodeByte());
+        attackInfo.setAttackSpeed(decodeByte());
+        attackInfo.setTick(decodeInt());
+        attackInfo.getPtTarget().setY(decodeInt());
+        attackInfo.setFinalAttackLastSkillID(decodeInt());
+        if (attackInfo.getFinalAttackLastSkillID() > 0) {
+            attackInfo.setFinalAttackByte(decodeByte());
         }
         if (skillID == 5111009) {
-            ai.ignorePCounter = decodeByte() != 0;
+            attackInfo.ignorePCounter = decodeByte() != 0;
         }
         if (skillID == 25111005) {
-            ai.spiritCoreEnhance = decodeInt();
+            attackInfo.spiritCoreEnhance = decodeInt();
         }
-        for (int i = 0; i < ai.mobCount; i++) {
+        for (int i = 0; i < attackInfo.mobCount; i++) {
             MobAttackInfo mai = new MobAttackInfo();
             int mobObjectID = decodeInt();
             byte idk1 = decodeByte();
@@ -115,8 +116,8 @@ public class CP_UserMeleeAttack extends InPacket<GameClient> {
             short oldPosX = decodeShort(); // ?
             short oldPosY = decodeShort(); // ?
             decodeInt();
-            long[] damages = new long[ai.hits];
-            for (int j = 0; j < ai.hits; j++) {
+            long[] damages = new long[attackInfo.hits];
+            for (int j = 0; j < attackInfo.hits; j++) {
                 damages[j] = decodeLong();
             }
             int mobUpDownYRange = decodeInt();
@@ -167,33 +168,33 @@ public class CP_UserMeleeAttack extends InPacket<GameClient> {
             mai.setAnimationDeltaL(animationDeltaL);
             mai.setHitPartRunTimes(hitPartRunTimes);
             mai.setResWarriorLiftPress(isResWarriorLiftPress);
-            ai.getMobAttackInfo().add(mai);
+            attackInfo.getMobAttackInfo().add(mai);
         }
         if (skillID == 61121052 || skillID == 36121052 || SkillConstants.isScreenCenterAttackSkill(skillID)) {
-            ai.ptTarget.setX(decodeShort());
-            ai.ptTarget.setY(decodeShort());
+            attackInfo.ptTarget.setX(decodeShort());
+            attackInfo.ptTarget.setY(decodeShort());
         } else {
             if (SkillConstants.isSuperNovaSkill(skillID)) {
-                ai.ptAttackRefPoint.setX(decodeShort());
-                ai.ptAttackRefPoint.setY(decodeShort());
+                attackInfo.ptAttackRefPoint.setX(decodeShort());
+                attackInfo.ptAttackRefPoint.setY(decodeShort());
             }
             if (skillID == 101000102) {
-                ai.idkPos.setX(decodeShort());
-                ai.idkPos.setY(decodeShort());
+                attackInfo.idkPos.setX(decodeShort());
+                attackInfo.idkPos.setY(decodeShort());
             }
-            ai.pos.setX(decodeShort());
-            ai.pos.setY(decodeShort());
+            attackInfo.pos.setX(decodeShort());
+            attackInfo.pos.setY(decodeShort());
             if (SkillConstants.isAranFallingStopSkill(skillID)) {
-                ai.fh = decodeByte();
+                attackInfo.fh = decodeByte();
             }
             if (skillID == 21120019 || skillID == 37121052) {
-                ai.teleportPt.setX(decodeInt());
-                ai.teleportPt.setY(decodeInt());
+                attackInfo.teleportPt.setX(decodeInt());
+                attackInfo.teleportPt.setY(decodeInt());
             }
             if (skillID == 61121105 || skillID == 61121222 || skillID == 24121052) {
-                ai.Vx = decodeShort();
+                attackInfo.Vx = decodeShort();
                 short x, y;
-                for (int i = 0; i < ai.Vx; i++) {
+                for (int i = 0; i < attackInfo.Vx; i++) {
                     x = decodeShort();
                     y = decodeShort();
                 }
@@ -202,9 +203,9 @@ public class CP_UserMeleeAttack extends InPacket<GameClient> {
                 // CUser::EncodeAdvancedEarthBreak
                 // TODO
             }
-            if (skillID == 14111006 && ai.grenadeId != 0) {
-                ai.grenadePos.setX(decodeShort());
-                ai.grenadePos.setY(decodeShort());
+            if (skillID == 14111006 && attackInfo.grenadeId != 0) {
+                attackInfo.grenadePos.setX(decodeShort());
+                attackInfo.grenadePos.setY(decodeShort());
             }
             if (available() != 0) {
                 getClient().getCharacter().chatMessage("CP_MeleeAttack 解包不完整");
@@ -217,18 +218,20 @@ public class CP_UserMeleeAttack extends InPacket<GameClient> {
     public void runImpl() {
         final Character chr = getClient().getCharacter();
         final Field field = chr.getField();
-        final Skill skill = chr.getSkill(ai.getSkillId());
-        final SkillInfo si = skill != null ? SkillData.getInstance().getSkillInfoById(ai.getSkillId()) : null;
-        final boolean attackSuccess = chr.getJobHandler().handleAttack(ai);
+        final int skillID = attackInfo.getSkillId();
+        final int originSkill = SkillConstants.getLinkedSkill(skillID);
+        final Skill skill = chr.getSkill(originSkill != 0 ? originSkill : skillID);
+        final SkillInfo si = SkillData.getInstance().getSkillInfoById(attackInfo.getSkillId());
+        final boolean attackSuccess = chr.getJobHandler().handleAttack(attackInfo);
         final List<Mob> killedMob = new ArrayList<>();
-        chr.getCharacterLocalStat().getCalcDamage().PDamageForPvM(ai);
-        field.broadcastPacket(new LP_UserMeleeAttack(chr, ai));
+        chr.getCharacterLocalStat().getCalcDamage().PDamageForPvM(attackInfo);
+        field.broadcastPacket(new LP_UserMeleeAttack(chr, attackInfo));
 
         if (attackSuccess) {
             if (skill != null) {
-                final int hpCon = si.getValue(SkillStat.hpCon, ai.getSlv());
-                final int mpCon = si.getValue(SkillStat.mpCon, ai.getSlv());
-                final int hpRCon = si.getValue(SkillStat.hpRCon, ai.getSlv());
+                final int hpCon = si.getValue(SkillStat.hpCon, attackInfo.getSlv());
+                final int mpCon = si.getValue(SkillStat.mpCon, attackInfo.getSlv());
+                final int hpRCon = si.getValue(SkillStat.hpRCon, attackInfo.getSlv());
                 if (hpCon > 0)
                     chr.addStat(Stat.HP, -hpCon);
                 if (mpCon > 0)
@@ -237,7 +240,9 @@ public class CP_UserMeleeAttack extends InPacket<GameClient> {
                     chr.addStat(Stat.HP, (int) -(chr.getStat(Stat.HP) * (chr.getStat(Stat.HP) * (hpRCon / 100.0))));
             }
             chr.renewCharacterStats();
-            chr.attackMob(ai);
+            chr.attackMob(attackInfo);
+        } else {
+            chr.showDebugMessage("攻擊失敗", ChatMsgType.SYSTEM,"物理攻擊失效");
         }
     }
 }

@@ -45,6 +45,7 @@ public class Movement1 extends MovementBase {
         short yv = inPacket.decodeShort();
         vPosition = new Position(xv, yv);
 
+
         fh = inPacket.decodeShort();
 
         if (command == 15 || command == 17) {

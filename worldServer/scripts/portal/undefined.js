@@ -5,12 +5,14 @@ function start() {
 }
 
 function action(mode, type, selection) {
+    cm.dispose();
+    return;
     if (mode > 0) {
         status++;
     } else {
         status--;
     }
-    if( status == 0 ) {
+    if( status === 0 ) {
         cm.say("傳送門ID:"+ parentID +"，這個腳本尚未完成唷");
     } else {
         cm.dispose();

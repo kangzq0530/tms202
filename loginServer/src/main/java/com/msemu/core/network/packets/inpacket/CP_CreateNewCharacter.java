@@ -33,6 +33,7 @@ import com.msemu.login.client.character.Character;
 import com.msemu.login.client.character.CharacterStat;
 import com.msemu.login.client.character.FuncKeyMap;
 import com.msemu.login.client.character.items.Equip;
+import com.msemu.login.client.character.items.Item;
 import com.msemu.login.constants.ItemConstants;
 import com.msemu.login.data.ItemData;
 import com.msemu.login.data.StringData;
@@ -68,11 +69,12 @@ public class CP_CreateNewCharacter extends InPacket<LoginClient> {
 
     public CP_CreateNewCharacter(short opcode) {
         super(opcode);
-        items = new ArrayList<>();
     }
 
     @Override
     public void read() {
+        items = new ArrayList<>();
+
         charName = decodeString();
         keyMapType = decodeInt();
         eventNewCharSaleJob = decodeInt();
@@ -188,11 +190,11 @@ public class CP_CreateNewCharacter extends InPacket<LoginClient> {
         DatabaseFactory.getInstance().saveToDB(chr);
 
         for (int itemID : chr.getAvatarData().getAvatarLook().getHairEquips()) {
-            Equip equip = ItemData.getInstance().getEquipFromTemplate(itemID);
-            if (equip != null && equip.getItemId() >= 1000000) {
-                equip.setBagIndex(ItemConstants.getBodyPartFromItem(
-                        equip.getItemId(), chr.getAvatarData().getAvatarLook().getGender()));
-                chr.addItemToInventory(EQUIPPED, equip, true);
+            Item item = ItemData.getInstance().getEquipFromTemplate(itemID);
+            if (item != null && item.getItemId() >= 1000000) {
+                item.setBagIndex(ItemConstants.getBodyPartFromItem(
+                        item.getItemId(), chr.getAvatarData().getAvatarLook().getGender()));
+                chr.addItemToInventory(EQUIPPED, item, true);
             }
         }
 
@@ -203,8 +205,6 @@ public class CP_CreateNewCharacter extends InPacket<LoginClient> {
             chr.addItemToInventory(EQUIPPED, equip, true);
         }
         DatabaseFactory.getInstance().saveToDB(chr.getInventoryByType(EQUIPPED));
-
-
         getClient().write(new LP_CreateNewCharacterResult(LoginResultCode.LoginSuccess, chr));
 
     }

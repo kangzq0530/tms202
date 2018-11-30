@@ -167,7 +167,6 @@ public class QuestData implements IReloadable {
                     questReq = new QuestProgressMoneyRequirement();
                     break;
                 default:
-                    log.warn("Unimplemented questProgressReq: {}", reqData.getType());
                     questReq = null;
                     break;
             }
@@ -246,7 +245,7 @@ public class QuestData implements IReloadable {
         quest.setQRKey(questID);
         quest.setStatus(QuestStatus.NOT_STARTED);
         if (qi != null) {
-            getQuestsProgressRequirements().get(questID).forEach(req -> quest.addQuestProgressRequirement((QuestProgressRequirement) req));
+            getQuestsProgressRequirements().get(questID).forEach(req -> quest.addQuestProgressRequirement(((QuestProgressRequirement) req).deepCopy()));
             if (qi.isAutoPreComplete())
                 quest.setStatus(QuestStatus.COMPLETE);
         } else {

@@ -32,6 +32,7 @@ import com.msemu.world.client.field.lifes.Mob;
 import com.msemu.world.client.field.lifes.skills.BurnedInfo;
 import com.msemu.world.client.field.lifes.skills.MobTemporaryStat;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -43,26 +44,25 @@ public class LP_MobStatReset extends OutPacket<GameClient> {
         this(mob, byteCalcDamageStatIndex, sn, null);
     }
 
-    public LP_MobStatReset(Mob mob, byte calcDamageStatIndex, boolean sn, List<BurnedInfo> biList) {
+    public LP_MobStatReset(Mob mob, byte calcDamageStatIndex, boolean sn, List<BurnedInfo> burnedInfos) {
         super(OutHeader.LP_MobStatReset);
         MobTemporaryStat resetStats = mob.getTemporaryStat();
         int[] mask = resetStats.getRemovedMask();
         encodeInt(mob.getObjectId());
-        for (int i = 0; i < 3; i++) {
-            encodeInt(mask[i]);
-        }
+        Arrays.stream(mask).forEach(this::encodeInt);
         if (resetStats.hasRemovedMobStat(MobBuffStat.BurnedInfo)) {
-            if (biList == null) {
+            if (burnedInfos == null) {
                 encodeInt(0);
                 encodeInt(0);
             } else {
-                int dotCount = biList.stream().mapToInt(BurnedInfo::getDotCount).sum();
+                int dotCount = burnedInfos.stream().mapToInt(BurnedInfo::getDotCount).sum();
                 encodeInt(dotCount);
-                encodeInt(biList.size());
-                for (BurnedInfo bi : biList) {
-                    encodeInt(bi.getCharacterId());
-                    encodeInt(bi.getSuperPos());
-                }
+                encodeInt(burnedInfos.size());
+                burnedInfos.forEach(info -> {
+                    encodeInt(info.getCharacterId());
+                    encodeInt(info.getSuperPos());
+                    encodeInt(0);
+                });
             }
             resetStats.getBurnedInfo().clear();
         }

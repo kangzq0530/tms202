@@ -33,8 +33,8 @@ import com.msemu.core.network.LoginClient;
  */
 public class LP_SetAccountGender extends OutPacket<LoginClient> {
 
-    public LP_SetAccountGender(LoginClient client) {
+    public LP_SetAccountGender() {
         super(OutHeader.LP_RequestSetGender);
-        encodeString(client.getAccount().getUsername());
+        encodeByte(true);
     }
 }

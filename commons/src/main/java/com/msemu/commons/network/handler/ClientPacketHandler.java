@@ -30,6 +30,7 @@ import com.msemu.commons.network.packets.InPacket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -56,13 +57,13 @@ public class ClientPacketHandler<TClient extends Client<TClient>> {
         }
     }
 
+    @SuppressWarnings("all")
     private InPacket<TClient> getPacket(short id, TClient ch) {
         InPacket<TClient> prototype = null;
         Map<Short, InPacket<TClient>> pm = this.packetsPrototypes.get(ch.getState());
         if (pm != null) {
             prototype = pm.get(id);
         }
-
         if (prototype == null) {
             unknownPacket(ch.getState(), id);
             return null;

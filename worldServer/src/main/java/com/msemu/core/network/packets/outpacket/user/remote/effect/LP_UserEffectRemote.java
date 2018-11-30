@@ -28,7 +28,7 @@ import com.msemu.commons.enums.OutHeader;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;
 import com.msemu.world.client.character.Character;
-import com.msemu.world.client.character.effect.IUserEffect;
+import com.msemu.world.client.character.effects.IUserEffect;
 
 /**
  * Created by Weber on 2018/4/29.

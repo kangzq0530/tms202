@@ -51,6 +51,15 @@ public class QuestProgressMoneyRequirement extends QuestProgressRequirement {
     @Setter
     private int curMoney;
 
+    public QuestProgressMoneyRequirement() {
+        this.curMoney = 0;
+    }
+
+    public QuestProgressMoneyRequirement(int money, int curMoney) {
+        this.money = money;
+        this.curMoney = curMoney;
+    }
+
     @Override
     public boolean isComplete() {
         return getCurMoney() >= getMoney();
@@ -65,6 +74,11 @@ public class QuestProgressMoneyRequirement extends QuestProgressRequirement {
         if (reqData instanceof QuestEndMesoReqData) {
             setMoney(((QuestEndMesoReqData) reqData).getMeso());
         }
+    }
+
+    @Override
+    public QuestProgressRequirement deepCopy() {
+       return new QuestProgressMoneyRequirement(money, 0);
     }
 }
 

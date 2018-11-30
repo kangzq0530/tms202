@@ -37,9 +37,9 @@ public class LP_NpcChangeController extends OutPacket<GameClient> {
         super(OutHeader.LP_NpcChangeController);
         encodeByte(controller);
         encodeInt(npc.getObjectId());
-        if (!controller)
-            return;
-        encodeInt(npc.getTemplateId());
-        npc.encode(this);
+        if(controller) {
+            encodeInt(npc.getTemplateId());
+            npc.encode(this);
+        }
     }
 }

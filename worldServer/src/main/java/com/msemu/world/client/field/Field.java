@@ -27,11 +27,14 @@ package com.msemu.world.client.field;
 import com.msemu.commons.data.templates.field.FieldTemplate;
 import com.msemu.commons.data.templates.field.Foothold;
 import com.msemu.commons.data.templates.field.Portal;
+import com.msemu.commons.data.templates.field.ReactorTemplate;
 import com.msemu.commons.data.templates.skill.SkillInfo;
 import com.msemu.commons.enums.FieldLimit;
+import com.msemu.commons.enums.FileTimeUnit;
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.commons.thread.EventManager;
 import com.msemu.commons.utils.Rand;
+import com.msemu.commons.utils.types.FileTime;
 import com.msemu.commons.utils.types.Position;
 import com.msemu.commons.utils.types.Rect;
 import com.msemu.core.network.GameClient;
@@ -49,10 +52,12 @@ import com.msemu.world.client.field.forceatoms.types.ForceAtomInfo;
 import com.msemu.world.client.field.lifes.*;
 import com.msemu.world.client.field.runestones.RuneStoneManager;
 import com.msemu.world.client.field.spawns.AbstractSpawnPoint;
+import com.msemu.world.client.field.spawns.MobSpawnPoint;
 import com.msemu.world.client.field.spawns.NpcSpawnPoint;
 import com.msemu.world.constants.GameConstants;
 import com.msemu.world.data.FieldData;
 import com.msemu.world.data.ItemData;
+import com.msemu.world.data.ReactorData;
 import com.msemu.world.data.SkillData;
 import com.msemu.world.enums.*;
 import lombok.Getter;
@@ -112,12 +117,9 @@ public class Field {
         this.fieldId = fieldData.getId();
         this.objects = new ArrayList<>();
         this.objectSchedules = new HashMap<>();
-
         Position lBound = new Position(fieldData.getRect().getLeft(), fieldData.getRect().getTop());
         Position rBound = new Position(fieldData.getRect().getRight(), fieldData.getRect().getBottom());
         this.footholdTree = new FootholdTree(lBound, rBound);
-
-
         fieldData.getFootholds().forEach(this.footholdTree::insertFoothold);
         EnumMap<FieldObjectType, LinkedHashMap<Integer, AbstractFieldObject>> objectsMap = new EnumMap<>(FieldObjectType.class);
         EnumMap<FieldObjectType, ReentrantReadWriteLock> objectLockMap = new EnumMap<>(FieldObjectType.class);
@@ -129,6 +131,19 @@ public class Field {
         this.fieldObjectLocks = Collections.unmodifiableMap(objectLockMap);
         this.forceAtomManager = new ForceAtomManager(this);
         this.runeStoneManager = new RuneStoneManager(this);
+        fieldData.getReactorsInfo().forEach(ri -> {
+            addFieldObject(new Reactor(ri));
+        });
+        fieldData.getLife().forEach(lifeData -> {
+            if (lifeData.getType().equals("m")) {
+                addSpawnPoint(new MobSpawnPoint(lifeData));
+            } else {
+                addSpawnPoint(new NpcSpawnPoint(lifeData));
+            }
+        });
+        fieldData.getObjects().forEach(fieldObjectInfo -> {
+            getObjects().add(new FieldObj(fieldObjectInfo));
+        });
     }
 
     /**
@@ -449,9 +464,17 @@ public class Field {
         drop.setOwnerID(ownerId);
         ScheduledFuture sf = EventManager.getInstance().addEvent(() -> {
             addFieldObject(drop);
-            broadcastPacket(new LP_DropEnterField(drop, posFrom, posTo, ownerId));
+            broadcastPacket(new LP_DropEnterField(drop, posFrom, posTo, drop.getOwnerID()));
         }, Rand.get(0, 200));
         addObjectSchedule(drop, sf);
+    }
+
+    public void removeDrop(Drop drop) {
+        final int objectID = drop.getObjectId();
+        if(getDropByObjectId(objectID) != null) {
+            broadcastPacket(new LP_DropLeaveField(DropLeaveType.ByTimeOut, drop.getObjectId(), 0, (short) 0, 0, 0));
+            removeFieldObject(drop);
+        }
     }
 
     public void dropFadeOut(Drop drop, Position position) {
@@ -751,6 +774,9 @@ public class Field {
         return (Drop) getFieldObjectsByKey(FieldObjectType.DROP, objectId);
     }
 
+    public Reactor getReactorByObjectId(int objectId) {
+        return (Reactor) getFieldObjectsByKey(FieldObjectType.REACTOR, objectId);
+    }
 
     public List<Mob> getMobInRect(Rect rect) {
         return getAllMobs().stream().filter(mob -> rect.contains(mob.getPosition())).collect(Collectors.toList());
@@ -821,7 +847,7 @@ public class Field {
     public void update(LocalDateTime now) {
         getAllDrops().forEach(drop -> {
             if (drop.isExpired()) {
-
+                removeDrop(drop);
             }
         });
         int charSize = getAllCharacters().size();

@@ -28,11 +28,12 @@ import com.msemu.commons.network.packets.InPacket;
 import com.msemu.core.network.GameClient;
 import com.msemu.world.client.character.Character;
 import com.msemu.world.client.field.Field;
+import com.msemu.world.client.field.lifes.Reactor;
 
 public class CP_ReactorHit extends InPacket<GameClient> {
 
     private int objectId;
-    private int type;
+    private int hitOption;
     private int actDelay;
 
     public CP_ReactorHit(short opcode) {
@@ -42,7 +43,7 @@ public class CP_ReactorHit extends InPacket<GameClient> {
     @Override
     public void read() {
         objectId = decodeInt();
-        type = decodeInt();
+        hitOption = decodeInt();
         actDelay = decodeShort();
     }
 
@@ -50,7 +51,9 @@ public class CP_ReactorHit extends InPacket<GameClient> {
     public void runImpl() {
         final Character chr = getClient().getCharacter();
         final Field field = chr.getField();
+        final Reactor reactor = field.getReactorByObjectId(objectId);
 
-
+        //TODO check distance && actDelaY
+        reactor.hit(chr, actDelay);
     }
 }

@@ -250,7 +250,7 @@ public class Magician extends JobHandler {
                 int x = attackInfo.forcedX;
                 int y = attackInfo.forcedY;
                 aa.setPosition(new Position(x, y));
-                aa.setRect(aa.getPosition().getRectAround(si.getRects().get(0)));
+                aa.setRect(aa.getPosition().getRectAround(si.getRect(slv)));
                 aa.setDelay((short) 9);
                 chr.getField().spawnAffectedArea(aa);
                 break;
@@ -286,7 +286,7 @@ public class Magician extends JobHandler {
                     aa2.setMobOrigin((byte) 0);
                     aa2.setCharID(chr.getId());
                     aa2.setPosition(mob.getPosition());
-                    aa2.setRect(aa2.getPosition().getRectAround(si.getRects().get(0)));
+                    aa2.setRect(aa2.getPosition().getRectAround(si.getRect()));
                     chr.getField().spawnAffectedArea(aa2);
                 }
                 break;
@@ -392,7 +392,7 @@ public class Magician extends JobHandler {
                     aa.setMobOrigin((byte) 0);
                     aa.setCharID(chr.getId());
                     aa.setPosition(chr.getPosition());
-                    aa.setRect(aa.getPosition().getRectAround(si.getRects().get(0)));
+                    aa.setRect(aa.getPosition().getRectAround(si.getRect()));
                     aa.setDelay((short) 4);
                     chr.getField().spawnAffectedArea(aa);
                     break;
@@ -449,7 +449,7 @@ public class Magician extends JobHandler {
                 int x = chr.isLeft() ? chr.getPosition().getX() - i : chr.getPosition().getX() + i;
                 int y = chr.getPosition().getY();
                 aa.setPosition(new Position(x, y));
-                aa.setRect(aa.getPosition().getRectAround(chillingStepInfo.getRects().get(0)));
+                aa.setRect(aa.getPosition().getRectAround(chillingStepInfo.getRect()));
                 aa.setDelay((short) 4);
                 chr.getField().spawnAffectedArea(aa);
             }
@@ -486,7 +486,7 @@ public class Magician extends JobHandler {
         Character chr = getCharacter();
         Field field = chr.getField();
         SkillInfo si = SkillData.getInstance().getSkillInfoById(MEGIDDO_FLAME);
-        Rect rect = chr.getPosition().getRectAround(si.getRects().get(0));
+        Rect rect = chr.getPosition().getRectAround(si.getRect());
         List<Mob> mobs = field.getMobInRect(rect);
         for (Mob mob : mobs) {
             int mobID = mob.getRefImgMobID(); //
@@ -775,7 +775,7 @@ public class Magician extends JobHandler {
                     aa.setMobOrigin((byte) 1);
                     aa.setCharID(chr.getId());
                     aa.setPosition(mob.getPosition());
-                    aa.setRect(aa.getPosition().getRectAround(igniteInfo.getRects().get(0)));
+                    aa.setRect(aa.getPosition().getRectAround(igniteInfo.getRect()));
                     aa.setDelay((short) 2);
                     aa.setSkillID(IGNITE_AA);
                     chr.getField().spawnAffectedArea(aa);

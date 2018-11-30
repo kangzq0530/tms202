@@ -59,7 +59,7 @@ public class FileTime implements Serializable {
     }
 
     public FileTime(long time) {
-        lowDateTime = (int) time;
+        lowDateTime = (int) (time);
         highDateTime = (int) (time >> 32);
     }
 
@@ -68,7 +68,11 @@ public class FileTime implements Serializable {
     }
 
     public static FileTime now() {
-        return getFTFromLong(System.currentTimeMillis() * 10000L + Type.FT_UT_OFFSET.getVal()); // Mushy
+        long timestamp = System.currentTimeMillis();
+        timestamp += 50400000L;
+        timestamp *= 10000L;
+        timestamp += Type.FT_UT_OFFSET.getVal();
+        return getFTFromLong(timestamp); // Mushy
     }
 
     public static FileTime getCurrentTimeForQuest() {

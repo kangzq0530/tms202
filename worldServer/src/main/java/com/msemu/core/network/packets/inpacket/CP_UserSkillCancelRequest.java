@@ -34,8 +34,8 @@ import com.msemu.world.client.character.stats.TemporaryStatManager;
  */
 public class CP_UserSkillCancelRequest extends InPacket<GameClient> {
 
-    private int rReason;
-    private int flags[] = new int[18];
+    private int reason;
+    private int flags[];
 
     public CP_UserSkillCancelRequest(short opcode) {
         super(opcode);
@@ -43,7 +43,8 @@ public class CP_UserSkillCancelRequest extends InPacket<GameClient> {
 
     @Override
     public void read() {
-        rReason = decodeInt();
+        flags = new int[18];
+        reason = decodeInt();
         decodeByte();
         for (int i = 0; i < 8; i++) {
             flags[i] = decodeInt();
@@ -57,7 +58,7 @@ public class CP_UserSkillCancelRequest extends InPacket<GameClient> {
 
         int[] _flags = tsm.getCurrentFlags();
 
-        tsm.removeStatsBySkill(rReason);
+        tsm.removeStatsBySkill(reason);
 
         boolean check = true;
         for (int i = 0; i < 8; i++) {

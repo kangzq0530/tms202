@@ -34,9 +34,19 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  */
 public class LP_TutorMsg extends OutPacket<GameClient> {
 
-    public LP_TutorMsg() {
+    public LP_TutorMsg(int id, int duration) {
         super(OutHeader.LP_UserTutorMsg);
-        throw new NotImplementedException();
+        encodeByte(true);
+        encodeInt(id);
+        encodeInt(duration);
+    }
+
+    public LP_TutorMsg(String message, int width, int duration) {
+        super(OutHeader.LP_UserTutorMsg);
+        encodeByte(false);
+        encodeString(message);
+        encodeInt(width);
+        encodeInt(duration);
     }
 
 }

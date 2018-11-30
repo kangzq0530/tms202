@@ -97,6 +97,7 @@ public class ItemSpec implements DatSerializable {
         dos.writeUTF(script);
         dos.writeUTF(charColor);
         dos.writeUTF(hue);
+        dos.writeInt(moveTo);
     }
 
     @Override
@@ -130,6 +131,7 @@ public class ItemSpec implements DatSerializable {
         script = dis.readUTF();
         charColor = dis.readUTF();
         hue = dis.readUTF();
+        moveTo = dis.readInt();
         return this;
     }
 }

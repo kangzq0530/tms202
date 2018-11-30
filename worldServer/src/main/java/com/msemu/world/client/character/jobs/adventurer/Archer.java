@@ -209,13 +209,13 @@ public class Archer extends Beginner {
                     int x = mob.getPosition().getX();
                     int y = mob.getPosition().getY();
                     aa.setPosition(new Position(x, y));
-                    Rect rect = si.getRects().get(0);
+                    Rect rect = si.getRect(slv);
 //                    if(rect.getLeft() > fh.getX1()) {
 //                        rect.setLeft(fh.getX1());
 //                    } else if(rect.getRight() > fh.getX2()) {
 //                        rect.setRight(fh.getX2());
 //                    }
-                    aa.setRect(aa.getPosition().getRectAround(si.getRects().get(0)));
+                    aa.setRect(aa.getPosition().getRectAround(rect));
                     chr.getField().spawnAffectedArea(aa);
                 }
                 break;

@@ -27,6 +27,7 @@ package com.msemu.world.client.character;
 import com.msemu.commons.data.enums.InvType;
 import com.msemu.commons.database.Schema;
 import com.msemu.world.client.character.inventory.items.Item;
+import com.msemu.world.constants.ItemConstants;
 import com.msemu.world.enums.BodyPart;
 import lombok.Getter;
 import lombok.Setter;
@@ -36,6 +37,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 /**
@@ -59,6 +61,9 @@ public class Inventory {
     private InvType type;
     @Column(name = "slots")
     private byte slots;
+    @Getter
+    @Transient
+    private final ReentrantLock lock = new ReentrantLock();
 
     public Inventory() {
         items = new ArrayList<>();
@@ -71,17 +76,23 @@ public class Inventory {
         this.slots = (byte) slots;
     }
 
-    public void addItem(Item item) {
-        if (getItems().size() <= getSlots()) {
+    public int addItem(Item item) {
+        if (getItems().size() <= getSlots() && !getItems().contains(item)) {
             getItems().add(item);
-            item.setInvType(getType());
+            item.setInventoryId(getId());
+            item.setInvType(type);
             sortItemsByIndex();
+            return item.getBagIndex();
         }
+        return 0;
     }
 
     public void removeItem(Item item) {
         if (getItems().contains(item)) {
+            item.setBagIndex(0);
             getItems().remove(item);
+            item.setInvType(ItemConstants.getInvTypeFromItemID(item.getItemId()));
+            item.setInventoryId(0);
             sortItemsByIndex();
         }
     }
@@ -128,5 +139,25 @@ public class Inventory {
 
     private boolean isFull() {
         return getItems().size() >= getSlots();
+    }
+
+    public void doLock(Runnable runnable) {
+        doLock(runnable, false);
+    }
+    public void doLock(Runnable runnable, boolean skipLock) {
+        if(!skipLock) {
+            getLock().lock();
+            try {
+                runnable.run();
+            } finally {
+                getLock().unlock();
+            }
+        } else {
+            runnable.run();
+        }
+    }
+
+    public void clear() {
+        getItems().clear();
     }
 }

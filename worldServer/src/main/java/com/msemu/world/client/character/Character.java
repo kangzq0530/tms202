@@ -26,7 +26,6 @@ package com.msemu.world.client.character;
 
 import com.msemu.commons.data.enums.InvType;
 import com.msemu.commons.data.enums.SkillStat;
-import com.msemu.commons.data.templates.ItemTemplate;
 import com.msemu.commons.data.templates.field.FieldTemplate;
 import com.msemu.commons.data.templates.field.Portal;
 import com.msemu.commons.data.templates.skill.SkillInfo;
@@ -44,13 +43,19 @@ import com.msemu.core.network.packets.outpacket.user.LP_UserLeaveField;
 import com.msemu.core.network.packets.outpacket.user.local.LP_ChatMsg;
 import com.msemu.core.network.packets.outpacket.user.local.LP_OpenUIOnDead;
 import com.msemu.core.network.packets.outpacket.user.local.LP_SetBuffProtector;
+import com.msemu.core.network.packets.outpacket.user.local.effect.LP_UserEffectLocal;
 import com.msemu.core.network.packets.outpacket.user.remote.LP_UserAvatarModified;
 import com.msemu.core.network.packets.outpacket.user.remote.effect.LP_UserEffectRemote;
-import com.msemu.core.network.packets.outpacket.wvscontext.*;
+import com.msemu.core.network.packets.outpacket.wvscontext.LP_ChangeSkillRecordResult;
+import com.msemu.core.network.packets.outpacket.wvscontext.LP_GuildResult;
+import com.msemu.core.network.packets.outpacket.wvscontext.LP_Message;
+import com.msemu.core.network.packets.outpacket.wvscontext.LP_StatChanged;
 import com.msemu.world.Channel;
-import com.msemu.world.client.character.effect.LevelUpUserEffect;
-import com.msemu.world.client.character.effect.MultiKillMessage;
+import com.msemu.world.client.character.effects.AvatarOrientedUserEffect;
+import com.msemu.world.client.character.effects.LevelUpUserEffect;
+import com.msemu.world.client.character.effects.MultiKillMessage;
 import com.msemu.world.client.character.friends.FriendList;
+import com.msemu.world.client.character.inventory.InventoryManipulator;
 import com.msemu.world.client.character.inventory.items.Equip;
 import com.msemu.world.client.character.inventory.items.Item;
 import com.msemu.world.client.character.jobs.JobHandler;
@@ -59,6 +64,7 @@ import com.msemu.world.client.character.messages.ComboKillMessage;
 import com.msemu.world.client.character.messages.IncExpMessage;
 import com.msemu.world.client.character.messages.IncMoneyMessage;
 import com.msemu.world.client.character.messages.MoneyDropPickUpMessage;
+import com.msemu.world.client.character.miniroom.MiniRoom;
 import com.msemu.world.client.character.party.Party;
 import com.msemu.world.client.character.quest.Quest;
 import com.msemu.world.client.character.quest.QuestManager;
@@ -72,6 +78,7 @@ import com.msemu.world.client.field.Field;
 import com.msemu.world.client.field.lifes.Life;
 import com.msemu.world.client.field.lifes.Mob;
 import com.msemu.world.client.field.lifes.Pet;
+import com.msemu.world.client.field.lifes.movement.IMovement;
 import com.msemu.world.client.guild.Guild;
 import com.msemu.world.client.guild.GuildMember;
 import com.msemu.world.client.guild.operations.LoadGuildDoneResponse;
@@ -96,14 +103,13 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static com.msemu.commons.data.enums.InvType.EQUIP;
 import static com.msemu.commons.data.enums.InvType.EQUIPPED;
-import static com.msemu.world.enums.InventoryOperationType.*;
 
 /**
  * Created by Weber on 2018/3/29.
@@ -242,8 +248,6 @@ public class Character extends Life {
     @Transient
     private String portableChairMsg;
     @Transient
-    private short foothold;
-    @Transient
     private int tamingMobLevel = 1;
     @Transient
     private int tamingMobExp;
@@ -308,6 +312,10 @@ public class Character extends Life {
     private List<SkillMacro> skillMacros = new ArrayList<>();
     @Transient
     private int comboKill;
+    @Transient
+    @Getter
+    @Setter
+    private int hyperMiniGameSeed;
 
 
     // timestamps ??
@@ -461,7 +469,8 @@ public class Character extends Life {
     }
 
     public void addExp(long amount, ExpIncreaseInfo eii) {
-        CharacterStat cs = getAvatarData().getCharacterStat();
+        final CharacterStat cs = getAvatarData().getCharacterStat();
+        final Field field = getField();
         long curExp = cs.getExp();
         int level = getStat(Stat.LEVEL);
         if (level >= GameConstants.CHAR_EXP_TABLE.length - 1) {
@@ -476,14 +485,13 @@ public class Character extends Life {
             addStat(Stat.LEVEL, 1);
             getJobHandler().handleLevelUp();
             level++;
-            getField().broadcastPacket(new LP_UserEffectRemote(this, new LevelUpUserEffect()), this);
+            field.broadcastPacket(new LP_UserEffectRemote(this, new LevelUpUserEffect()), this);
         }
         cs.setExp(newExp);
         stats.put(Stat.EXP, newExp);
-        if (eii != null)
-            write(new LP_Message(new IncExpMessage(eii)));
+        if (eii != null) write(new LP_Message(new IncExpMessage(eii)));
+        write(new LP_StatChanged(stats));
         notifyChanges();
-        getClient().write(new LP_StatChanged(stats));
     }
 
     public void addStat(Stat charStat, int amount) {
@@ -580,6 +588,26 @@ public class Character extends Life {
         write(new LP_StatChanged(changedStats));
     }
 
+    public void resetStats(int str, int dex, int int_, int luk) {
+        resetStats(str, dex, int_, luk, false);
+    }
+
+    public void resetStats(final int str, final int dex, final int int_, final int luk, boolean recalculate) {
+        Map<Stat, Integer> stats = new EnumMap<>(Stat.class);
+        int totalAP = getStat(Stat.STR) + getStat(Stat.DEX) + getStat(Stat.INT) + getStat(Stat.LUK) + getStat(Stat.AP);
+        if (recalculate) {
+            totalAP = GameConstants.calcMaxRemainingAP(getLevel(), getJob());
+        }
+        totalAP -= (str + dex + int_ + luk);
+        stats.put(Stat.STR, str);
+        stats.put(Stat.DEX, dex);
+        stats.put(Stat.INT, int_);
+        stats.put(Stat.LUK, luk);
+        stats.put(Stat.AP, totalAP);
+        setStat(stats);
+        write(new LP_UserEffectLocal(new AvatarOrientedUserEffect("Effect/OnUserEff.img/RecordClear_BT/clear")));
+    }
+
     public int getHp() {
         return getStat(Stat.HP);
     }
@@ -637,53 +665,6 @@ public class Character extends Life {
         }
     }
 
-    /**
-     * Consumes a single {@link Item} from this Char's {@link Inventory}. Will unregisterParty the Item if it has a quantity of 1.
-     *
-     * @param item The Item to consume, which is currently in the Char's inventory.
-     */
-    public void consumeItem(Item item) {
-        Inventory inventory = getInventoryByType(item.getInvType());
-        // data race possible
-        if (item.getQuantity() <= 1 && !ItemConstants.isThrowingItem(item.getItemId())) {
-            item.setQuantity(0);
-            inventory.removeItem(item);
-            write(new LP_InventoryOperation(true, false,
-                    REMOVE, item, item.getBagIndex()));
-        } else {
-            item.setQuantity(item.getQuantity() - 1);
-            write(new LP_InventoryOperation(true, false,
-                    UPDATE, item, item.getBagIndex()));
-        }
-        this.renewBulletIDForAttack();
-    }
-
-    /**
-     * Consumes an item of this Char with the given id. Will do nothing if the Char doesn't have the Item.
-     * Only works for non-Equip (i.e., type is not EQUIPPED or EQUIP, CASH is fine) itemTemplates.
-     * Calls {@link #consumeItem(Item)} if an Item is found.
-     *
-     * @param id       The Item's id.
-     * @param quantity The amount to consume.
-     */
-    public void consumeItem(int id, int quantity) {
-        quantity -= 1;
-        Item checkItem = ItemData.getInstance().createItem(id);
-        Item item = getInventoryByType(checkItem.getInvType()).getItemByItemID(id);
-        item.setQuantity(quantity);
-        consumeItem(item);
-    }
-
-    public boolean hasItem(int itemID) {
-        return getInventories().stream().anyMatch(inv -> inv.containsItem(itemID));
-    }
-
-    public boolean hasItemCount(int itemID, int quantity) {
-        return getInventories().stream().anyMatch(inv -> {
-            Item item = inv.getItemByItemID(itemID);
-            return item != null && item.getQuantity() >= quantity;
-        });
-    }
 
     public int getCurrentMaxHp() {
         return getCharacterLocalStat().getMaxHp();
@@ -694,10 +675,14 @@ public class Character extends Life {
     }
 
     public void addMoney(long amount) {
-        addMoney(amount, true);
+        addMoney(amount, true, true);
     }
 
-    public void addMoney(long amount, boolean showInChat) {
+    public void addMoney(long amount, boolean show) {
+        addMoney(amount, show, true);
+    }
+
+    public void addMoney(long amount, boolean show, boolean showInChat) {
         CharacterStat cs = getAvatarData().getCharacterStat();
         long money = cs.getMoney();
         long newMoney = money + amount;
@@ -708,6 +693,8 @@ public class Character extends Life {
             stats.put(Stat.MONEY, newMoney);
             write(new LP_StatChanged(stats));
         }
+        if (!show)
+            return;
         if (showInChat) {
             write(new LP_Message(new IncMoneyMessage(amount)));
         } else {
@@ -742,42 +729,23 @@ public class Character extends Life {
         return i != null ? i.getItemId() : 0;
     }
 
-    public void addItemToInventory(InvType type, Item item, boolean hasCorrectBagIndex) {
+    public void giveItem(Item item) {
         getQuestManager().handleItemGain(item);
-        Inventory inventory = getInventoryByType(type);
-        if (inventory != null) {
-            Item existingItem = inventory.getItems().stream()
-                    .filter(_item -> _item.getDateExpire().equal(item.getDateExpire()) &&
-                            _item.getItemId() == item.getItemId()).findFirst().orElse(null);
-            if (existingItem != null && existingItem.getInvType().isStackable()) {
-                existingItem.addQuantity(item.getQuantity());
-                write(new LP_InventoryOperation(true, false,
-                        UPDATE, existingItem, (short) existingItem.getBagIndex()));
-            } else {
-                item.setInventoryId(inventory.getId());
-                if (!hasCorrectBagIndex) {
-                    item.setBagIndex(inventory.getFirstOpenSlot());
-                }
-                inventory.addItem(item);
-                if (item.getId() == 0) {
-                    DatabaseFactory.getInstance().saveToDB(item);
-                }
-                write(new LP_InventoryOperation(true, false,
-                        ADD, item, item.getBagIndex()));
-            }
-            this.renewBulletIDForAttack();
-        }
+        InventoryManipulator.add(this, item);
     }
 
-    public void addItemToInventory(Item item) {
-        addItemToInventory(item.getInvType(), item, false);
+    public void giveItem(int itemID, int quantity, int period) {
+        Item item = ItemData.getInstance().createItem(itemID);
+        if (item == null)
+            return;
+        if (period > 0)
+            item.setDateExpire(FileTime.now().plus(period, FileTimeUnit.DAY));
+        if (item.getType() != Item.Type.EQUIP)
+            item.setQuantity(quantity);
+        giveItem(item);
     }
 
-    /**
-     * Sends a message to this Char with a default colour {@link ChatMsgType#MOB}.
-     *
-     * @param msg The message to display.
-     */
+
     public void chatMessage(String msg) {
         chatMessage(ChatMsgType.NOTICE, msg);
     }
@@ -806,7 +774,7 @@ public class Character extends Life {
             oldSkill.setCurrentLevel(skill.getCurrentLevel());
             oldSkill.setMasterLevel(skill.getMasterLevel());
         }
-        write(new LP_ChangeSkillRecordResult(getSkills(), true,
+        write(new LP_ChangeSkillRecordResult(getVisibleSkills(), true,
                 false, false, false));
     }
 
@@ -864,6 +832,15 @@ public class Character extends Life {
             }
         }
         return createIfNull ? createAndReturnSkill(id) : null;
+    }
+
+
+    public List<Skill> getVisibleSkills() {
+        return getSkills().stream()
+                .filter(skill -> {
+                    SkillInfo si = SkillData.getInstance().getSkillInfoById(skill.getSkillId());
+                    return si != null && !si.isInvisible();
+                }).collect(Collectors.toList());
     }
 
     /**
@@ -1194,10 +1171,11 @@ public class Character extends Life {
         if (mask.isInMask(DBChar.SKILL_RECORD)) {
             boolean encodeSkills = true;
             outPacket.encodeByte(encodeSkills);
+            List<Skill> skills = getVisibleSkills();
             if (encodeSkills) {
-                short size = (short) getSkills().size();
+                short size = (short) skills.size();
                 outPacket.encodeShort(size);
-                for (Skill skill : getSkills()) {
+                for (Skill skill : skills) {
                     outPacket.encodeInt(skill.getSkillId());
                     outPacket.encodeInt(skill.getCurrentLevel());
                     outPacket.encodeFT(skill.getDateExpire());
@@ -1213,7 +1191,7 @@ public class Character extends Life {
                 final Map<Integer, Integer> skillsWithoutMax = new LinkedHashMap<>();
                 final Map<Integer, FileTime> skillsWithExpiration = new LinkedHashMap<>();
                 final Map<Integer, Integer> skillsWithMax = new LinkedHashMap<>();
-                for (Skill skill : getSkills()) {
+                for (Skill skill : skills) {
                     skillsWithoutMax.put(skill.getSkillId(), skill.getCurrentLevel());
                     if (skill.getDateExpire() != null && skill.getDateExpire().getLongValue() !=
                             FileTime.Type.PERMANENT.getVal()) {
@@ -1512,7 +1490,7 @@ public class Character extends Life {
             outPacket.encodeLong(FileTime.now().getLongValue() + 86400000L);
             outPacket.encodeByte(MapleJob.is蒼龍俠客(getJob()) && MapleJob.is幻獸師(getJob()));
 
-            outPacket.encodeByte(1);
+            outPacket.encodeByte(0);
         }
 
         if (mask.isInMask(DBChar.OXSystem)) {
@@ -1778,9 +1756,13 @@ public class Character extends Life {
             getParty().updateFull();
             setParty(null);
         }
+        if (getMiniRoom() != null) {
+            getMiniRoom().close();
+            setMiniRoom(null);
+        }
         PartyService.getInstance().removeInvitation(this);
-        DatabaseFactory.getInstance().saveToDB(this);
         getClient().getChannelInstance().removeCharacter(this);
+        DatabaseFactory.getInstance().saveToDB(this);
     }
 
     public int getTotalChuc() {
@@ -1805,10 +1787,6 @@ public class Character extends Life {
 
     public void enableActions() {
         write(new LP_StatChanged());
-    }
-
-    public void dropMessage() {
-
     }
 
     public Field getOrCreateFieldByCurrentInstanceType(int fieldID) {
@@ -1852,33 +1830,35 @@ public class Character extends Life {
         }
     }
 
+    public void consumeItem(int itemId) {
+        consumeItem(itemId, 1);
+    }
+
+    public void consumeItem(int itemId, int quantity) {
+        InvType invType = ItemConstants.getInvTypeFromItemID(itemId);
+        Item item = getInventoryByType(invType).getItemByItemID(itemId);
+        consumeItem(item, quantity);
+    }
+
+    public void consumeItem(final Item item, int quantity) {
+        InventoryManipulator.consume(this, item, quantity);
+    }
+
+    public boolean hasItem(int itemID) {
+        return getInventories().stream().anyMatch(inv -> inv.containsItem(itemID));
+    }
+
+    public boolean hasItemCount(int itemID, int quantity) {
+        return getInventories().stream().anyMatch(inv -> {
+            Item item = inv.getItemByItemID(itemID);
+            return item != null && item.getQuantity() >= quantity;
+        });
+    }
+
     public boolean canHold(final int itemID, final int quantity) {
-        if (ItemConstants.isEquip(itemID)) {
-            return getEquipInventory().getSlots() > getEquipInventory().getItems().size();
-        } else {
-            ItemTemplate template = ItemData.getInstance().getItemInfo(itemID);
-            Inventory inv = getInventoryByType(template.getInvType());
-            Item existsItem = inv.getItemByItemID(itemID);
-            return (existsItem != null && existsItem.getQuantity() + 1 < template.getSlotMax())
-                    || inv.getSlots() > inv.getItems().size();
-        }
+        return InventoryManipulator.canHold(this, itemID, quantity);
     }
 
-
-    public void giveItem(int itemID, int quantity, int period) {
-        double isEquip = Math.floor((itemID / 1000000));
-        Item item = ItemData.getInstance().createItem(itemID);
-        if (item == null)
-            return;
-        if (period > 0)
-            item.setDateExpire(FileTime.now().plus(period, FileTimeUnit.DAY));
-        if (item.getType() == Item.Type.EQUIP) {  //Equip
-            addItemToInventory(item.getInvType(), item, false);
-        } else {    //Item
-            item.setQuantity(quantity);
-            addItemToInventory(item);
-        }
-    }
 
     @Override
     public FieldObjectType getFieldObjectType() {
@@ -1932,15 +1912,16 @@ public class Character extends Life {
     }
 
     public void controlMob(Mob mob, int controllerLevel) {
-        mob.setControllerLevel(controllerLevel);
-        mob.setController(this);
         getControlledLock().writeLock().lock();
         try {
+            mob.setControllerLevel(controllerLevel);
+            mob.setController(this);
             controlledMobs.add(mob);
+            client.write(new LP_MobChangeController(mob, false, true));
+
         } finally {
             getControlledLock().writeLock().unlock();
         }
-        client.write(new LP_MobChangeController(mob, false, true));
     }
 
     public boolean isVisibleFieldObject(AbstractFieldObject object) {
@@ -2009,7 +1990,7 @@ public class Character extends Life {
     public void attackMob(AttackInfo attackInfo) {
         final List<Mob> killedMob = new ArrayList<>();
         final Skill skill = this.getSkill(attackInfo.getSkillId());
-        final SkillInfo si = skill != null ? SkillData.getInstance().getSkillInfoById(attackInfo.getSkillId()) : null;
+        final SkillInfo si = SkillData.getInstance().getSkillInfoById(attackInfo.getSkillId());
         attackInfo.getMobAttackInfo().forEach(mai -> {
             Mob mob = field.getMobByObjectId(mai.getObjectID());
             if (mob != null) {
@@ -2022,10 +2003,9 @@ public class Character extends Life {
                     setComboKill(getComboKill() + 1);
                     this.write(new LP_Message(new ComboKillMessage(getComboKill(), mob.getObjectId())));
                 }
-                this.chatMessage(ChatMsgType.GAME_DESC, String.format("近距離攻擊: 技能: %s(%d) 怪物: %s(%d)  HP: (%d/%d) MP: (%d/%d) 總攻擊: %d 座標: %s",
+                this.chatMessage(ChatMsgType.GAME_DESC, String.format("攻擊: 技能: %s(%d) 怪物: %s(%d)  HP: (%d/%d) MP: (%d/%d) 總攻擊: %d 座標: %s",
                         (si != null ? si.getName() : "普通攻擊"), attackInfo.getSkillId(), mob.getTemplate().getName(),
                         mob.getTemplateId(), mob.getHp(), mob.getMaxHp(), mob.getMp(), mob.getMaxHp(), totalDamage, attackInfo.getPos().toString()));
-
             }
         });
 
@@ -2080,7 +2060,6 @@ public class Character extends Life {
             setStat(Stat.HP, getCurrentMaxHp() / 100 * recoveryHpR);
             setAction((byte) 0);
             tsm.removeStat(buff, true);
-            // TODO cooldown
         });
 
         final int hp = getStat(Stat.HP);
@@ -2131,7 +2110,7 @@ public class Character extends Life {
         tsm.removeStat(CharacterTemporaryStat.MaxMP, true);
 
         if (buffProtectorItem != null) {
-            consumeItem(buffProtectorItem);
+            consumeItem(buffProtectorItem.getItemId(), 1);
             write(new LP_SetBuffProtector(buffProtectorItem, true));
         } else {
             tsm.getCurrentStats().keySet().forEach(cts -> tsm.removeStat(cts, true));
@@ -2145,6 +2124,12 @@ public class Character extends Life {
         this.write(new LP_ChatMsg(type, "[" + caption + "] " + text));
     }
 
+    @Override
+    public void move(List<IMovement> movements) {
+        super.move(movements);
+        this.getField().updateCharacterPosition(this);
+        this.getField().checkCharInAffectedAreas(this);
+    }
 }
 
 

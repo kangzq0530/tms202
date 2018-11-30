@@ -641,7 +641,7 @@ public enum OutHeader implements IHeader {
     LP_FIELDATTACKOBJ_REMOVE_BYLIST,
     LP_FIELDATTACKOBJ_SETATTACK,
     LP_DamageSkinSaveResult,
-    LP_STRENGTHEN_UI,
+    LP_StrengthenUI,
     LP_LEVEL_UI,
     LP_DAY_OF_CHRONOSPHERE,
     LP_ERROR_CHRONOSPHERE,
@@ -833,7 +833,14 @@ public enum OutHeader implements IHeader {
             case "LP_UserMeleeAttack":
             case "LP_MobLeaveField":
             case "LP_UserMove":
-
+            case "LP_UserChat":
+            case "LP_DropEnterField":
+            case "LP_Message":
+            case "LP_ResultInstanceTable":
+            case "LP_NpcEnterField":
+            case "LP_NpcChangeController":
+            case "LP_InventoryOperation":
+            case "LP_DropLeaveField":
                 return true;
             default:
                 return false;

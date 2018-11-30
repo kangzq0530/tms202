@@ -24,6 +24,7 @@
 
 package com.msemu.commons.network;
 
+import com.msemu.commons.database.DatabaseFactory;
 import com.msemu.commons.enums.InHeader;
 import com.msemu.commons.network.crypt.ICipher;
 import com.msemu.commons.network.packets.InPacket;
@@ -137,7 +138,7 @@ public class Connection<TClient extends Client<TClient>> extends ChannelInboundH
                         inPacket.read();
                         inPacket.runImpl();
                     } catch (Exception e) {
-                        log.error(String.format("Created packet [{}] has not been read.\n\t[All]\t%s\n\t[Now]\t%s\n", inPacket.getClass().getSimpleName(),
+                        log.error(String.format("Created packet [%s] has not been read.\n\t[All]\t%s\n\t[Now]\t%s\n", inPacket.getClass().getSimpleName(),
                                 inPacket.toString(), inPacket.toString(false)), inPacket.getClass().getSimpleName(), e);
                         this.close();
                     }

@@ -26,9 +26,12 @@ package com.msemu.world.client.field.lifes;
 
 import com.msemu.commons.network.packets.OutPacket;
 import com.msemu.core.network.GameClient;
+import com.msemu.world.client.field.lifes.movement.IMovement;
 import com.msemu.world.enums.FieldObjectType;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 /**
  * Created by Weber on 2018/4/13.
@@ -79,6 +82,11 @@ public class Pet extends Life {
 
     @Override
     public void outScreen(GameClient client) {
+
+    }
+
+    @Override
+    public void move(List<IMovement> movements) {
 
     }
 }

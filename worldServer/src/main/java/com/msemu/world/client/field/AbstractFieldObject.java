@@ -45,6 +45,10 @@ public abstract class AbstractFieldObject {
     @Setter
     private int objectId;
 
+    @Getter
+    @Setter
+    private Field field;
+
     public abstract FieldObjectType getFieldObjectType();
 
     public abstract void enterScreen(GameClient client);

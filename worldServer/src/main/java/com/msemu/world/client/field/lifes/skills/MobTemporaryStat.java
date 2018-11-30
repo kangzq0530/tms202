@@ -129,85 +129,10 @@ public class MobTemporaryStat {
         }
         for (Map.Entry<MobBuffStat, Option> entry : getNewStatVals().entrySet()) {
             MobBuffStat mobStat = entry.getKey();
-            switch (mobStat) {
-                case PAD:
-                case PDR:
-                case MAD:
-                case MDR:
-                case ACC:
-                case EVA:
-                case Speed:
-                case Stun:
-                case Freeze:
-                case Poison:
-                case Seal:
-                case Darkness:
-                case PowerUp:
-                case MagicUp:
-                case PGuardUp:
-                case MGuardUp:
-                case PImmune:
-                case MImmune:
-                case Web:
-                case HardSkin:
-                case Ambush:
-                case Venom:
-                case Blind:
-                case SealSkill:
-                case Dazzle:
-                case PCounter:
-                case MCounter:
-                case RiseByToss:
-                case BodyPressure:
-                case Weakness:
-                case Showdown:
-                case MagicCrash:
-                case DamagedElemAttr:
-                case Dark:
-                case Mystery:
-                case AddDamParty:
-                case HitCriDamR:
-                case Fatality:
-                case Lifting:
-                case DeadlyCharge:
-                case Smite:
-                case AddDamSkill:
-                case Incizing:
-                case DodgeBodyAttack:
-                case DebuffHealing:
-                case AddDamSkill2:
-                case BodyAttack:
-                case TempMoveAbility:
-                case FixDamRBuff:
-                case ElementDarkness:
-                case AreaInstallByHit:
-                case BMageDebuff:
-                case JaguarProvoke:
-                case JaguarBleeding:
-                case DarkLightning:
-                case PinkbeanFlowerPot:
-                case BattlePvPHelenaMark:
-                case PsychicLock:
-                case PsychicLockCoolTime:
-                case PsychicGroundMark:
-                case PowerImmune:
-                case PsychicForce:
-                case MultiPMDR:
-                case ElementResetBySummon:
-                case BahamutLightElemAddDam:
-                case BossPropPlus:
-                case MultiDamSkill:
-                case RWLiftPress:
-                case RWChoppingHammer:
-                case TimeBomb:
-                case Treasure:
-                case AddEffect:
-                case Invincible:
-                case Explosion:
-                case HangOver:
-                    outPacket.encodeInt(getNewOptionsByMobStat(mobStat).nOption);
-                    outPacket.encodeInt(getNewOptionsByMobStat(mobStat).rOption);
-                    outPacket.encodeShort(getNewOptionsByMobStat(mobStat).tOption / 500);
+            if (mobStat.getBitNumber() < MobBuffStat.BurnedInfo.getBitNumber()) {
+                outPacket.encodeInt(getNewOptionsByMobStat(mobStat).nOption);
+                outPacket.encodeInt(getNewOptionsByMobStat(mobStat).rOption);
+                outPacket.encodeShort(getNewOptionsByMobStat(mobStat).tOption / 500);
             }
         }
         if (hasNewMobStat(PDR)) {
@@ -262,9 +187,9 @@ public class MobTemporaryStat {
         }
 
         if (hasNewMobStat(Smite)) {
-            outPacket.encodeInt(getNewOptionsByMobStat(Fatality).wOption);
-            outPacket.encodeInt(getNewOptionsByMobStat(Fatality).uOption);
-            outPacket.encodeInt(getNewOptionsByMobStat(Fatality).pOption);
+            outPacket.encodeInt(getNewOptionsByMobStat(Smite).wOption);
+            outPacket.encodeInt(getNewOptionsByMobStat(Smite).uOption);
+            outPacket.encodeInt(getNewOptionsByMobStat(Smite).pOption);
         }
         if (hasNewMobStat(BMageDebuff)) {
             outPacket.encodeInt(getNewOptionsByMobStat(BMageDebuff).cOption);
@@ -279,10 +204,10 @@ public class MobTemporaryStat {
             outPacket.encodeInt(getNewOptionsByMobStat(MultiPMDR).cOption);
         }
         if (hasNewMobStat(MBS62)) {
-            outPacket.encodeInt(getNewOptionsByMobStat(MultiPMDR).nOption);
-            outPacket.encodeInt(getNewOptionsByMobStat(MultiPMDR).rOption);
-            outPacket.encodeInt(getNewOptionsByMobStat(MultiPMDR).tOption);
-            outPacket.encodeInt(getNewOptionsByMobStat(MultiPMDR).cOption);
+            outPacket.encodeInt(getNewOptionsByMobStat(MBS62).nOption);
+            outPacket.encodeInt(getNewOptionsByMobStat(MBS62).rOption);
+            outPacket.encodeInt(getNewOptionsByMobStat(MBS62).tOption);
+            outPacket.encodeInt(getNewOptionsByMobStat(MBS62).cOption);
         }
 
         if (hasNewMobStat(ElementResetBySummon)) {
@@ -562,7 +487,10 @@ public class MobTemporaryStat {
         addStatOptionsAndBroadcast(MobBuffStat.BurnedInfo, new Option());
         ScheduledFuture sf = EventManager.getInstance().addEvent(() -> removeBurnedInfo(charId, true), time);
         ScheduledFuture burn = EventManager.getInstance().addFixedRateEvent(
-                () -> getMob().damage((long) bi.getDamage()), 0, bi.getInterval(), bi.getDotCount());
+                () -> {
+                    getMob().damage((long) bi.getDamage());
+
+                }, 0, bi.getInterval(), bi.getDotCount());
         getBurnCancelSchedules().put(charId, sf);
         getBurnSchedules().put(charId, burn);
     }

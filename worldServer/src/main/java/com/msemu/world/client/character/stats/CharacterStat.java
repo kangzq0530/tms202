@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 /**
@@ -181,6 +182,9 @@ public class CharacterStat {
     @Transient
     @Getter
     private AtomicReference<CharacterStatus> status = new AtomicReference<>(CharacterStatus.ALIVE);
+    @Transient
+    @Getter
+    private ReentrantLock moneyLock = new ReentrantLock();
 
     public CharacterStat() {
         extendSP = new ExtendSP(5);
@@ -208,7 +212,7 @@ public class CharacterStat {
         outPacket.encodeByte(getSkin());
         outPacket.encodeInt(getFace());
         outPacket.encodeInt(getHair());
-        outPacket.encodeByte(-1/*getMixBaseHairColor()*/);
+        outPacket.encodeByte(getMixBaseHairColor());
         outPacket.encodeByte(getMixAddHairColor());
         outPacket.encodeByte(getMixHairBaseProb());
         outPacket.encodeByte(getLevel());
@@ -296,5 +300,13 @@ public class CharacterStat {
                         .before(FileTime.now())).collect(Collectors.toList());
     }
 
+    public void doMoneyLock(Runnable runnable) {
+        getMoneyLock().lock();
+        try {
+            runnable.run();
+        } finally {
+            getMoneyLock().unlock();
+        }
+    }
 }
 

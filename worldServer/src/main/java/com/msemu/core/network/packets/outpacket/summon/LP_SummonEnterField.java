@@ -55,10 +55,10 @@ public class LP_SummonEnterField extends OutPacket<GameClient> {
         encodeByte(summon.isBeforeFirstAttack());
         encodeInt(summon.getTemplateId());
         encodeInt(summon.getBulletID());
-        AvatarLook al = summon.getAvatarLook();
-        encodeByte(al != null);
-        if (al != null) {
-            al.encode(this);
+        AvatarLook avatarLook = summon.getAvatarLook();
+        encodeByte(avatarLook != null);
+        if (avatarLook != null) {
+            avatarLook.encode(this);
         }
         if (summon.getSkillID() == 35111002) { // Tesla Coil
             encodeByte(summon.getTeslaCoilState());

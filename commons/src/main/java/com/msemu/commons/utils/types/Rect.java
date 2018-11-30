@@ -155,12 +155,16 @@ public class Rect {
      * rect.top < pos.y < rect.bottom.
      */
     public boolean hasPositionInside(Position position) {
-        if (position == null) {
-            return false;
-        }
         int x = position.getX();
         int y = position.getY();
         return x >= left && y >= top && x <= right && y <= bottom;
+    }
+
+    public boolean hasPositionInside(Position center, Position position)
+    {
+        int x = position.getX();
+        int y = position.getY();
+        return x >= center.getX() + left && y >= center.getY() + top && x <=  center.getX() + right && y <= center.getY() + bottom;
     }
 
     /**

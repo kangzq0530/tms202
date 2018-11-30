@@ -32,7 +32,7 @@ import com.msemu.core.network.packets.outpacket.user.local.effect.LP_UserEffectL
 import com.msemu.core.network.packets.outpacket.user.remote.effect.LP_UserEffectRemote;
 import com.msemu.core.network.packets.outpacket.wvscontext.LP_Message;
 import com.msemu.world.client.character.Character;
-import com.msemu.world.client.character.effect.QuestCompleteUserEffect;
+import com.msemu.world.client.character.effects.QuestCompleteUserEffect;
 import com.msemu.world.client.character.inventory.items.Item;
 import com.msemu.world.client.character.messages.QuestRecordExMessage;
 import com.msemu.world.client.character.messages.QuestRecordMessage;
@@ -149,7 +149,7 @@ public class QuestManager {
         quest.setStatus(STARTED);
         getCharacter().write(new LP_Message(new QuestRecordMessage(quest)));
         getCharacter().chatMessage(MOB, String.format("[任務資訊] 已接受任務 : %s(%d) ", qi != null ? qi.getName() : "自定義任務", quest.getQRKey()));
-        if (qi != null && qi.isAutoComplete())
+        if (qi != null && qi.isAutoPreComplete())
             completeQuest(questID);
     }
 
@@ -199,9 +199,10 @@ public class QuestManager {
         getCharacter().chatMessage(MOB, String.format("[任務資訊] 已完成任務 : %s(%d) ", qi.getName(), quest.getQRKey()));
         getCharacter().write(new LP_Message(new QuestRecordMessage(quest)));
         getCharacter().write(new LP_UserEffectLocal(new QuestCompleteUserEffect()));
-        getCharacter().getField().broadcastPacket(new LP_UserEffectRemote(getCharacter(), new QuestCompleteUserEffect()));
-        for (QuestProgressItemRequirement qpir : quest.getItemReqs()) {
-            getCharacter().consumeItem(qpir.getItemID(), qpir.getRequiredCount());
+        getCharacter().getField().broadcastPacket(new LP_UserEffectRemote(getCharacter(), new QuestCompleteUserEffect()), getCharacter());
+        for (QuestProgressItemRequirement questRequireInfo : quest.getItemReqs()) {
+            if (questRequireInfo.getRequiredCount() > 0)
+                getCharacter().consumeItem(questRequireInfo.getItemID(), questRequireInfo.getRequiredCount());
         }
         for (IQuestAction reward : questData.getCompleteActionsById(questID)) {
             reward.action(character);

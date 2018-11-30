@@ -25,19 +25,20 @@
 package com.msemu.world.client.field.lifes;
 
 
+import com.msemu.commons.utils.types.Position;
 import com.msemu.world.client.field.AbstractFieldObject;
 import com.msemu.world.client.field.Field;
+import com.msemu.world.client.field.lifes.movement.IMovement;
+import com.msemu.world.client.field.lifes.movement.MovementBase;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 /**
  * Created by Weber on 2018/5/13.
  */
 public abstract class Life extends AbstractFieldObject {
-
-    @Getter
-    @Setter
-    private Field field;
 
     @Getter
     @Setter
@@ -51,5 +52,16 @@ public abstract class Life extends AbstractFieldObject {
         return getAction() % 2 != 0;
     }
 
+    public  void move(List<IMovement> movements){
+        for (IMovement m : movements) {
+            Position pos = m.getPosition();
+            this.setFh(m.getFh());
+            this.setAction(m.getMoveAction());
+            if (pos != null) {
+                this.setOldPosition(this.getPosition());
+                this.setPosition(pos);
+                            }
+        }
+    }
 
 }

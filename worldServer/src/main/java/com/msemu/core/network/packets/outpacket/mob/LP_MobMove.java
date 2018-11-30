@@ -52,7 +52,7 @@ public class LP_MobMove extends OutPacket<GameClient> {
         encodePosition(msai.getOldPos());
         encodePosition(msai.getOldVPos());
         encodeByte(movements.size());
-        movements.stream().forEach(m -> m.encode(this));
+        movements.forEach(m -> m.encode(this));
         encodeByte(0);
         encodeByte(0);
     }

@@ -31,8 +31,10 @@ import com.msemu.login.client.character.items.Equip;
 import com.msemu.login.client.character.items.Item;
 import com.msemu.login.client.character.quest.QuestManager;
 import com.msemu.login.client.character.skill.Skill;
+import com.msemu.login.constants.ItemConstants;
 import com.msemu.login.constants.MapleJob;
 import com.msemu.login.data.ItemData;
+import com.msemu.login.enums.BodyPart;
 import com.msemu.login.enums.CharCreateItemFlag;
 import lombok.Getter;
 import lombok.Setter;
@@ -148,6 +150,8 @@ public class Character {
         Character newChar = new Character();
         AvatarData avatarData = newChar.getAvatarData();
         AvatarLook look = avatarData.getAvatarLook();
+        CharacterStat stat = new CharacterStat(charName, jobId);
+        newChar.getAvatarData().setCharacterStat(stat);
         newChar.setAccId(accId);
 
         look.setGender(gender);
@@ -172,6 +176,8 @@ public class Character {
                 look.setHair(37467);
         }
 
+        DatabaseFactory.getInstance().saveToDB(newChar);
+
         List<Integer> hairEquips = new ArrayList<>();
 
         creatData.forEach((flag, itemId) -> {
@@ -192,8 +198,6 @@ public class Character {
 
         look.setHairEquips(hairEquips);
 
-
-        CharacterStat stat = new CharacterStat(charName, jobId);
         stat.setSubJob(subJob);
         stat.setMoney(0);
         stat.setLevel(1);
@@ -213,7 +217,7 @@ public class Character {
         stat.setGender(gender);
         stat.setFace(creatData.get(CharCreateItemFlag.臉型));
         stat.setHair(creatData.get(CharCreateItemFlag.髮型));
-        newChar.getAvatarData().setCharacterStat(stat);
+
         return newChar;
     }
 

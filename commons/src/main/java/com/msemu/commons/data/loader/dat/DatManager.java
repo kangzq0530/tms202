@@ -40,4 +40,5 @@ public class DatManager {
     public static final String Mob = "mob.dat";
     public static final String ItemOption = "itemOption.dat";
     public static final String ForbiddenName = "forbiddenName.dat";
+    public static final String Reactor = "reactors.dat";
 }

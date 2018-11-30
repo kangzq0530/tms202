@@ -46,10 +46,10 @@ import java.util.concurrent.locks.ReentrantLock;
 public class ScriptManager {
     public static final Logger log = LoggerFactory.getLogger(ScriptManager.class);
 
-    public static final String SCRIPT_ENGINE_EXTENSION = ".py";
+    public static final String SCRIPT_ENGINE_EXTENSION = ".js";
     public static final String QUEST_START_SCRIPT_END_TAG = "s";
     public static final String QUEST_COMPLETE_SCRIPT_END_TAG = "e";
-    private static final String SCRIPT_ENGINE_NAME = "python";
+    private static final String SCRIPT_ENGINE_NAME = "nashorn";
     private static final String DEFAULT_SCRIPT = "undefined";
 
     @Getter
@@ -150,8 +150,7 @@ public class ScriptManager {
                     ScriptInteraction cm = getScriptInfo().getInteraction();
                     if (lastType.getValue() != cm.getNpcScriptInfo().getLastMessageType().getValue()) {
                         stopScriptWithoutLock();
-                    } else if (cm.getNpcScriptInfo().getLastMessageType() == NpcMessageType.NM_SAY && !cm.getNpcScriptInfo().isPrev()
-                            && !cm.getNpcScriptInfo().isNext()) {
+                    } else if (action < 0) {
                         stopScriptWithoutLock();
                     } else {
                         if (getScriptInfo() != null) {

@@ -168,7 +168,6 @@ public class FieldTemplateLoader extends WzDataLoader<Map<Integer, FieldTemplate
                     } else if (propName.equalsIgnoreCase("foothold")) {
                         Position lBound = new Position(Integer.MAX_VALUE, Integer.MAX_VALUE);
                         Position uBound = new Position(Integer.MIN_VALUE, Integer.MIN_VALUE);
-                        ;
                         prop.getProperties().stream()
                                 .map(e -> (WzSubProperty) e)
                                 .forEach(layerProp -> {
@@ -226,8 +225,8 @@ public class FieldTemplateLoader extends WzDataLoader<Map<Integer, FieldTemplate
                                     .filter(p -> p.propType() == WzPropertyType.SubProperty)
                                     .map(p -> (WzSubProperty) p)
                                     .forEach(lifeProp -> {
-                                        LifeData lifeData = loadLife(lifeProp);
-                                        template.addLifeData(lifeData);
+                                        LifeInField lifeInField = loadLife(lifeProp);
+                                        template.addLifeData(lifeInField);
                                     });
                         } else {
                             prop.getProperties()
@@ -240,8 +239,8 @@ public class FieldTemplateLoader extends WzDataLoader<Map<Integer, FieldTemplate
                                                 .stream()
                                                 .map(p -> (WzSubProperty) p)
                                                 .forEach(lifeProp -> {
-                                                    LifeData lifeData = loadLife(lifeProp);
-                                                    template.addLifeData(category, lifeData);
+                                                    LifeInField lifeInField = loadLife(lifeProp);
+                                                    template.addLifeData(category, lifeInField);
                                                 });
                                     });
                         }
@@ -283,6 +282,29 @@ public class FieldTemplateLoader extends WzDataLoader<Map<Integer, FieldTemplate
                                     });
                                     template.addPortal(pt);
                                 });
+                    } else if (propName.equalsIgnoreCase("reactor")) {
+                        ReactorInField reactorInField = new ReactorInField();
+                        prop.getProperties().stream()
+                        .map(p -> (WzSubProperty)p)
+                        .forEach(reSubProp -> {
+                            reSubProp.getProperties().forEach(reProp -> {
+                                String rePropName = reProp.getName();
+                                if (rePropName.equalsIgnoreCase("id")) {
+                                    reactorInField.setId(Integer.parseInt(reProp.getString()));
+                                } else if (rePropName.equalsIgnoreCase("x")) {
+                                    reactorInField.setX(reProp.getInt());
+                                } else if (rePropName.equalsIgnoreCase("y")) {
+                                    reactorInField.setY(reProp.getInt());
+                                } else if (rePropName.equalsIgnoreCase("f")) {
+                                    reactorInField.setF(reProp.getInt());
+                                } else if (rePropName.equalsIgnoreCase("reactorTime")) {
+                                    reactorInField.setReactorTime(reProp.getInt());
+                                } else if (rePropName.equalsIgnoreCase("name")) {
+                                    reactorInField.setName(reProp.getString());
+                                }
+                            });
+                            template.getReactorsInfo().add(reactorInField);
+                        });
                     } else if (propName.equalsIgnoreCase("monsterCarnival")) {
                         MonsterCarnivalInfo carnivalInfo = new MonsterCarnivalInfo();
                         prop.getProperties().forEach(mcSubProp -> {
@@ -589,59 +611,59 @@ public class FieldTemplateLoader extends WzDataLoader<Map<Integer, FieldTemplate
 
     }
 
-    private LifeData loadLife(WzSubProperty lifeProp) {
+    private LifeInField loadLife(WzSubProperty lifeProp) {
 
         boolean mob = lifeProp.hasProperty("type") && lifeProp.get("type").getString().equals("m");
 
-        LifeData lifeData = new LifeData();
+        LifeInField lifeInField = new LifeInField();
         lifeProp.getProperties().forEach(p -> {
 
             if (p.getName().equalsIgnoreCase("id")) {
-                lifeData.setId(p.getInt());
+                lifeInField.setId(p.getInt());
             } else if (p.getName().equalsIgnoreCase("type")) {
-                lifeData.setType(p.getString());
+                lifeInField.setType(p.getString());
             } else if (p.getName().equalsIgnoreCase("x")) {
-                lifeData.setX(p.getInt());
+                lifeInField.setX(p.getInt());
             } else if (p.getName().equalsIgnoreCase("y")) {
-                lifeData.setY(p.getInt());
+                lifeInField.setY(p.getInt());
             } else if (p.getName().equalsIgnoreCase("mobTime")) {
-                lifeData.setMobTime(p.getInt());
+                lifeInField.setMobTime(p.getInt());
             } else if (p.getName().equalsIgnoreCase("f")) {
-                lifeData.setF(p.getInt());
+                lifeInField.setF(p.getInt());
             } else if (p.getName().equalsIgnoreCase("fh")) {
-                lifeData.setFh(p.getInt());
+                lifeInField.setFh(p.getInt());
             } else if (p.getName().equalsIgnoreCase("hide")) {
-                lifeData.setHide(p.getInt() > 0);
+                lifeInField.setHide(p.getInt() > 0);
             } else if (p.getName().equalsIgnoreCase("cy")) {
-                lifeData.setCy(p.getInt());
+                lifeInField.setCy(p.getInt());
             } else if (p.getName().equalsIgnoreCase("rx0")) {
-                lifeData.setRx0(p.getInt());
+                lifeInField.setRx0(p.getInt());
             } else if (p.getName().equalsIgnoreCase("rx1")) {
-                lifeData.setRx1(p.getInt());
+                lifeInField.setRx1(p.getInt());
             } else if (p.getName().equalsIgnoreCase("limitedname")) {
-                lifeData.setLimitedname(p.getString());
+                lifeInField.setLimitedname(p.getString());
             } else if (p.getName().equalsIgnoreCase("useDay")) {
-                lifeData.setUseDay(p.getInt() > 0);
+                lifeInField.setUseDay(p.getInt() > 0);
             } else if (p.getName().equalsIgnoreCase("useNight")) {
-                lifeData.setUseNight(p.getInt() > 0);
+                lifeInField.setUseNight(p.getInt() > 0);
             } else if (p.getName().equalsIgnoreCase("hold")) {
-                lifeData.setHold(p.getInt() > 0);
+                lifeInField.setHold(p.getInt() > 0);
             } else if (p.getName().equalsIgnoreCase("nofoothold")) {
-                lifeData.setNofoothold(p.getInt() > 0);
+                lifeInField.setNofoothold(p.getInt() > 0);
             } else if (p.getName().equalsIgnoreCase("dummy")) {
-                lifeData.setDummy(p.getInt() > 0);
+                lifeInField.setDummy(p.getInt() > 0);
             } else if (p.getName().equalsIgnoreCase("spine")) {
-                lifeData.setSpine(p.getInt() > 0);
+                lifeInField.setSpine(p.getInt() > 0);
             } else if (p.getName().equalsIgnoreCase("mobTimeOnDie")) {
-                lifeData.setMobTimeOnDie(p.getInt() > 0);
+                lifeInField.setMobTimeOnDie(p.getInt() > 0);
             } else if (p.getName().equalsIgnoreCase("regenStart")) {
-                lifeData.setRx1(p.getInt());
+                lifeInField.setRx1(p.getInt());
             } else if (p.getName().equalsIgnoreCase("mobAliveReq")) {
-                lifeData.setRx1(p.getInt());
+                lifeInField.setRx1(p.getInt());
             }
         });
 
-        return lifeData;
+        return lifeInField;
     }
 
     @Override

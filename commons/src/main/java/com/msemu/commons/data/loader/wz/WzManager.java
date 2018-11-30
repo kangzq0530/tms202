@@ -56,6 +56,7 @@ public class WzManager {
     public static final String MOB = "Mob.wz";
     public static final String MOB2 = "Mob2.wz";
     public static final String NPC = "Npc.wz";
+    public static final String REACTOR = "Reactor.wz";
 
     private static final Logger log = LoggerFactory.getLogger(WzManager.class);
 

@@ -27,16 +27,22 @@ package com.msemu.core.network.packets.inpacket;
 import com.msemu.commons.network.packets.InPacket;
 import com.msemu.core.network.GameClient;
 import com.msemu.world.client.character.Character;
-import com.msemu.world.client.character.inventory.items.Equip;
-import com.msemu.world.client.character.inventory.items.enhant.EquipmentEnchantScroll;
-import com.msemu.world.enums.EquipmentEnchantType;
+import com.msemu.world.client.enchant.singleui.HyperUpgradeTabHandler;
+import com.msemu.world.client.enchant.singleui.UpgradeScrollTabHandler;
+import com.msemu.world.enums.EquipEnchantType;
+import org.slf4j.LoggerFactory;
 
 public class CP_UserEquipmentEnchantWithSingleUIRequest extends InPacket<GameClient> {
 
 
-    private int type;
+    private int updateTick;
+    private int typeValue;
 
-    private int itemSlot;
+    private int bagIndex;
+
+    private boolean safeUpgrade;
+
+    private int scrollIndex;
 
     public CP_UserEquipmentEnchantWithSingleUIRequest(short opcode) {
         super(opcode);
@@ -44,31 +50,46 @@ public class CP_UserEquipmentEnchantWithSingleUIRequest extends InPacket<GameCli
 
     @Override
     public void read() {
-        type = decodeByte();
+        typeValue = decodeByte();
 
-        final EquipmentEnchantType enchantType = EquipmentEnchantType.getByValue(type);
+        final EquipEnchantType enchantType = EquipEnchantType.getByValue(typeValue);
 
         switch (enchantType) {
-            case SCROLL_REQUEST_DISPLAY:
-                itemSlot = decodeInt();
+            case SCROLL_UPGRADE:
+                updateTick = decodeInt();
+                bagIndex = decodeShort();
+                scrollIndex = decodeInt();
                 break;
+            case DISPLAY_SCROLL_UPGRADE:
+                bagIndex = decodeInt();
+                break;
+            case DISPLAY_HYPER_UPGRADE:
+                bagIndex = decodeInt();
+                safeUpgrade = decodeByte() > 0;
+                break;
+            default:
+                LoggerFactory.getLogger(CP_UserEquipmentEnchantWithSingleUIRequest.class)
+                        .warn("Unhandled enchantType : " + typeValue);
         }
     }
 
     @Override
     public void runImpl() {
         final Character chr = getClient().getCharacter();
-        final EquipmentEnchantType enchantType = EquipmentEnchantType.getByValue(type);
+        final EquipEnchantType enchantType = EquipEnchantType.getByValue(typeValue);
 
         switch (enchantType) {
-
-
-            case SCROLL_REQUEST_DISPLAY:
-                Equip equip = (Equip) chr.getEquipInventory().getItemBySlot(itemSlot);
-                if (equip == null)
-                    return;
-                EquipmentEnchantScroll.onRequestDisplay(chr, equip);
+            case SCROLL_UPGRADE:
+                UpgradeScrollTabHandler.getInstance().onUpgrade(chr, scrollIndex, bagIndex);
                 break;
+            case DISPLAY_SCROLL_UPGRADE:
+                UpgradeScrollTabHandler.getInstance().onDisplay(chr, bagIndex);
+                break;
+
+            case DISPLAY_HYPER_UPGRADE:
+                HyperUpgradeTabHandler.getInstance().onDisplay(chr, bagIndex, safeUpgrade);
+                break;
+
         }
     }
 }

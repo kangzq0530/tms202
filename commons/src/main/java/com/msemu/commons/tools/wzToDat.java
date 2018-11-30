@@ -25,9 +25,10 @@
 package com.msemu.commons.tools;
 
 import com.msemu.commons.config.utils.ConfigLoader;
-import com.msemu.commons.data.loader.wz.QuestInfoLoader;
-import com.msemu.commons.data.loader.wz.SkillInfoLoader;
-import com.msemu.commons.data.loader.wz.WzManager;
+import com.msemu.commons.data.loader.dat.ItemTemplateDatLoader;
+import com.msemu.commons.data.loader.dat.ReactorTemplateDatLoader;
+import com.msemu.commons.data.loader.wz.*;
+import com.msemu.commons.data.templates.ItemTemplate;
 
 import java.io.IOException;
 
@@ -41,16 +42,23 @@ public class wzToDat {
         WzManager wzManager = new WzManager();
 //        new ForbiddenNameLoader(wzManager).saveToDat();
 //        new ItemOptionLoader(wzManager).saveToDat();
-//        new ItemTemplateLoader(wzManager).saveToDat();
-//        new EquipTemplateLoader(wzManager).saveToDat();
+        new ItemTemplateLoader(wzManager).saveToDat();
+        new EquipTemplateLoader(wzManager).saveToDat();
 //        new SetItemInfoLoader(wzManager).saveToDat();
 //        new MonsterBookLoader(wzManager).saveToDat();
 //        new FieldTemplateLoader(wzManager).saveToDat();
 //        new NpcTemplateLoader(wzManager).saveToDat();
 //
 //        new SkillInfoLoader(wzManager).saveToDat();
-        new QuestInfoLoader(wzManager).saveToDat();
+//        new QuestInfoLoader(wzManager).saveToDat();
 //        new MobTemplateLoader(wzManager).saveToDat();
 //        new FieldTemplateLoader(wzManager).saveToDat();
+//        new ReactorTemplateLoader(wzManager).saveToDat();
+//        new ReactorTemplateDatLoader().load();
+        ItemTemplateDatLoader loader = new ItemTemplateDatLoader();
+        loader.load();
+
+        ItemTemplate t = loader.getItem(2030000);
+        int moveTo = t.getItemSpec().getMoveTo();
     }
 }

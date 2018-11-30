@@ -66,7 +66,7 @@ public class QuestItemAction implements IQuestAction {
     @Override
     public void action(Character chr) {
         Item item = ItemData.getInstance().createItem(getItemId());
-        chr.addItemToInventory(item);
+        chr.giveItem(item);
     }
 
     @Override

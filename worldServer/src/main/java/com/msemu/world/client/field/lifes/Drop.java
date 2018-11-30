@@ -111,7 +111,7 @@ public class Drop extends AbstractFieldObject {
 
     @Override
     public void outScreen(GameClient client) {
-        client.write(new LP_DropLeaveField(DropLeaveType.ByScreenScroll, 0, getObjectId(), (short) 0, 0, 0));
+        client.write(new LP_DropLeaveField(DropLeaveType.ByScreenScroll, getObjectId(), 0, (short) 0, 0, 0));
     }
 
     public boolean isExpired() {

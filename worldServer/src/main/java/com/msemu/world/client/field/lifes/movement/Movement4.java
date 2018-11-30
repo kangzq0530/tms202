@@ -36,7 +36,7 @@ public class Movement4 extends MovementBase {
     public Movement4(InPacket<GameClient> inPacket, byte command) {
         super();
         this.command = command;
-        this.position = new Position(0, 0);
+        this.position = null;
 
         moveAction = inPacket.decodeByte();
         elapse = inPacket.decodeShort();

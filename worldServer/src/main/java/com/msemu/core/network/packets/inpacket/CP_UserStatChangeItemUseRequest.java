@@ -94,8 +94,7 @@ public class CP_UserStatChangeItemUseRequest extends InPacket<GameClient> {
         TemporaryStatManager tsm = chr.getTemporaryStatManager();
 
         final int tTerm = itemInfo.getItemSpec().getSpecStats().getOrDefault(ItemSpecStat.time, 0) / 1000;
-
-        chr.consumeItem(usedItem);
+        chr.consumeItem(usedItem, 1);
         itemInfo.getItemSpec().getSpecStats()
                 .forEach((stat, value) -> {
                     Option option;

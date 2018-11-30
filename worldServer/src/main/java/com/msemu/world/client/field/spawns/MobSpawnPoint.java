@@ -24,7 +24,7 @@
 
 package com.msemu.world.client.field.spawns;
 
-import com.msemu.commons.data.templates.field.LifeData;
+import com.msemu.commons.data.templates.field.LifeInField;
 import com.msemu.world.client.field.Field;
 import com.msemu.world.client.field.lifes.ForcedMobStat;
 import com.msemu.world.client.field.lifes.Mob;
@@ -61,15 +61,15 @@ public class MobSpawnPoint extends AbstractSpawnPoint {
     private ForcedMobStat forcedMobStat;
 
 
-    public MobSpawnPoint(LifeData lifeData) {
-        super(lifeData);
-        this.mobTime = lifeData.getMobTime();
-        this.regenStart = lifeData.getRegenStart();
-        this.mobAliveReq = lifeData.getMobAliveReq();
-        this.mobTimeOnDie = lifeData.isMobTimeOnDie();
-        this.dummy = lifeData.isDummy();
-        this.spine = lifeData.isSpine();
-        this.limitedName = lifeData.getLimitedname();
+    public MobSpawnPoint(LifeInField lifeInField) {
+        super(lifeInField);
+        this.mobTime = lifeInField.getMobTime();
+        this.regenStart = lifeInField.getRegenStart();
+        this.mobAliveReq = lifeInField.getMobAliveReq();
+        this.mobTimeOnDie = lifeInField.isMobTimeOnDie();
+        this.dummy = lifeInField.isDummy();
+        this.spine = lifeInField.isSpine();
+        this.limitedName = lifeInField.getLimitedname();
         this.nextSpawnTime = LocalDateTime.now();
     }
 

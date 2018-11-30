@@ -24,6 +24,7 @@
 
 package com.msemu.world.client.character.quest.req;
 
+import com.msemu.commons.data.templates.quest.reqs.QuestItemReqData;
 import com.msemu.commons.data.templates.quest.reqs.QuestReqData;
 import com.msemu.commons.database.Schema;
 
@@ -46,8 +47,17 @@ public class QuestProgressItemRequirement extends QuestProgressRequirement imple
     private int requiredCount;
     @Column(name = "currentCount")
     private int currentCount;
+    @Column(name =  "_order")
+    private int order;
 
     public QuestProgressItemRequirement() {
+    }
+
+    public QuestProgressItemRequirement(int itemID, int requiredCount, int currentCount, int order) {
+        this.itemID = itemID;
+        this.requiredCount = requiredCount;
+        this.currentCount = currentCount;
+        this.order = order;
     }
 
     public int getItemID() {
@@ -81,6 +91,14 @@ public class QuestProgressItemRequirement extends QuestProgressRequirement imple
         this.currentCount = currentCount;
     }
 
+    public int getOrder() {
+        return order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
+    }
+
     @Override
     public boolean isComplete() {
         return getCurrentCount() >= getRequiredCount();
@@ -97,6 +115,14 @@ public class QuestProgressItemRequirement extends QuestProgressRequirement imple
 
     @Override
     public void load(QuestReqData reqData) {
+        setItemID(((QuestItemReqData)reqData).getItemId());
+        setRequiredCount(((QuestItemReqData)reqData).getQuantity());
+        setOrder(((QuestItemReqData)reqData).getOrder());
+        setCurrentCount(0);
+    }
 
+    @Override
+    public QuestProgressRequirement deepCopy() {
+        return new QuestProgressItemRequirement(itemID, requiredCount, 0, order);
     }
 }

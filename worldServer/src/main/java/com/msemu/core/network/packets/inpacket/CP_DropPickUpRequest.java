@@ -30,7 +30,7 @@ import com.msemu.core.network.GameClient;
 import com.msemu.core.network.packets.outpacket.user.local.effect.LP_UserEffectLocal;
 import com.msemu.core.network.packets.outpacket.wvscontext.LP_Message;
 import com.msemu.world.client.character.Character;
-import com.msemu.world.client.character.effect.PickUpItemUserEffect;
+import com.msemu.world.client.character.effects.PickUpItemUserEffect;
 import com.msemu.world.client.character.inventory.items.Equip;
 import com.msemu.world.client.character.inventory.items.Item;
 import com.msemu.world.client.character.messages.DropPickUpAddIenventoryItem;
@@ -88,7 +88,7 @@ public class CP_DropPickUpRequest extends InPacket<GameClient> {
                 chr.enableActions();
             } else {
                 if (drop.isMoney()) {
-                    boolean canHoldMoney = chr.getMoney() + drop.getMoney() > GameConstants.MAX_MONEY;
+                    boolean canHoldMoney = chr.getMoney() + drop.getMoney() <= GameConstants.MAX_MONEY;
                     if (!canHoldMoney) {
                         chr.write(new LP_Message(new DropPickUpItemFullFail()));
                         return;
@@ -109,7 +109,7 @@ public class CP_DropPickUpRequest extends InPacket<GameClient> {
                             }
                         }
                         chr.write(new LP_Message(new DropPickUpAddIenventoryItem(item)));
-                        chr.addItemToInventory(item);
+                        chr.giveItem(item);
                     }
                 }
                 drop.setPicked(true);

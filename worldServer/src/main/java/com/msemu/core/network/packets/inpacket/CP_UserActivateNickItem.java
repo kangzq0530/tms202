@@ -63,14 +63,12 @@ public class CP_UserActivateNickItem extends InPacket<GameClient> {
         final ItemTemplate itemInfo = ItemData.getInstance().getItemInfo(nickItemID);
         final Item item = chr.getInventoryByType(itemInfo.getInvType()).getItemBySlot(slotPos);
 
-        if (item.getItemId() != itemInfo.getItemId()) {
+        if (item != null && item.getItemId() != itemInfo.getItemId()) {
             chr.enableActions();
             return;
         }
-
         final boolean hasItem = chr.getInventoryByType(itemInfo.getInvType())
                 .containsItem(nickItemID);
-
         if (!hasItem)
             return;
         chr.setActiveNickItemID(nickItemID);

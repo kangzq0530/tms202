@@ -90,7 +90,7 @@ public abstract class NetworkThread<TClient extends Client<TClient>> {
                     protected void initChannel(SocketChannel channel) throws Exception {
                         channel.config().setPerformancePreferences(0, 2, 1);
                         ChannelPipeline pipeline = channel.pipeline();
-                        pipeline.addLast("readTimeoutHandler", new IdleStateHandler(10, 0, 0, TimeUnit.MINUTES));
+                        pipeline.addLast("readTimeoutHandler", new IdleStateHandler(1, 0, 0, TimeUnit.MINUTES));
                         pipeline.addLast("packetDecoder", new PacketDecoder());
                         pipeline.addLast("packetEncoder", new PacketEncoder());
                         pipeline.addLast(new Connection<>(NetworkThread.this));

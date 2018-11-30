@@ -171,8 +171,12 @@ public abstract class MovementBase implements IMovement {
                 case 12:
                     res.add(new Movement8(inPacket, type));
                     break;
+                case 75:
+                case 77: // in default
+                    res.add(new Movement9(inPacket, type));
+                    break;
                 default:
-                    log.warn(String.format("[MovementBase.parseMovement] The type (%s) is unhandled.", type));
+                    res.add(new Movement4(inPacket, type));
                     break;
             }
         }

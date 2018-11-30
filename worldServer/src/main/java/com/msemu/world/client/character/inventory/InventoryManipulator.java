@@ -26,9 +26,11 @@ package com.msemu.world.client.character.inventory;
 
 import com.msemu.commons.data.enums.InvType;
 import com.msemu.commons.data.templates.ItemTemplate;
+import com.msemu.commons.utils.types.FileTime;
 import com.msemu.core.network.packets.outpacket.wvscontext.LP_InventoryOperation;
 import com.msemu.world.client.character.AvatarLook;
 import com.msemu.world.client.character.Character;
+import com.msemu.world.client.character.Inventory;
 import com.msemu.world.client.character.inventory.items.Equip;
 import com.msemu.world.client.character.inventory.items.Item;
 import com.msemu.world.client.field.lifes.Drop;
@@ -37,16 +39,24 @@ import com.msemu.world.data.ItemData;
 import com.msemu.world.enums.InventoryOperationType;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
+
+import static com.msemu.world.enums.InventoryOperationType.*;
 
 /**
  * Created by Weber on 2018/4/28.
  */
 public class InventoryManipulator {
-    public static void unequip(Character chr, short srcSlot, short destSlot) {
+
+
+    public static void unequipped(Character chr, short srcSlot, short destSlot) {
         AvatarLook al = chr.getAvatarData().getAvatarLook();
         List<InventoryOperationInfo> operates = new ArrayList<>();
+
+
         Equip srcEquip = (Equip) chr.getEquippedInventory()
                 .getItemBySlot(-srcSlot);
         Equip destEquip = (Equip) chr.getEquipInventory()
@@ -60,9 +70,16 @@ public class InventoryManipulator {
                 srcEquip.getTemplate().getItemId()
                 )
         );
-        chr.getEquippedInventory().removeItem(srcEquip);
-        chr.getEquipInventory().addItem(srcEquip);
-        srcEquip.setBagIndex(destSlot);
+        chr.getEquippedInventory().getLock().lock();
+        chr.getEquipInventory().getLock().lock();
+        try {
+            chr.getEquippedInventory().removeItem(srcEquip);
+            chr.getEquipInventory().addItem(srcEquip);
+            srcEquip.setBagIndex(destSlot);
+        } finally {
+            chr.getEquippedInventory().getLock().unlock();
+            chr.getEquipInventory().getLock().unlock();
+        }
         if (ItemConstants.類型.武器(srcEquip.getItemId())) {
             chr.getAvatarData().getAvatarLook().setWeaponId(0);
         } else if (ItemConstants.類型.副手(srcEquip.getItemId())) {
@@ -72,7 +89,7 @@ public class InventoryManipulator {
                 .map(Item::getItemId).collect(Collectors.toList());
         al.setHairEquips(newHairEqups);
         operates.add(new InventoryOperationInfo(InventoryOperationType.MOVE,
-                srcEquip, srcSlot));
+                srcEquip, InvType.EQUIPPED, srcSlot));
         chr.write(new LP_InventoryOperation(true, false, operates));
         chr.renewAvatarLook();
         chr.renewCharacterStats();
@@ -85,7 +102,6 @@ public class InventoryManipulator {
                 .getItemBySlot(srcSlot);
         Equip destEquip = (Equip) chr.getEquippedInventory()
                 .getItemBySlot(-destSlot);
-        List<Integer> hairEquips = al.getHairEquips();
         chr.chatMessage(String.format("[穿上裝備] 來源: %d 道具: %s(%d) 目標: %d 道具: %s(%d)",
                 srcSlot,
                 srcEquip != null ? srcEquip.getTemplate().getName() : "無",
@@ -101,17 +117,24 @@ public class InventoryManipulator {
         if (destEquip != null) {
             short nextSlot = (short) chr.getEquipInventory().getFirstOpenSlot();
             if (nextSlot > 0)
-                unequip(chr, destSlot, nextSlot);
+                unequipped(chr, destSlot, nextSlot);
             else {
                 chr.enableActions();
                 return;
             }
         }
-        chr.getEquipInventory().removeItem(srcEquip);
-        chr.getEquippedInventory().addItem(srcEquip);
-        srcEquip.setBagIndex(destSlot);
+        chr.getEquippedInventory().getLock().lock();
+        chr.getEquipInventory().getLock().lock();
+        try {
+            chr.getEquipInventory().removeItem(srcEquip);
+            chr.getEquippedInventory().addItem(srcEquip);
+            srcEquip.setBagIndex(destSlot);
+        } finally {
+            chr.getEquippedInventory().getLock().unlock();
+            chr.getEquipInventory().getLock().unlock();
+        }
         operates.add(new InventoryOperationInfo(InventoryOperationType.MOVE,
-                srcEquip, srcSlot));
+                srcEquip, InvType.EQUIP, srcSlot));
         List<Integer> newHairEqups = chr.getEquippedInventory().getItems().stream()
                 .map(Item::getItemId).collect(Collectors.toList());
         al.setHairEquips(newHairEqups);
@@ -128,22 +151,25 @@ public class InventoryManipulator {
     public static void drop(Character chr, InvType invType, short srcSlot, short destSlot, short quantity) {
         Item srcItem = chr.getInventoryByType(invType).getItemBySlot(srcSlot);
         Drop drop;
-
         List<InventoryOperationInfo> operates = new ArrayList<>();
         if (!srcItem.getInvType().isStackable() || quantity >= srcItem.getQuantity()) {
-            chr.getInventoryByType(invType).removeItem(srcItem);
+            chr.getInventoryByType(invType).getLock().lock();
+            try {
+                chr.getInventoryByType(invType).removeItem(srcItem);
+            } finally {
+                chr.getInventoryByType(invType).getLock().unlock();
+            }
             srcItem.drop();
             drop = new Drop(-1, srcItem);
             operates.add(new InventoryOperationInfo(InventoryOperationType.REMOVE,
-                    srcItem, srcSlot));
+                    srcItem, invType, srcSlot));
         } else {
             Item dropItem = ItemData.getInstance().createItem(srcItem.getItemId());
             dropItem.setQuantity(quantity);
             srcItem.removeQuantity(quantity);
-            srcItem.setInventoryId(0);
             drop = new Drop(-1, dropItem);
             operates.add(new InventoryOperationInfo(InventoryOperationType.UPDATE,
-                    srcItem, srcSlot));
+                    srcItem, invType, srcSlot));
         }
         chr.chatMessage(String.format("[丟棄裝備] 來源: %d 道具: %s(%d)",
                 srcSlot,
@@ -157,6 +183,7 @@ public class InventoryManipulator {
             chr.getField().drop(drop, chr.getPosition());
         }
         chr.write(new LP_InventoryOperation(true, false, operates));
+        chr.renewBulletIDForAttack();
     }
 
     public static void move(Character chr, InvType invType, short srcSlot, short destSlot) {
@@ -186,18 +213,23 @@ public class InventoryManipulator {
 
         List<InventoryOperationInfo> operates = new ArrayList<>();
 
-        if (destItem != null) {
-            destItem.setBagIndex(srcSlot);
+        chr.getInventoryByType(invType).getLock().lock();
+        try {
+            if (destItem != null) {
+                destItem.setBagIndex(srcSlot);
+            }
+            if (srcItem != null)
+                srcItem.setBagIndex(destSlot);
+            chr.getInventoryByType(invType).sortItemsByIndex();
+        } finally {
+            chr.getInventoryByType(invType).getLock().unlock();
         }
 
-
-        srcItem.setBagIndex(destSlot);
-
-        chr.getInventoryByType(invType).sortItemsByIndex();
         operates.add(new InventoryOperationInfo(InventoryOperationType.MOVE,
-                srcItem, srcSlot));
+                srcItem, invType, srcSlot));
 
         chr.write(new LP_InventoryOperation(true, false, operates));
+        chr.renewBulletIDForAttack();
     }
 
     public static void update(final Character chr, final InvType invType, final int pos) {
@@ -205,7 +237,161 @@ public class InventoryManipulator {
         if (item == null)
             return;
         List<InventoryOperationInfo> operates = new ArrayList<>();
-        operates.add(new InventoryOperationInfo(InventoryOperationType.ADD, item, item.getBagIndex()));
+        operates.add(new InventoryOperationInfo(InventoryOperationType.ADD, item, item.getInvType(), item.getBagIndex()));
         chr.write(new LP_InventoryOperation(true, false, operates));
+        chr.renewBulletIDForAttack();
     }
+    public static void consume(final Character chr, final int itemID, final int amount) {
+        consume(chr, itemID, amount, false);
+    }
+    public static void consume(final Character chr, final int itemID, final int amount, boolean skipLock) {
+        InvType invType = ItemConstants.getInvTypeFromItemID(itemID);
+        Inventory inventory = chr.getInventoryByType(invType);
+        inventory.doLock(() -> {
+            int lastAmount = amount;
+            Item item = chr.getInventoryByType(invType).getItemByItemID(itemID);
+            while (item != null && lastAmount > 0) {
+                if (item.getQuantity() > lastAmount) {
+                    consume(chr, item, lastAmount, true);
+                    lastAmount = 0;
+                } else {
+                    consume(chr, item, item.getQuantity(), true);
+                    lastAmount -= item.getQuantity();
+                }
+                item = chr.getInventoryByType(invType).getItemByItemID(itemID);
+            }
+        }, skipLock);
+    }
+
+    public static void consume(final Character chr, final Item item) {
+        consume(chr, item, 1, false);
+    }
+
+    public static void consume(final Character chr, final Item item, final int consumeCount) {
+        consume(chr, item, consumeCount, false);
+    }
+
+    public static void consume(final Character chr, final Item item, final int consumeCount, boolean skipLock) {
+        Inventory inventory = chr.getInventoryByType(item.getInvType());
+        if (item.getQuantity() == consumeCount && !ItemConstants.類型.可充值道具(item.getItemId())) {
+            inventory.doLock(() -> {
+                item.setQuantity(0);
+                inventory.removeItem(item);
+            }, skipLock);
+            int oldBagIndex = item.getBagIndex();
+            chr.write(new LP_InventoryOperation(true, false,
+                    REMOVE, item, oldBagIndex));
+        } else {
+            inventory.doLock(() -> item.setQuantity(item.getQuantity() - consumeCount), skipLock);
+            chr.write(new LP_InventoryOperation(true, false,
+                    UPDATE, item, item.getBagIndex()));
+        }
+        chr.renewBulletIDForAttack();
+    }
+
+    public static void add(final Character chr, final Item item) {
+        add(chr, item, false);
+    }
+
+    public static void add(final Character chr, final Item item, boolean skipLock) {
+
+        final InvType invType = item.getInvType();
+        final Inventory inventory = chr.getInventoryByType(invType);
+        final ItemTemplate template = item.getTemplate();
+
+        inventory.doLock(() -> {
+            if (invType != InvType.EQUIP) {
+                final int slotMax = template.getSlotMax();
+
+                if (!ItemConstants.類型.可充值道具(item.getItemId())) {
+                    // 非裝備、充值道具 限制最大堆疊數量
+                    final List<Item> existsItems = inventory.getItems()
+                            .stream().filter(each -> each.getItemId() == item.getItemId()).collect(Collectors.toList());
+
+                    int lastQuantity = item.getQuantity();
+                    Iterator<Item> iterator = existsItems.iterator();
+                    while (lastQuantity > 0) {
+                        if (iterator.hasNext()) {
+                            Item bagItem = iterator.next();
+                            if (bagItem.getQuantity() < slotMax &&
+                                    (bagItem.getOwner().equalsIgnoreCase("") || bagItem.getOwner().equals(chr.getName())) &&
+                                    bagItem.getDateExpire().equal(FileTime.getFileTimeFromType(FileTime.Type.MAX_TIME))) {
+                                short newQuantity = (short) Math.min(bagItem.getQuantity() + lastQuantity, slotMax);
+                                lastQuantity -= (newQuantity - bagItem.getQuantity());
+                                item.setQuantity(lastQuantity);
+                                bagItem.setQuantity(newQuantity);
+                                chr.write(new LP_InventoryOperation(true, false,
+                                        UPDATE, bagItem, bagItem.getBagIndex()));
+                            }
+                        } else {
+                            break;
+                        }
+                    }
+
+                    while (lastQuantity > 0) {
+                        final Item insertItem;
+                        if (lastQuantity > slotMax) {
+                            short newQuantity = (short) Math.min(lastQuantity, slotMax);
+                            lastQuantity -= newQuantity;
+                            item.setQuantity(lastQuantity);
+                            insertItem = ItemData.getInstance().createItem(item.getItemId());
+                            insertItem.setDateExpire(item.getDateExpire());
+                            insertItem.setOwner(item.getOwner());
+                            insertItem.setQuantity(newQuantity);
+                        } else {
+                            insertItem = item;
+                            lastQuantity = 0;
+                        }
+                        insertItem.setBagIndex(inventory.getFirstOpenSlot());
+                        inventory.addItem(insertItem);
+                        List<InventoryOperationInfo> operates = new ArrayList<>();
+                        operates.add(new InventoryOperationInfo(InventoryOperationType.ADD, insertItem, insertItem.getInvType(), insertItem.getBagIndex()));
+                        chr.write(new LP_InventoryOperation(true, false, operates));
+                    }
+
+                } else {
+                    item.setBagIndex(inventory.getFirstOpenSlot());
+                    inventory.addItem(item);
+                }
+            } else {
+                item.setQuantity(1);
+                item.setBagIndex(inventory.getFirstOpenSlot());
+                inventory.addItem(item);
+                List<InventoryOperationInfo> operates = new ArrayList<>();
+                operates.add(new InventoryOperationInfo(InventoryOperationType.ADD, item, item.getInvType(), item.getBagIndex()));
+                chr.write(new LP_InventoryOperation(true, false, operates));
+            }
+            chr.renewBulletIDForAttack();
+        }, skipLock);
+    }
+
+    public static void update(Character chr, Item item) {
+        chr.write(new LP_InventoryOperation(true, false,
+                ADD, item, item.getBagIndex()));
+    }
+
+
+    public static void remove(Character chr, Item item) {
+        consume(chr, item, item.getQuantity());
+    }
+
+
+    public static boolean canHold(Character chr, int itemId, int quantity) {
+        final InvType invType = ItemConstants.getInvTypeFromItemID(itemId);
+        final Inventory inventory = chr.getInventoryByType(invType);
+        final AtomicBoolean result = new AtomicBoolean(false);
+        inventory.doLock(() -> {
+            if (ItemConstants.isEquip(itemId)) {
+                result.set(chr.getEquipInventory().getSlots() > chr.getEquipInventory().getItems().size());
+            } else {
+                ItemTemplate template = ItemData.getInstance().getItemInfo(itemId);
+                Item existsItem = inventory.getItemByItemID(itemId);
+                result.set((existsItem != null && existsItem.getQuantity() + 1 < template.getSlotMax())
+                        || inventory.getSlots() > inventory.getItems().size());
+            }
+        });
+        return result.get();
+
+    }
+
 }

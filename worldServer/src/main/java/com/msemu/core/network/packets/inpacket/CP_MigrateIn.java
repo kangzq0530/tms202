@@ -106,15 +106,15 @@ public class CP_MigrateIn extends InPacket<GameClient> {
             chr.setJob(chr.getJob());
             chr.setParty(party);
             chr.setOnline(true);
-            getClient().write(new LP_AuthenCodeChanged());
-            getClient().write(new LP_SetQuestClear());
-            getClient().write(new LP_HourChanged(DateUtils.getCurrentDayOfWeek()));
-            getClient().write(new LP_SetTamingMobInfo(chr, false));
+            chr.write(new LP_AuthenCodeChanged());
+            chr.write(new LP_SetQuestClear());
+            chr.write(new LP_HourChanged(DateUtils.getCurrentDayOfWeek()));
+            chr.write(new LP_SetTamingMobInfo(chr, false));
             //0x020F:
-            getClient().write(new LP_ChangeSkillRecordResult(chr.getSkills(), true,
+            chr.write(new LP_ChangeSkillRecordResult(chr.getVisibleSkills(), true,
                     false, false, false));
             // TODO update VSkillRecord
-            getClient().write(new LP_ForcedStatReset());
+            chr.write(new LP_ForcedStatReset());
             //TODO c.announce(CWvsContext.broadcastMsg(channelServer.getServerMessage(player.getWorld())));
             // GM hide
             /**
@@ -126,12 +126,12 @@ public class CP_MigrateIn extends InPacket<GameClient> {
              */
             if (MapleJob.is幻獸師(chr.getJob())) {
                 // ??
-                getClient().write(new LP_FuncKeyMappedInit(chr.getFuncKeyMap()));
+                chr.write(new LP_FuncKeyMappedInit(chr.getFuncKeyMap()));
             } else {
-                getClient().write(new LP_FuncKeyMappedInit(chr.getFuncKeyMap()));
+                chr.write(new LP_FuncKeyMappedInit(chr.getFuncKeyMap()));
             }
 
-            getClient().write(new LP_MacroSysDataInit(chr.getSkillMacros()));
+            chr.write(new LP_MacroSysDataInit(chr.getSkillMacros()));
 
 
         }

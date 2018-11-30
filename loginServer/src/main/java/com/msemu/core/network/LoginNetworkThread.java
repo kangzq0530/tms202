@@ -38,16 +38,16 @@ import java.util.concurrent.atomic.AtomicReference;
 @StartupComponent("Network")
 public class LoginNetworkThread extends NetworkThread<LoginClient> {
 
-    private static final AtomicReference<Object> instance = new AtomicReference<>();
+    private static final AtomicReference<LoginNetworkThread> instance = new AtomicReference<>();
 
     protected LoginNetworkThread() {
         super(NetworkConfig.HOST, NetworkConfig.PORT);
     }
 
     public static LoginNetworkThread getInstance() {
-        Object value = instance.get();
+        LoginNetworkThread value = instance.get();
         if (value == null) {
-            synchronized (LoginNetworkThread.instance) {
+            synchronized (instance) {
                 value = instance.get();
                 if (value == null) {
                     value = new LoginNetworkThread();
@@ -55,7 +55,7 @@ public class LoginNetworkThread extends NetworkThread<LoginClient> {
                 instance.set(value);
             }
         }
-        return (LoginNetworkThread) ((value == LoginNetworkThread.instance) ? null : value);
+        return instance.get();
     }
 
     @Override

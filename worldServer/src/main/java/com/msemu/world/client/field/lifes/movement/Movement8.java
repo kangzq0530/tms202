@@ -36,7 +36,7 @@ public class Movement8 extends MovementBase {
     public Movement8(InPacket<GameClient> inPacket, byte command) {
         super();
         this.command = command;
-        this.position = new Position(0, 0);
+        this.position = null;
 
         this.stat = inPacket.decodeByte();
     }

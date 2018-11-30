@@ -42,7 +42,7 @@ public class GameConstants {
     public static final int RANDOM_EQUIP_RARE_CHANCE = 8; // out of a 100
     public static final int THIRD_LINE_CHANCE = 50;
 
-    public static final int MAX_RUNESTONE_PER_FIELD = 2;
+    public static final int MAX_RUNE_STONE_PER_FIELD = 1;
     public static final int RUNE_RESPAWN_TIME = 5;
     public static final int RUNE_STONE_REQUEST_COOLTIME = 5000; // 5000 miles
     public static final int RUNE_COOLDOWN_TIME = 4; // minutes
@@ -275,4 +275,29 @@ public class GameConstants {
         return x;
     }
 
+    public static int calculateTradeTax(final long money) {
+        if (money >= 100000000) {
+            return (int) Math.round(0.06 * money);
+        } else if (money >= 25000000) {
+            return (int) Math.round(0.05 * money);
+        } else if (money >= 10000000) {
+            return (int) Math.round(0.04 * money);
+        } else if (money >= 5000000) {
+            return (int) Math.round(0.03 * money);
+        } else if (money >= 1000000) {
+            return (int) Math.round(0.018 * money);
+        } else if (money >= 100000) {
+            return (int) Math.round(0.008 * money);
+        }
+        return 0;
+    }
+
+    public static int calcMaxRemainingAP(int level, short job) {
+        int total = 20;
+        if (MapleJob.getJobGrade(job) >= 3 && level >= 60) {
+            total += MapleJob.getJobGrade(job) - 2;
+        }
+        total += level * 5;
+        return total;
+    }
 }

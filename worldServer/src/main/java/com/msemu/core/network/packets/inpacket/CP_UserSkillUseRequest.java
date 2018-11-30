@@ -40,7 +40,7 @@ import com.msemu.world.enums.Stat;
  */
 public class CP_UserSkillUseRequest extends InPacket<GameClient> {
 
-    private SkillUseInfo skillUseInfo = new SkillUseInfo();
+    private SkillUseInfo skillUseInfo;
 
     public CP_UserSkillUseRequest(short opcode) {
         super(opcode);
@@ -48,16 +48,17 @@ public class CP_UserSkillUseRequest extends InPacket<GameClient> {
 
     @Override
     public void read() {
-
+        skillUseInfo = new SkillUseInfo();
         skillUseInfo.setUpdateTick(decodeInt());
         skillUseInfo.setSkillID(decodeInt());
-        skillUseInfo.setSlv(decodeByte());
+
 
         if (SkillConstants.isZeroSkill(skillUseInfo.getSkillID())) {
             decodeByte();
             skillUseInfo.setZeroSkill(true);
         }
 
+        skillUseInfo.setSlv(decodeByte());
         skillUseInfo.setOption(decodeInt());
 
         if (((skillUseInfo.getOption() >> 4) & 1) > 0) {
@@ -84,8 +85,8 @@ public class CP_UserSkillUseRequest extends InPacket<GameClient> {
         if (skillID == 100001261
                 || skillID == 80001408
                 || skillID == 25111206
-                || skillID == 0xB8F3AD
-                || skillID == 0x142482C
+                || skillID == 12121005
+                || skillID == 21121068
                 || skillID == 37110002
                 || skillID == 80001839
                 || skillID == 80001840
@@ -116,6 +117,71 @@ public class CP_UserSkillUseRequest extends InPacket<GameClient> {
 //            }
 //            //
 
+        }
+
+        // if ( dwAffectedMemberBitmap ) 不知怎判斷= =
+
+        boolean dwAffectedMemberBitmap = false;
+
+        if (dwAffectedMemberBitmap) {
+            decodeByte();
+            if (skillID == 2311001 || skillID == 112121010) {
+                decodeByte();
+                decodeShort();
+            }
+        }
+        int available = available();
+        int shouldAvailable = 3;
+        switch (skillID) {
+            case 400001017:
+                shouldAvailable += 4;
+                break;
+            case 33111013:
+            case 33121016:
+            case 131001107:
+            case 131001207:
+            case 51120057:
+            case 37110002:
+            case 400021039:
+            case 25111012:
+            case 25121055:
+            case 400020051:
+                shouldAvailable += 1;
+                break;
+            case 400020046:
+                shouldAvailable += 1;
+                break;
+        }
+
+
+        if (available != shouldAvailable) {
+            int mobCount = decodeByte();
+            for (int i = 0; i < mobCount; i++)
+                skillUseInfo.getMobs().add(decodeInt());
+        }
+
+        decodeShort();
+        decodeByte();
+
+        switch (skillID) {
+            case 400001017:
+                decodeInt();
+                break;
+            case 33111013:
+            case 33121016:
+            case 131001107:
+            case 131001207:
+            case 51120057:
+            case 37110002:
+            case 400021039:
+            case 25111012:
+            case 25121055:
+            case 400020051:
+                decodeByte();
+                break;
+            case 400020046:
+                decodeByte();
+                break;
         }
 
 

@@ -140,7 +140,7 @@ public class LP_UserEnterField extends OutPacket<GameClient> {
         encodeInt(0);
         encodePosition(chr.getPosition());
         encodeByte(chr.getAction());
-        encodeShort(chr.getFoothold());
+        encodeShort(chr.getFh());
 
 
         encodeByte(0);
@@ -154,18 +154,19 @@ public class LP_UserEnterField extends OutPacket<GameClient> {
         }
         encodeByte(0);
         encodeByte(chr.getMechanicHue());
-
-
         encodeInt(chr.getTamingMobLevel());
         encodeInt(chr.getTamingMobExp());
         encodeInt(chr.getTamingMobFatigue());
         encodeByte(false);
 
-        byte miniRoomType = chr.getMiniRoom() != null ? chr.getMiniRoom().getType() : 0;
-        encodeByte(miniRoomType);
-        if (miniRoomType > 0) {
-            chr.getMiniRoom().encode(this);
-        }
+
+        encodeByte(0);
+
+//        byte miniRoomType = chr.getMiniRoom() != null ? chr.getMiniRoom().getType() : 0;
+//        encodeByte(miniRoomType);
+//        if (miniRoomType > 0) {
+//            //chr.getMiniRoom().encode(this);
+//        }
 
         encodeByte(chr.getADBoardRemoteMsg() != null);
         if (chr.getADBoardRemoteMsg() != null) {

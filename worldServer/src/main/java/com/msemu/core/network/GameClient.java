@@ -85,6 +85,14 @@ public class GameClient extends Client<GameClient> {
     }
 
     @Override
+    protected void onClose() {
+        super.onClose();
+        if ( getCharacter() != null) {
+            getCharacter().logout();
+        }
+    }
+
+    @Override
     public String toString() {
         try {
             switch (getState()) {

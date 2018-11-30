@@ -37,11 +37,12 @@ import com.msemu.world.enums.GroupMessageType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class CP_GroupMessage extends InPacket<GameClient> {
 
     private int typeValue;
-    private List<Integer> targets = new ArrayList<>();
+    private List<Integer> targets;
     private String text;
 
 
@@ -51,13 +52,12 @@ public class CP_GroupMessage extends InPacket<GameClient> {
 
     @Override
     public void read() {
-
+        targets = new ArrayList<>();
         typeValue = decodeByte();
-        final int targetCount = decodeByte();
+        int targetCount = decodeByte();
         for (int i = 0; i < targetCount; i++)
             targets.add(decodeInt());
         text = decodeString();
-
     }
 
     @Override
@@ -72,14 +72,7 @@ public class CP_GroupMessage extends InPacket<GameClient> {
         switch (type) {
             case FRIENDS:
                 final FriendList friendList = chr.getFriendList();
-                targets.forEach(targetId -> {
-                    if (friendList.getByCharId(targetId) == null)
-                        return;
-                    Character target = world.getCharacterById(targetId);
-                    if (target == null)
-                        return;
-                    target.write(packet);
-                });
+                friendList.broadcast(packet, targets, chr);
                 break;
             case PARTY:
                 final Party party = chr.getParty();

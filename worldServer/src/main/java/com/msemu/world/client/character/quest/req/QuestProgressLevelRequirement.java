@@ -55,6 +55,11 @@ public class QuestProgressLevelRequirement extends QuestProgressRequirement {
         this.level = 0;
     }
 
+    public QuestProgressLevelRequirement(int level, int curLevel) {
+        this.level = level;
+        this.curLevel = curLevel;
+    }
+
     @Override
     public boolean isComplete() {
         return getCurLevel() >= getLevel();
@@ -65,6 +70,11 @@ public class QuestProgressLevelRequirement extends QuestProgressRequirement {
         if (reqData instanceof QuestLevelMinReqData) {
             setLevel(((QuestLevelMinReqData) reqData).getMinLevel());
         }
+    }
+
+    @Override
+    public QuestProgressRequirement deepCopy() {
+        return new QuestProgressLevelRequirement(level, 0);
     }
 }
 

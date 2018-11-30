@@ -53,7 +53,7 @@ public class CP_MobMove extends InPacket<GameClient> {
     private int mobSkillID;
     private int mobSkillLevel;
     private int mobSkillDelay;
-    private MobSkillAttackInfo msai = new MobSkillAttackInfo();
+    private MobSkillAttackInfo msai;
     private int crc0, crc1, crc2;
     private int encodedGatherDuration;
     private Mob mob;
@@ -64,6 +64,8 @@ public class CP_MobMove extends InPacket<GameClient> {
 
     @Override
     public void read() {
+
+        msai = new MobSkillAttackInfo();
         final GameClient client = getClient();
         final Character chr = client.getCharacter();
         final Field field = chr.getField();
@@ -131,12 +133,7 @@ public class CP_MobMove extends InPacket<GameClient> {
         Character controller = mob.getController();
 
         if (controller != null && controller.equals(chr)) {
-            for (IMovement movement : movements) {
-                mob.setPosition(movement.getPosition());
-                mob.setMoveAction(movement.getMoveAction());
-                mob.setFh(movement.getFh());
-            }
-
+            mob.move(movements);
             if (!movements.isEmpty()) {
                 getClient().write(new LP_MobCtrlAck(mob, true, moveId, mobSkillID, (byte) mobSkillLevel, 0));
                 field.broadcastPacket(new LP_MobMove(mob, msai, movements), controller);

@@ -100,8 +100,8 @@ public class LP_SetField extends OutPacket<GameClient> {
             fieldCustom.encode(this);
         }
 
-        encodeByte(false); // is pvp map, deprecated
-        encodeByte(canNotifyAnnouncedQuest);
+        encodeByte(false);
+        encodeByte(false); // display pvp levl
 
         encodeByte(JobConstants.isSeparatedSp(chr.getJob()));
 

@@ -50,6 +50,7 @@ import lombok.Setter;
 
 import java.lang.ref.WeakReference;
 import java.util.*;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Created by Weber on 2018/4/11.
@@ -344,7 +345,7 @@ public class Mob extends InternalLife {
     }
 
     public void setController(Character character) {
-        controller = new WeakReference<Character>(character);
+        controller = new WeakReference<>(character);
     }
 
     @Override
@@ -353,8 +354,10 @@ public class Mob extends InternalLife {
     }
 
 
-    public void die() {
+    public synchronized void die() {
         final Field field = getField();
+        if (field == null )
+            return;
         field.broadcastPacket(new LP_MobLeaveField(this));
         distributeExp();
         dropDrops(); // xd
@@ -366,6 +369,7 @@ public class Mob extends InternalLife {
             getMobListener().die();
             setMobListener(null);
         }
+        this.setField(null);
         field.removeLife(this);
     }
 

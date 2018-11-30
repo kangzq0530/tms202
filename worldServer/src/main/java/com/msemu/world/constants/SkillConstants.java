@@ -776,23 +776,29 @@ public class SkillConstants {
     }
 
     public static boolean isAntiRepeatBuffSkill(int skillID) {
+        boolean v1; // zf
+
         if (skillID > 15001022) {
             if (skillID > 40011186) {
                 if (skillID > 80000365) {
                     if (skillID > 131001018) {
                         if (skillID > 400021035) {
                             if (skillID > 400051001) {
-                                return skillID == 400051015;
+                                v1 = skillID == 400051015;
                             } else {
-                                return skillID == 400051001 || skillID == 400031002 || skillID == 400041008;
+                                if (skillID == 400051001 || skillID == 400031002)
+                                    return true;
+                                v1 = skillID == 400041008;
                             }
                         } else {
                             if (skillID == 400021035)
                                 return true;
                             if (skillID > 400011010) {
-                                return skillID == 400021024;
+                                v1 = skillID == 400021024;
                             } else {
-                                return skillID == 400011010 || skillID == 142121016 || skillID == 400001020;
+                                if (skillID == 400011010 || skillID == 142121016)
+                                    return true;
+                                v1 = skillID == 400001020;
                             }
                         }
                     } else {
@@ -800,48 +806,58 @@ public class SkillConstants {
                             return true;
                         if (skillID > 100001271) {
                             if (skillID > 112121010) {
-                                return skillID == 112121056;
+                                v1 = skillID == 112121056;
                             } else {
-                                return skillID == 112121010 || skillID == 110001511 || skillID == 112121006;
+                                if (skillID == 112121010 || skillID == 110001511)
+                                    return true;
+                                v1 = skillID == 112121006;
                             }
                         } else {
                             if (skillID == 100001271)
                                 return true;
                             if (skillID > 80010019) {
-                                return skillID == 80011032 || skillID == 100001268;
+                                if (skillID == 80011032)
+                                    return true;
+                                v1 = skillID == 100001268;
                             } else {
-                                return skillID == 80010019 || skillID == 80001361 || skillID == 80001816;
+                                if (skillID == 80010019 || skillID == 80001361)
+                                    return true;
+                                v1 = skillID == 80001816;
                             }
                         }
                     }
+                    return v1;
                 }
                 if (skillID == 80000365)
                     return true;
-                if (skillID > 0x3A453CA) {
-                    if (skillID > 0x3E1843C) {
+                if (skillID > 61101002) {
+                    if (skillID > 65111100) {
                         switch (skillID) {
-                            case 0x3E1AAEC:
-                            case 0x3E1AAF1:
-                            case 0x3E1AAF3:
-                            case 0x3E1AB1D:
-                            case 0x3E1AB1E:
+                            case 65121004:
+                            case 65121009:
+                            case 65121011:
+                            case 65121053:
+                            case 65121054:
                                 return true;
                             default:
                                 return false;
                         }
                     }
-                    if (skillID == 0x3E1843C)
+                    if (skillID == 65111100)
                         return true;
-                    if (skillID > 0x3A49E07) {
-                        if (skillID == 0x3A4A1F6)
+                    if (skillID > 61120007) {
+                        if (skillID == 61121014)
                             return true;
-                        return skillID == 0x3A4A2C1;
-
+                        v1 = skillID == 61121217;
+                        return v1;
                     }
-                    if (skillID == 0x3A49E07)
+                    if (skillID == 61120007)
                         return true;
-                    if (skillID >= 0x3A477C3) {
-                        return skillID <= 61110212 || skillID == 0x3A47AE0;
+                    if (skillID >= 61110211) {
+                        if (skillID <= 61110212)
+                            return true;
+                        v1 = skillID == 61111008;
+                        return v1;
                     }
                 } else {
                     if (skillID == 61101002)
@@ -859,77 +875,97 @@ public class SkillConstants {
                             }
                         }
                     } else {
-                        if (skillID >= 0x282B75D)
+                        if (skillID >= 42121053)
                             return true;
-                        if (skillID <= 0xEC29D0 + 1) {
-                            return skillID == 15477201 || skillID == 41001010 || skillID == 41101003;
+                        if (skillID <= 41121005) {
+                            if (skillID == 41121005 || skillID == 41001010)
+                                return true;
+                            v1 = skillID == 41101003;
+                            return v1;
                         }
                         if (skillID >= 41121053) {
-                            return skillID <= 41121054 || skillID == 42121006;
-
+                            if (skillID <= 41121054)
+                                return true;
+                            v1 = skillID == 42121006;
+                            return v1;
                         }
                     }
                 }
             } else {
-                if (skillID == 0x26285B0 + 2)
+                if (skillID == 40011186)
                     return true;
-                if (skillID > 0x19DD56C + 2) {
-                    if (skillID > 0x1EA20DD) {
-                        if (skillID > 0x217E79D) {
-                            if (skillID > 0x22729DE) {
-                                return skillID == 0x2366C1D;
+                if (skillID > 27121006) {
+                    if (skillID > 32121053) {
+                        if (skillID > 35121053) {
+                            if (skillID > 36121054) {
+                                v1 = skillID == 37121053;
                             } else {
-                                return skillID >= 0x22729DB + 2 || skillID == 0x227029A + 2 || skillID == 0x22729B0;
+                                if (skillID >= 36121053 || skillID == 36111004)
+                                    return true;
+                                v1 = skillID == 36121008;
                             }
                         } else {
-                            if (skillID == 0x217E79D)
+                            if (skillID == 35121053)
                                 return true;
-                            if (skillID > 0x217C063 + 2) {
-                                return skillID == 0x217E38E;
+                            if (skillID > 35111013) {
+                                v1 = skillID == 35120014;
                             } else {
-                                return skillID == 0x217C063 + 2 || skillID == 0x1F962EE + 1 || skillID - (0x1F962EE + 1) == 46;
+                                if (skillID == 35111013 || skillID == 33121007)
+                                    return true;
+                                v1 = skillID == 33121053;
                             }
                         }
+                        return v1;
                     }
-                    if (skillID == 0x1EA20DD)
+                    if (skillID == 32121053)
                         return true;
-                    if (skillID > 0x1DC3DFC) {
-                        if (skillID > 0x1DC653C + 2) {
-                            return skillID == 0x1EA20AC + 3;
+                    if (skillID > 31211004) {
+                        if (skillID > 31221054) {
+                            v1 = skillID == 32121007;
                         } else {
-                            return skillID >= 0x1DC653C + 1 || skillID == 0x1DC6507 + 2 || skillID - (0x1DC6507 + 2) == 7;
+                            if (skillID >= 31221053 || skillID == 31221001)
+                                return true;
+                            v1 = skillID == 31221008;
                         }
+                        return v1;
                     }
-                    if (skillID >= 0x1DC3DF7 + 4)
+                    if (skillID >= 31211003)
                         return true;
-                    if (skillID > 0x1D930B9) {
-                        if (skillID >= 0x1DADE6B) {
-                            return skillID <= 0x1DADE6B + 2 || skillID == 0x1DADE9D;
+                    if (skillID > 31011001) {
+                        if (skillID >= 31121003) {
+                            if (skillID <= 31121005)
+                                return true;
+                            v1 = skillID == 31121053;
+                            return v1;
                         }
                     } else {
-                        if (skillID == 0x1D930B9 || skillID == 0x19DD571)
+                        if (skillID == 31011001 || skillID == 27121009)
                             return true;
-                        if (skillID > 0x19DD597 + 5) {
-                            return skillID <= 0x19DD59D + 1;
+                        if (skillID > 27121052) {
+                            if (skillID > 27121054)
+                                return false;
+                            return true;
                         }
                     }
                 } else {
-                    if (skillID == 0x19DD56C + 2)
+                    if (skillID == 27121006)
                         return true;
-                    if (skillID > 0x160A55B + 1) {
-                        if (skillID > 0x1700ED9 + 4) {
-                            if (skillID <= 0x17F516B + 1) {
-                                return skillID == 0x17F516B + 1 || skillID == 0x17F02D1 || skillID == 0x17F514E + 6;
-
+                    if (skillID > 23111004) {
+                        if (skillID > 24121053) {
+                            if (skillID <= 25121132) {
+                                if (skillID == 25121132 || skillID == 25101009)
+                                    return true;
+                                v1 = skillID == 25121108;
+                                return v1;
                             }
-                            if (skillID >= 0x19DAE59 + 4) {
-                                return skillID <= 0x19DAE5E;
+                            if (skillID >= 27111005) {
+                                return skillID <= 27111006;
                             }
                         } else {
-                            if (skillID == 0x1700ED9 + 4)
+                            if (skillID == 24121053)
                                 return true;
-                            if (skillID <= 0x16FE79B) {
-                                if (skillID != 0x16FE79B) {
+                            if (skillID <= 24111003) {
+                                if (skillID != 24111003) {
                                     switch (skillID) {
                                         case 23121004:
                                         case 23121005:
@@ -942,70 +978,77 @@ public class SkillConstants {
                                 }
                                 return true;
                             }
-                            if (skillID == 0x1700EAC)
+                            if (skillID == 24121004)
                                 return true;
-                            if (skillID > 0x1700EAE) {
-                                if (skillID > 24121008)
-                                    return false;
-                                ;
-                                return true;
+                            if (skillID > 24121006) {
+                                return skillID <= 24121008;
                             }
                         }
                     } else {
-                        if (skillID == 0x160A55B + 1)
+                        if (skillID == 23111004)
                             return true;
-                        if (skillID > 0x14247E8) {
-                            if (skillID > 0x1524DC0 + 1) {
-                                return skillID == 0x1524DCA;
+                        if (skillID > 21121000) {
+                            if (skillID > 22171073) {
+                                v1 = skillID == 22171082;
+                                return v1;
                             }
-                            if (skillID == 0x1524DC0 + 1)
+                            if (skillID == 22171073)
                                 return true;
-                            if (skillID >= 0x1424817 + 6) {
-                                return skillID <= 0x142481E || skillID == 0x1524DBB + 1;
+                            if (skillID >= 21121053) {
+                                if (skillID <= 21121054)
+                                    return true;
+                                v1 = skillID == 22171068;
+                                return v1;
                             }
                         } else {
-                            if (skillID == 0x14247E8)
+                            if (skillID == 21121000)
                                 return true;
-                            if (skillID <= 0xE6BA9B + 2) {
-                                return skillID == 0xE6BA9B + 2 || skillID == 0xE6BA68 || skillID - 0xE6BA68 == 5;
+                            if (skillID <= 15121053) {
+                                if (skillID == 15121053 || skillID == 15121000)
+                                    return true;
+                                v1 = skillID == 15121005;
+                                return v1;
                             }
-                            if (skillID >= 0x131A6E7 + 2) {
-                                return skillID <= 0x131A6E7 + 3 || skillID == 0x14220DD + 7;
+                            if (skillID >= 20031209) {
+                                if (skillID <= 20031210)
+                                    return true;
+                                v1 = skillID == 21111012;
+                                return v1;
                             }
                         }
                     }
                 }
             }
         } else {
-            if (skillID == 0xE4E5BE)
+            if (skillID == 15001022)
                 return true;
-            if (skillID > 0x423D08) {
-                if (skillID > 0x574BDE) {
+            if (skillID > 4341000) {
+                if (skillID > 5721054) {
                     if (skillID > 13101024) {
-                        if (skillID > 0xD5A36D + 2) {
-                            if (skillID > 0xD77827 + 1) {
-                                return skillID == 0xD7785D;
-
+                        if (skillID > 14001007) {
+                            if (skillID > 14121000) {
+                                v1 = skillID == 14121053;
+                                return v1;
                             }
-                            if (skillID == 0xD77827 + 1)
+                            if (skillID == 14121000)
                                 return true;
-                            if (skillID >= 0xD5A379 + 5) {
-                                if (skillID <= 0xD5A37F)
+                            if (skillID >= 14001022) {
+                                if (skillID <= 14001023)
                                     return true;
-                                return skillID == 0xD5A381 + 2;
-
+                                v1 = skillID == 14001027;
+                                return v1;
                             }
                         } else {
-                            if (skillID == 0xD5A36D + 2)
+                            if (skillID == 14001007)
                                 return true;
-                            if (skillID > 0xC8361A + 3) {
-                                return skillID == 0xD5A36B;
-
+                            if (skillID > 13121053) {
+                                v1 = skillID == 14001003;
+                                return v1;
                             }
-                            if (skillID == 0xC8361A + 3 || skillID == 0xC835E2 + 6)
+                            if (skillID == 13121053 || skillID == 13121000)
                                 return true;
                             if (skillID > 13121003) {
-                                if (skillID > 0xC835ED)
+                                if (skillID > 13121005)
                                     return false;
                                 return true;
                             }
@@ -1013,97 +1056,121 @@ public class SkillConstants {
                     } else {
                         if (skillID == 13101024)
                             return true;
-                        if (skillID <= 0xA9B19A + 4) {
-                            if (skillID >= 0xA9B19A + 3)
+                        if (skillID <= 11121054) {
+                            if (skillID >= 11121053)
                                 return true;
-                            if (skillID > 0xA98A6E + 1) {
-                                return skillID == 0xA9B167 + 1 || skillID - (0xA9B167 + 1) == 5;
+                            if (skillID > 11111023) {
+                                if (skillID == 11121000)
+                                    return true;
+                                v1 = skillID == 11121005;
                             } else {
-                                return skillID >= 0xA98A6E || skillID == 0xA7DCBC + 2 || skillID == 0xA9635E;
+                                if (skillID >= 11111022 || skillID == 11001022)
+                                    return true;
+                                v1 = skillID == 11101022;
                             }
-
+                            return v1;
                         }
-                        if (skillID > 0xB8F3DC + 1) {
-                            return skillID == 0xC6613E;
-
+                        if (skillID > 12121053) {
+                            v1 = skillID == 13001022;
+                            return v1;
                         }
-                        if (skillID == 0xB8F3DC + 1)
+                        if (skillID == 12121053)
                             return true;
-                        if (skillID >= 0xB8A587 + 1) {
-                            return skillID <= 0xB8A587 + 2 || skillID == 0xB8F3A8;
-
+                        if (skillID >= 12101000) {
+                            if (skillID <= 12101001)
+                                return true;
+                            v1 = skillID == 12121000;
+                            return v1;
                         }
                     }
                 } else {
                     if (skillID >= 5721053)
                         return true;
                     if (skillID > 5221018) {
-                        if (skillID > 0x51315D) {
+                        if (skillID > 5321053) {
                             if (skillID > 5711024) {
-                                return skillID == 0x574BA5 + 3;
+                                v1 = skillID == 5721000;
                             } else {
-                                return skillID == 0x5724AF + 1 || skillID == 0x56FD94 + 1 || skillID == 0x57249E + 1;
+                                if (skillID == 5711024 || skillID == 5701013)
+                                    return true;
+                                v1 = skillID == 5711007;
                             }
-
+                            return v1;
                         }
-                        if (skillID == 0x51315D)
+                        if (skillID == 5321053)
                             return true;
-                        if (skillID > 0x510A1D) {
+                        if (skillID > 5311005) {
                             if (skillID >= 5320007) {
-                                return skillID <= 5320008 || skillID == 0x51312B + 2;
-
+                                if (skillID <= 5320008)
+                                    return true;
+                                v1 = skillID == 5321005;
+                                return v1;
                             }
                         } else {
-                            if (skillID >= 0x510A1C)
+                            if (skillID >= 5311004)
                                 return true;
                             if (skillID >= 5221053) {
-                                return skillID <= 5221054 || skillID == 0x50E309 + 2;
-
+                                if (skillID <= 5221054)
+                                    return true;
+                                v1 = skillID == 5301003;
+                                return v1;
                             }
                         }
                     } else {
-                        if (skillID == 0x4FAA9A)
+                        if (skillID == 5221018)
                             return true;
-                        if (skillID <= 0x4E23F7) {
-                            if (skillID == 0x4E23F7)
+                        if (skillID <= 5121015) {
+                            if (skillID == 5121015)
                                 return true;
                             if (skillID > 5120012) {
-                                return skillID == 0x4E23E8 || skillID - 0x4E23E8 == 9;
+                                if (skillID == 5121000)
+                                    return true;
+                                v1 = skillID == 5121009;
                             } else {
-                                return skillID == 5120012 || skillID == 0x423D3D || skillID == 0x4DFCDF;
+                                if (skillID == 5120012 || skillID == 4341053)
+                                    return true;
+                                v1 = skillID == 5111007;
                             }
-
+                            return v1;
                         }
-                        if (skillID > 0x4FA6AE) {
-                            return skillID == 0x4FAA86 + 2;
-
+                        if (skillID > 5220014) {
+                            v1 = skillID == 5221000;
+                            return v1;
                         }
-                        if (skillID == 0x4FA6AE)
+                        if (skillID == 5220014)
                             return true;
-                        if (skillID >= 0x4E241B + 2) {
-                            return skillID <= 0x4E241E || skillID == 0x4F837D + 2;
-
+                        if (skillID >= 5121053) {
+                            if (skillID <= 5121054)
+                                return true;
+                            v1 = skillID == 5211007;
+                            return v1;
                         }
                     }
                 }
             } else {
-                if (skillID == 0x423D08)
+                if (skillID == 4341000)
                     return true;
                 if (skillID > 2221053) {
                     if (skillID > 3211012) {
                         if (skillID > 4121000) {
-                            if (skillID > 0x40687D) {
-                                return skillID == 0x41A0C8 + 3;
+                            if (skillID > 4221053) {
+                                v1 = skillID == 4301003;
                             } else {
-                                return skillID == 0x40687D || skillID == 4121053 || skillID == 0x406846 + 2;
+                                if (skillID == 4221053 || skillID == 4121053)
+                                    return true;
+                                v1 = skillID == 4221000;
                             }
                         } else {
                             if (skillID == 4121000)
                                 return true;
                             if (skillID > 4001003) {
-                                return skillID == 4001005 || skillID == 4101011;
+                                if (skillID == 4001005)
+                                    return true;
+                                v1 = skillID == 4101011;
                             } else {
-                                return skillID == 4001003 || skillID == 3221000 || skillID - 3221000 == 53;
+                                if (skillID == 4001003 || skillID == 3221000)
+                                    return true;
+                                v1 = skillID == 3221053;
                             }
                         }
                     } else {
@@ -1111,20 +1178,27 @@ public class SkillConstants {
                             return true;
                         if (skillID > 2321053) {
                             if (skillID > 3121002) {
-                                return skillID == 3121053;
+                                v1 = skillID == 3121053;
                             } else {
-                                return skillID == 3121002 || skillID == 3111011 || skillID == 3121000;
+                                if (skillID == 3121002 || skillID == 3111011)
+                                    return true;
+                                v1 = skillID == 3121000;
                             }
                         } else {
                             if (skillID == 2321053)
                                 return true;
                             if (skillID > 2311003) {
-                                return skillID == 2321000 || skillID - 2321000 == 5;
+                                if (skillID == 2321000)
+                                    return true;
+                                v1 = skillID == 2321005;
                             } else {
-                                return skillID == 2311003 || skillID == 2301004 || skillID == 2311001;
+                                if (skillID == 2311003 || skillID == 2301004)
+                                    return true;
+                                v1 = skillID == 2311001;
                             }
                         }
                     }
+                    return v1;
                 }
                 if (skillID == 2221053)
                     return true;
@@ -1133,18 +1207,26 @@ public class SkillConstants {
                         if (skillID == 2101010)
                             return true;
                         if (skillID > 1321015) {
-                            return skillID == 1321053 || skillID == 2101001;
+                            if (skillID == 1321053)
+                                return true;
+                            v1 = skillID == 2101001;
                         } else {
-                            return skillID >= 1321014 || skillID == 1311015 || skillID == 1321000;
+                            if (skillID >= 1321014 || skillID == 1311015)
+                                return true;
+                            v1 = skillID == 1321000;
                         }
+                        return v1;
                     }
                     if (skillID > 2201001) {
-                        return skillID == 2221000;
+                        v1 = skillID == 2221000;
+                        return v1;
                     }
                     if (skillID == 2201001 || skillID == 2121000)
                         return true;
                     if (skillID > 2121052) {
-                        return skillID <= 2121054;
+                        if (skillID > 2121054)
+                            return false;
+                        return true;
                     }
                 } else {
                     if (skillID >= 1301006)
@@ -1153,15 +1235,25 @@ public class SkillConstants {
                         if (skillID == 1211010)
                             return true;
                         if (skillID > 1121000) {
-                            return !(skillID != 1121016 && (skillID <= 1121052 || skillID > 1121054));
+                            if (skillID != 1121016 && (skillID <= 1121052 || skillID > 1121054))
+                                return false;
+                            return true;
                         }
-                        return skillID == 1121000 || skillID == 1000003 || skillID == 1101006;
+                        if (skillID == 1121000 || skillID == 1000003)
+                            return true;
+                        v1 = skillID == 1101006;
+                        return v1;
                     }
                     if (skillID <= 1221014) {
-                        return skillID == 1221014 || skillID == 1211013 || skillID == 1221000;
+                        if (skillID == 1221014 || skillID == 1211013)
+                            return true;
+                        v1 = skillID == 1221000;
+                        return v1;
                     }
                     if (skillID >= 1221052) {
-                        return skillID <= 1221053;
+                        if (skillID > 1221053)
+                            return false;
+                        return true;
                     }
                 }
             }
@@ -1347,6 +1439,848 @@ public class SkillConstants {
             return true;
         }
         return false;
+    }
+
+    public static boolean isHiddenIgnoreRequestTimeSkill(int nSkillID) {
+        if (nSkillID > 25120110) {
+            if (nSkillID == 25120115)
+                return true;
+        } else if (nSkillID == 25120110 || nSkillID >= 25100009 && nSkillID <= 25100010) {
+            return true;
+        }
+        if (isCnnCancelSkill(nSkillID)) {
+            return true;
+        }
+        return nSkillID == 25100002;
+    }
+
+    public static boolean isCnnCancelSkill(int nSkillID) {
+        boolean v1;
+        if (nSkillID <= 51111012 && (nSkillID >= 51111011 || (nSkillID - 51001006) <= 7))
+            return true;
+        if (nSkillID > 23121015) {
+            if (nSkillID > 80001881) {
+                if (nSkillID == 142111010 || nSkillID == 400011029)
+                    return true;
+                v1 = nSkillID == 400041007;
+            } else {
+                if (nSkillID == 80001881 || nSkillID == 25101205 || nSkillID == 37100002)
+                    return true;
+                v1 = nSkillID == 37110004;
+            }
+        } else {
+            if (nSkillID >= 23121014)
+                return true;
+            if (nSkillID > 21110018) {
+                if (nSkillID == 22001011 || nSkillID == 22141017)
+                    return true;
+                v1 = nSkillID == 22170070;
+            } else {
+                if (nSkillID == 21110018)
+                    return true;
+                if (nSkillID > 14001024) {
+                    v1 = nSkillID == 20051284;
+                } else {
+                    if (nSkillID == 14001024 || nSkillID == 4331006)
+                        return true;
+                    v1 = nSkillID == 11121014;
+                }
+            }
+        }
+        return v1;
+    }
+
+    public static int getLinkedSkill(int skillId) {
+        switch (skillId) {
+            case 1111014: // 虎咆哮_下
+                return 1111008; // 虎咆哮
+            case 21000006:
+            case 21000007:
+            case 21110022:
+                return 21001010; // 粉碎震撼
+            case 21000004:
+                return 21001009; // 猛擲之矛
+            case 21100012:
+            case 21100002:
+                return 21101016; // 突次之矛
+            case 21100013:
+                return 21101017; // 旋風斬
+            case 21110020:
+            case 21110028:
+            case 21120025:
+                return 21111021; // 終極之矛
+            case 21110018:
+                return 21111019; // 一網打盡
+            case 21110011:
+            case 21110025:
+            case 21110024:
+                return 21111017; // 鬥氣審判
+            case 21121016:
+            case 21121017:
+                return 21120022; // 比耀德
+            default:
+                return 0;
+        }
+    }
+
+    public static boolean isUseableNotStealableSkill(int nSkillID) {
+        int v1; // esi
+        boolean v2; // zf
+        if (nSkillID > 0) {
+            v1 = nSkillID / 10000;
+            if ((nSkillID / 10000 - 8000) <= 1)
+                v1 = nSkillID / 100;
+            if (v1 == 9500)
+                return true;
+        }
+        if (nSkillID > 5300007) {
+            if (nSkillID == 5310008)
+                return true;
+            v2 = nSkillID == 5310011;
+        } else {
+            if (nSkillID == 5300007 || nSkillID == 4221016)
+                return true;
+            v2 = nSkillID == 5220023;
+        }
+        return v2;
+    }
+
+    public static boolean isStealableHyperSkill(int nSkillID) {
+        boolean v1; // zf
+
+        if (nSkillID > 3121054) {
+            if (nSkillID > 4221054) {
+                if (nSkillID == 5121054)
+                    return true;
+                v1 = nSkillID == 5221054;
+            } else {
+                if (nSkillID == 4221054 || nSkillID == 3221054)
+                    return true;
+                v1 = nSkillID == 4121054;
+            }
+        } else {
+            if (nSkillID == 3121054)
+                return true;
+            if (nSkillID > 2121054) {
+                if (nSkillID == 2221054)
+                    return true;
+                v1 = nSkillID == 2321054;
+            } else {
+                if (nSkillID == 2121054 || nSkillID == 1121054 || nSkillID == 1221054)
+                    return true;
+                v1 = nSkillID == 1321054;
+            }
+        }
+        return v1;
+    }
+
+    public static int getSkillRootBySkill(int nSkillID) {
+        int result; // eax
+        if ((nSkillID / 10000 - 8000) > 1)
+            result = nSkillID / 10000;
+        else
+            result = nSkillID / 100;
+        return result;
+    }
+
+    public static boolean isPhantomSkill(int nSkillID) {
+        int v1; // ecx
+        v1 = nSkillID / 10000;
+        if ((nSkillID / 10000 - 8000) <= 1)
+            v1 = nSkillID / 100;
+        return (v1 - 2400) < 0x64 || v1 == 2003;
+    }
+
+    public static boolean isActiveSkill(int nSkillID) {
+        int v1; // e
+        v1 = nSkillID / 1000 % 10;
+        return v1 > 0 && v1 != 9;
+    }
+
+    public static int getJobCategory(int nJob) {
+        int result; // eax MAPDST
+        result = nJob % 1000 / 100;
+        switch (nJob / 100) {
+            case 27:
+            case 140:
+            case 142:
+                result = 2;
+                break;
+            case 36:
+                result = 4;
+                break;
+            case 37:
+                result = 1;
+                break;
+            default:
+                return result;
+        }
+        return result;
+    }
+
+    public static boolean isNormalBoosterSkill(int nSkillID) {
+        int v1; // ecx
+        boolean v2; // zf
+
+        v1 = nSkillID / 10000;
+        if ((nSkillID / 10000 - 8000) <= 1)
+            v1 = nSkillID / 100;
+        if ((v1 / 1000) > 0 || MapleJob.is初心者(v1))
+            return false;
+        if (nSkillID > 4101003) {
+            if (nSkillID > 5101006) {
+                if (nSkillID == 5201003 || nSkillID == 42101003)
+                    return true;
+                v2 = nSkillID == 80001366;
+            } else {
+                if (nSkillID == 5101006 || nSkillID == 4201002 || nSkillID == 4311009)
+                    return true;
+                v2 = nSkillID == 5081023;
+            }
+            return !v2;
+        }
+        if (nSkillID == 4101003)
+            return true;
+        if (nSkillID > 2201010) {
+            if (nSkillID == 2301008 || nSkillID == 3101002)
+                return true;
+            v2 = nSkillID == 3201002;
+            return !v2;
+        }
+        if (nSkillID == 2201010)
+            return true;
+        if (nSkillID > 1301004) {
+            v2 = nSkillID == 2101008;
+            return !v2;
+        } else {
+            if (nSkillID == 1301004 || nSkillID == 1101004)
+                return true;
+            v2 = nSkillID == 1201004;
+            return !v2;
+        }
+    }
+
+    public static int getVariDummyBulletByCane(int nStealSkillID) {
+        int v1; // esi
+        int v2; // edi
+        int v3; // eax
+        int v4; // edi
+        int v5; // edi
+
+        v1 = nStealSkillID / 10000;
+        if ((nStealSkillID / 10000 - 8000) <= 1)
+            v1 = nStealSkillID / 100;
+        v2 = getJobCategory(v1);
+        v3 = v1 % 100 / 10;
+        if (nStealSkillID == 4001334 || nStealSkillID == 5001003)
+            v3 = 2;
+        v4 = v2 - 3;
+        if (v4 > 0) {
+            v5 = v4 - 1;
+            if (v5 > 0) {
+                if (v5 == 1 && (v3 == 2 || v3 == 9 || v3 == 8 || v3 == 0))
+                    return 2330009;
+            } else if (v3 <= 1) {
+                return 2070025;
+            }
+        } else {
+            if (v3 <= 1)
+                return 2061011;
+            if (v3 == 2)
+                return 2060012;
+        }
+        return 0;
+    }
+
+    public static boolean isNormalPupetSkill(int nSkillID) {
+        int v1; // ecx
+        boolean result; // eax
+        v1 = nSkillID / 10000;
+        if ((nSkillID / 10000 - 8000) <= 1)
+            v1 = nSkillID / 100;
+        if ((v1 / 1000) > 0 || MapleJob.is初心者(v1))
+            result = false;
+        else
+            result = nSkillID == 3221014;
+        return result;
+    }
+
+    public static boolean isTeleportMasterySkill(int nSkillID) {
+        boolean v1; // zf
+        if (nSkillID > 2311007) {
+            if (nSkillID == 12111007)
+                return true;
+            v1 = nSkillID == 32111010;
+        } else {
+            if (nSkillID == 2311007 || nSkillID == 2111007)
+                return true;
+            v1 = nSkillID == 2211007;
+        }
+        return v1;
+    }
+
+    public static boolean isMovingSkill(int nSkillID) {
+        boolean v2; // zf
+
+        if (nSkillID > 37100002) {
+            if (nSkillID > 80001886) {
+                if (nSkillID == 100001266)
+                    return true;
+                v2 = nSkillID == 400051004;
+            } else {
+                if (nSkillID == 80001886 || nSkillID == 37101001 || nSkillID == 37110004)
+                    return true;
+                v2 = nSkillID == 37111003;
+            }
+        } else {
+            if (nSkillID == 37100002)
+                return true;
+            if (nSkillID > 20001295) {
+                if (nSkillID == 25101205 || nSkillID == 30001068)
+                    return true;
+                v2 = nSkillID == 31101002;
+            } else {
+                if (nSkillID == 20001295 || nSkillID == 4211016 || nSkillID == 12101025)
+                    return true;
+                v2 = nSkillID == 13001021;
+            }
+        }
+        if (!v2 && nSkillID != 112111000 && nSkillID != 41001012) {
+            final SkillInfo si = SkillData.getInstance().getSkillInfoById(nSkillID);
+            return si.getSkillType() <= 42; // SKILL_TYPE_MOVE_RANDOM_TELEPORT
+        }
+        return true;
+    }
+
+    public static boolean isHerosWillSkill(int nSkillID) {
+        boolean ret; // zf
+
+        if (nSkillID > 23121008) {
+            if (nSkillID > 41121004) {
+                if (nSkillID > 65121010) {
+                    if (nSkillID == 110001512 || nSkillID == 142121007)
+                        return true;
+                    ret = nSkillID == 400001009;
+                } else {
+                    if (nSkillID == 65121010 || nSkillID == 42121007 || nSkillID == 61121015)
+                        return true;
+                    ret = nSkillID == 61121220;
+                }
+            } else {
+                if (nSkillID == 41121004)
+                    return true;
+                if (nSkillID > 33121008) {
+                    if (nSkillID == 35121008 || nSkillID == 36121009)
+                        return true;
+                    ret = nSkillID == 37121007;
+                } else {
+                    if (nSkillID == 33121008)
+                        return true;
+                    if (nSkillID > 27121010) {
+                        ret = nSkillID == 32121008;
+                    } else {
+                        if (nSkillID == 27121010 || nSkillID == 24121009)
+                            return true;
+                        ret = nSkillID == 25121211;
+                    }
+                }
+            }
+        } else {
+            if (nSkillID == 23121008)
+                return true;
+            if (nSkillID > 4121009) {
+                if (nSkillID > 5321006) {
+                    if (nSkillID == 5721002 || nSkillID == 21121008)
+                        return true;
+                    ret = nSkillID == 22171069;
+                } else {
+                    if (nSkillID == 5321006)
+                        return true;
+                    if (nSkillID > 5121008) {
+                        ret = nSkillID == 5221010;
+                    } else {
+                        if (nSkillID == 5121008 || nSkillID == 4221008)
+                            return true;
+                        ret = nSkillID == 4341008;
+                    }
+                }
+            } else {
+                if (nSkillID == 4121009)
+                    return true;
+                if (nSkillID > 2221008) {
+                    if (nSkillID == 2321009 || nSkillID == 3121009)
+                        return true;
+                    ret = nSkillID == 3221008;
+                } else {
+                    if (nSkillID == 2221008)
+                        return true;
+                    if (nSkillID > 1321010) {
+                        ret = nSkillID == 2121008;
+                    } else {
+                        if (nSkillID == 1321010 || nSkillID == 1121011)
+                            return true;
+                        ret = nSkillID == 1221012;
+                    }
+                }
+            }
+        }
+        return ret;
+    }
+
+    public static boolean isNormalMapleheroSkill(int nSkillID) {
+        int v1; // ecx
+        boolean v2; // zf
+
+        v1 = nSkillID / 10000;
+        if ((nSkillID / 10000 - 8000) <= 1)
+            v1 = nSkillID / 100;
+        if ((v1 / 1000) > 0 || MapleJob.is初心者(v1))
+            return false;
+        if (nSkillID > 4221000) {
+            if (nSkillID > 5721000) {
+                if (nSkillID == 31221008 || nSkillID == 51121005)
+                    return true;
+                v2 = nSkillID == 110001511;
+                return v2;
+            }
+            if (nSkillID != 5721000) {
+                if (nSkillID > 5221000) {
+                    v2 = nSkillID == 5321005;
+                } else {
+                    if (nSkillID == 5221000 || nSkillID == 4341000)
+                        return true;
+                    v2 = nSkillID == 5121000;
+                }
+                return v2;
+            }
+            return true;
+        }
+        if (nSkillID == 4221000)
+            return true;
+        if (nSkillID > 2221000) {
+            if (nSkillID > 3221000) {
+                v2 = nSkillID == 4121000;
+            } else {
+                if (nSkillID == 3221000 || nSkillID == 2321000)
+                    return true;
+                v2 = nSkillID == 3121000;
+            }
+            return v2;
+        }
+        if (nSkillID == 2221000)
+            return true;
+        if (nSkillID > 1321000) {
+            v2 = nSkillID == 2121000;
+        } else {
+            if (nSkillID == 1321000 || nSkillID == 1121000)
+                return true;
+            return nSkillID == 1221000;
+        }
+        return v2;
+    }
+
+    public static boolean isStealableSkill(int nSkillID) {
+        if (nSkillID == 4001013)
+            return false;
+        if (nSkillID == 5121001)
+            return false;
+        if (nSkillID == 32121010)
+            return false;
+        if (nSkillID == 5311003 || nSkillID == 5221022)
+            return false;
+        if (nSkillID == 5201008)
+            return false;
+        if (nSkillID == 5201011)
+            return false;
+        if (nSkillID == 5121020)
+            return false;
+        if (nSkillID == 2221004)
+            return false;
+        if (nSkillID == 5001005)
+            return false;
+        if (nSkillID == 4211008 || nSkillID == 4111002)
+            return false;
+        if (nSkillID == 4111009)
+            return false;
+        if (nSkillID == 4341006)
+            return false;
+        if (nSkillID == 4001011)
+            return false;
+        if (nSkillID == 3221006 || nSkillID == 3201004)
+            return false;
+        if (nSkillID == 3211010)
+            return false;
+        if (nSkillID == 3101009 || nSkillID == 2321004)
+            return false;
+        if (nSkillID == 3101004)
+            return false;
+        if (nSkillID == 3121007)
+            return false;
+        if (nSkillID == 3121016)
+            return false;
+        if (nSkillID == 2201009)
+            return false;
+        if (nSkillID == 2121004 || nSkillID == 1311014)
+            return false;
+        if (nSkillID == 1321015)
+            return false;
+        if (nSkillID == 1310013)
+            return false;
+        if (nSkillID == 1121015)
+            return false;
+        if (nSkillID == 1121008 || nSkillID == 1101012)
+            return false;
+        if (nSkillID == 1111003)
+            return false;
+        if (isStealableHyperSkill(nSkillID))
+            return true;
+        final SkillInfo si = SkillData.getInstance().getSkillInfoById(nSkillID);
+        if (si == null || si.getHyper() > 0)
+            return false;
+        final int nJob = getSkillRootBySkill(nSkillID);
+        return isActiveSkill(nSkillID)
+                && !MapleJob.is初心者(nJob)
+                && (nJob / 1000) == 0
+                && !isPhantomSkill(nSkillID)
+                && getJobCategory(nJob) != 9
+                && !MapleJob.is蒼龍俠客(nJob)
+                && !isNormalBoosterSkill(nSkillID)
+                && !isNormalMapleheroSkill(nSkillID)
+                && !isHerosWillSkill(nSkillID)
+                && !isTeleportMasterySkill(nSkillID)
+                && !isMovingSkill(nSkillID)
+                // 33 = SUMMON_SKILL
+                && (si.getSkillType() != 33 || isNormalPupetSkill(nSkillID))
+                && si.getSkillType() == 98 // SKILL_TYPE_DUMMY
+                ;
+
+    }
+
+    public static boolean isUseableStealedSkill(int nSkillID) {
+        return isUseableNotStealableSkill(nSkillID) || isStealableSkill(nSkillID);
+    }
+
+    public static int getPrivateSumppBulletItemId(int nJob) {
+        int result; // eax
+        switch (nJob) {
+            case 508:
+                result = 2330010;
+                break;
+            case 570:
+                result = 2330011;
+                break;
+            case 571:
+                result = 2330012;
+                break;
+            case 572:
+                result = 2330013;
+                break;
+            default:
+                result = 0;
+                break;
+        }
+        return result;
+    }
+
+    public static int getDummyBulletItemIdForJob(int nJobCode, int nSubJobCode, int nSkillID) {
+        int result = 0; // eax
+
+        if (MapleJob.is機甲戰神(nJobCode))
+            return 2333000;
+        if (MapleJob.is重砲指揮官(nJobCode) || (nJobCode / 1000) == 0 && nSubJobCode == 2)
+            return 2333001;
+        if (MapleJob.is精靈遊俠(nJobCode))
+            return 2061010;
+        if (MapleJob.is天使破壞者(nJobCode))
+            return 2333001;
+        if (!MapleJob.is幻影俠盜(nJobCode) && isUseableStealedSkill(nSkillID)) {
+            result = getVariDummyBulletByCane(nSkillID);
+        }
+        if (result <= 0) {
+            return getPrivateSumppBulletItemId(nJobCode);
+        }
+        return result;
+    }
+
+    public static boolean sub_2299F50(int nSkillID)
+    {
+        boolean result; // al
+        switch ( nSkillID )
+        {
+            case 80011370:
+            case 80011371:
+            case 80011372:
+            case 80011373:
+            case 80011374:
+            case 80011384:
+            case 80011385:
+            case 80011386:
+            case 80011387:
+            case 80011388:
+            case 80011390:
+            case 80011401:
+            case 80011402:
+                result = true;
+                break;
+            default:
+                result = false;
+                break;
+        }
+        return result;
+    }
+
+    public static boolean sub_2299E70(int nSkillID)
+    {
+        boolean result; // al
+
+        switch ( nSkillID )
+        {
+            case 80011361:
+            case 80011362:
+            case 80011363:
+            case 80011364:
+            case 80011365:
+            case 80011366:
+            case 80011367:
+            case 80011368:
+            case 80011369:
+            case 80011375:
+            case 80011376:
+            case 80011377:
+            case 80011378:
+            case 80011379:
+            case 80011380:
+            case 80011381:
+            case 80011382:
+            case 80011383:
+            case 80011389:
+            case 80011399:
+            case 80011400:
+                result = true;
+                break;
+            default:
+                result = false;
+                break;
+        }
+        return result;
+    }
+    public static boolean isBubbleGun(int skillID)
+    {
+        return sub_2299E70(skillID) || sub_2299F50(skillID) || (skillID - 80011393) <= 1 || (skillID - 80011391) <= 1;
+    }
+
+    public static boolean  isShootSkillNotUsingShootingWeapon(int nSkillID, boolean bBySteal)
+    {
+        boolean v3; // zf
+
+        if ( bBySteal )
+            return true;
+        if ( nSkillID > 42001006 )
+        {
+            if ( nSkillID <= 80011067 && (nSkillID >= 80011065 || (nSkillID - 80001848) <= 2) )
+                return true;
+        }
+        else if ( nSkillID >= 42001005 || nSkillID >= 40021183 && (nSkillID <= 40021185 || nSkillID == 42001000) )
+        {
+            return true;
+        }
+        if ( nSkillID > 42001006 )
+        {
+            if ( (nSkillID - 80011065) <= 2 )
+                return true;
+        }
+        else if ( nSkillID >= 42001005 || nSkillID >= 40021183 && (nSkillID <= 40021185 || nSkillID == 42001000) )
+        {
+            return true;
+        }
+        if ( isBubbleGun(nSkillID) )
+            return true;
+        if ( nSkillID > 80001365 )
+        {
+            if ( nSkillID > 80011053 )
+            {
+                if ( nSkillID > 101110201 )
+                {
+                    if ( nSkillID > 112111016 )
+                    {
+                        v3 = nSkillID == 400010000;
+                    }
+                    else
+                    {
+                        if ( nSkillID == 112111016 || nSkillID == 101110204 )
+                            return true;
+                        v3 = nSkillID == 112110003;
+                    }
+                }
+                else
+                {
+                    if ( nSkillID == 101110201 )
+                        return true;
+                    if ( nSkillID > 95001001 )
+                    {
+                        if ( nSkillID == 101000202 )
+                            return true;
+                        v3 = nSkillID == 101100202;
+                    }
+                    else
+                    {
+                        if ( nSkillID == 95001001 )
+                            return true;
+                        if ( nSkillID < 80011073 )
+                            return false;
+                        if ( nSkillID <= 80011077 )
+                            return true  ;
+                        v3 = nSkillID == 80011087;
+                    }
+                }
+            }
+            else
+            {
+                if ( nSkillID == 80011053 )
+                    return true;
+                if ( nSkillID > 80001838 )
+                {
+                    switch ( nSkillID )
+                    {
+                        case 80001856:
+                        case 80001858:
+                        case 80001859:
+                        case 80001860:
+                        case 80001863:
+                        case 80001914:
+                        case 80001915:
+                        case 80001939:
+                            return true;
+                        default:
+                            return false;
+                    }
+                }
+                if ( nSkillID == 80001838 )
+                    return true;
+                if ( nSkillID > 80001587 )
+                {
+                    if ( nSkillID == 80001629 )
+                        return true;
+                    v3 = nSkillID == 80001829;
+                }
+                else
+                {
+                    if ( nSkillID == 80001587 || nSkillID == 80001387 )
+                        return true;
+                    v3 = nSkillID == 80001418;
+                }
+            }
+            return v3;
+        }
+        if ( nSkillID > 31101000 )
+        {
+            if ( nSkillID > 36111010 )
+            {
+                return nSkillID == 36121001;
+            }
+            else
+            {
+                return nSkillID == 36111010 || nSkillID == 31111005 || nSkillID == 36101009;
+            }
+        }
+        if ( nSkillID == 31101000 )
+            return true;
+        if ( nSkillID > 21100007 )
+        {
+            if ( nSkillID > 22110014 )
+            {
+                if ( nSkillID < 22110024 )
+                    return false;
+                if ( nSkillID <= 22110025 )
+                    return true;
+                v3 = nSkillID == 31001000;
+            }
+            else
+            {
+                if ( nSkillID == 22110014 || nSkillID == 21110027 )
+                    return true;
+                v3 = nSkillID == 21120006;
+            }
+            return v3;
+        }
+        if ( nSkillID == 21100007 )
+            return true;
+        if ( nSkillID > 5121017 )
+        {
+            if ( nSkillID == 21000004 )
+                return true;
+            v3 = nSkillID == 21001009;
+            return v3;
+        }
+        if ( nSkillID >= 5121016 )
+            return true;
+        if ( nSkillID >= 1078 )
+        {
+            if ( nSkillID <= 1079 )
+                return true;
+            v3 = nSkillID == 5121013;
+            return v3;
+        }
+        return false;
+    }
+
+    public static boolean isFieldAttackObjSkill(int nSkillID)
+    {
+        int ret; // ecx
+        if ( nSkillID <= 0)
+            return false;
+        ret = nSkillID / 10000;
+        if ( (nSkillID / 10000 - 8000) <= 1 )
+            ret = nSkillID / 100;
+        return ret == 9500;
+    }
+
+    public static boolean isPrivateBoat(int skillID)
+    {
+        return skillID >= 5220023 && (skillID <= 5220025 || skillID == 5221022);
+    }
+
+    public static boolean isShootSkillNotConsumingBullet(int nSkillID, boolean bySteal) {
+        int v3; // ecx
+        boolean ret; // zf
+
+        if (bySteal)
+            return true;
+        if (nSkillID == 112111016)
+            return true;
+        v3 = nSkillID / 10000;
+        if ((nSkillID / 10000 - 8000) <= 1)
+            v3 = nSkillID / 100;
+        if (getDummyBulletItemIdForJob(v3, 0, 0) > 0
+                || isShootSkillNotUsingShootingWeapon(nSkillID, false)
+                || isFieldAttackObjSkill(nSkillID)
+                || isPrivateBoat(nSkillID)
+                || isBubbleGun(nSkillID)) {
+            return true;
+        }
+        if (nSkillID > 33101002) {
+            if (nSkillID > 80001915) {
+                if ((nSkillID - 80011113) > 1)
+                    return false;
+                return true;
+            }
+            if (nSkillID >= 80001914 || nSkillID == 33121052)
+                return true;
+            ret = nSkillID == 80001629;
+        } else {
+            if (nSkillID == 33101002)
+                return true;
+            if (nSkillID > 5721055) {
+                if (nSkillID == 13101020)
+                    return true;
+                ret = nSkillID == 14101006;
+            } else {
+                if (nSkillID == 5721055 || nSkillID == 1078)
+                    return true;
+                ret = nSkillID == 5701010;
+            }
+        }
+        return ret;
     }
 
 }

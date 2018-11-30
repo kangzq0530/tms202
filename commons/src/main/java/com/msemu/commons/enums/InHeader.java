@@ -72,7 +72,7 @@ public enum InHeader implements IHeader {
     CP_AliveAck(ClientState.CONNECTED),
     CP_ResponseToCheckAliveAck,
     CP_ClientDumpLog(ClientState.values()),
-    CP_SetGender(ClientState.CONNECTED),
+    CP_SetGender(ClientState.AUTHED_GG),
     CP_ServerStatusRequest,
     CP_LoginBackground(ClientState.CONNECTED),
     CP_DirectGoToField(ClientState.AUTHED),
@@ -509,9 +509,14 @@ public enum InHeader implements IHeader {
             case "CP_MobMove":
             case "CP_UserMove":
             case "CP_UserHit":
-            case "CP_UserMeleeAttack":
             case "CP_DummyCode":
             case "CP_UserChangeStatRequest":
+            case "CP_MobApplyCtrl":
+            case "CP_UserRequestInstanceTable":
+            case "CP_UserPortalScriptRequest":
+            case "CP_ReactorHit":
+            case "CP_UserMeleeAttack":
+            case "CP_UserChangeSlotPositionRequest":
                 return true;
             default:
                 return false;

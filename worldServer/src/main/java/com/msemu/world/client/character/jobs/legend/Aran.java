@@ -25,6 +25,7 @@
 package com.msemu.world.client.character.jobs.legend;
 
 import com.msemu.commons.data.enums.MobBuffStat;
+import com.msemu.commons.data.enums.SkillStat;
 import com.msemu.commons.data.templates.skill.SkillInfo;
 import com.msemu.commons.network.packets.InPacket;
 import com.msemu.commons.utils.Rand;
@@ -40,6 +41,8 @@ import com.msemu.world.client.field.AffectedArea;
 import com.msemu.world.client.field.Field;
 import com.msemu.world.client.field.lifes.Mob;
 import com.msemu.world.client.field.lifes.skills.MobTemporaryStat;
+import com.msemu.world.constants.MapleJob;
+import com.msemu.world.constants.SkillConstants;
 import com.msemu.world.data.SkillData;
 import com.msemu.world.enums.ChatMsgType;
 import com.msemu.world.enums.Stat;
@@ -93,8 +96,8 @@ public class Aran extends JobHandler {
     public static final int 終極研究I = 21100015;
     public static final int FINAL_TOSS_COMBO = 21100012;
 
-    public static final int ROLLING_SPIN = 21101017;
-    public static final int ROLLING_SPIN_COMBO = 21100013; //Special Attack (Stun Debuff) (Special Skill from Key-Command)
+    public static final int 旋風斬 = 21101017;
+    public static final int 旋風斬_COMBO = 21100013; //Special Attack (Stun Debuff) (Special Skill from Key-Command)
 
     public static final int GATHERING_HOOK = 21111019;
     public static final int GATHERING_HOOK_COMBO = 21110018;
@@ -131,6 +134,7 @@ public class Aran extends JobHandler {
             找回記憶,
             戰鬥衝刺,
     };
+
     private int combo = 0;
 
     public Aran(Character character) {
@@ -260,12 +264,13 @@ public class Aran extends JobHandler {
 
     private void handleAdrenalinRush(int skillId, TemporaryStatManager tsm) {
         // 處理鬥氣爆發
-        SkillInfo adrenalinInfo = SkillData.getInstance().getSkillInfoById(鬥氣爆發);
+        final Character chr = getCharacter();
+        final SkillInfo adrenalinInfo = SkillData.getInstance().getSkillInfoById(鬥氣爆發);
         if (getCharacter().hasSkill(鬥氣爆發)) {
             Option o = new Option();
             o.nOption = 1;
             o.rOption = 鬥氣爆發;
-            o.tOption = adrenalinInfo.getValue(time, adrenalinInfo.getCurrentLevel());
+            o.tOption = adrenalinInfo.getValue(time, chr.getSkill(鬥氣爆發).getCurrentLevel());
             o.cOption = 1;
             tsm.putCharacterStatValue(AdrenalinBoost, o);
             getClient().write(new LP_TemporaryStatSet(tsm));
@@ -310,17 +315,20 @@ public class Aran extends JobHandler {
         final boolean normalAttack = attackInfo.skillId == 0;
         final Character chr = getCharacter();
         final TemporaryStatManager tsm = chr.getTemporaryStatManager();
-        final Skill skill = chr.getSkill(attackInfo.skillId);
-        final int skillID = skill != null ? skill.getSkillId() : 0;
-        SkillInfo si = skill != null ? getSkillInfo(skillID) : null;
-        boolean hasHitMobs = attackInfo.mobAttackInfo.size() > 0;
-        int slv = attackInfo.getSlv();
-        if ((!normalAttack && (skill == null || si == null)))
+        final int linkedSkill = SkillConstants.getLinkedSkill(attackInfo.skillId);
+        final boolean hasSkill = chr.getSkill(linkedSkill > 0 ? linkedSkill : attackInfo.skillId) != null;
+        if (!hasSkill)
             return false;
-        if ((!normalAttack) && skill.getCurrentLevel() != slv)
+        final SkillInfo si = getSkillInfo(attackInfo.skillId);
+        if ((!normalAttack) && si == null)
+            return false;
+        final int slv = chr.getSkill(linkedSkill > 0 ? linkedSkill : attackInfo.skillId).getCurrentLevel();
+        if ((!normalAttack) && attackInfo.slv != slv)
             return false;
         if (normalAttack && slv != 0)
             return false;
+        final boolean hasHitMobs = attackInfo.mobAttackInfo.size() > 0;
+        final int skillId = attackInfo.skillId;
         // trigger cheat attack
         if (hasHitMobs) {
             handleComboAbility(tsm, attackInfo);
@@ -328,139 +336,128 @@ public class Aran extends JobHandler {
                 if (tsm.getOption(ComboAbilityBuff).nOption > 999) {
                     if (chr.hasSkill(鬥氣爆發)) {
                         tsm.getOption(ComboAbilityBuff).nOption = 1000;
-                        handleAdrenalinRush(skillID, tsm);
+                        handleAdrenalinRush(skillId, tsm);
                         getClient().write(new LP_TemporaryStatSet(tsm));
                         comboAfterAdrenalin();
                     }
                 }
             }
         }
+        // 觸發寒冰屬性
+        if (hasHitMobs) {
+            if (tsm.hasStat(WeaponCharge) && tsm.getOption(WeaponCharge).rOption == 寒冰屬性) {
+                final SkillInfo iceSklllInfo = SkillData.getInstance().getSkillInfoById(寒冰屬性);
+                final Skill iceSkill = chr.getSkill(寒冰屬性);
+                attackInfo.getMobAttackInfo().forEach(mai -> {
+                    Mob mob = chr.getField().getMobByObjectId(mai.getObjectID());
+                    if (mob != null && mob.getTemporaryStat().hasCurrentMobStat(MobBuffStat.Speed)) {
+                        return;
+                    }
+                    MobTemporaryStat mts = mob.getTemporaryStat();
+                    Option option = new Option();
+                    option.nOption = iceSklllInfo.getValue(SkillStat.x, iceSkill.getCurrentLevel());
+                    option.rOption = 寒冰屬性;
+                    option.tOption = iceSklllInfo.getValue(SkillStat.y, iceSkill.getCurrentLevel());
+                    mts.addStatOptionsAndBroadcast(MobBuffStat.Speed, option);
+                });
+            }
+        }
+
+        // 觸發吸血術
+
+        if (hasHitMobs) {
+            if (chr.hasSkill(吸血術)) {
+                if (tsm.hasStat(AranDrain)) {
+                    final SkillInfo aranDrainInfo = SkillData.getInstance().getSkillInfoById(吸血術);
+                    final Skill aranDrain = chr.getSkill(吸血術);
+                    attackInfo.getMobAttackInfo().forEach(mai -> {
+                        Mob mob = chr.getField().getMobByObjectId(mai.getObjectID());
+                        if (mob == null)
+                            return;
+                        final int maxHp = mob.getMaxMp();
+                        final int x = aranDrainInfo.getValue(SkillStat.x, aranDrain.getCurrentLevel());
+                        final int healHp = (int) ((maxHp * x) / 100.0);
+                        chr.addStat(Stat.HP, healHp);
+                    });
+                }
+            }
+        }
 
         if (normalAttack) return true;
-        handleSwingStudies(getOriginalSkillByID(skillID), tsm);
+        handleSwingStudies(getOriginalSkillByID(skillId), tsm);
 
         Option o1 = new Option();
         Option o2 = new Option();
         Option o3 = new Option();
-        switch (skillID) {
+        switch (skillId) {
             case 極速巔峰_目標鎖定:
                 int t = si.getValue(subTime, slv);
                 o1.nOption = 1;
-                o1.rOption = skillID;
+                o1.rOption = skillId;
                 o1.tOption = t;
                 tsm.putCharacterStatValue(AranBoostEndHunt, o1);
-                getClient().write(new LP_TemporaryStatSet(tsm));
                 break;
-            case 突刺之矛_COMBO: //TODO  Leaves an ice trail behind that freezes enemies
+            case 突刺之矛_COMBO:
+                final SkillInfo fcComboInfo = SkillData.getInstance().getSkillInfoById(21100002);
+                final SkillInfo fcInfo = SkillData.getInstance().getSkillInfoById(21101011);
+                final Skill fcSkill = chr.getSkill(21101011);
                 for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
-                    int hcProp = 5; //hcProp is defined yet still gives NPEs
-                    int hcTime = 10; //hcTime is defined yet still gives NPEs
+                    int x = fcComboInfo.getValue(SkillStat.x, fcSkill.getCurrentLevel());
+                    int hcProp = fcComboInfo.getValue(SkillStat.hcProp, fcSkill.getCurrentLevel());
+                    int hcTime = fcComboInfo.getValue(SkillStat.hcTime, fcSkill.getCurrentLevel());
                     if (Rand.getChance(hcProp)) {
                         Mob mob = chr.getField().getMobByObjectId(mai.getObjectID());
                         MobTemporaryStat mts = mob.getTemporaryStat();
-                        o1.nOption = 1;
-                        o1.rOption = getOriginalSkillByID(skillID);
+                        o1.nOption = x;
+                        o1.rOption = fcInfo.getSkillId();
                         o1.tOption = hcTime;
                         mts.addStatOptionsAndBroadcast(MobBuffStat.Stun, o1);
                     }
                 }
                 break;
-            case ROLLING_SPIN_COMBO:
-                for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
-                    int prop = 30; //Prop value never given, so I decided upon 30%.
-                    int time = 3; //Time value never given, so I decided upon 3 seconds.
-                    if (Rand.getChance(prop)) {
-                        Mob mob = chr.getField().getMobByObjectId(mai.getObjectID());
-                        MobTemporaryStat mts = mob.getTemporaryStat();
-                        o1.nOption = 1;
-                        o1.rOption = getOriginalSkillByID(skillID);
-                        o1.tOption = time;
-                        mts.addStatOptionsAndBroadcast(MobBuffStat.Stun, o1);
-                    }
-                }
-                break;
+            case 旋風斬_COMBO:
             case 終極之矛_COMBO:
+            case 終極之矛_粉碎震撼_COMBO: {
+                final SkillInfo psdInfo = SkillData.getInstance().getSkillInfoById(skillId);
+                final Skill oriSkill = chr.getSkill(linkedSkill);
                 for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
-                    int prop = 30; //Prop value never given, so I decided upon 30%.
-                    int time = 3; //Time value never given, so I decided upon 3 seconds.
+                    int prop = psdInfo.getValue(SkillStat.prop, oriSkill.getCurrentLevel());
+                    int time = psdInfo.getValue(SkillStat.time, oriSkill.getCurrentLevel());
                     if (Rand.getChance(prop)) {
                         Mob mob = chr.getField().getMobByObjectId(mai.getObjectID());
                         MobTemporaryStat mts = mob.getTemporaryStat();
                         o1.nOption = 1;
-                        o1.rOption = getOriginalSkillByID(skillID);
+                        o1.rOption = oriSkill.getSkillId();
                         o1.tOption = time;
                         mts.addStatOptionsAndBroadcast(MobBuffStat.Stun, o1);
                     }
                 }
                 break;
-            case 終極之矛_粉碎震撼_COMBO:
-                for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
-                    int prop = 30; //Prop value never given, so I decided upon 30%.
-                    int time = 3; //Time value never given, so I decided upon 3 seconds.
-                    if (Rand.getChance(prop)) {
-                        Mob mob = chr.getField().getMobByObjectId(mai.getObjectID());
-                        MobTemporaryStat mts = mob.getTemporaryStat();
-                        o1.nOption = 1;
-                        o1.rOption = getOriginalSkillByID(skillID);
-                        o1.tOption = time;
-                        mts.addStatOptionsAndBroadcast(MobBuffStat.Stun, o1);
-                    }
-                }
-                break;
+            }
             case 鬥氣審判_COMBO_下:
-                for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
-                    int hcProp = 5; //hcProp is defined yet still gives NPEs
-                    int hcTime = 2; //hcTime is defined yet still gives NPE
-                    if (Rand.getChance(hcProp/*si.getValue(hcProp, slv)*/)) {
-                        Mob mob = chr.getField().getMobByObjectId(mai.getObjectID());
-                        MobTemporaryStat mts = mob.getTemporaryStat();
-                        o1.nOption = 1;
-                        o1.rOption = getOriginalSkillByID(skillID);
-                        o1.tOption = hcTime;    //si.getValue(time, slv);
-                        mts.addStatOptionsAndBroadcast(MobBuffStat.Freeze, o1);
-                    } else {
-                        Mob mob = chr.getField().getMobByObjectId(mai.getObjectID());
-                        MobTemporaryStat mts = mob.getTemporaryStat();
-                        mts.createAndAddBurnedInfo(chr.getId(), skill, 1);
-                    }
-                }
-                break;
             case 鬥氣審判_COMBO_左:
+            case 鬥氣審判_COMBO_右: {
                 for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
-                    int hcProp = 5; //hcProp is defined yet still gives NPE
-                    int hcTime = 2; //hcTime is defined yet still gives NPE
-                    if (Rand.getChance(hcProp/*si.getValue(hcProp, slv)*/)) {
+                    final SkillInfo psdInfo = SkillData.getInstance().getSkillInfoById(skillId);
+                    final Skill judgeSkill = chr.getSkill(鬥氣審判);
+                    int hcProp = psdInfo.getValue(SkillStat.hcProp, judgeSkill.getCurrentLevel());
+                    int hcTime = psdInfo.getValue(SkillStat.hcTime, judgeSkill.getCurrentLevel());
+                    int x = psdInfo.getValue(SkillStat.x, judgeSkill.getCurrentLevel());
+                    if (Rand.getChance(hcProp)) {
                         Mob mob = chr.getField().getMobByObjectId(mai.getObjectID());
                         MobTemporaryStat mts = mob.getTemporaryStat();
                         o1.nOption = 1;
-                        o1.rOption = getOriginalSkillByID(skillID);
-                        o1.tOption = hcTime;    //si.getValue(time, slv);
+                        o1.rOption = 鬥氣審判;
+                        o1.tOption = hcTime;
                         mts.addStatOptionsAndBroadcast(MobBuffStat.Freeze, o1);
                     } else {
                         Mob mob = chr.getField().getMobByObjectId(mai.getObjectID());
                         MobTemporaryStat mts = mob.getTemporaryStat();
-                        mts.createAndAddBurnedInfo(chr.getId(), skill, 1);
+                        mts.createAndAddBurnedInfo(chr.getId(), chr.getSkill(鬥氣審判), 1);
                     }
                 }
                 break;
-            case 鬥氣審判_COMBO_右:
-                for (MobAttackInfo mai : attackInfo.mobAttackInfo) {
-                    int hcProp = 5; //hcProp is defined yet still gives NPEs
-                    int hcTime = 2; //hcTime is defined yet still gives NPE
-                    if (Rand.getChance(hcProp/*si.getValue(hcProp, slv)*/)) {
-                        Mob mob = chr.getField().getMobByObjectId(mai.getObjectID());
-                        MobTemporaryStat mts = mob.getTemporaryStat();
-                        o1.nOption = 1;
-                        o1.rOption = getOriginalSkillByID(skillID);
-                        o1.tOption = hcTime;    //si.getValue(time, slv);
-                        mts.addStatOptionsAndBroadcast(MobBuffStat.Freeze, o1);
-                    } else {
-                        Mob mob = chr.getField().getMobByObjectId(mai.getObjectID());
-                        MobTemporaryStat mts = mob.getTemporaryStat();
-                        mts.createAndAddBurnedInfo(chr.getId(), skill, 1);
-                    }
-                }
-                break;
+            }
         }
         return true;
     }
@@ -500,7 +497,7 @@ public class Aran extends JobHandler {
                     aa.setMobOrigin((byte) 0);
                     aa.setCharID(chr.getId());
                     aa.setPosition(chr.getPosition());
-                    aa.setRect(aa.getPosition().getRectAround(mdi.getRects().get(0)));
+                    aa.setRect(aa.getPosition().getRectAround(mdi.getRect(slv)));
                     chr.getField().spawnAffectedArea(aa);
                     break;
             }
@@ -510,7 +507,7 @@ public class Aran extends JobHandler {
 
     @Override
     public boolean isHandlerOfJob(short id) {
-        return false;
+        return MapleJob.is狂狼勇士(id);
     }
 
     @Override
